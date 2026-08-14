@@ -1,8 +1,15 @@
 ```javascript
-const messageInput = document.getElementById("messageInput");
-const sendButton = document.getElementById("sendButton");
-const messages = document.getElementById("messages");
-const typing = document.getElementById("typing");
+const messageInput =
+    document.getElementById("messageInput");
+
+const sendButton =
+    document.getElementById("sendButton");
+
+const messages =
+    document.getElementById("messages");
+
+const typing =
+    document.getElementById("typing");
 
 
 // =====================================================
@@ -11,23 +18,29 @@ const typing = document.getElementById("typing");
 
 function sendMessage() {
 
-    const message = messageInput.value.trim();
+    const message =
+        messageInput.value.trim();
+
 
     if (message === "") {
         return;
     }
 
 
-    // Remove welcome screen
+    // Remove welcome message
 
-    const welcome = document.querySelector(".welcome-message");
+    const welcome =
+        document.querySelector(
+            ".welcome-message"
+        );
+
 
     if (welcome) {
         welcome.remove();
     }
 
 
-    // Add user message
+    // Add user's message
 
     addMessage(
         message,
@@ -42,20 +55,23 @@ function sendMessage() {
 
     // Show typing
 
-    typing.style.display = "block";
+    typing.style.display =
+        "block";
 
 
     // Temporary demo response
 
-    setTimeout(() => {
+    setTimeout(function () {
 
-        typing.style.display = "none";
+        typing.style.display =
+            "none";
 
 
         addMessage(
-            "I'm Lazarus. The AI connection isn't connected yet, but the chat interface is working! 🚀",
+            "I'm MoonPlug. The AI connection isn't connected yet, but the chat interface is working! 🌙🔌",
             "ai"
         );
+
 
     }, 1200);
 
@@ -71,7 +87,11 @@ function addMessage(
     sender
 ) {
 
-    const message = document.createElement("div");
+    const message =
+        document.createElement(
+            "div"
+        );
+
 
     message.classList.add(
         "message",
@@ -79,14 +99,19 @@ function addMessage(
     );
 
 
-    const bubble = document.createElement("div");
+    const bubble =
+        document.createElement(
+            "div"
+        );
+
 
     bubble.classList.add(
         "message-bubble"
     );
 
 
-    bubble.textContent = text;
+    bubble.textContent =
+        text;
 
 
     message.appendChild(
@@ -123,7 +148,7 @@ sendButton.addEventListener(
 
 messageInput.addEventListener(
     "keydown",
-    function(event) {
+    function (event) {
 
         if (
             event.key === "Enter"
@@ -138,3 +163,4 @@ messageInput.addEventListener(
     }
 );
 ```
+
