@@ -1,4 +1,3 @@
-```json
 {
   "name": "Lazarus AI",
   "short_name": "Lazarus",
@@ -7,6 +6,12 @@
   "display": "standalone",
   "background_color": "#0f0f0f",
   "theme_color": "#0f0f0f",
-  "orientation": "any"
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
 }
-```
