@@ -1,15 +1,4 @@
 ```css
-/* =========================================================
-   LAZARUS AI
-   Responsive Chat UI
-   Windows • Mac • iPad • iPhone
-   ========================================================= */
-
-
-/* =========================================================
-   RESET
-   ========================================================= */
-
 * {
     margin: 0;
     padding: 0;
@@ -22,15 +11,15 @@ html {
 
 body {
     background: #0f0f0f;
-    color: #ffffff;
+    color: white;
     font-family: Arial, Helvetica, sans-serif;
     overflow-x: hidden;
 }
 
 
-/* =========================================================
+/* =========================
    NAVIGATION
-   ========================================================= */
+========================= */
 
 nav {
     height: 70px;
@@ -54,9 +43,6 @@ nav {
     backdrop-filter: blur(15px);
 }
 
-
-/* LOGO */
-
 .logo {
     font-size: 22px;
     font-weight: 800;
@@ -67,9 +53,6 @@ nav {
     color: #8f8f8f;
 }
 
-
-/* NAV LINKS */
-
 .nav-links {
     display: flex;
     gap: 28px;
@@ -78,9 +61,7 @@ nav {
 .nav-links a {
     color: #9d9d9d;
     text-decoration: none;
-
     font-size: 15px;
-
     transition: 0.2s;
 }
 
@@ -89,19 +70,17 @@ nav {
 }
 
 
-/* =========================================================
+/* =========================
    HERO
-   ========================================================= */
+========================= */
 
 .hero {
     min-height: calc(100vh - 70px);
 
     display: flex;
-
     flex-direction: column;
 
     justify-content: center;
-
     align-items: center;
 
     text-align: center;
@@ -112,9 +91,6 @@ nav {
 
     overflow: hidden;
 }
-
-
-/* GLOW */
 
 .glow {
     position: absolute;
@@ -131,9 +107,6 @@ nav {
     pointer-events: none;
 }
 
-
-/* SMALL TITLE */
-
 .small-title {
     color: #858585;
 
@@ -146,15 +119,8 @@ nav {
     position: relative;
 }
 
-
-/* HERO TITLE */
-
 .hero h1 {
-    font-size: clamp(
-        50px,
-        8vw,
-        95px
-    );
+    font-size: clamp(50px, 8vw, 95px);
 
     line-height: 1;
 
@@ -167,17 +133,10 @@ nav {
     color: #bdbdbd;
 }
 
-
-/* DESCRIPTION */
-
 .description {
     color: #9c9c9c;
 
-    font-size: clamp(
-        16px,
-        2vw,
-        20px
-    );
+    font-size: clamp(16px, 2vw, 20px);
 
     line-height: 1.7;
 
@@ -187,11 +146,11 @@ nav {
 }
 
 
-/* =========================================================
+/* =========================
    MAIN BUTTON
-   ========================================================= */
+========================= */
 
-.download-button {
+.main-button {
     display: inline-flex;
 
     align-items: center;
@@ -203,7 +162,7 @@ nav {
 
     background: white;
 
-    color: #111111;
+    color: #111;
 
     text-decoration: none;
 
@@ -214,33 +173,28 @@ nav {
     font-weight: 600;
 
     transition: 0.2s;
-
-    -webkit-tap-highlight-color: transparent;
 }
 
-.download-button:hover {
+.main-button:hover {
     background: #dddddd;
 
     transform: translateY(-2px);
 }
 
-.download-button:active {
+.main-button:active {
     transform: scale(0.97);
 }
 
 
-/* =========================================================
-   CHAT SECTION
-   ========================================================= */
+/* =========================
+   CHAT
+========================= */
 
 .chat-section {
     padding: 80px 20px 110px;
 
     background: #101010;
 }
-
-
-/* CHAT CONTAINER */
 
 .chat-container {
     width: 100%;
@@ -264,18 +218,11 @@ nav {
     flex-direction: column;
 
     box-shadow:
-        0 20px 70px rgba(
-            0,
-            0,
-            0,
-            0.35
-        );
+        0 20px 70px rgba(0, 0, 0, 0.35);
 }
 
 
-/* =========================================================
-   CHAT HEADER
-   ========================================================= */
+/* CHAT HEADER */
 
 .chat-header {
     height: 65px;
@@ -293,11 +240,9 @@ nav {
     background: #171717;
 }
 
-
 .chat-header strong {
     font-size: 16px;
 }
-
 
 .chat-header span {
     color: #8f8f8f;
@@ -307,17 +252,16 @@ nav {
     font-size: 13px;
 }
 
-
 .online {
-    color: #7d7d7d;
+    color: #777;
 
     font-size: 13px;
 }
 
 
-/* =========================================================
+/* =========================
    MESSAGES
-   ========================================================= */
+========================= */
 
 .messages {
     flex: 1;
@@ -331,12 +275,7 @@ nav {
     flex-direction: column;
 
     gap: 15px;
-
-    scroll-behavior: smooth;
 }
-
-
-/* SCROLLBAR */
 
 .messages::-webkit-scrollbar {
     width: 7px;
@@ -347,24 +286,21 @@ nav {
 }
 
 .messages::-webkit-scrollbar-thumb {
-    background: #333333;
+    background: #333;
 
     border-radius: 10px;
 }
 
 
-/* =========================================================
-   WELCOME
-   ========================================================= */
+/* WELCOME */
 
 .welcome-message {
     margin: auto;
 
     text-align: center;
 
-    color: #999999;
+    color: #999;
 }
-
 
 .welcome-icon {
     width: 55px;
@@ -381,11 +317,8 @@ nav {
 
     background: #252525;
 
-    color: white;
-
     font-size: 25px;
 }
-
 
 .welcome-message h2 {
     color: white;
@@ -395,17 +328,14 @@ nav {
     margin-bottom: 10px;
 }
 
-
 .welcome-message p {
-    color: #777777;
+    color: #777;
 
     font-size: 15px;
 }
 
 
-/* =========================================================
-   MESSAGES
-   ========================================================= */
+/* MESSAGES */
 
 .message {
     display: flex;
@@ -413,16 +343,13 @@ nav {
     width: 100%;
 }
 
-
 .message.user {
     justify-content: flex-end;
 }
 
-
 .message.ai {
     justify-content: flex-start;
 }
-
 
 .message-bubble {
     max-width: 75%;
@@ -438,7 +365,6 @@ nav {
     word-wrap: break-word;
 }
 
-
 .message.user .message-bubble {
     background: #303030;
 
@@ -447,34 +373,33 @@ nav {
     border-bottom-right-radius: 5px;
 }
 
-
 .message.ai .message-bubble {
     background: #202020;
 
-    color: #dddddd;
+    color: #ddd;
 
     border-bottom-left-radius: 5px;
 }
 
 
-/* =========================================================
+/* =========================
    TYPING
-   ========================================================= */
+========================= */
 
 .typing {
     display: none;
 
     padding: 0 25px 12px;
 
-    color: #777777;
+    color: #777;
 
     font-size: 13px;
 }
 
 
-/* =========================================================
-   CHAT INPUT
-   ========================================================= */
+/* =========================
+   INPUT
+========================= */
 
 .chat-input-area {
     padding: 15px;
@@ -487,7 +412,6 @@ nav {
 
     background: #171717;
 }
-
 
 .chat-input-area input {
     flex: 1;
@@ -511,18 +435,13 @@ nav {
     font-size: 16px;
 }
 
-
 .chat-input-area input::placeholder {
-    color: #777777;
+    color: #777;
 }
-
 
 .chat-input-area input:focus {
-    border-color: #444444;
+    border-color: #444;
 }
-
-
-/* SEND BUTTON */
 
 #sendButton {
     width: 50px;
@@ -544,45 +463,35 @@ nav {
     cursor: pointer;
 
     transition: 0.2s;
-
-    -webkit-tap-highlight-color: transparent;
 }
-
 
 #sendButton:hover {
     background: #414141;
 }
-
 
 #sendButton:active {
     transform: scale(0.94);
 }
 
 
-/* =========================================================
+/* =========================
    FEATURES
-   ========================================================= */
+========================= */
 
 .features {
     padding: 110px 50px;
 
-    background: #111111;
+    background: #111;
 
     text-align: center;
 }
 
-
 .features h2,
 .about h2 {
-    font-size: clamp(
-        32px,
-        5vw,
-        50px
-    );
+    font-size: clamp(32px, 5vw, 50px);
 
     margin-bottom: 55px;
 }
-
 
 .cards {
     max-width: 1100px;
@@ -597,7 +506,6 @@ nav {
     gap: 25px;
 }
 
-
 .card {
     padding: 35px 25px;
 
@@ -610,13 +518,11 @@ nav {
     transition: 0.2s;
 }
 
-
 .card:hover {
     transform: translateY(-5px);
 
-    border-color: #444444;
+    border-color: #444;
 }
-
 
 .icon {
     font-size: 40px;
@@ -624,13 +530,11 @@ nav {
     margin-bottom: 20px;
 }
 
-
 .card h3 {
     margin-bottom: 12px;
 
     font-size: 21px;
 }
-
 
 .card p {
     color: #969696;
@@ -641,9 +545,9 @@ nav {
 }
 
 
-/* =========================================================
+/* =========================
    ABOUT
-   ========================================================= */
+========================= */
 
 .about {
     max-width: 850px;
@@ -655,9 +559,8 @@ nav {
     text-align: center;
 }
 
-
 .about p {
-    color: #999999;
+    color: #999;
 
     font-size: 18px;
 
@@ -665,26 +568,26 @@ nav {
 }
 
 
-/* =========================================================
+/* =========================
    FOOTER
-   ========================================================= */
+========================= */
 
 footer {
     padding: 35px 20px;
 
     text-align: center;
 
-    border-top: 1px solid #222222;
+    border-top: 1px solid #222;
 
-    color: #666666;
+    color: #666;
 
     font-size: 13px;
 }
 
 
-/* =========================================================
+/* =========================
    TABLETS / IPAD
-   ========================================================= */
+========================= */
 
 @media (max-width: 900px) {
 
@@ -692,23 +595,20 @@ footer {
         padding: 0 30px;
     }
 
-
     .cards {
         grid-template-columns:
             repeat(2, 1fr);
     }
 
-
     .chat-container {
         height: 620px;
     }
-
 }
 
 
-/* =========================================================
-   IPAD / SMALL TABLETS
-   ========================================================= */
+/* =========================
+   SMALL TABLETS
+========================= */
 
 @media (max-width: 700px) {
 
@@ -718,16 +618,13 @@ footer {
         padding: 0 18px;
     }
 
-
     .nav-links {
         gap: 14px;
     }
 
-
     .nav-links a {
         font-size: 12px;
     }
-
 
     .hero {
         min-height:
@@ -737,12 +634,10 @@ footer {
             60px 20px;
     }
 
-
     .chat-section {
         padding:
             55px 12px 80px;
     }
-
 
     .chat-container {
         height: 75vh;
@@ -752,11 +647,9 @@ footer {
         border-radius: 18px;
     }
 
-
     .messages {
         padding: 18px;
     }
-
 
     .message-bubble {
         max-width: 85%;
@@ -764,11 +657,9 @@ footer {
         font-size: 15px;
     }
 
-
     .chat-input-area {
         padding: 12px;
     }
-
 
     #sendButton {
         width: 52px;
@@ -776,30 +667,26 @@ footer {
         height: 52px;
     }
 
-
     .chat-input-area input {
         height: 52px;
 
         font-size: 16px;
     }
 
-
     .cards {
         grid-template-columns: 1fr;
     }
-
 
     .features {
         padding:
             80px 20px;
     }
-
 }
 
 
-/* =========================================================
+/* =========================
    PHONE
-   ========================================================= */
+========================= */
 
 @media (max-width: 450px) {
 
@@ -807,27 +694,22 @@ footer {
         padding: 0 12px;
     }
 
-
     .logo {
         font-size: 18px;
     }
-
 
     .nav-links {
         gap: 8px;
     }
 
-
     .nav-links a {
         font-size: 10px;
     }
-
 
     .hero {
         padding:
             50px 15px;
     }
-
 
     .chat-container {
         min-height: 500px;
@@ -837,22 +719,19 @@ footer {
         border-radius: 15px;
     }
 
-
     .welcome-message h2 {
         font-size: 20px;
     }
 
-
     .message-bubble {
         max-width: 90%;
     }
-
 }
 
 
-/* =========================================================
+/* =========================
    TOUCH DEVICES
-   ========================================================= */
+========================= */
 
 @media (hover: none) {
 
@@ -862,22 +741,19 @@ footer {
         min-height: 52px;
     }
 
-
-    .download-button {
+    .main-button {
         min-height: 55px;
     }
-
 
     .card:hover {
         transform: none;
     }
 
-
-    .download-button:hover {
+    .main-button:hover {
         transform: none;
 
         background: white;
     }
-
 }
 ```
+
