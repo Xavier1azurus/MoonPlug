@@ -1,5 +1,12 @@
+```css
 /* =========================================================
-   LAZARUS AI — MAIN STYLES
+   LAZARUS AI — RESPONSIVE WEBSITE
+   Windows • Mac • iPad
+   ========================================================= */
+
+
+/* =========================================================
+   RESET
    ========================================================= */
 
 * {
@@ -13,10 +20,10 @@ html {
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
     background: #0f0f0f;
     color: #ffffff;
-    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
 }
 
 
@@ -25,12 +32,8 @@ body {
    ========================================================= */
 
 nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-
     width: 100%;
-    height: 70px;
+    height: 72px;
 
     display: flex;
     align-items: center;
@@ -40,41 +43,38 @@ nav {
 
     background: rgba(15, 15, 15, 0.85);
 
-    backdrop-filter: blur(15px);
-
     border-bottom: 1px solid #242424;
 
+    position: sticky;
+    top: 0;
     z-index: 1000;
+
+    backdrop-filter: blur(12px);
 }
 
 
-/* =========================================================
-   LOGO
-   ========================================================= */
+/* LOGO */
 
 .logo {
     font-size: 22px;
-    font-weight: 700;
-    letter-spacing: 2px;
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
 .logo span {
-    color: #8b8b8b;
+    color: #8f8f8f;
 }
 
 
-/* =========================================================
-   NAV LINKS
-   ========================================================= */
+/* NAV LINKS */
 
 .nav-links {
     display: flex;
-    gap: 35px;
+    gap: 30px;
 }
 
 .nav-links a {
-    color: #b5b5b5;
-
+    color: #bdbdbd;
     text-decoration: none;
 
     font-size: 15px;
@@ -83,7 +83,7 @@ nav {
 }
 
 .nav-links a:hover {
-    color: #ffffff;
+    color: white;
 }
 
 
@@ -92,39 +92,35 @@ nav {
    ========================================================= */
 
 .hero {
-    position: relative;
-
-    min-height: 100vh;
+    min-height: calc(100vh - 72px);
 
     display: flex;
-
     flex-direction: column;
 
-    justify-content: center;
-
     align-items: center;
+    justify-content: center;
 
     text-align: center;
 
-    padding: 120px 20px 80px;
+    padding: 80px 25px;
+
+    position: relative;
 
     overflow: hidden;
 }
 
 
-/* =========================================================
-   GLOW
-   ========================================================= */
+/* GLOW */
 
 .glow {
     position: absolute;
 
-    width: 500px;
-    height: 500px;
+    width: 450px;
+    height: 450px;
+
+    background: rgba(255, 255, 255, 0.06);
 
     border-radius: 50%;
-
-    background: rgba(255, 255, 255, 0.05);
 
     filter: blur(100px);
 
@@ -132,91 +128,50 @@ nav {
 }
 
 
-/* =========================================================
-   SMALL TITLE
-   ========================================================= */
+/* SMALL TITLE */
 
 .small-title {
-    position: relative;
-
-    color: #888888;
+    color: #8e8e8e;
 
     font-size: 13px;
 
     letter-spacing: 4px;
 
     margin-bottom: 20px;
+
+    position: relative;
 }
 
 
-/* =========================================================
-   MAIN TITLE
-   ========================================================= */
+/* MAIN TITLE */
 
 .hero h1 {
-    position: relative;
-
-    font-size: clamp(55px, 8vw, 100px);
+    font-size: clamp(48px, 8vw, 92px);
 
     line-height: 1;
 
     margin-bottom: 25px;
 
-    letter-spacing: -4px;
+    position: relative;
 }
 
 .hero h1 span {
-    color: #aaaaaa;
+    color: #bcbcbc;
 }
 
 
-/* =========================================================
-   DESCRIPTION
-   ========================================================= */
+/* DESCRIPTION */
 
 .description {
-    position: relative;
+    color: #9c9c9c;
 
-    color: #a0a0a0;
-
-    font-size: 18px;
+    font-size: clamp(16px, 2vw, 20px);
 
     line-height: 1.7;
 
     margin-bottom: 35px;
-}
 
-
-/* =========================================================
-   MAIN BUTTON
-   ========================================================= */
-
-.hero button {
     position: relative;
-
-    padding: 14px 26px;
-
-    border: none;
-
-    border-radius: 10px;
-
-    background: #ffffff;
-
-    color: #111111;
-
-    font-size: 15px;
-
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition: 0.2s;
-}
-
-.hero button:hover {
-    transform: translateY(-2px);
-
-    background: #dddddd;
 }
 
 
@@ -225,37 +180,43 @@ nav {
    ========================================================= */
 
 .download-button {
-    position: relative;
+    display: inline-flex;
 
-    display: inline-block;
+    align-items: center;
+    justify-content: center;
 
-    margin-top: 14px;
+    min-height: 52px;
 
-    padding: 13px 24px;
+    padding: 0 25px;
 
-    background: #242424;
+    background: #ffffff;
 
-    color: #ffffff;
+    color: #111111;
 
     text-decoration: none;
 
-    border: 1px solid #3a3a3a;
+    border-radius: 12px;
 
-    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
 
-    font-size: 15px;
+    transition:
+        transform 0.2s,
+        background 0.2s;
 
-    font-weight: 500;
+    position: relative;
 
-    transition: 0.2s;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .download-button:hover {
-    background: #353535;
-
-    border-color: #505050;
+    background: #dddddd;
 
     transform: translateY(-2px);
+}
+
+.download-button:active {
+    transform: scale(0.97);
 }
 
 
@@ -266,71 +227,68 @@ nav {
 .features {
     padding: 110px 60px;
 
-    background: #111111;
-
     text-align: center;
+
+    background: #111111;
 }
 
-.features h2 {
-    font-size: 40px;
+.features h2,
+.about h2 {
+    font-size: clamp(32px, 5vw, 50px);
 
     margin-bottom: 55px;
 }
 
 
-/* =========================================================
-   CARDS
-   ========================================================= */
+/* CARDS */
 
 .cards {
     max-width: 1100px;
 
-    margin: 0 auto;
+    margin: auto;
 
     display: grid;
 
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns:
+        repeat(3, 1fr);
 
     gap: 25px;
 }
 
+
+/* CARD */
+
 .card {
-    padding: 35px;
+    background: #191919;
 
-    background: #181818;
-
-    border: 1px solid #292929;
+    border: 1px solid #282828;
 
     border-radius: 18px;
 
-    text-align: left;
+    padding: 35px 25px;
 
-    transition: 0.25s;
+    transition:
+        transform 0.2s,
+        border-color 0.2s;
 }
 
 .card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-5px);
 
-    background: #1d1d1d;
-
-    border-color: #3b3b3b;
+    border-color: #444444;
 }
 
 
-/* =========================================================
-   CARD ICON
-   ========================================================= */
+/* ICON */
 
 .icon {
-    font-size: 32px;
+    font-size: 40px;
 
     margin-bottom: 20px;
 }
 
 
-/* =========================================================
-   CARD TITLE
-   ========================================================= */
+/* CARD TITLE */
 
 .card h3 {
     font-size: 21px;
@@ -339,16 +297,14 @@ nav {
 }
 
 
-/* =========================================================
-   CARD DESCRIPTION
-   ========================================================= */
+/* CARD TEXT */
 
 .card p {
-    color: #9a9a9a;
+    color: #969696;
 
     font-size: 15px;
 
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 
@@ -357,25 +313,19 @@ nav {
    ========================================================= */
 
 .about {
-    padding: 110px 30px;
-
-    max-width: 800px;
-
-    margin: 0 auto;
+    padding: 110px 25px;
 
     text-align: center;
-}
 
-.about h2 {
-    font-size: 40px;
+    max-width: 850px;
 
-    margin-bottom: 25px;
+    margin: auto;
 }
 
 .about p {
-    color: #9a9a9a;
+    color: #9b9b9b;
 
-    font-size: 17px;
+    font-size: 18px;
 
     line-height: 1.8;
 }
@@ -386,9 +336,9 @@ nav {
    ========================================================= */
 
 footer {
-    padding: 30px;
-
     text-align: center;
+
+    padding: 35px 20px;
 
     color: #666666;
 
@@ -399,13 +349,36 @@ footer {
 
 
 /* =========================================================
-   MOBILE
+   TABLETS / IPAD
    ========================================================= */
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
 
     nav {
-        padding: 0 25px;
+        padding: 0 30px;
+    }
+
+    .cards {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .features {
+        padding: 90px 30px;
+    }
+}
+
+
+/* =========================================================
+   IPAD / SMALL TABLETS
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    nav {
+        height: 64px;
+
+        padding: 0 20px;
     }
 
     .nav-links {
@@ -416,10 +389,17 @@ footer {
         font-size: 13px;
     }
 
-    .hero h1 {
-        font-size: 60px;
+    .hero {
+        min-height: calc(100vh - 64px);
 
-        letter-spacing: -3px;
+        padding:
+            60px 20px;
+    }
+
+    .small-title {
+        font-size: 10px;
+
+        letter-spacing: 3px;
     }
 
     .cards {
@@ -427,25 +407,29 @@ footer {
     }
 
     .features {
-        padding: 80px 25px;
+        padding:
+            80px 20px;
+    }
+
+    .card {
+        padding: 30px 22px;
     }
 
     .about {
-        padding: 80px 25px;
+        padding:
+            80px 25px;
     }
 }
 
 
 /* =========================================================
-   SMALL PHONES
+   IPHONE / VERY SMALL SCREENS
    ========================================================= */
 
-@media (max-width: 500px) {
+@media (max-width: 450px) {
 
     nav {
-        height: 60px;
-
-        padding: 0 18px;
+        padding: 0 15px;
     }
 
     .logo {
@@ -461,47 +445,43 @@ footer {
     }
 
     .hero {
-        padding-top: 100px;
+        padding:
+            50px 15px;
     }
 
-    .hero h1 {
-        font-size: 48px;
+    .download-button {
+        width: 100%;
+
+        max-width: 320px;
     }
 
-    .small-title {
-        font-size: 10px;
-
-        letter-spacing: 2px;
-    }
-
-    .description {
-        font-size: 16px;
+    .features {
+        padding:
+            70px 15px;
     }
 }
-.download-button {
-    position: relative;
-    z-index: 10;
 
-    display: inline-block;
 
-    margin-top: 15px;
-    padding: 13px 24px;
+/* =========================================================
+   TOUCH DEVICES
+   ========================================================= */
 
-    background: #242424;
-    color: white;
+@media (hover: none) {
 
-    border: 1px solid #3a3a3a;
-    border-radius: 10px;
+    .download-button:hover {
+        transform: none;
 
-    text-decoration: none;
+        background: #ffffff;
+    }
 
-    cursor: pointer;
+    .card:hover {
+        transform: none;
 
-    pointer-events: auto;
+        border-color: #282828;
+    }
 
-    font-size: 15px;
+    .download-button {
+        min-height: 56px;
+    }
 }
-
-.download-button:hover {
-    background: #353535;
-}
+```
