@@ -1,3 +1,3 @@
-function tryLazarus() {
-    alert("Lazarus AI is coming soon! 🚀");
+function tryMoonPlug() {
+    alert("MoonPlug AI is coming soon! 🚀");
 }
