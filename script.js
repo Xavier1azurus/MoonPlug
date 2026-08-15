@@ -1,4 +1,4 @@
-```javascript
+
 const messageInput =
     document.getElementById("messageInput");
 
