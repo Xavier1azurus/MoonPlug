@@ -23,7 +23,11 @@ function sendMessage() {
     if (text === "") {
         return;
     }
+const emptyChat = document.querySelector(".empty-chat");
 
+if (emptyChat) {
+    emptyChat.remove();
+}
     addMessage(text, "user");
 
     input.value = "";
