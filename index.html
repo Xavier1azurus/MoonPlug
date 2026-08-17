@@ -379,3 +379,111 @@
 
 </html>
   
+<!-- =================================================
+     OWNER PANEL
+================================================= -->
+
+<div
+    id="ownerLogin"
+    class="owner-overlay"
+>
+
+    <div class="owner-box">
+
+        <h2>Owner Access</h2>
+
+        <p>Enter the owner code.</p>
+
+        <input
+            id="ownerCode"
+            type="password"
+            placeholder="Owner code"
+            autocomplete="off"
+        >
+
+        <button
+            id="ownerLoginButton"
+            type="button"
+        >
+            Enter
+        </button>
+
+        <p
+            id="ownerError"
+            class="owner-error"
+        ></p>
+
+        <button
+            id="ownerCancel"
+            type="button"
+            class="owner-cancel"
+        >
+            Cancel
+        </button>
+
+    </div>
+
+</div>
+
+
+<div
+    id="ownerPanel"
+    class="owner-panel"
+>
+
+    <div class="owner-header">
+
+        <div>
+            <h1>Owner Panel</h1>
+            <span>MoonPlug AI Administration</span>
+        </div>
+
+        <button
+            id="ownerLogout"
+            type="button"
+        >
+            Logout
+        </button>
+
+    </div>
+
+
+    <div class="owner-grid">
+
+        <div class="owner-card">
+            <strong>Users</strong>
+            <span id="ownerUsers">0</span>
+        </div>
+
+        <div class="owner-card">
+            <strong>Chats</strong>
+            <span id="ownerChats">0</span>
+        </div>
+
+        <div class="owner-card">
+            <strong>Status</strong>
+            <span>Online</span>
+        </div>
+
+    </div>
+
+
+    <div class="owner-section">
+
+        <h2>App Controls</h2>
+
+        <button type="button">
+            Manage Users
+        </button>
+
+        <button type="button">
+            Manage Chats
+        </button>
+
+        <button type="button">
+            App Settings
+        </button>
+
+    </div>
+
+</div>
