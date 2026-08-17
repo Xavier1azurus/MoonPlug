@@ -827,3 +827,67 @@ body.text-large {
     }
 
 }
+/* =========================================
+   TABLET / MOBILE SIDEBAR
+========================================= */
+
+@media screen and (max-width: 1200px) {
+
+    .sidebar {
+        width: 64px !important;
+        min-width: 64px !important;
+        max-width: 64px !important;
+
+        overflow: hidden !important;
+    }
+
+    .sidebar-logo {
+        width: 64px !important;
+        padding: 0 !important;
+
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    .sidebar-logo strong,
+    .sidebar-logo span {
+        display: none !important;
+    }
+
+    .sidebar-buttons {
+        width: 64px !important;
+        padding: 8px 5px !important;
+    }
+
+    .sidebar-button {
+        width: 54px !important;
+        min-width: 54px !important;
+        max-width: 54px !important;
+
+        height: 46px !important;
+        min-height: 46px !important;
+
+        padding: 0 !important;
+        margin: 2px auto !important;
+
+        justify-content: center !important;
+        gap: 0 !important;
+    }
+
+    .sidebar-button span {
+        display: none !important;
+    }
+
+    .sidebar-bottom {
+        width: 64px !important;
+        padding: 6px 5px !important;
+    }
+
+    .sidebar-bottom .sidebar-button {
+        width: 54px !important;
+    }
+
+    .chat-section {
+        left: 64px !important;
+    }
+}
