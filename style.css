@@ -891,3 +891,22 @@ body.text-large {
         left: 64px !important;
     }
 }
+@media screen and (max-width: 1200px) {
+
+    .sidebar-buttons {
+        flex: 0 0 auto !important;
+        overflow: visible !important;
+    }
+
+    .sidebar-bottom {
+        margin-top: auto !important;
+        padding-top: 4px !important;
+        padding-bottom: 10px !important;
+    }
+
+    .sidebar-bottom .sidebar-button {
+        height: 42px !important;
+        min-height: 42px !important;
+    }
+
+}
