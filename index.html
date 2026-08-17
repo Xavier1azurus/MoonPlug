@@ -17,256 +17,427 @@
         href="style.css"
     >
 
-    <meta
-        name="theme-color"
-        content="#0f0f0f"
-    >
-
-  
-
 </head>
 
 
 <body>
 
-<!-- =====================================================
-     NAVIGATION
-===================================================== -->
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
 
-<nav class="sidebar">
-<div class="sidebar-logo">
-    🌙 <strong>MOONPLUG</strong><span>AI</span>
-</div>
-   
+    <nav class="sidebar">
 
+        <!-- LOGO -->
 
-    <div class="sidebar-buttons">
-
-        <button class="sidebar-button">
-            ➕ <span>New Chat</span>
-        </button>
-
-        <button class="sidebar-button">
-            🧠 <span>AI Learn</span>
-        </button>
-
-        <button class="sidebar-button">
-            📚 <span>Study</span>
-        </button>
-
-        <button class="sidebar-button">
-            🍳 <span>Cook</span>
-        </button>
-
-        <button class="sidebar-button">
-            🖼️ <span>Image</span>
-        </button>
-
-        <button class="sidebar-button">
-            💻 <span>Code</span>
-        </button>
-
-        <button class="sidebar-button">
-            🔄 <span>AI Switch</span>
-        </button>
-
-        <div class="sidebar-divider"></div>
-
-        <button class="sidebar-button">
-            💬 <span>Chat History</span>
-        </button>
-
-    </div>
+        <div class="sidebar-logo">
+            🌙
+            <strong>MOONPLUG</strong>
+            <span>AI</span>
+        </div>
 
 
-    <div class="sidebar-bottom">
+        <!-- MAIN SIDEBAR BUTTONS -->
 
-     <button
-    id="settingsButton"
-    class="sidebar-button"
->
-    ⚙️ <span>Settings</span>
-</button>
+        <div class="sidebar-buttons">
 
-        <button class="sidebar-button">
-            👤 <span>Account</span>
-        </button>
-
-    </div>
-
-</nav>
+            <button
+                class="sidebar-button"
+                type="button"
+            >
+                ➕
+                <span>New Chat</span>
+            </button>
 
 
-<!-- =====================================================
-     CHAT
-===================================================== -->
-
-<section
-    id="chat"
-    class="chat-section"
->
-
-  
+            <button
+                class="sidebar-button"
+                type="button"
+            >
+                🧠
+                <span>AI Learn</span>
+            </button>
 
 
-        <!-- MOONPLUG ANIMATION -->
+            <button
+                class="sidebar-button"
+                type="button"
+            >
+                📚
+                <span>Study</span>
+            </button>
 
-      
+
+            <button
+                class="sidebar-button"
+                type="button"
+            >
+                🍳
+                <span>Cook</span>
+            </button>
 
 
-        <!-- MESSAGES -->
+            <button
+                class="sidebar-button"
+                type="button"
+            >
+                🖼️
+                <span>Image</span>
+            </button>
 
-        <div
-            id="messages"
-            class="messages"
-        >
 
-            <div class="empty-chat">
+            <button
+                class="sidebar-button"
+                type="button"
+            >
+                💻
+                <span>Code</span>
+            </button>
 
-                <h1>
-                    What can I help with?
-                </h1>
 
-                <p>
-                    Ask MoonPlug anything.
-                </p>
+            <button
+                class="sidebar-button"
+                type="button"
+            >
+                🔄
+                <span>AI Switch</span>
+            </button>
+
+
+            <div class="sidebar-divider"></div>
+
+
+            <button
+                class="sidebar-button"
+                type="button"
+            >
+                💬
+                <span>Chat History</span>
+            </button>
+
+        </div>
+
+
+        <!-- BOTTOM SIDEBAR -->
+
+        <div class="sidebar-bottom">
+
+            <button
+                id="settingsButton"
+                class="sidebar-button"
+                type="button"
+            >
+                ⚙️
+                <span>Settings</span>
+            </button>
+
+
+            <button
+                class="sidebar-button"
+                type="button"
+            >
+                👤
+                <span>Account</span>
+            </button>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================================
+         CHAT
+    ========================================== -->
+
+    <main
+        id="chat"
+        class="chat-section"
+    >
+
+        <div class="chat-container">
+
+
+            <!-- CHAT HEADER -->
+
+            <header class="chat-header">
+
+                <div>
+
+                    <strong>
+                        MoonPlug
+                    </strong>
+
+                    <span>
+                        AI
+                    </span>
+
+                </div>
+
+
+                <div class="online">
+                    ● Online
+                </div>
+
+            </header>
+
+
+            <!-- MOONPLUG DECORATION -->
+
+            <div
+                class="moonplug-animation"
+                aria-hidden="true"
+            >
+
+                <div class="plug">
+                    🔌
+                </div>
+
+                <div class="cable"></div>
+
+                <div class="moon">
+                    🌙
+                </div>
+
+            </div>
+
+
+            <!-- MESSAGES -->
+
+            <div
+                id="messages"
+                class="messages"
+            >
+
+                <div class="empty-chat">
+
+                    <h1>
+                        What can I help with?
+                    </h1>
+
+                    <p>
+                        Ask MoonPlug anything.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- TYPING INDICATOR -->
+
+            <div
+                id="typing"
+                class="typing"
+                style="display: none;"
+            >
+                MoonPlug is thinking...
+            </div>
+
+
+            <!-- MESSAGE INPUT -->
+
+            <div class="chat-input-area">
+
+                <input
+                    id="messageInput"
+                    type="text"
+                    placeholder="Message MoonPlug..."
+                    autocomplete="off"
+                >
+
+
+                <button
+                    id="sendButton"
+                    type="button"
+                    aria-label="Send message"
+                >
+                    ➤
+                </button>
 
             </div>
 
         </div>
 
-
-        <!-- TYPING INDICATOR -->
-
-        <div
-            id="typing"
-            class="typing"
-            style="display: none;"
-        >
-            MoonPlug is thinking...
-        </div>
+    </main>
 
 
-        <!-- INPUT -->
+    <!-- =========================================
+         SETTINGS
+    ========================================== -->
 
-        <div class="chat-input-area">
+    <div
+        id="settingsPanel"
+        class="settings-panel"
+    >
 
-            <input
-                id="messageInput"
-                type="text"
-                placeholder="Message MoonPlug..."
-                autocomplete="off"
-            >
-
-            <button
-                id="sendButton"
-                type="button"
-                aria-label="Send message"
-            >
-                ➤
-            </button>
-
-        </div>
-
-    </div>
-
-</section>
+        <div class="settings-box">
 
 
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
-<div id="settingsPanel" class="settings-panel">
+            <!-- SETTINGS HEADER -->
 
-    <div class="settings-box">
+            <div class="settings-header">
 
-        <div class="settings-header">
-            <h2>Settings</h2>
+                <h2>
+                    Settings
+                </h2>
 
-            <button
-                id="closeSettings"
-                class="close-settings"
-            >
-                ✕
-            </button>
-        </div>
 
-        <div class="setting-item">
-            <strong>Appearance</strong>
-            <span>Customize MoonPlug</span>
-        </div>
+                <button
+                    id="closeSettings"
+                    class="close-settings"
+                    type="button"
+                    aria-label="Close settings"
+                >
+                    ✕
+                </button>
 
-        <div class="setting-item">
-            <strong>Theme</strong>
+            </div>
+
+
+            <!-- APPEARANCE -->
+
             <div class="setting-item">
-    <strong>Text Size</strong>
-<div class="setting-item">
-    <strong>Sidebar Size</strong>
 
-    <div class="appearance-options">
+                <strong>
+                    Appearance
+                </strong>
 
-        <button
-            class="sidebar-size-button active"
-            data-sidebar-size="normal"
-        >
-            Normal
-        </button>
+                <span>
+                    Customize MoonPlug
+                </span>
 
-        <button
-            class="sidebar-size-button"
-            data-sidebar-size="compact"
-        >
-            Compact
-        </button>
+            </div>
 
-        <button
-            class="sidebar-size-button"
-            data-sidebar-size="wide"
-        >
-            Wide
-        </button>
 
-    </div>
-</div>
-    <div class="appearance-options">
+            <!-- THEME -->
 
-        <button
-            class="size-button"
-            data-size="small"
-        >
-            Small
-        </button>
+            <div class="setting-item">
 
-        <button
-            class="size-button active"
-            data-size="medium"
-        >
-            Medium
-        </button>
+                <strong>
+                    Theme
+                </strong>
 
-        <button
-            class="size-button"
-            data-size="large"
-        >
-            Large
-        </button>
 
-    </div>
-</div>
-          <button id="themeButton">
-    Dark
-</button>
+                <div class="appearance-options">
+
+                    <button
+                        id="themeButton"
+                        type="button"
+                    >
+                        Dark
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TEXT SIZE -->
+
+            <div class="setting-item">
+
+                <strong>
+                    Text Size
+                </strong>
+
+
+                <div class="appearance-options">
+
+                    <button
+                        class="size-button"
+                        data-size="small"
+                        type="button"
+                    >
+                        Small
+                    </button>
+
+
+                    <button
+                        class="size-button active"
+                        data-size="medium"
+                        type="button"
+                    >
+                        Medium
+                    </button>
+
+
+                    <button
+                        class="size-button"
+                        data-size="large"
+                        type="button"
+                    >
+                        Large
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SIDEBAR SIZE -->
+
+            <div class="setting-item">
+
+                <strong>
+                    Sidebar Size
+                </strong>
+
+
+                <div class="appearance-options">
+
+                    <button
+                        class="sidebar-size-button active"
+                        data-sidebar-size="normal"
+                        type="button"
+                    >
+                        Normal
+                    </button>
+
+
+                    <button
+                        class="sidebar-size-button"
+                        data-sidebar-size="compact"
+                        type="button"
+                    >
+                        Compact
+                    </button>
+
+
+                    <button
+                        class="sidebar-size-button"
+                        data-sidebar-size="wide"
+                        type="button"
+                    >
+                        Wide
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ABOUT -->
+
+            <div class="setting-item">
+
+                <strong>
+                    About
+                </strong>
+
+                <span>
+                    MoonPlug AI
+                </span>
+
+            </div>
+
         </div>
 
-        <div class="setting-item">
-            <strong>About</strong>
-            <span>MoonPlug AI</span>
-        </div>
-
     </div>
 
-</div>
-<script src="script.js"></script>
+
+    <!-- JAVASCRIPT -->
+
+    <script src="script.js"></script>
 
 </body>
 
