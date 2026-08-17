@@ -1358,3 +1358,14 @@ body.large-text .empty-chat h1 {
 #sendButton {
     flex-shrink: 0 !important;
 }
+/* CENTER CHAT CONTENT + MESSAGE BOX */
+
+.empty-chat {
+    width: 100%;
+    text-align: center;
+}
+
+.chat-input-area {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
