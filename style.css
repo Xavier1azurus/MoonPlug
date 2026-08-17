@@ -972,3 +972,27 @@ body.text-medium {
 body.text-large {
     font-size: 18px;
 }
+/* =========================================
+   MOBILE + IPAD MESSAGE BAR
+========================================= */
+
+@media screen and (max-width: 1200px) {
+
+    .chat-input-area {
+        bottom: 35px !important;
+    }
+
+}
+
+
+/* =========================================
+   SMALL IPHONE
+========================================= */
+
+@media screen and (max-width: 450px) {
+
+    .chat-input-area {
+        bottom: 28px !important;
+    }
+
+}
