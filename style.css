@@ -723,3 +723,11 @@ footer {
         min-height: 55px;
     }
 }
+.message-bubble {
+    font-size: 19px;
+    line-height: 1.6;
+}
+
+.chat-input-area input {
+    font-size: 18px;
+}
