@@ -1244,3 +1244,18 @@ body.large-text .empty-chat h1 {
     padding-bottom: 90px;
     box-sizing: border-box;
 }
+/* SMALLER MESSAGE BAR */
+
+.chat-input-area {
+    padding: 8px 12px;
+}
+
+.chat-input-area input {
+    height: 42px;
+    font-size: 15px;
+}
+
+#sendButton {
+    width: 42px;
+    height: 42px;
+}
