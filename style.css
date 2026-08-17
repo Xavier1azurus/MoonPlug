@@ -983,3 +983,54 @@ footer {
 
     font-size: 13px;
 }
+/* ================================
+   LIGHT THEME
+================================ */
+
+body.light-theme {
+    background: #f5f5f5;
+    color: #111;
+}
+
+body.light-theme .sidebar {
+    background: #ffffff;
+    border-color: #dddddd;
+}
+
+body.light-theme .sidebar-button {
+    color: #555;
+}
+
+body.light-theme .sidebar-button:hover {
+    background: #eeeeee;
+    color: #111;
+}
+
+body.light-theme .chat-container {
+    background: #ffffff;
+    border-color: #dddddd;
+}
+
+body.light-theme .chat-header {
+    background: #fafafa;
+    border-color: #dddddd;
+}
+
+body.light-theme .chat-input-area {
+    background: #fafafa;
+    border-color: #dddddd;
+}
+
+body.light-theme .chat-input-area input {
+    background: #eeeeee;
+    color: #111;
+    border-color: #d5d5d5;
+}
+
+body.light-theme .empty-chat h1 {
+    color: #111;
+}
+
+body.light-theme .empty-chat p {
+    color: #666;
+}
