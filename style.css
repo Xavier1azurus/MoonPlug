@@ -1323,52 +1323,8 @@ body.large-text .empty-chat h1 {
 }
 /* CENTER MESSAGE BOX + TEXT */
 
-.chat-input-area {
-    position: absolute !important;
 
-    left: 50% !important;
-    right: auto !important;
-    bottom: 18px !important;
 
-    transform: translateX(-50%) !important;
-
-    width: min(700px, calc(100% - 40px)) !important;
-
-    margin: 0 !important;
-
-    display: flex !important;
-    align-items: center !important;
-}
-
-.chat-input-area input {
-    flex: 1 !important;
-
-    height: 42px !important;
-
-    padding: 0 14px !important;
-
-    display: flex;
-    align-items: center;
-
-   
-
-    box-sizing: border-box;
-}
-
-#sendButton {
-    flex-shrink: 0 !important;
-}
-/* CENTER CHAT CONTENT + MESSAGE BOX */
-
-.empty-chat {
-    width: 100%;
-    text-align: center;
-}
-
-.chat-input-area {
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-}
 /* ================================
    PERFECT CHAT CENTERING
 ================================ */
