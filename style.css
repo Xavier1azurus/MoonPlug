@@ -1363,7 +1363,6 @@ body.large-text .empty-chat h1 {
     }
 
     .sidebar-logo {
-        justify-content: center;
         text-align: center;
         padding: 18px 4px;
     }
@@ -1381,22 +1380,16 @@ body.large-text .empty-chat h1 {
 
     .sidebar-button span {
         display: none !important;
-       @media (max-width: 700px) {
+    }
 
     .chat-section {
-        margin-left: 64px;
-        width: calc(100% - 64px);
+        margin-left: 64px !important;
+        width: calc(100% - 64px) !important;
     }
 
     .chat-container {
-        width: 100%;
-    }
-
-    .chat-input-area {
-        width: calc(100% - 20px) !important;
-    }
-
-}
+        width: 100% !important;
+        max-width: none !important;
     }
 
 }
