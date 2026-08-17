@@ -1034,3 +1034,43 @@ body.light-theme .empty-chat h1 {
 body.light-theme .empty-chat p {
     color: #666;
 }
+/* ================================
+   APPEARANCE OPTIONS
+================================ */
+
+.appearance-options {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.size-button {
+    flex: 1;
+
+    padding: 9px 10px;
+
+    border: 1px solid #303030;
+
+    border-radius: 9px;
+
+    background: #242424;
+
+    color: #aaa;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    transition: 0.2s;
+}
+
+.size-button:hover {
+    background: #303030;
+    color: white;
+}
+
+.size-button.active {
+    background: #3a3a3a;
+    color: white;
+    border-color: #555;
+}
