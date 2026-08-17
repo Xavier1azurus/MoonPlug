@@ -122,3 +122,38 @@ sizeButtons.forEach(function(button) {
     });
 
 });
+const sidebarSizeButtons =
+    document.querySelectorAll(".sidebar-size-button");
+
+const sidebar =
+    document.querySelector(".sidebar");
+
+sidebarSizeButtons.forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+        sidebarSizeButtons.forEach(function(btn) {
+            btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        const size =
+            button.dataset.sidebarSize;
+
+        sidebar.classList.remove(
+            "sidebar-compact",
+            "sidebar-wide"
+        );
+
+        if (size === "compact") {
+            sidebar.classList.add("sidebar-compact");
+        }
+
+        if (size === "wide") {
+            sidebar.classList.add("sidebar-wide");
+        }
+
+    });
+
+});
