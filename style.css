@@ -1074,3 +1074,16 @@ body.light-theme .empty-chat p {
     color: white;
     border-color: #555;
 }
+/* TEXT SIZE MODES */
+
+body.small-text .message-bubble {
+    font-size: 15px;
+}
+
+body.medium-text .message-bubble {
+    font-size: 18px;
+}
+
+body.large-text .message-bubble {
+    font-size: 21px;
+}
