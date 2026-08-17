@@ -1053,3 +1053,68 @@ body.text-large {
         left: 250px !important;
     }
 }
+/* =========================================
+   COLLAPSIBLE SIDEBAR
+========================================= */
+
+.sidebar {
+    transition: width 0.25s ease;
+}
+
+.sidebar-logo {
+    cursor: pointer;
+}
+
+.chat-section {
+    transition: left 0.25s ease;
+}
+
+/* EXPANDED */
+
+.sidebar.expanded {
+    width: 250px !important;
+    min-width: 250px !important;
+    max-width: 250px !important;
+}
+
+.sidebar.expanded .sidebar-logo {
+    width: 250px !important;
+    justify-content: flex-start !important;
+    padding-left: 20px !important;
+}
+
+.sidebar.expanded .sidebar-logo strong,
+.sidebar.expanded .sidebar-logo span {
+    display: inline !important;
+}
+
+.sidebar.expanded .sidebar-buttons {
+    width: 250px !important;
+}
+
+.sidebar.expanded .sidebar-button {
+    width: 230px !important;
+    max-width: 230px !important;
+
+    justify-content: flex-start !important;
+
+    padding: 0 13px !important;
+
+    gap: 12px !important;
+}
+
+.sidebar.expanded .sidebar-button span {
+    display: inline !important;
+}
+
+.sidebar.expanded .sidebar-bottom {
+    width: 250px !important;
+}
+
+.sidebar.expanded .sidebar-bottom .sidebar-button {
+    width: 230px !important;
+}
+
+.sidebar.expanded ~ .chat-section {
+    left: 250px !important;
+}
