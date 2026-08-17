@@ -1396,3 +1396,28 @@ body.large-text .empty-chat h1 {
         max-width: none !important;
     }
 }
+@media screen and (max-width: 700px) {
+
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+
+    .sidebar-buttons {
+        flex: 1 !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+    }
+
+    .sidebar-bottom {
+        flex-shrink: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .sidebar-bottom .sidebar-button {
+        flex-shrink: 0 !important;
+    }
+
+}
