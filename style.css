@@ -1328,3 +1328,71 @@ body.large-text .empty-chat h1 {
         margin: 0 !important;
     }
 }
+/* ================================
+   MOONPLUG MOBILE
+================================ */
+
+@media screen and (max-width: 700px) {
+
+    .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+
+        width: 64px !important;
+        min-width: 64px !important;
+        height: 100vh !important;
+
+        z-index: 9999 !important;
+    }
+
+    .sidebar-logo {
+        width: 64px !important;
+        padding: 16px 0 !important;
+        text-align: center !important;
+    }
+
+    .sidebar-logo strong,
+    .sidebar-logo span {
+        display: none !important;
+    }
+
+    .sidebar-button {
+        width: 64px !important;
+        padding: 12px 0 !important;
+
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .sidebar-button span {
+        display: none !important;
+    }
+
+    .chat-section {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 64px !important;
+        right: 0 !important;
+        bottom: 0 !important;
+
+        width: auto !important;
+        height: 100vh !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .chat-container {
+        width: 100% !important;
+        height: 100vh !important;
+        margin: 0 !important;
+    }
+
+    .chat-input-area {
+        width: calc(100% - 24px) !important;
+        max-width: none !important;
+    }
+}
