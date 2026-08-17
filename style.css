@@ -864,3 +864,12 @@ footer {
 
     gap: 5px;
 }
+.chat-section {
+    margin-left: 250px;
+
+    width: calc(100% - 250px);
+
+    height: calc(100vh - 0px);
+
+    padding: 0;
+}
