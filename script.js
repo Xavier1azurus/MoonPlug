@@ -77,3 +77,16 @@ settingsButton.addEventListener("click", function() {
 closeSettings.addEventListener("click", function() {
     settingsPanel.style.display = "none";
 });
+const themeButton = document.getElementById("themeButton");
+
+themeButton.addEventListener("click", function() {
+
+    document.body.classList.toggle("light-theme");
+
+    if (document.body.classList.contains("light-theme")) {
+        themeButton.textContent = "Light";
+    } else {
+        themeButton.textContent = "Dark";
+    }
+
+});
