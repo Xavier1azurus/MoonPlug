@@ -173,3 +173,15 @@ if (sidebar) {
     });
 
 }
+const sidebar = document.querySelector(".sidebar");
+const sidebarToggle = document.querySelector("#sidebarToggle");
+
+if (sidebar && sidebarToggle) {
+
+    sidebarToggle.addEventListener("click", function () {
+
+        sidebar.classList.toggle("expanded");
+
+    });
+
+}
