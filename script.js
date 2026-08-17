@@ -1,8 +1,13 @@
+/* =====================================================
+   MOONPLUG AI
+   MAIN JAVASCRIPT
+===================================================== */
+
 document.addEventListener("DOMContentLoaded", function () {
 
-    /* =========================================
+    /* =================================================
        ELEMENTS
-    ========================================= */
+    ================================================= */
 
     const sidebar = document.querySelector(".sidebar");
     const sidebarLogo = document.querySelector(".sidebar-logo");
@@ -32,9 +37,9 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("typing");
 
 
-    /* =========================================
+    /* =================================================
        SIDEBAR
-    ========================================= */
+    ================================================= */
 
     if (sidebar && sidebarLogo) {
 
@@ -47,9 +52,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================================
+    /* =================================================
        SETTINGS
-    ========================================= */
+    ================================================= */
 
     if (settingsButton && settingsPanel) {
 
@@ -90,9 +95,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================================
+    /* =================================================
        THEME
-    ========================================= */
+    ================================================= */
 
     if (themeButton) {
 
@@ -117,9 +122,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================================
+    /* =================================================
        TEXT SIZE
-    ========================================= */
+    ================================================= */
 
     const sizeButtons =
         document.querySelectorAll(".size-button");
@@ -168,9 +173,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    /* =========================================
-       SIDEBAR SIZE BUTTONS
-    ========================================= */
+    /* =================================================
+       SIDEBAR SIZE SETTINGS
+    ================================================= */
 
     const sidebarSizeButtons =
         document.querySelectorAll(
@@ -189,14 +194,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             button.classList.add("active");
 
+            const size =
+                button.dataset.sidebarSize;
+
             sidebar.classList.remove(
                 "sidebar-normal",
                 "sidebar-compact",
                 "sidebar-wide"
             );
-
-            const size =
-                button.dataset.sidebarSize;
 
             if (size === "normal") {
 
@@ -227,23 +232,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    /* =========================================
-       SEND MESSAGE
-    ========================================= */
+    /* =================================================
+       REMOVE EMPTY CHAT
+    ================================================= */
 
-    function sendMessage() {
-
-        if (!messageInput || !messages) {
-            return;
-        }
-
-        const text =
-            messageInput.value.trim();
-
-        if (text === "") {
-            return;
-        }
-
+    function removeEmptyChat() {
 
         const emptyChat =
             document.querySelector(".empty-chat");
@@ -254,26 +247,83 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
+    }
 
-        const userMessage =
+
+    /* =================================================
+       CREATE MESSAGE BUBBLE
+    ================================================= */
+
+    function createMessage(text, type) {
+
+        if (!messages) {
+            return;
+        }
+
+        const bubble =
             document.createElement("div");
 
-        userMessage.className =
-            "message-bubble user";
-
-        userMessage.textContent =
-            text;
-
-        messages.appendChild(
-            userMessage
+        bubble.classList.add(
+            "message-bubble"
         );
 
+        if (type === "user") {
 
-        messageInput.value = "";
+            bubble.classList.add("user");
+
+        } else {
+
+            bubble.classList.add("ai");
+
+        }
+
+        bubble.textContent = text;
+
+        messages.appendChild(bubble);
 
         messages.scrollTop =
             messages.scrollHeight;
 
+    }
+
+
+    /* =================================================
+       SEND MESSAGE
+    ================================================= */
+
+    function sendMessage() {
+
+        if (!messageInput || !messages) {
+            return;
+        }
+
+        const text =
+            messageInput.value.trim();
+
+        if (text.length === 0) {
+            return;
+        }
+
+
+        /* Remove "What can I help with?" */
+
+        removeEmptyChat();
+
+
+        /* Add USER bubble */
+
+        createMessage(
+            text,
+            "user"
+        );
+
+
+        /* Clear input */
+
+        messageInput.value = "";
+
+
+        /* Show typing */
 
         if (typing) {
 
@@ -282,6 +332,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        /* Temporary MoonPlug response */
 
         setTimeout(function () {
 
@@ -292,10 +344,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
-        }, 1000);
+            createMessage(
+                "I'm ready to help.",
+                "ai"
+            );
+
+        }, 900);
 
     }
 
+
+    /* =================================================
+       SEND BUTTON
+    ================================================= */
 
     if (sendButton) {
 
@@ -306,6 +367,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+
+    /* =================================================
+       ENTER TO SEND
+    ================================================= */
 
     if (messageInput) {
 
@@ -325,5 +390,27 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
     }
+
+
+    /* =================================================
+       PREVENT FORM-LIKE BEHAVIOR
+    ================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Enter" &&
+                document.activeElement === messageInput
+            ) {
+
+                event.preventDefault();
+
+            }
+
+        }
+    );
+
 
 });
