@@ -1137,3 +1137,24 @@ body.large-text .empty-chat h1 {
     color: white;
     border-color: #555;
 }
+/* ================================
+   SIDEBAR SIZE MODES
+================================ */
+
+/* NORMAL */
+.sidebar {
+    width: 250px;
+    transition: width 0.25s ease;
+}
+
+
+/* COMPACT */
+.sidebar.sidebar-compact {
+    width: 190px;
+}
+
+
+/* WIDE */
+.sidebar.sidebar-wide {
+    width: 330px;
+}
