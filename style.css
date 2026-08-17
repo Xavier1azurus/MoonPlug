@@ -1,5 +1,6 @@
 /* =====================================================
-   MOONPLUG AI — CLEAN STYLE
+   MOONPLUG AI
+   COMPLETE RESPONSIVE STYLESHEET
 ===================================================== */
 
 * {
@@ -12,17 +13,17 @@ html,
 body {
     width: 100%;
     height: 100%;
-    overflow: hidden;
 }
 
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: #0f0f0f;
     color: #ffffff;
+    overflow: hidden;
 }
 
 /* =====================================================
-   SIDEBAR
+   SIDEBAR — DESKTOP
 ===================================================== */
 
 .sidebar {
@@ -40,8 +41,6 @@ body {
     flex-direction: column;
 
     z-index: 1000;
-
-    overflow: hidden;
 }
 
 /* LOGO */
@@ -56,9 +55,9 @@ body {
 
     font-size: 18px;
 
-    flex-shrink: 0;
-
     border-bottom: 1px solid #292929;
+
+    flex-shrink: 0;
 }
 
 .sidebar-logo strong {
@@ -66,10 +65,10 @@ body {
 }
 
 .sidebar-logo span {
-    color: #8b8b8b;
+    color: #888888;
 }
 
-/* SIDEBAR BUTTON AREA */
+/* SIDEBAR BUTTONS */
 
 .sidebar-buttons {
     flex: 1;
@@ -81,8 +80,6 @@ body {
 
     overflow-y: auto;
 }
-
-/* BUTTONS */
 
 .sidebar-button {
     width: 100%;
@@ -105,9 +102,7 @@ body {
 
     cursor: pointer;
 
-    transition:
-        background 0.15s ease,
-        color 0.15s ease;
+    flex-shrink: 0;
 }
 
 .sidebar-button:hover {
@@ -119,44 +114,42 @@ body {
     white-space: nowrap;
 }
 
-/* DIVIDER */
-
 .sidebar-divider {
     height: 1px;
 
     background: #292929;
 
     margin: 10px 5px;
+
+    flex-shrink: 0;
 }
 
-/* BOTTOM */
+/* BOTTOM BUTTONS */
 
 .sidebar-bottom {
     padding: 10px;
 
     border-top: 1px solid #292929;
 
-    flex-shrink: 0;
-
     display: flex;
     flex-direction: column;
 
-    gap: 3px;
+    flex-shrink: 0;
 }
 
 /* =====================================================
-   CHAT
+   CHAT AREA — DESKTOP
 ===================================================== */
 
 .chat-section {
     position: fixed;
 
     top: 0;
-    left: 250px;
     right: 0;
     bottom: 0;
 
-    width: auto;
+    left: 250px;
+
     height: 100vh;
 
     background: #0f0f0f;
@@ -211,7 +204,7 @@ body {
 .moonplug-animation {
     position: absolute;
 
-    top: 75px;
+    top: 80px;
     right: 30px;
 
     display: flex;
@@ -271,8 +264,6 @@ body {
     width: min(700px, calc(100% - 40px));
 
     text-align: center;
-
-    pointer-events: none;
 }
 
 .empty-chat h1 {
@@ -297,8 +288,6 @@ body {
     padding: 12px 16px;
 
     border-radius: 16px;
-
-    font-size: 15px;
 
     line-height: 1.5;
 }
@@ -330,7 +319,7 @@ body {
 }
 
 /* =====================================================
-   MESSAGE INPUT
+   MESSAGE BAR
 ===================================================== */
 
 .chat-input-area {
@@ -367,14 +356,13 @@ body {
     width: 100%;
     height: 42px;
 
-    padding: 0 12px;
-
     border: none;
     outline: none;
 
     background: transparent;
-
     color: #ffffff;
+
+    padding: 0 12px;
 
     font-size: 15px;
 }
@@ -387,29 +375,23 @@ body {
     width: 42px;
     height: 42px;
 
-    flex-shrink: 0;
-
     border: none;
     border-radius: 50%;
 
     background: #ffffff;
     color: #111111;
 
-    font-size: 18px;
-
     cursor: pointer;
 
     display: flex;
     align-items: center;
     justify-content: center;
-}
 
-#sendButton:hover {
-    opacity: 0.85;
+    flex-shrink: 0;
 }
 
 /* =====================================================
-   SETTINGS PANEL
+   SETTINGS
 ===================================================== */
 
 .settings-panel {
@@ -447,8 +429,6 @@ body {
     padding: 22px;
 }
 
-/* SETTINGS HEADER */
-
 .settings-header {
     display: flex;
 
@@ -473,11 +453,7 @@ body {
     color: #ffffff;
 
     cursor: pointer;
-
-    font-size: 17px;
 }
-
-/* SETTING ITEM */
 
 .setting-item {
     padding: 16px 0;
@@ -505,15 +481,15 @@ body {
 }
 
 /* =====================================================
-   APPEARANCE BUTTONS
+   SETTINGS BUTTONS
 ===================================================== */
 
 .appearance-options {
     display: flex;
 
-    gap: 8px;
-
     flex-wrap: wrap;
+
+    gap: 8px;
 }
 
 .appearance-options button,
@@ -530,15 +506,6 @@ body {
     border-radius: 9px;
 
     cursor: pointer;
-
-    font-size: 13px;
-}
-
-.appearance-options button:hover,
-.size-button:hover,
-.sidebar-size-button:hover,
-#themeButton:hover {
-    background: #303030;
 }
 
 .appearance-options button.active,
@@ -578,11 +545,6 @@ body.light-theme .sidebar-button:hover {
     background: #eeeeee;
 }
 
-body.light-theme .sidebar-divider,
-body.light-theme .sidebar-bottom {
-    border-color: #dddddd;
-}
-
 body.light-theme .chat-input-area {
     background: #ffffff;
     border-color: #dddddd;
@@ -594,15 +556,11 @@ body.light-theme .chat-input-area input {
 
 body.light-theme .settings-box {
     background: #ffffff;
-    border-color: #dddddd;
-}
-
-body.light-theme .setting-item {
-    border-color: #dddddd;
+    color: #111111;
 }
 
 /* =====================================================
-   TEXT SIZES
+   TEXT SIZE
 ===================================================== */
 
 body.text-small {
@@ -618,32 +576,15 @@ body.text-large {
 }
 
 /* =====================================================
-   SIDEBAR SIZES
-===================================================== */
-
-body.sidebar-compact .sidebar {
-    width: 210px;
-}
-
-body.sidebar-compact .chat-section {
-    left: 210px;
-}
-
-body.sidebar-wide .sidebar {
-    width: 300px;
-}
-
-body.sidebar-wide .chat-section {
-    left: 300px;
-}
-
-/* =====================================================
-   MOBILE
+   MOBILE + TABLET
+   1000px AND BELOW
 ===================================================== */
 
 @media screen and (max-width: 1000px) {
 
-    /* THIN SIDEBAR */
+    /* ================================================
+       THIN SIDEBAR
+    ================================================ */
 
     .sidebar {
         position: fixed !important;
@@ -665,7 +606,9 @@ body.sidebar-wide .chat-section {
         z-index: 9999 !important;
     }
 
-    /* MOBILE LOGO */
+    /* ================================================
+       LOGO
+    ================================================ */
 
     .sidebar-logo {
         width: 64px !important;
@@ -675,8 +618,8 @@ body.sidebar-wide .chat-section {
 
         display: flex !important;
 
-        align-items: center !important;
         justify-content: center !important;
+        align-items: center !important;
 
         font-size: 22px !important;
 
@@ -688,23 +631,28 @@ body.sidebar-wide .chat-section {
         display: none !important;
     }
 
-    /* MIDDLE BUTTONS */
+    /* ================================================
+       MAIN SIDEBAR BUTTONS
+    ================================================ */
 
     .sidebar-buttons {
         flex: 1 1 auto !important;
 
         min-height: 0 !important;
 
-        padding: 8px 6px !important;
-
-        overflow-y: auto !important;
+        padding: 8px 5px !important;
 
         display: flex !important;
         flex-direction: column !important;
+
+        overflow-y: auto !important;
     }
 
     .sidebar-button {
-        width: 52px !important;
+        width: 54px !important;
+        min-width: 54px !important;
+
+        height: 46px !important;
         min-height: 46px !important;
 
         margin: 2px auto !important;
@@ -727,12 +675,14 @@ body.sidebar-wide .chat-section {
         display: none !important;
     }
 
-    /* SETTINGS + ACCOUNT */
+    /* ================================================
+       SETTINGS + ACCOUNT
+    ================================================ */
 
     .sidebar-bottom {
         width: 64px !important;
 
-        padding: 6px !important;
+        padding: 6px 5px !important;
 
         display: flex !important;
         flex-direction: column !important;
@@ -740,18 +690,24 @@ body.sidebar-wide .chat-section {
         flex-shrink: 0 !important;
 
         border-top: 1px solid #292929 !important;
+
+        background: #151515 !important;
     }
 
     .sidebar-bottom .sidebar-button {
-        width: 52px !important;
+        width: 54px !important;
         height: 46px !important;
+
+        min-height: 46px !important;
 
         margin: 2px auto !important;
 
         flex-shrink: 0 !important;
     }
 
-    /* CHAT BESIDE SIDEBAR */
+    /* ================================================
+       CHAT AREA
+    ================================================ */
 
     .chat-section {
         position: fixed !important;
@@ -775,7 +731,9 @@ body.sidebar-wide .chat-section {
         margin: 0 !important;
     }
 
-    /* HEADER */
+    /* ================================================
+       HEADER
+    ================================================ */
 
     .chat-header {
         height: 58px;
@@ -783,50 +741,48 @@ body.sidebar-wide .chat-section {
         padding: 0 14px;
     }
 
-    /* HIDE DECORATION ON SMALL SCREENS */
+    /* ================================================
+       ANIMATION
+    ================================================ */
 
     .moonplug-animation {
         display: none;
     }
 
-    /* WELCOME */
+    /* ================================================
+       WELCOME
+    ================================================ */
 
     .empty-chat {
         width: calc(100% - 24px);
 
-        max-width: 500px;
+        max-width: 600px;
     }
 
     .empty-chat h1 {
-        font-size: 25px;
+        font-size: 27px;
     }
 
     .empty-chat p {
         font-size: 14px;
     }
 
-    /* MESSAGE BOX */
+    /* ================================================
+       MESSAGE BAR
+    ================================================ */
 
     .chat-input-area {
-        left: 50% !important;
+        width: calc(100% - 20px) !important;
 
         bottom: 12px !important;
 
-        width: calc(100% - 20px) !important;
-
         min-height: 54px;
-
-        padding: 6px;
-
-        border-radius: 17px;
     }
 
     .chat-input-area input {
         height: 40px;
 
         font-size: 14px;
-
-        padding: 0 10px;
     }
 
     #sendButton {
@@ -834,19 +790,10 @@ body.sidebar-wide .chat-section {
         height: 40px;
     }
 
-    /* SETTINGS */
-
-    .settings-box {
-        width: calc(100% - 24px);
-
-        max-height: 90vh;
-
-        padding: 18px;
-    }
 }
 
 /* =====================================================
-VERY SMALL PHONES
+   SMALL PHONES
 ===================================================== */
 
 @media screen and (max-width: 450px) {
@@ -879,7 +826,4 @@ VERY SMALL PHONES
         bottom: 8px !important;
     }
 
-    .chat-input-area input {
-        font-size: 14px;
-    }
 }
