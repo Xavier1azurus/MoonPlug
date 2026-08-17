@@ -1,3 +1,9 @@
+/* =====================================================
+   MOONPLUG AI
+   RESPONSIVE CSS
+   DESKTOP + IPAD + IPHONE
+===================================================== */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -13,16 +19,18 @@ body {
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: #0f0f0f;
-    color: white;
+    color: #ffffff;
     overflow: hidden;
 }
 
-/* =========================================
+
+/* =====================================================
    SIDEBAR
-========================================= */
+===================================================== */
 
 .sidebar {
     position: fixed;
+
     top: 0;
     left: 0;
     bottom: 0;
@@ -30,6 +38,7 @@ body {
     width: 250px;
 
     background: #151515;
+
     border-right: 1px solid #292929;
 
     display: flex;
@@ -38,13 +47,18 @@ body {
     z-index: 1000;
 
     transition: width 0.25s ease;
+
+    overflow: hidden;
 }
 
-/* LOGO */
+
+/* =====================================================
+   SIDEBAR LOGO
+===================================================== */
 
 .sidebar-logo {
-    height: 70px;
     width: 100%;
+    height: 70px;
 
     display: flex;
     align-items: center;
@@ -60,6 +74,8 @@ body {
     flex-shrink: 0;
 
     white-space: nowrap;
+
+    user-select: none;
 }
 
 .sidebar-logo strong {
@@ -67,15 +83,18 @@ body {
 }
 
 .sidebar-logo span {
-    color: #888;
+    color: #888888;
 }
 
-/* =========================================
-   SIDEBAR BUTTONS
-========================================= */
+
+/* =====================================================
+   SIDEBAR BUTTON AREA
+===================================================== */
 
 .sidebar-buttons {
     flex: 1;
+
+    min-height: 0;
 
     display: flex;
     flex-direction: column;
@@ -93,7 +112,8 @@ body {
     border-radius: 10px;
 
     background: transparent;
-    color: #ddd;
+
+    color: #dddddd;
 
     display: flex;
     align-items: center;
@@ -115,16 +135,29 @@ body {
 
 .sidebar-button:hover {
     background: #242424;
-    color: white;
+    color: #ffffff;
+}
+
+.sidebar-button span {
+    white-space: nowrap;
 }
 
 .sidebar-divider {
+    width: calc(100% - 10px);
+
     height: 1px;
 
     background: #292929;
 
     margin: 10px 5px;
+
+    flex-shrink: 0;
 }
+
+
+/* =====================================================
+   SIDEBAR BOTTOM
+===================================================== */
 
 .sidebar-bottom {
     padding: 10px;
@@ -137,9 +170,10 @@ body {
     flex-shrink: 0;
 }
 
-/* =========================================
-   CHAT
-========================================= */
+
+/* =====================================================
+   CHAT SECTION
+===================================================== */
 
 .chat-section {
     position: fixed;
@@ -147,26 +181,30 @@ body {
     top: 0;
     right: 0;
     bottom: 0;
+
     left: 250px;
 
     height: 100vh;
+
+    background: #0f0f0f;
 
     transition: left 0.25s ease;
 }
 
 .chat-container {
+    position: relative;
+
     width: 100%;
     height: 100%;
-
-    position: relative;
 
     display: flex;
     flex-direction: column;
 }
 
-/* =========================================
-   HEADER
-========================================= */
+
+/* =====================================================
+   CHAT HEADER
+===================================================== */
 
 .chat-header {
     height: 64px;
@@ -187,17 +225,19 @@ body {
 }
 
 .chat-header span {
-    color: #888;
+    color: #888888;
 }
 
 .online {
     color: #7cff9b;
+
     font-size: 13px;
 }
 
-/* =========================================
-   ANIMATION
-========================================= */
+
+/* =====================================================
+   MOONPLUG ANIMATION
+===================================================== */
 
 .moonplug-animation {
     position: absolute;
@@ -221,16 +261,17 @@ body {
     width: 30px;
     height: 2px;
 
-    background: white;
+    background: #ffffff;
 }
 
 .moon {
     font-size: 28px;
 }
 
-/* =========================================
+
+/* =====================================================
    MESSAGES
-========================================= */
+===================================================== */
 
 .messages {
     flex: 1;
@@ -246,6 +287,11 @@ body {
 
     gap: 15px;
 }
+
+
+/* =====================================================
+   EMPTY CHAT
+===================================================== */
 
 .empty-chat {
     position: absolute;
@@ -267,12 +313,57 @@ body {
 }
 
 .empty-chat p {
-    color: #888;
+    color: #888888;
+
+    font-size: 16px;
 }
 
-/* =========================================
+
+/* =====================================================
+   MESSAGE BUBBLES
+===================================================== */
+
+.message-bubble {
+    max-width: 75%;
+
+    padding: 12px 16px;
+
+    border-radius: 16px;
+
+    line-height: 1.5;
+}
+
+.message-bubble.user {
+    align-self: flex-end;
+
+    background: #292929;
+}
+
+.message-bubble.ai {
+    align-self: flex-start;
+
+    background: #1c1c1c;
+}
+
+
+/* =====================================================
+   TYPING
+===================================================== */
+
+.typing {
+    padding: 0 24px 10px;
+
+    color: #888888;
+
+    font-size: 14px;
+
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
    MESSAGE BAR
-========================================= */
+===================================================== */
 
 .chat-input-area {
     position: absolute;
@@ -312,7 +403,8 @@ body {
     outline: none;
 
     background: transparent;
-    color: white;
+
+    color: #ffffff;
 
     padding: 0 12px;
 
@@ -320,7 +412,7 @@ body {
 }
 
 .chat-input-area input::placeholder {
-    color: #777;
+    color: #777777;
 }
 
 #sendButton {
@@ -330,8 +422,9 @@ body {
     border: none;
     border-radius: 50%;
 
-    background: white;
-    color: #111;
+    background: #ffffff;
+
+    color: #111111;
 
     cursor: pointer;
 
@@ -342,9 +435,10 @@ body {
     flex-shrink: 0;
 }
 
-/* =========================================
-   SETTINGS
-========================================= */
+
+/* =====================================================
+   SETTINGS PANEL
+===================================================== */
 
 .settings-panel {
     position: fixed;
@@ -390,6 +484,10 @@ body {
     margin-bottom: 20px;
 }
 
+.settings-header h2 {
+    font-size: 22px;
+}
+
 .close-settings {
     width: 36px;
     height: 36px;
@@ -398,7 +496,8 @@ body {
     border-radius: 50%;
 
     background: #292929;
-    color: white;
+
+    color: #ffffff;
 
     cursor: pointer;
 }
@@ -414,23 +513,37 @@ body {
     gap: 8px;
 }
 
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-item strong {
+    font-size: 15px;
+}
+
 .setting-item > span {
-    color: #888;
+    color: #888888;
+
     font-size: 13px;
 }
 
 .appearance-options {
     display: flex;
+
     flex-wrap: wrap;
+
     gap: 8px;
 }
 
 .appearance-options button,
+.size-button,
+.sidebar-size-button,
 #themeButton {
     border: 1px solid #383838;
 
-    background: #222;
-    color: #ddd;
+    background: #222222;
+
+    color: #dddddd;
 
     padding: 9px 14px;
 
@@ -439,9 +552,18 @@ body {
     cursor: pointer;
 }
 
-/* =========================================
+.appearance-options button.active,
+.size-button.active,
+.sidebar-size-button.active {
+    background: #ffffff;
+
+    color: #111111;
+}
+
+
+/* =====================================================
    COLLAPSED SIDEBAR
-========================================= */
+===================================================== */
 
 .sidebar.collapsed {
     width: 64px;
@@ -462,7 +584,6 @@ body {
 
 .sidebar.collapsed .sidebar-button {
     width: 54px;
-
     min-width: 54px;
 
     margin-left: auto;
@@ -487,30 +608,81 @@ body {
     left: 64px;
 }
 
-/* =========================================
+
+/* =====================================================
    EXPANDED SIDEBAR
-========================================= */
+===================================================== */
 
 .sidebar.expanded {
     width: 250px;
+}
+
+.sidebar.expanded .sidebar-logo {
+    width: 250px;
+
+    padding: 0 20px;
+
+    justify-content: flex-start;
+}
+
+.sidebar.expanded .sidebar-logo strong,
+.sidebar.expanded .sidebar-logo span {
+    display: inline;
+}
+
+.sidebar.expanded .sidebar-buttons {
+    width: 250px;
+}
+
+.sidebar.expanded .sidebar-button {
+    width: 230px;
+    max-width: 230px;
+
+    justify-content: flex-start;
+
+    padding: 0 13px;
+
+    gap: 12px;
+}
+
+.sidebar.expanded .sidebar-button span {
+    display: inline;
+}
+
+.sidebar.expanded .sidebar-bottom {
+    width: 250px;
+}
+
+.sidebar.expanded .sidebar-bottom .sidebar-button {
+    width: 230px;
 }
 
 .sidebar.expanded ~ .chat-section {
     left: 250px;
 }
 
-/* =========================================
-   TABLET / IPAD / PHONE
-========================================= */
+
+/* =====================================================
+   IPAD + IPHONE
+===================================================== */
 
 @media screen and (max-width: 1200px) {
 
+    /* ---------------------------------------------
+       THIN SIDEBAR
+    --------------------------------------------- */
+
     .sidebar {
         width: 64px;
+
+        min-width: 64px;
+        max-width: 64px;
     }
 
     .sidebar-logo {
         width: 64px;
+
+        height: 64px;
 
         padding: 0;
 
@@ -522,13 +694,22 @@ body {
         display: none;
     }
 
+    .sidebar-buttons {
+        width: 64px;
+
+        padding: 8px 5px;
+    }
+
     .sidebar-button {
         width: 54px;
 
         min-width: 54px;
+        max-width: 54px;
 
-        margin-left: auto;
-        margin-right: auto;
+        height: 46px;
+        min-height: 46px;
+
+        margin: 2px auto;
 
         padding: 0;
 
@@ -541,24 +722,28 @@ body {
         display: none;
     }
 
-    .sidebar-buttons {
-        padding: 8px 5px;
-    }
-
     .sidebar-bottom {
         width: 64px;
 
         padding: 6px 5px 10px;
     }
 
-    .chat-section {
-        left: 64px;
+    .sidebar-bottom .sidebar-button {
+        width: 54px;
+
+        min-width: 54px;
     }
 
-    /* CLICK TO EXPAND */
+
+    /* ---------------------------------------------
+       EXPANDED SIDEBAR ON IPAD / IPHONE
+    --------------------------------------------- */
 
     .sidebar.expanded {
         width: 250px;
+
+        min-width: 250px;
+        max-width: 250px;
     }
 
     .sidebar.expanded .sidebar-logo {
@@ -581,6 +766,9 @@ body {
     .sidebar.expanded .sidebar-button {
         width: 230px;
 
+        min-width: 230px;
+        max-width: 230px;
+
         padding: 0 13px;
 
         justify-content: flex-start;
@@ -600,23 +788,80 @@ body {
         width: 230px;
     }
 
+
+    /* ---------------------------------------------
+       CHAT
+    --------------------------------------------- */
+
+    .chat-section {
+        left: 64px;
+    }
+
     .sidebar.expanded ~ .chat-section {
         left: 250px;
     }
+
+
+    /* ---------------------------------------------
+       ANIMATION
+    --------------------------------------------- */
 
     .moonplug-animation {
         display: none;
     }
 
+
+    /* ---------------------------------------------
+       MESSAGE BAR
+    --------------------------------------------- */
+
     .chat-input-area {
-        width: calc(100% - 20px);
-        bottom: 12px;
+        left: 50%;
+
+        bottom: 25px;
+
+        width: calc(100% - 30px);
+
+        min-height: 54px;
+
+        padding: 6px 8px;
+
+        border-radius: 18px;
+    }
+
+    .chat-input-area input {
+        height: 40px;
+
+        font-size: 15px;
+    }
+
+    #sendButton {
+        width: 40px;
+        height: 40px;
+    }
+
+
+    /* ---------------------------------------------
+       EMPTY CHAT
+    --------------------------------------------- */
+
+    .empty-chat {
+        width: calc(100% - 30px);
+    }
+
+    .empty-chat h1 {
+        font-size: 28px;
+    }
+
+    .empty-chat p {
+        font-size: 15px;
     }
 }
 
-/* =========================================
-   SMALL PHONES
-========================================= */
+
+/* =====================================================
+   IPHONE
+===================================================== */
 
 @media screen and (max-width: 450px) {
 
@@ -624,6 +869,14 @@ body {
         height: 54px;
 
         padding: 0 10px;
+    }
+
+    .chat-header strong {
+        font-size: 15px;
+    }
+
+    .online {
+        font-size: 11px;
     }
 
     .empty-chat h1 {
@@ -635,7 +888,87 @@ body {
     }
 
     .chat-input-area {
-        width: calc(100% - 16px);
-        bottom: 8px;
+        bottom: 18px;
+
+        width: calc(100% - 20px);
+
+        min-height: 52px;
     }
+
+    .chat-input-area input {
+        height: 38px;
+
+        font-size: 14px;
+    }
+
+    #sendButton {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+
+/* =====================================================
+   LIGHT THEME
+===================================================== */
+
+body.light-theme {
+    background: #f5f5f5;
+
+    color: #111111;
+}
+
+body.light-theme .sidebar {
+    background: #ffffff;
+
+    border-color: #dddddd;
+}
+
+body.light-theme .chat-section {
+    background: #f5f5f5;
+}
+
+body.light-theme .chat-header {
+    border-color: #dddddd;
+}
+
+body.light-theme .sidebar-button {
+    color: #333333;
+}
+
+body.light-theme .sidebar-button:hover {
+    background: #eeeeee;
+}
+
+body.light-theme .chat-input-area {
+    background: #ffffff;
+
+    border-color: #dddddd;
+}
+
+body.light-theme .chat-input-area input {
+    color: #111111;
+}
+
+body.light-theme .settings-box {
+    background: #ffffff;
+
+    color: #111111;
+}
+
+
+/* =====================================================
+   TEXT SIZE
+===================================================== */
+
+body.text-small {
+    font-size: 14px;
+}
+
+body.text-medium {
+    font-size: 16px;
+}
+
+body.text-large {
+    font-size: 18px;
 }
