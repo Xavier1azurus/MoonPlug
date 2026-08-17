@@ -874,3 +874,112 @@ footer {
 
     padding: 0;
 }
+/* ================================
+   SETTINGS PANEL
+================================ */
+
+.settings-panel {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    backdrop-filter: blur(8px);
+
+    z-index: 3000;
+}
+
+
+.settings-box {
+    width: 420px;
+    max-width: calc(100% - 30px);
+
+    background: #181818;
+
+    border: 1px solid #303030;
+
+    border-radius: 18px;
+
+    padding: 24px;
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.5);
+}
+
+
+/* HEADER */
+
+.settings-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+.settings-header h2 {
+    margin: 0;
+
+    font-size: 24px;
+}
+
+
+/* CLOSE BUTTON */
+
+.close-settings {
+    width: 36px;
+    height: 36px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #252525;
+
+    color: #aaa;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+.close-settings:hover {
+    background: #333;
+
+    color: white;
+}
+
+
+/* SETTINGS ITEMS */
+
+.setting-item {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    padding: 16px 0;
+
+    border-top: 1px solid #292929;
+}
+
+.setting-item strong {
+    color: white;
+
+    font-size: 15px;
+}
+
+.setting-item span {
+    color: #888;
+
+    font-size: 13px;
+}
