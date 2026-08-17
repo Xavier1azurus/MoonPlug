@@ -41,16 +41,34 @@ document.addEventListener("DOMContentLoaded", function () {
        SIDEBAR
     ================================================= */
 
-    if (sidebar && sidebarLogo) {
+   /* =================================================
+   SIDEBAR CLICK TO EXPAND
+================================================= */
 
-        sidebarLogo.addEventListener("click", function () {
+if (sidebar) {
 
+    sidebar.addEventListener("click", function (event) {
+
+        /* Don't expand when clicking a button */
+
+        if (event.target.closest(".sidebar-button")) {
+            return;
+        }
+
+        /* Don't toggle when clicking the logo itself */
+
+        if (event.target.closest(".sidebar-logo")) {
             sidebar.classList.toggle("expanded");
+            return;
+        }
 
-        });
+        /* Empty sidebar space */
 
-    }
+        sidebar.classList.toggle("expanded");
 
+    });
+
+}
 
     /* =================================================
        SETTINGS
