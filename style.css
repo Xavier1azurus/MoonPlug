@@ -1075,15 +1075,31 @@ body.light-theme .empty-chat p {
     border-color: #555;
 }
 /* TEXT SIZE MODES */
+/* ================================
+   TEXT SIZE
+================================ */
 
 body.small-text .message-bubble {
     font-size: 15px;
 }
 
-body.medium-text .message-bubble {
-    font-size: 18px;
+body.small-text #messageInput {
+    font-size: 14px;
 }
+
+body.small-text .empty-chat h1 {
+    font-size: 26px;
+}
+
 
 body.large-text .message-bubble {
     font-size: 21px;
+}
+
+body.large-text #messageInput {
+    font-size: 19px;
+}
+
+body.large-text .empty-chat h1 {
+    font-size: 38px;
 }
