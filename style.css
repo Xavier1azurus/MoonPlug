@@ -923,3 +923,37 @@ body.text-large {
     }
 
 }
+@media screen and (max-width: 1200px) {
+
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .sidebar-buttons {
+        flex: 0 0 auto !important;
+    }
+
+    .sidebar-bottom {
+        position: static !important;
+
+        width: 64px !important;
+
+        padding: 0 5px !important;
+        margin: 0 !important;
+
+        border-top: none !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .sidebar-bottom .sidebar-button {
+        width: 54px !important;
+        height: 46px !important;
+        min-height: 46px !important;
+
+        margin: 2px auto !important;
+    }
+
+}
