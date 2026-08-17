@@ -963,16 +963,21 @@ body.text-large {
         position: fixed !important;
     }
 
-    .sidebar-buttons {
-        display: contents !important;
-    }
+    #settingsButton {
+        position: absolute !important;
 
-    .sidebar-bottom {
-        display: contents !important;
-    }
+        left: 5px !important;
+        top: 430px !important;
 
-    .sidebar-button {
-        flex-shrink: 0 !important;
+        width: 54px !important;
+        height: 46px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
 }
