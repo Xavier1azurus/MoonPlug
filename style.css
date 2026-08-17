@@ -1158,3 +1158,23 @@ body.large-text .empty-chat h1 {
 .sidebar.sidebar-wide {
     width: 330px;
 }
+/* ================================
+   KEEP MESSAGE BAR AT BOTTOM
+================================ */
+
+.chat-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.messages {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.chat-input-area {
+    flex-shrink: 0;
+    width: 100%;
+}
