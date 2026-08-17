@@ -49,28 +49,28 @@ if (sidebar) {
 
     sidebar.addEventListener("click", function (event) {
 
-        /* Don't expand when clicking a button */
+        /* BUTTONS MUST KEEP WORKING */
 
         if (event.target.closest(".sidebar-button")) {
             return;
         }
 
-        /* Don't toggle when clicking the logo itself */
+        /* LOGO */
 
         if (event.target.closest(".sidebar-logo")) {
+
             sidebar.classList.toggle("expanded");
+
             return;
         }
 
-        /* Empty sidebar space */
+        /* EMPTY SIDEBAR SPACE */
 
         sidebar.classList.toggle("expanded");
 
     });
 
 }
-
-    /* =================================================
        SETTINGS
     ================================================= */
 
@@ -463,7 +463,7 @@ const ownerError =
 
 /* TEMPORARY TEST CODE */
 
-const OWNER_CODE = "1234";
+const OWNER_CODE = "BumsUp1AI1591";
 
 
 /* OPEN OWNER LOGIN */
