@@ -957,3 +957,22 @@ body.text-large {
     }
 
 }
+@media screen and (max-width: 1200px) {
+
+    .sidebar {
+        position: fixed !important;
+    }
+
+    .sidebar-buttons {
+        display: contents !important;
+    }
+
+    .sidebar-bottom {
+        display: contents !important;
+    }
+
+    .sidebar-button {
+        flex-shrink: 0 !important;
+    }
+
+}
