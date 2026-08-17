@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,7 +38,6 @@
 
 <body>
 
-
 <!-- =====================================================
      NAVIGATION
 ===================================================== -->
@@ -50,12 +48,7 @@
         MOONPLUG<span>AI</span>
     </div>
 
-
     <div class="nav-links">
-
-        <a href="#home">
-            Home
-        </a>
 
         <a href="#chat">
             Chat
@@ -72,13 +65,6 @@
     </div>
 
 </nav>
-
-
-
-<!-- =====================================================
-     HERO
-===================================================== -->
-
 
 
 <!-- =====================================================
@@ -109,31 +95,30 @@
 
             </div>
 
-
             <div class="online">
-
                 ● Online
-
             </div>
 
         </div>
 
 
-<!-- MOONPLUG ANIMATION -->
+        <!-- MOONPLUG ANIMATION -->
 
-<div class="moonplug-animation">
+        <div class="moonplug-animation">
 
-    <div class="plug">
-        🔌
-    </div>
+            <div class="plug">
+                🔌
+            </div>
 
-    <div class="cable"></div>
+            <div class="cable"></div>
 
-    <div class="moon">
-        🌙
-    </div>
+            <div class="moon">
+                🌙
+            </div>
 
-</div>
+        </div>
+
+
         <!-- MESSAGES -->
 
         <div
@@ -141,30 +126,35 @@
             class="messages"
         >
 
-          <div class="empty-chat">
+            <div class="empty-chat">
 
-    <h1>What can I help with?</h1>
+                <h1>
+                    What can I help with?
+                </h1>
 
-    <p>Ask MoonPlug anything.</p>
+                <p>
+                    Ask MoonPlug anything.
+                </p>
 
-</div>
-        <!-- TYPING -->
+            </div>
+
+        </div>
+
+
+        <!-- TYPING INDICATOR -->
 
         <div
             id="typing"
             class="typing"
+            style="display: none;"
         >
-
             MoonPlug is thinking...
-
         </div>
-
 
 
         <!-- INPUT -->
 
         <div class="chat-input-area">
-
 
             <input
                 id="messageInput"
@@ -172,7 +162,6 @@
                 placeholder="Message MoonPlug..."
                 autocomplete="off"
             >
-
 
             <button
                 id="sendButton"
@@ -182,13 +171,19 @@
                 ➤
             </button>
 
-
         </div>
-
 
     </div>
 
 </section>
 
 
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
 
+<script src="script.js"></script>
+
+</body>
+
+</html>
