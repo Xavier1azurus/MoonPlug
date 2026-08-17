@@ -32,9 +32,10 @@ body {
    NAVIGATION
 ======================================== */
 
-nav {
+nav:not(.sidebar) {
     width: 100%;
     height: 70px;
+}
 
     display: flex;
     align-items: center;
