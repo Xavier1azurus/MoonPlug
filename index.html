@@ -373,7 +373,163 @@
 <!-- =================================================
      JAVASCRIPT
 ================================================= -->
+<!-- =================================================
+     PUBLIC ACCOUNT SCREEN
+================================================= -->
 
+<div
+    id="accountScreen"
+    class="account-screen"
+>
+
+    <div class="account-box">
+
+        <div class="account-logo">
+            🌙
+        </div>
+
+        <h1>Welcome to MoonPlug</h1>
+
+        <p class="account-subtitle">
+            Sign in or create your MoonPlug account.
+        </p>
+
+
+        <!-- TABS -->
+
+        <div class="account-tabs">
+
+            <button
+                id="loginTab"
+                class="account-tab active"
+                type="button"
+            >
+                Log In
+            </button>
+
+            <button
+                id="signupTab"
+                class="account-tab"
+                type="button"
+            >
+                Sign Up
+            </button>
+
+        </div>
+
+
+        <!-- LOGIN -->
+
+        <form
+            id="loginForm"
+            class="account-form"
+        >
+
+            <label>
+                Email address
+            </label>
+
+            <input
+                id="loginEmail"
+                type="text"
+                placeholder="Email address"
+                autocomplete="email"
+            >
+
+
+            <label>
+                Password
+            </label>
+
+            <input
+                id="loginPassword"
+                type="password"
+                placeholder="Password"
+                autocomplete="current-password"
+            >
+
+
+            <button
+                type="submit"
+                class="account-submit"
+            >
+                Log In
+            </button>
+
+        </form>
+
+
+        <!-- SIGN UP -->
+
+        <form
+            id="signupForm"
+            class="account-form"
+            style="display: none;"
+        >
+
+            <label>
+                Email address
+            </label>
+
+            <input
+                id="signupEmail"
+                type="text"
+                placeholder="Email address"
+                autocomplete="email"
+            >
+
+
+            <label>
+                Password
+            </label>
+
+            <input
+                id="signupPassword"
+                type="password"
+                placeholder="Password"
+                autocomplete="new-password"
+            >
+
+
+            <label>
+                Confirm password
+            </label>
+
+            <input
+                id="signupConfirm"
+                type="password"
+                placeholder="Confirm password"
+                autocomplete="new-password"
+            >
+
+
+            <button
+                type="submit"
+                class="account-submit"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+
+        <button
+            id="closeAccount"
+            class="account-close"
+            type="button"
+        >
+            Continue as guest
+        </button>
+
+
+        <p
+            id="accountMessage"
+            class="account-message"
+        ></p>
+
+    </div>
+
+</div>
 <script src="script.js"></script>
 
 
