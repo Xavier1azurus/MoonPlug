@@ -301,6 +301,36 @@ nav {
 
     color: #999;
 }
+.empty-chat {
+    margin: auto;
+    text-align: center;
+    padding: 30px;
+    animation: fadeIn 0.35s ease;
+}
+
+.empty-chat h1 {
+    font-size: 32px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.empty-chat p {
+    font-size: 17px;
+    color: #777;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 .welcome-icon {
     width: 55px;
