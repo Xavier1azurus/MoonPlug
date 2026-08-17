@@ -1,166 +1,21 @@
-
-const messageInput =
-    document.getElementById("messageInput");
-
-const sendButton =
-    document.getElementById("sendButton");
-
-const messages =
-    document.getElementById("messages");
-
-const typing =
-    document.getElementById("typing");
-
-
-// =====================================================
-// SEND MESSAGE
-// =====================================================
-
+const input = document.getElementById("messageInput");
+const sendButton = document.getElementById("sendButton");
+const messages = document.getElementById("messages");
 function sendMessage() {
 
-    const message =
-        messageInput.value.trim();
+    const text = input.value.trim();
 
-
-    if (message === "") {
+    if (text === "") {
         return;
     }
 
+    const message = document.createElement("div");
 
-    // Remove welcome message
+    message.textContent = text;
 
-    const welcome =
-        document.querySelector(
-            ".welcome-message"
-        );
+    messages.appendChild(message);
 
-
-    if (welcome) {
-        welcome.remove();
-    }
-
-
-    // Add user's message
-
-    addMessage(
-        message,
-        "user"
-    );
-
-
-    // Clear input
-
-    messageInput.value = "";
-
-
-    // Show typing
-
-    typing.style.display =
-        "block";
-
-
-    // Temporary demo response
-
-    setTimeout(function () {
-
-        typing.style.display =
-            "none";
-
-
-        addMessage(
-            "I'm MoonPlug. The AI connection isn't connected yet, but the chat interface is working! 🌙🔌",
-            "ai"
-        );
-
-
-    }, 1200);
-
+    input.value = "";
 }
 
-
-// =====================================================
-// ADD MESSAGE
-// =====================================================
-
-function addMessage(
-    text,
-    sender
-) {
-
-    const message =
-        document.createElement(
-            "div"
-        );
-
-
-    message.classList.add(
-        "message",
-        sender
-    );
-
-
-    const bubble =
-        document.createElement(
-            "div"
-        );
-
-
-    bubble.classList.add(
-        "message-bubble"
-    );
-
-
-    bubble.textContent =
-        text;
-
-
-    message.appendChild(
-        bubble
-    );
-
-
-    messages.appendChild(
-        message
-    );
-
-
-    // Scroll to newest message
-
-    messages.scrollTop =
-        messages.scrollHeight;
-
-}
-
-
-// =====================================================
-// SEND BUTTON
-// =====================================================
-
-sendButton.addEventListener(
-    "click",
-    sendMessage
-);
-
-
-// =====================================================
-// ENTER KEY
-// =====================================================
-
-messageInput.addEventListener(
-    "keydown",
-    function (event) {
-
-        if (
-            event.key === "Enter"
-        ) {
-
-            event.preventDefault();
-
-            sendMessage();
-
-        }
-
-    }
-);
-```
-
+sendButton.addEventListener("click", sendMessage);
