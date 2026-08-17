@@ -157,3 +157,19 @@ sidebarSizeButtons.forEach(function(button) {
     });
 
 });
+const sidebar = document.querySelector(".sidebar");
+
+if (sidebar) {
+
+    sidebar.addEventListener("click", function(event) {
+
+        // Don't expand/collapse when clicking an actual sidebar button
+        if (event.target.closest(".sidebar-button")) {
+            return;
+        }
+
+        sidebar.classList.toggle("expanded");
+
+    });
+
+}
