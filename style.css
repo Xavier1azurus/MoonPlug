@@ -967,7 +967,7 @@ body.text-large {
         position: absolute !important;
 
         left: 5px !important;
-        top: 390px !important;
+        top: 410px !important;
 
         width: 54px !important;
         height: 46px !important;
@@ -980,4 +980,76 @@ body.text-large {
         justify-content: center !important;
     }
 
+}
+.sidebar {
+    transition: width 0.25s ease;
+}
+
+.sidebar-button {
+    transition: width 0.25s ease, background 0.2s ease;
+}
+
+/* EXPANDED SIDEBAR */
+
+.sidebar.expanded {
+    width: 250px !important;
+}
+
+/* Keep chat aligned with sidebar */
+
+.chat-section {
+    transition: left 0.25s ease;
+}
+
+.sidebar.expanded ~ .chat-section {
+    left: 250px !important;
+}
+
+/* On mobile/tablet */
+
+@media screen and (max-width: 1200px) {
+
+    .sidebar.expanded {
+        width: 250px !important;
+        max-width: 250px !important;
+    }
+
+    .sidebar.expanded .sidebar-logo {
+        width: 250px !important;
+        justify-content: flex-start !important;
+        padding-left: 20px !important;
+    }
+
+    .sidebar.expanded .sidebar-logo strong,
+    .sidebar.expanded .sidebar-logo span {
+        display: inline !important;
+    }
+
+    .sidebar.expanded .sidebar-button {
+        width: 230px !important;
+        max-width: 230px !important;
+        justify-content: flex-start !important;
+        padding: 0 13px !important;
+        gap: 12px !important;
+    }
+
+    .sidebar.expanded .sidebar-button span {
+        display: inline !important;
+    }
+
+    .sidebar.expanded .sidebar-buttons {
+        width: 250px !important;
+    }
+
+    .sidebar.expanded .sidebar-bottom {
+        width: 250px !important;
+    }
+
+    .sidebar.expanded .sidebar-bottom .sidebar-button {
+        width: 230px !important;
+    }
+
+    .sidebar.expanded ~ .chat-section {
+        left: 250px !important;
+    }
 }
