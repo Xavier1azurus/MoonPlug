@@ -1,4 +1,3 @@
-
 const input = document.getElementById("messageInput");
 const sendButton = document.getElementById("sendButton");
 const messages = document.getElementById("messages");
@@ -18,31 +17,52 @@ function addMessage(text, type) {
 }
 
 function sendMessage() {
+    if (!input || !messages) {
+        return;
+    }
+
     const text = input.value.trim();
 
     if (text === "") {
         return;
     }
-const emptyChat = document.querySelector(".empty-chat");
 
-if (emptyChat) {
-    emptyChat.remove();
-}
+    // Remove the empty-chat greeting
+    const emptyChat = document.querySelector(".empty-chat");
+
+    if (emptyChat) {
+        emptyChat.remove();
+    }
+
+    // Add user's message
     addMessage(text, "user");
 
+    // Clear input
     input.value = "";
     input.focus();
 
-    // Temporary MoonPlug response
+    // Show MoonPlug's response
     setTimeout(() => {
-        addMessage("I'm MoonPlug AI. How can I help?", "ai");
+        addMessage(
+            "I'm MoonPlug AI. How can I help?",
+            "ai"
+        );
     }, 600);
 }
 
-sendButton.addEventListener("click", sendMessage);
 
-input.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        sendMessage();
-    }
-});
+// Send button
+if (sendButton) {
+    sendButton.addEventListener("click", sendMessage);
+}
+
+
+// Enter key
+if (input) {
+    input.addEventListener("keydown", function(event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+}
