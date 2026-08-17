@@ -1221,3 +1221,26 @@ body.large-text .empty-chat h1 {
     flex-shrink: 0;
     width: 100%;
 }
+/* FINAL MESSAGE BAR POSITION */
+
+.chat-container {
+    position: relative;
+    height: 100vh;
+}
+
+.chat-input-area {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 100%;
+
+    box-sizing: border-box;
+}
+
+.messages {
+    height: 100%;
+    padding-bottom: 90px;
+    box-sizing: border-box;
+}
