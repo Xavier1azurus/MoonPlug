@@ -1381,6 +1381,22 @@ body.large-text .empty-chat h1 {
 
     .sidebar-button span {
         display: none !important;
+       @media (max-width: 700px) {
+
+    .chat-section {
+        margin-left: 64px;
+        width: calc(100% - 64px);
+    }
+
+    .chat-container {
+        width: 100%;
+    }
+
+    .chat-input-area {
+        width: calc(100% - 20px) !important;
+    }
+
+}
     }
 
 }
