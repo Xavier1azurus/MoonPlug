@@ -90,3 +90,35 @@ themeButton.addEventListener("click", function() {
     }
 
 });
+const sizeButtons = document.querySelectorAll(".size-button");
+
+sizeButtons.forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+        sizeButtons.forEach(function(btn) {
+            btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        const size = button.dataset.size;
+
+        if (size === "small") {
+            document.body.classList.add("small-text");
+            document.body.classList.remove("large-text");
+        }
+
+        if (size === "medium") {
+            document.body.classList.remove("small-text");
+            document.body.classList.remove("large-text");
+        }
+
+        if (size === "large") {
+            document.body.classList.remove("small-text");
+            document.body.classList.add("large-text");
+        }
+
+    });
+
+});
