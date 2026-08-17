@@ -1353,3 +1353,47 @@ body.large-text .empty-chat h1 {
 
     margin: 0 !important;
 }
+/* ================================
+   MOBILE LAYOUT
+================================ */
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        width: 260px !important;
+        z-index: 5000;
+    }
+
+    .chat-section {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .chat-container {
+        width: 100%;
+        height: 100vh;
+    }
+
+    .chat-input-area {
+        width: calc(100% - 24px) !important;
+        max-width: none !important;
+
+        bottom: 12px !important;
+    }
+
+    .empty-chat {
+        width: calc(100% - 30px);
+    }
+
+    .empty-chat h1 {
+        font-size: 28px;
+    }
+
+    .empty-chat p {
+        font-size: 14px;
+    }
+
+    .moonplug-animation {
+        transform: scale(0.8);
+    }
+}
