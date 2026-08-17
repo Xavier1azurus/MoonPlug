@@ -1237,3 +1237,221 @@ body.text-large {
     }
 
 }
+/* =====================================================
+   PUBLIC ACCOUNT SCREEN
+===================================================== */
+
+.account-screen {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #0f0f0f;
+
+    z-index: 8000;
+
+    overflow-y: auto;
+
+    padding: 20px;
+}
+
+.account-screen.open {
+    display: flex;
+}
+
+.account-box {
+    width: min(430px, 100%);
+
+    background: #181818;
+
+    border: 1px solid #303030;
+
+    border-radius: 22px;
+
+    padding: 30px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.account-logo {
+    text-align: center;
+
+    font-size: 38px;
+
+    margin-bottom: 10px;
+}
+
+.account-box h1 {
+    text-align: center;
+
+    font-size: 25px;
+
+    margin-bottom: 8px;
+}
+
+.account-subtitle {
+    text-align: center;
+
+    color: #888;
+
+    font-size: 14px;
+
+    margin-bottom: 25px;
+}
+
+
+/* TABS */
+
+.account-tabs {
+    display: flex;
+
+    background: #101010;
+
+    border-radius: 11px;
+
+    padding: 4px;
+
+    margin-bottom: 22px;
+}
+
+.account-tab {
+    flex: 1;
+
+    height: 40px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: #888;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.account-tab.active {
+    background: #292929;
+
+    color: white;
+}
+
+
+/* FORM */
+
+.account-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.account-form label {
+    color: #bbb;
+
+    font-size: 13px;
+
+    margin-top: 7px;
+}
+
+.account-form input {
+    width: 100%;
+
+    height: 46px;
+
+    padding: 0 13px;
+
+    border: 1px solid #333;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #101010;
+
+    color: white;
+
+    font-size: 14px;
+}
+
+.account-form input:focus {
+    border-color: #666;
+}
+
+.account-submit {
+    height: 46px;
+
+    margin-top: 14px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: white;
+
+    color: #111;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.account-close {
+    width: 100%;
+
+    height: 42px;
+
+    margin-top: 10px;
+
+    border: 1px solid #333;
+
+    border-radius: 10px;
+
+    background: #222;
+
+    color: #ddd;
+
+    cursor: pointer;
+}
+
+.account-message {
+    min-height: 18px;
+
+    margin-top: 12px;
+
+    text-align: center;
+
+    color: #888;
+
+    font-size: 13px;
+}
+
+
+/* MOBILE */
+
+@media screen and (max-width: 600px) {
+
+    .account-screen {
+        padding: 15px;
+    }
+
+    .account-box {
+        padding: 22px;
+
+        border-radius: 18px;
+    }
+
+    .account-box h1 {
+        font-size: 22px;
+    }
+
+}
