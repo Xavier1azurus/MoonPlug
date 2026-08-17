@@ -66,3 +66,14 @@ if (input) {
         }
     });
 }
+const settingsButton = document.getElementById("settingsButton");
+const settingsPanel = document.getElementById("settingsPanel");
+const closeSettings = document.getElementById("closeSettings");
+
+settingsButton.addEventListener("click", function() {
+    settingsPanel.style.display = "flex";
+});
+
+closeSettings.addEventListener("click", function() {
+    settingsPanel.style.display = "none";
+});
