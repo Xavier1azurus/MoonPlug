@@ -1,187 +1,329 @@
-const input = document.getElementById("messageInput");
-const sendButton = document.getElementById("sendButton");
-const messages = document.getElementById("messages");
+document.addEventListener("DOMContentLoaded", function () {
 
-function addMessage(text, type) {
-    const message = document.createElement("div");
-    message.className = `message ${type}`;
+    /* =========================================
+       ELEMENTS
+    ========================================= */
 
-    const bubble = document.createElement("div");
-    bubble.className = "message-bubble";
-    bubble.textContent = text;
+    const sidebar = document.querySelector(".sidebar");
+    const sidebarLogo = document.querySelector(".sidebar-logo");
 
-    message.appendChild(bubble);
-    messages.appendChild(message);
+    const settingsButton =
+        document.getElementById("settingsButton");
 
-    messages.scrollTop = messages.scrollHeight;
-}
+    const settingsPanel =
+        document.getElementById("settingsPanel");
 
-function sendMessage() {
-    if (!input || !messages) {
-        return;
-    }
+    const closeSettings =
+        document.getElementById("closeSettings");
 
-    const text = input.value.trim();
+    const themeButton =
+        document.getElementById("themeButton");
 
-    if (text === "") {
-        return;
-    }
+    const messageInput =
+        document.getElementById("messageInput");
 
-    // Remove the empty-chat greeting
-    const emptyChat = document.querySelector(".empty-chat");
+    const sendButton =
+        document.getElementById("sendButton");
 
-    if (emptyChat) {
-        emptyChat.remove();
-    }
+    const messages =
+        document.getElementById("messages");
 
-    // Add user's message
-    addMessage(text, "user");
-
-    // Clear input
-    input.value = "";
-    input.focus();
-
-    // Show MoonPlug's response
-    setTimeout(() => {
-        addMessage(
-            "I'm MoonPlug AI. How can I help?",
-            "ai"
-        );
-    }, 600);
-}
+    const typing =
+        document.getElementById("typing");
 
 
-// Send button
-if (sendButton) {
-    sendButton.addEventListener("click", sendMessage);
-}
+    /* =========================================
+       SIDEBAR
+    ========================================= */
 
+    if (sidebar && sidebarLogo) {
 
-// Enter key
-if (input) {
-    input.addEventListener("keydown", function(event) {
-        if (event.key === "Enter" && !event.shiftKey) {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
-}
-const settingsButton = document.getElementById("settingsButton");
-const settingsPanel = document.getElementById("settingsPanel");
-const closeSettings = document.getElementById("closeSettings");
+        sidebarLogo.addEventListener("click", function () {
 
-settingsButton.addEventListener("click", function() {
-    settingsPanel.style.display = "flex";
-});
+            sidebar.classList.toggle("expanded");
 
-closeSettings.addEventListener("click", function() {
-    settingsPanel.style.display = "none";
-});
-const themeButton = document.getElementById("themeButton");
-
-themeButton.addEventListener("click", function() {
-
-    document.body.classList.toggle("light-theme");
-
-    if (document.body.classList.contains("light-theme")) {
-        themeButton.textContent = "Light";
-    } else {
-        themeButton.textContent = "Dark";
-    }
-
-});
-const sizeButtons = document.querySelectorAll(".size-button");
-
-sizeButtons.forEach(function(button) {
-
-    button.addEventListener("click", function() {
-
-        sizeButtons.forEach(function(btn) {
-            btn.classList.remove("active");
         });
 
-        button.classList.add("active");
+    }
 
-        const size = button.dataset.size;
 
-        if (size === "small") {
-            document.body.classList.add("small-text");
-            document.body.classList.remove("large-text");
-        }
+    /* =========================================
+       SETTINGS
+    ========================================= */
 
-        if (size === "medium") {
-            document.body.classList.remove("small-text");
-            document.body.classList.remove("large-text");
-        }
+    if (settingsButton && settingsPanel) {
 
-        if (size === "large") {
-            document.body.classList.remove("small-text");
-            document.body.classList.add("large-text");
-        }
+        settingsButton.addEventListener("click", function (event) {
 
-    });
+            event.stopPropagation();
 
-});
-const sidebarSizeButtons =
-    document.querySelectorAll(".sidebar-size-button");
+            settingsPanel.classList.add("open");
 
-const sidebar =
-    document.querySelector(".sidebar");
-
-sidebarSizeButtons.forEach(function(button) {
-
-    button.addEventListener("click", function() {
-
-        sidebarSizeButtons.forEach(function(btn) {
-            btn.classList.remove("active");
         });
 
-        button.classList.add("active");
+    }
 
-        const size =
-            button.dataset.sidebarSize;
 
-        sidebar.classList.remove(
-            "sidebar-compact",
-            "sidebar-wide"
-        );
+    if (closeSettings && settingsPanel) {
 
-        if (size === "compact") {
-            sidebar.classList.add("sidebar-compact");
-        }
+        closeSettings.addEventListener("click", function () {
 
-        if (size === "wide") {
-            sidebar.classList.add("sidebar-wide");
-        }
+            settingsPanel.classList.remove("open");
+
+        });
+
+    }
+
+
+    if (settingsPanel) {
+
+        settingsPanel.addEventListener("click", function (event) {
+
+            if (event.target === settingsPanel) {
+
+                settingsPanel.classList.remove("open");
+
+            }
+
+        });
+
+    }
+
+
+    /* =========================================
+       THEME
+    ========================================= */
+
+    if (themeButton) {
+
+        themeButton.addEventListener("click", function () {
+
+            document.body.classList.toggle("light-theme");
+
+            if (
+                document.body.classList.contains("light-theme")
+            ) {
+
+                themeButton.textContent = "Light";
+
+            } else {
+
+                themeButton.textContent = "Dark";
+
+            }
+
+        });
+
+    }
+
+
+    /* =========================================
+       TEXT SIZE
+    ========================================= */
+
+    const sizeButtons =
+        document.querySelectorAll(".size-button");
+
+    sizeButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            sizeButtons.forEach(function (item) {
+
+                item.classList.remove("active");
+
+            });
+
+            button.classList.add("active");
+
+            document.body.classList.remove(
+                "text-small",
+                "text-medium",
+                "text-large"
+            );
+
+            const size =
+                button.dataset.size;
+
+            if (size === "small") {
+
+                document.body.classList.add("text-small");
+
+            }
+
+            if (size === "medium") {
+
+                document.body.classList.add("text-medium");
+
+            }
+
+            if (size === "large") {
+
+                document.body.classList.add("text-large");
+
+            }
+
+        });
 
     });
 
-});
-const sidebar = document.querySelector(".sidebar");
 
-if (sidebar) {
+    /* =========================================
+       SIDEBAR SIZE BUTTONS
+    ========================================= */
 
-    sidebar.addEventListener("click", function(event) {
+    const sidebarSizeButtons =
+        document.querySelectorAll(
+            ".sidebar-size-button"
+        );
 
-        // Don't expand/collapse when clicking an actual sidebar button
-        if (event.target.closest(".sidebar-button")) {
+    sidebarSizeButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            sidebarSizeButtons.forEach(function (item) {
+
+                item.classList.remove("active");
+
+            });
+
+            button.classList.add("active");
+
+            sidebar.classList.remove(
+                "sidebar-normal",
+                "sidebar-compact",
+                "sidebar-wide"
+            );
+
+            const size =
+                button.dataset.sidebarSize;
+
+            if (size === "normal") {
+
+                sidebar.classList.add(
+                    "sidebar-normal"
+                );
+
+            }
+
+            if (size === "compact") {
+
+                sidebar.classList.add(
+                    "sidebar-compact"
+                );
+
+            }
+
+            if (size === "wide") {
+
+                sidebar.classList.add(
+                    "sidebar-wide"
+                );
+
+            }
+
+        });
+
+    });
+
+
+    /* =========================================
+       SEND MESSAGE
+    ========================================= */
+
+    function sendMessage() {
+
+        if (!messageInput || !messages) {
             return;
         }
 
-        sidebar.classList.toggle("expanded");
+        const text =
+            messageInput.value.trim();
 
-    });
+        if (text === "") {
+            return;
+        }
 
-}
-const sidebar = document.querySelector(".sidebar");
-const sidebarToggle = document.querySelector("#sidebarToggle");
 
-if (sidebar && sidebarToggle) {
+        const emptyChat =
+            document.querySelector(".empty-chat");
 
-    sidebarToggle.addEventListener("click", function () {
+        if (emptyChat) {
 
-        sidebar.classList.toggle("expanded");
+            emptyChat.remove();
 
-    });
+        }
 
-}
+
+        const userMessage =
+            document.createElement("div");
+
+        userMessage.className =
+            "message-bubble user";
+
+        userMessage.textContent =
+            text;
+
+        messages.appendChild(
+            userMessage
+        );
+
+
+        messageInput.value = "";
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+
+        if (typing) {
+
+            typing.style.display =
+                "block";
+
+        }
+
+
+        setTimeout(function () {
+
+            if (typing) {
+
+                typing.style.display =
+                    "none";
+
+            }
+
+        }, 1000);
+
+    }
+
+
+    if (sendButton) {
+
+        sendButton.addEventListener(
+            "click",
+            sendMessage
+        );
+
+    }
+
+
+    if (messageInput) {
+
+        messageInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Enter") {
+
+                    event.preventDefault();
+
+                    sendMessage();
+
+                }
+
+            }
+        );
+
+    }
+
+});
