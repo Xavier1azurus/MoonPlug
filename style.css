@@ -641,7 +641,7 @@ body.sidebar-wide .chat-section {
    MOBILE
 ===================================================== */
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 1000px) {
 
     /* THIN SIDEBAR */
 
@@ -846,10 +846,10 @@ body.sidebar-wide .chat-section {
 }
 
 /* =====================================================
-  MOBILE
+VERY SMALL PHONES
 ===================================================== */
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 450px) {
 
     .chat-header {
         height: 54px;
