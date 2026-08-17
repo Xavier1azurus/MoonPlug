@@ -432,3 +432,172 @@ if (sidebar) {
 
 
 });
+/* =================================================
+   OWNER PANEL
+================================================= */
+
+const ownerButton =
+    document.getElementById("ownerButton");
+
+const ownerLogin =
+    document.getElementById("ownerLogin");
+
+const ownerPanel =
+    document.getElementById("ownerPanel");
+
+const ownerCode =
+    document.getElementById("ownerCode");
+
+const ownerLoginButton =
+    document.getElementById("ownerLoginButton");
+
+const ownerCancel =
+    document.getElementById("ownerCancel");
+
+const ownerLogout =
+    document.getElementById("ownerLogout");
+
+const ownerError =
+    document.getElementById("ownerError");
+
+
+/* TEMPORARY TEST CODE */
+
+const OWNER_CODE = "1234";
+
+
+/* OPEN OWNER LOGIN */
+
+if (ownerButton) {
+
+    ownerButton.addEventListener("click", function () {
+
+        if (ownerLogin) {
+
+            ownerLogin.classList.add("open");
+
+        }
+
+        if (ownerCode) {
+
+            ownerCode.value = "";
+
+            ownerCode.focus();
+
+        }
+
+    });
+
+}
+
+
+/* LOGIN */
+
+function loginOwner() {
+
+    if (!ownerCode) {
+        return;
+    }
+
+    if (ownerCode.value === OWNER_CODE) {
+
+        if (ownerLogin) {
+
+            ownerLogin.classList.remove("open");
+
+        }
+
+        if (ownerPanel) {
+
+            ownerPanel.classList.add("open");
+
+        }
+
+        if (ownerError) {
+
+            ownerError.textContent = "";
+
+        }
+
+    } else {
+
+        if (ownerError) {
+
+            ownerError.textContent =
+                "Incorrect owner code.";
+
+        }
+
+        ownerCode.value = "";
+
+        ownerCode.focus();
+
+    }
+
+}
+
+
+/* LOGIN BUTTON */
+
+if (ownerLoginButton) {
+
+    ownerLoginButton.addEventListener(
+        "click",
+        loginOwner
+    );
+
+}
+
+
+/* ENTER KEY */
+
+if (ownerCode) {
+
+    ownerCode.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                loginOwner();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* CANCEL */
+
+if (ownerCancel) {
+
+    ownerCancel.addEventListener(
+        "click",
+        function () {
+
+            ownerLogin.classList.remove("open");
+
+        }
+    );
+
+}
+
+
+/* LOGOUT */
+
+if (ownerLogout) {
+
+    ownerLogout.addEventListener(
+        "click",
+        function () {
+
+            ownerPanel.classList.remove("open");
+
+        }
+    );
+
+}
