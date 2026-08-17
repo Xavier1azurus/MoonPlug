@@ -1308,19 +1308,7 @@ body.large-text .empty-chat h1 {
 }
 /* CENTER MESSAGE BOX */
 
-.chat-input-area {
-    position: absolute !important;
 
-    left: 50% !important;
-    right: auto !important;
-    bottom: 18px !important;
-
-    transform: translateX(-50%) !important;
-
-    width: min(700px, calc(100% - 40px)) !important;
-
-    margin: 0 auto !important;
-}
 /* CENTER MESSAGE BOX + TEXT */
 
 
