@@ -1103,3 +1103,37 @@ body.large-text #messageInput {
 body.large-text .empty-chat h1 {
     font-size: 38px;
 }
+/* ================================
+   SIDEBAR SIZE OPTIONS
+================================ */
+
+.sidebar-size-button {
+    flex: 1;
+
+    padding: 9px 8px;
+
+    border: 1px solid #303030;
+
+    border-radius: 9px;
+
+    background: #242424;
+
+    color: #aaa;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    transition: 0.2s;
+}
+
+.sidebar-size-button:hover {
+    background: #303030;
+    color: white;
+}
+
+.sidebar-size-button.active {
+    background: #3a3a3a;
+    color: white;
+    border-color: #555;
+}
