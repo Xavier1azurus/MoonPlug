@@ -1393,3 +1393,69 @@ body.large-text .empty-chat h1 {
     }
 
 }
+/* ================================
+   MOBILE MODE
+================================ */
+
+@media screen and (max-width: 700px) {
+
+    /* Thin icon sidebar */
+    .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: 64px !important;
+        min-width: 64px !important;
+        height: 100vh !important;
+
+        z-index: 9999 !important;
+    }
+
+    /* Hide button words */
+    .sidebar-button span {
+        display: none !important;
+    }
+
+    /* Center icons */
+    .sidebar-button {
+        width: 64px !important;
+        justify-content: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* Only show the moon logo */
+    .sidebar-logo strong,
+    .sidebar-logo span {
+        display: none !important;
+    }
+
+    .sidebar-logo {
+        text-align: center !important;
+        padding: 16px 0 !important;
+    }
+
+    /* Move the entire chat beside the sidebar */
+    .chat-section {
+        position: fixed !important;
+
+        top: 0 !important;
+        left: 64px !important;
+        right: 0 !important;
+        bottom: 0 !important;
+
+        width: auto !important;
+        height: 100vh !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .chat-container {
+        width: 100% !important;
+        height: 100vh !important;
+        margin: 0 !important;
+    }
+}
