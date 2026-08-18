@@ -556,11 +556,7 @@ function openOwnerPanel() {
     const OWNER_CODE = "BumsUp1AI1591";
 
 
-    /* OPEN OWNER LOGIN */
-
-    if (ownerButton && ownerLogin) {
-
-        ownerButton.addEventListener(
+   
             "click",
             function (event) {
 
