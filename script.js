@@ -1,5 +1,300 @@
 document.addEventListener("DOMContentLoaded", function () {
+/* =================================================
+   PUBLIC ACCOUNT SYSTEM
+================================================= */
 
+const accountScreen =
+    document.getElementById("accountScreen");
+
+const loginTab =
+    document.getElementById("loginTab");
+
+const signupTab =
+    document.getElementById("signupTab");
+
+const loginForm =
+    document.getElementById("loginForm");
+
+const signupForm =
+    document.getElementById("signupForm");
+
+const closeAccount =
+    document.getElementById("closeAccount");
+
+const accountMessage =
+    document.getElementById("accountMessage");
+
+
+/*
+   TEMPORARY OWNER CODE
+
+   Replace this locally with your own code.
+*/
+
+const OWNER_CODE = "OWNER-CODE-HERE";
+
+
+/* OPEN ACCOUNT SCREEN */
+
+if (ownerButton && accountScreen) {
+
+    ownerButton.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            accountScreen.classList.add("open");
+
+        }
+    );
+
+}
+
+
+/* LOGIN TAB */
+
+if (loginTab) {
+
+    loginTab.addEventListener(
+        "click",
+        function () {
+
+            loginTab.classList.add("active");
+
+            signupTab.classList.remove("active");
+
+            loginForm.style.display = "flex";
+
+            signupForm.style.display = "none";
+
+            accountMessage.textContent = "";
+
+        }
+    );
+
+}
+
+
+/* SIGN UP TAB */
+
+if (signupTab) {
+
+    signupTab.addEventListener(
+        "click",
+        function () {
+
+            signupTab.classList.add("active");
+
+            loginTab.classList.remove("active");
+
+            signupForm.style.display = "flex";
+
+            loginForm.style.display = "none";
+
+            accountMessage.textContent = "";
+
+        }
+    );
+
+}
+
+
+/* CLOSE ACCOUNT */
+
+if (closeAccount) {
+
+    closeAccount.addEventListener(
+        "click",
+        function () {
+
+            accountScreen.classList.remove("open");
+
+        }
+    );
+
+}
+
+
+/* =================================================
+   OWNER CODE DETECTION
+================================================= */
+
+function checkOwnerCode(value) {
+
+    if (!value) {
+        return false;
+    }
+
+    return value.trim() === OWNER_CODE;
+
+}
+
+
+/* =================================================
+   LOGIN
+================================================= */
+
+if (loginForm) {
+
+    loginForm.addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+            const email =
+                document.getElementById(
+                    "loginEmail"
+                ).value;
+
+            const password =
+                document.getElementById(
+                    "loginPassword"
+                ).value;
+
+
+            /* OWNER CODE IN EMAIL */
+
+            if (checkOwnerCode(email)) {
+
+                openOwnerPanel();
+
+                return;
+
+            }
+
+
+            /* OWNER CODE IN PASSWORD */
+
+            if (checkOwnerCode(password)) {
+
+                openOwnerPanel();
+
+                return;
+
+            }
+
+
+            /* NORMAL PUBLIC LOGIN */
+
+            accountMessage.textContent =
+                "Account login will be connected to authentication next.";
+
+        }
+    );
+
+}
+
+
+/* =================================================
+   SIGN UP
+================================================= */
+
+if (signupForm) {
+
+    signupForm.addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+            const email =
+                document.getElementById(
+                    "signupEmail"
+                ).value;
+
+            const password =
+                document.getElementById(
+                    "signupPassword"
+                ).value;
+
+            const confirm =
+                document.getElementById(
+                    "signupConfirm"
+                ).value;
+
+
+            /* OWNER CODE IN EMAIL */
+
+            if (checkOwnerCode(email)) {
+
+                openOwnerPanel();
+
+                return;
+
+            }
+
+
+            /* OWNER CODE IN PASSWORD */
+
+            if (checkOwnerCode(password)) {
+
+                openOwnerPanel();
+
+                return;
+
+            }
+
+
+            /* NORMAL SIGN UP */
+
+            if (password !== confirm) {
+
+                accountMessage.textContent =
+                    "Passwords do not match.";
+
+                return;
+
+            }
+
+
+            accountMessage.textContent =
+                "Account signup will be connected to authentication next.";
+
+        }
+    );
+
+}
+
+
+/* =================================================
+   OPEN OWNER PANEL
+================================================= */
+
+function openOwnerPanel() {
+
+    const ownerLogin =
+        document.getElementById(
+            "ownerLogin"
+        );
+
+    const ownerPanel =
+        document.getElementById(
+            "ownerPanel"
+        );
+
+
+    if (ownerLogin) {
+
+        ownerLogin.classList.remove("open");
+
+    }
+
+    if (accountScreen) {
+
+        accountScreen.classList.remove("open");
+
+    }
+
+    if (ownerPanel) {
+
+        ownerPanel.classList.add("open");
+
+    }
+
+}
     /* =========================================
        ELEMENTS
     ========================================= */
