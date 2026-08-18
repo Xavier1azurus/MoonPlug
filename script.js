@@ -1,303 +1,8 @@
-document.addEventListener("DOMContentLoaded", function () {
-/* =================================================
-   PUBLIC ACCOUNT SYSTEM
-================================================= */
-
-const accountScreen =
-    document.getElementById("accountScreen");
-
-const loginTab =
-    document.getElementById("loginTab");
-
-const signupTab =
-    document.getElementById("signupTab");
-
-const loginForm =
-    document.getElementById("loginForm");
-
-const signupForm =
-    document.getElementById("signupForm");
-
-const closeAccount =
-    document.getElementById("closeAccount");
-
-const accountMessage =
-    document.getElementById("accountMessage");
-
-
-/*
-   TEMPORARY OWNER CODE
-
-   Replace this locally with your own code.
-*/
-
-const OWNER_CODE = "OWNER-CODE-HERE";
-
-
-/* OPEN ACCOUNT SCREEN */
-
-if (ownerButton && accountScreen) {
-
-    ownerButton.addEventListener(
-        "click",
-        function (event) {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            accountScreen.classList.add("open");
-
-        }
-    );
-
-}
-
-
-/* LOGIN TAB */
-
-if (loginTab) {
-
-    loginTab.addEventListener(
-        "click",
-        function () {
-
-            loginTab.classList.add("active");
-
-            signupTab.classList.remove("active");
-
-            loginForm.style.display = "flex";
-
-            signupForm.style.display = "none";
-
-            accountMessage.textContent = "";
-
-        }
-    );
-
-}
-
-
-/* SIGN UP TAB */
-
-if (signupTab) {
-
-    signupTab.addEventListener(
-        "click",
-        function () {
-
-            signupTab.classList.add("active");
-
-            loginTab.classList.remove("active");
-
-            signupForm.style.display = "flex";
-
-            loginForm.style.display = "none";
-
-            accountMessage.textContent = "";
-
-        }
-    );
-
-}
-
-
-/* CLOSE ACCOUNT */
-
-if (closeAccount) {
-
-    closeAccount.addEventListener(
-        "click",
-        function () {
-
-            accountScreen.classList.remove("open");
-
-        }
-    );
-
-}
-
-
-/* =================================================
-   OWNER CODE DETECTION
-================================================= */
-
-function checkOwnerCode(value) {
-
-    if (!value) {
-        return false;
-    }
-
-    return value.trim() === OWNER_CODE;
-
-}
-
-
-/* =================================================
-   LOGIN
-================================================= */
-
-if (loginForm) {
-
-    loginForm.addEventListener(
-        "submit",
-        function (event) {
-
-            event.preventDefault();
-
-            const email =
-                document.getElementById(
-                    "loginEmail"
-                ).value;
-
-            const password =
-                document.getElementById(
-                    "loginPassword"
-                ).value;
-
-
-            /* OWNER CODE IN EMAIL */
-
-            if (checkOwnerCode(email)) {
-
-                openOwnerPanel();
-
-                return;
-
-            }
-
-
-            /* OWNER CODE IN PASSWORD */
-
-            if (checkOwnerCode(password)) {
-
-                openOwnerPanel();
-
-                return;
-
-            }
-
-
-            /* NORMAL PUBLIC LOGIN */
-
-            accountMessage.textContent =
-                "Account login will be connected to authentication next.";
-
-        }
-    );
-
-}
-
-
-/* =================================================
-   SIGN UP
-================================================= */
-
-if (signupForm) {
-
-    signupForm.addEventListener(
-        "submit",
-        function (event) {
-
-            event.preventDefault();
-
-            const email =
-                document.getElementById(
-                    "signupEmail"
-                ).value;
-
-            const password =
-                document.getElementById(
-                    "signupPassword"
-                ).value;
-
-            const confirm =
-                document.getElementById(
-                    "signupConfirm"
-                ).value;
-
-
-            /* OWNER CODE IN EMAIL */
-
-            if (checkOwnerCode(email)) {
-
-                openOwnerPanel();
-
-                return;
-
-            }
-
-
-            /* OWNER CODE IN PASSWORD */
-
-            if (checkOwnerCode(password)) {
-
-                openOwnerPanel();
-
-                return;
-
-            }
-
-
-            /* NORMAL SIGN UP */
-
-            if (password !== confirm) {
-
-                accountMessage.textContent =
-                    "Passwords do not match.";
-
-                return;
-
-            }
-
-
-            accountMessage.textContent =
-                "Account signup will be connected to authentication next.";
-
-        }
-    );
-
-}
-
-
-/* =================================================
-   OPEN OWNER PANEL
-================================================= */
-
-function openOwnerPanel() {
-
-    const ownerLogin =
-        document.getElementById(
-            "ownerLogin"
-        );
-
-    const ownerPanel =
-        document.getElementById(
-            "ownerPanel"
-        );
-
-
-    if (ownerLogin) {
-
-        ownerLogin.classList.remove("open");
-
-    }
-
-    if (accountScreen) {
-
-        accountScreen.classList.remove("open");
-
-    }
-
-    if (ownerPanel) {
-
-        ownerPanel.classList.add("open");
-
-    }
-
-}
-    /* =========================================
-       ELEMENTS
-    ========================================= */
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* ===============================
+       BASIC ELEMENTS
+    =============================== */
 
     const sidebar = document.querySelector(".sidebar");
     const messages = document.getElementById("messages");
@@ -308,30 +13,35 @@ function openOwnerPanel() {
     const settingsButton = document.getElementById("settingsButton");
     const settingsPanel = document.getElementById("settingsPanel");
     const closeSettings = document.getElementById("closeSettings");
-
     const themeButton = document.getElementById("themeButton");
 
+    const accountScreen = document.getElementById("accountScreen");
     const ownerButton = document.getElementById("ownerButton");
-    const ownerLogin = document.getElementById("ownerLogin");
+
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+
+    const closeAccount = document.getElementById("closeAccount");
+    const accountMessage = document.getElementById("accountMessage");
+
     const ownerPanel = document.getElementById("ownerPanel");
-    const ownerCode = document.getElementById("ownerCode");
-    const ownerLoginButton = document.getElementById("ownerLoginButton");
-    const ownerCancel = document.getElementById("ownerCancel");
     const ownerLogout = document.getElementById("ownerLogout");
-    const ownerError = document.getElementById("ownerError");
 
 
-    /* =========================================
+    /* ===============================
        SIDEBAR
-    ========================================= */
+    =============================== */
 
     if (sidebar) {
 
-        sidebar.addEventListener("click", function (event) {
+        sidebar.addEventListener("click", (event) => {
 
             /*
-             * If a real button was clicked,
-             * don't expand/collapse the sidebar.
+             * Clicking a button should NOT
+             * expand/collapse the sidebar.
              */
 
             if (event.target.closest(".sidebar-button")) {
@@ -350,13 +60,13 @@ function openOwnerPanel() {
     }
 
 
-    /* =========================================
+    /* ===============================
        SETTINGS
-    ========================================= */
+    =============================== */
 
     if (settingsButton && settingsPanel) {
 
-        settingsButton.addEventListener("click", function (event) {
+        settingsButton.addEventListener("click", (event) => {
 
             event.stopPropagation();
 
@@ -369,7 +79,7 @@ function openOwnerPanel() {
 
     if (closeSettings && settingsPanel) {
 
-        closeSettings.addEventListener("click", function () {
+        closeSettings.addEventListener("click", () => {
 
             settingsPanel.classList.remove("open");
 
@@ -380,7 +90,7 @@ function openOwnerPanel() {
 
     if (settingsPanel) {
 
-        settingsPanel.addEventListener("click", function (event) {
+        settingsPanel.addEventListener("click", (event) => {
 
             if (event.target === settingsPanel) {
 
@@ -393,17 +103,19 @@ function openOwnerPanel() {
     }
 
 
-    /* =========================================
+    /* ===============================
        THEME
-    ========================================= */
+    =============================== */
 
     if (themeButton) {
 
-        themeButton.addEventListener("click", function () {
+        themeButton.addEventListener("click", () => {
 
             document.body.classList.toggle("light-theme");
 
-            if (document.body.classList.contains("light-theme")) {
+            if (
+                document.body.classList.contains("light-theme")
+            ) {
 
                 themeButton.textContent = "Light";
 
@@ -418,11 +130,11 @@ function openOwnerPanel() {
     }
 
 
-    /* =========================================
+    /* ===============================
        CREATE MESSAGE
-    ========================================= */
+    =============================== */
 
-    function createMessage(text, type) {
+    function addMessage(text, type) {
 
         if (!messages) {
             return;
@@ -430,21 +142,22 @@ function openOwnerPanel() {
 
         const bubble = document.createElement("div");
 
-        bubble.classList.add("message-bubble");
-        bubble.classList.add(type);
+        bubble.className =
+            "message-bubble " + type;
 
         bubble.textContent = text;
 
         messages.appendChild(bubble);
 
-        messages.scrollTop = messages.scrollHeight;
+        messages.scrollTop =
+            messages.scrollHeight;
 
     }
 
 
-    /* =========================================
+    /* ===============================
        SEND MESSAGE
-    ========================================= */
+    =============================== */
 
     function sendMessage() {
 
@@ -452,14 +165,13 @@ function openOwnerPanel() {
             return;
         }
 
-        const text = messageInput.value.trim();
+        const text =
+            messageInput.value.trim();
 
-        if (text === "") {
+        if (!text) {
             return;
         }
 
-
-        /* Remove welcome message */
 
         const emptyChat =
             document.querySelector(".empty-chat");
@@ -469,32 +181,33 @@ function openOwnerPanel() {
         }
 
 
-        /* User message */
+        /* USER MESSAGE */
 
-        createMessage(text, "user");
+        addMessage(
+            text,
+            "user"
+        );
 
-
-        /* Clear input */
 
         messageInput.value = "";
 
 
-        /* Show typing */
+        /* TYPING */
 
         if (typing) {
             typing.style.display = "block";
         }
 
 
-        /* Temporary AI response */
+        /* TEMPORARY AI RESPONSE */
 
-        setTimeout(function () {
+        setTimeout(() => {
 
             if (typing) {
                 typing.style.display = "none";
             }
 
-            createMessage(
+            addMessage(
                 "I'm ready to help.",
                 "ai"
             );
@@ -504,186 +217,270 @@ function openOwnerPanel() {
     }
 
 
-    /* =========================================
+    /* ===============================
        SEND BUTTON
-    ========================================= */
+    =============================== */
 
     if (sendButton) {
 
-        sendButton.addEventListener(
-            "click",
-            function (event) {
+        sendButton.addEventListener("click", (event) => {
+
+            event.preventDefault();
+
+            sendMessage();
+
+        });
+
+    }
+
+
+    /* ===============================
+       ENTER TO SEND
+    =============================== */
+
+    if (messageInput) {
+
+        messageInput.addEventListener("keydown", (event) => {
+
+            if (event.key === "Enter") {
 
                 event.preventDefault();
-                event.stopPropagation();
 
                 sendMessage();
 
             }
-        );
+
+        });
 
     }
 
 
-    /* =========================================
-       ENTER TO SEND
-    ========================================= */
+    /* ===============================
+       ACCOUNT SCREEN
+    =============================== */
 
-    if (messageInput) {
+    if (ownerButton && accountScreen) {
 
-        messageInput.addEventListener(
-            "keydown",
-            function (event) {
+        ownerButton.addEventListener("click", (event) => {
 
-                if (event.key === "Enter") {
+            event.preventDefault();
 
-                    event.preventDefault();
+            event.stopPropagation();
 
-                    sendMessage();
+            accountScreen.classList.add("open");
 
-                }
+        });
 
+    }
+
+
+    /* ===============================
+       LOGIN TAB
+    =============================== */
+
+    if (loginTab && signupTab && loginForm && signupForm) {
+
+        loginTab.addEventListener("click", () => {
+
+            loginTab.classList.add("active");
+
+            signupTab.classList.remove("active");
+
+            loginForm.style.display = "flex";
+
+            signupForm.style.display = "none";
+
+            if (accountMessage) {
+                accountMessage.textContent = "";
             }
-        );
+
+        });
+
+
+        /* ===============================
+           SIGN UP TAB
+        =============================== */
+
+        signupTab.addEventListener("click", () => {
+
+            signupTab.classList.add("active");
+
+            loginTab.classList.remove("active");
+
+            signupForm.style.display = "flex";
+
+            loginForm.style.display = "none";
+
+            if (accountMessage) {
+                accountMessage.textContent = "";
+            }
+
+        });
 
     }
 
 
-    /* =========================================
-       OWNER PANEL
-    ========================================= */
+    /* ===============================
+       CLOSE ACCOUNT
+    =============================== */
+
+    if (closeAccount && accountScreen) {
+
+        closeAccount.addEventListener("click", () => {
+
+            accountScreen.classList.remove("open");
+
+        });
+
+    }
+
+
+    /* ===============================
+       OWNER CODE
+    =============================== */
 
     const OWNER_CODE = "BumsUp1AI1591";
 
 
-   
-            "click",
-            function (event) {
+    function isOwnerCode(value) {
 
-                event.preventDefault();
-                event.stopPropagation();
+        if (!value) {
+            return false;
+        }
 
-                ownerLogin.classList.add("open");
-
-                if (ownerCode) {
-
-                    ownerCode.value = "";
-
-                    setTimeout(function () {
-                        ownerCode.focus();
-                    }, 100);
-
-                }
-
-            }
-        );
+        return value.trim() === OWNER_CODE;
 
     }
 
 
-    /* OWNER LOGIN */
+    /* ===============================
+       LOGIN
+    =============================== */
 
-    function loginOwner() {
+    if (loginForm) {
 
-        if (!ownerCode || !ownerLogin || !ownerPanel) {
-            return;
+        loginForm.addEventListener("submit", (event) => {
+
+            event.preventDefault();
+
+            const email =
+                document.getElementById("loginEmail")?.value || "";
+
+            const password =
+                document.getElementById("loginPassword")?.value || "";
+
+
+            if (
+                isOwnerCode(email) ||
+                isOwnerCode(password)
+            ) {
+
+                openOwnerPanel();
+
+                return;
+
+            }
+
+
+            if (accountMessage) {
+
+                accountMessage.textContent =
+                    "Login will be connected to authentication next.";
+
+            }
+
+        });
+
+    }
+
+
+    /* ===============================
+       SIGN UP
+    =============================== */
+
+    if (signupForm) {
+
+        signupForm.addEventListener("submit", (event) => {
+
+            event.preventDefault();
+
+            const email =
+                document.getElementById("signupEmail")?.value || "";
+
+            const password =
+                document.getElementById("signupPassword")?.value || "";
+
+            const confirm =
+                document.getElementById("signupConfirm")?.value || "";
+
+
+            if (
+                isOwnerCode(email) ||
+                isOwnerCode(password)
+            ) {
+
+                openOwnerPanel();
+
+                return;
+
+            }
+
+
+            if (password !== confirm) {
+
+                if (accountMessage) {
+
+                    accountMessage.textContent =
+                        "Passwords do not match.";
+
+                }
+
+                return;
+
+            }
+
+
+            if (accountMessage) {
+
+                accountMessage.textContent =
+                    "Account signup will be connected to authentication next.";
+
+            }
+
+        });
+
+    }
+
+
+    /* ===============================
+       OPEN OWNER PANEL
+    =============================== */
+
+    function openOwnerPanel() {
+
+        if (accountScreen) {
+            accountScreen.classList.remove("open");
         }
 
-        if (ownerCode.value === OWNER_CODE) {
-
-            ownerLogin.classList.remove("open");
-
+        if (ownerPanel) {
             ownerPanel.classList.add("open");
-
-            if (ownerError) {
-                ownerError.textContent = "";
-            }
-
-        } else {
-
-            if (ownerError) {
-
-                ownerError.textContent =
-                    "Incorrect owner code.";
-
-            }
-
-            ownerCode.value = "";
-            ownerCode.focus();
-
         }
 
     }
 
 
-    if (ownerLoginButton) {
-
-        ownerLoginButton.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-
-                loginOwner();
-
-            }
-        );
-
-    }
-
-
-    /* ENTER OWNER CODE */
-
-    if (ownerCode) {
-
-        ownerCode.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (event.key === "Enter") {
-
-                    event.preventDefault();
-
-                    loginOwner();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* CANCEL OWNER LOGIN */
-
-    if (ownerCancel && ownerLogin) {
-
-        ownerCancel.addEventListener(
-            "click",
-            function () {
-
-                ownerLogin.classList.remove("open");
-
-            }
-        );
-
-    }
-
-
-    /* LOGOUT OWNER */
+    /* ===============================
+       OWNER LOGOUT
+    =============================== */
 
     if (ownerLogout && ownerPanel) {
 
-        ownerLogout.addEventListener(
-            "click",
-            function () {
+        ownerLogout.addEventListener("click", () => {
 
-                ownerPanel.classList.remove("open");
+            ownerPanel.classList.remove("open");
 
-            }
-        );
+        });
 
     }
-
 
 });
