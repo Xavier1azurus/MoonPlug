@@ -1,18 +1,60 @@
+/* =========================================================
+   🌙 MOONPLUG AI
+   LOCAL JAVASCRIPT TRAINER
+   =========================================================
 
-document.addEventListener("DOMContentLoaded", function () {
+   NO API
+   NO PYTHON
+   NO SERVER REQUIRED
 
-    "use strict";
+   Features:
+   - Chat
+   - Training examples
+   - Keyword matching
+   - Similarity matching
+   - Exact matching
+   - Conversation memory
+   - Statistics
+   - Search
+   - Delete training
+   - Export
+   - Import
+   - Browser persistence
+   - Owner panel
+   - Trainer chat
+   - Settings
+   - Account screen
+   - Responsive website support
+
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* =====================================================
+       CONFIGURATION
+    ===================================================== */
+
+    const APP_NAME = "MoonPlug AI";
+    const APP_VERSION = "2.0.0";
+
+    /*
+       IMPORTANT:
+       Change this to your private owner code.
+    */
+    const OWNER_CODE = "BumsUp1AI1591";
+
+    /*
+       Browser storage key.
+    */
+    const MEMORY_KEY = "moonplug_ai_memory_v2";
 
 
     /* =====================================================
-       ELEMENTS
+       BASIC ELEMENTS
     ===================================================== */
 
     const sidebar =
-        document.getElementById("sidebar");
-
-    const sidebarLogo =
-        document.getElementById("sidebarLogo");
+        document.querySelector(".sidebar");
 
     const messages =
         document.getElementById("messages");
@@ -27,7 +69,9 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("typing");
 
 
-    /* SETTINGS */
+    /* =====================================================
+       SETTINGS
+    ===================================================== */
 
     const settingsButton =
         document.getElementById("settingsButton");
@@ -42,13 +86,15 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("themeButton");
 
 
-    /* ACCOUNT */
-
-    const ownerButton =
-        document.getElementById("ownerButton");
+    /* =====================================================
+       ACCOUNT
+    ===================================================== */
 
     const accountScreen =
         document.getElementById("accountScreen");
+
+    const ownerButton =
+        document.getElementById("ownerButton");
 
     const loginTab =
         document.getElementById("loginTab");
@@ -69,22 +115,9 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("accountMessage");
 
 
-    /* OWNER */
-
-    const ownerLogin =
-        document.getElementById("ownerLogin");
-
-    const ownerCodeInput =
-        document.getElementById("ownerCode");
-
-    const ownerLoginButton =
-        document.getElementById("ownerLoginButton");
-
-    const ownerCancel =
-        document.getElementById("ownerCancel");
-
-    const ownerError =
-        document.getElementById("ownerError");
+    /* =====================================================
+       OWNER PANEL
+    ===================================================== */
 
     const ownerPanel =
         document.getElementById("ownerPanel");
@@ -92,278 +125,989 @@ document.addEventListener("DOMContentLoaded", function () {
     const ownerLogout =
         document.getElementById("ownerLogout");
 
+    const ownerUsers =
+        document.getElementById("ownerUsers");
+
+    const ownerChats =
+        document.getElementById("ownerChats");
 
 
     /* =====================================================
-       OWNER CODE
+       MEMORY
     ===================================================== */
 
-    const OWNER_CODE =
-        "BumsUp1AI1591";
-
+    let memory = loadMemory();
 
 
     /* =====================================================
-       SIDEBAR
-       
-       IMPORTANT:
-       Clicking ANY empty sidebar space expands it.
-       
-       Clicking a sidebar button does not accidentally
-       toggle it.
+       CREATE EMPTY MEMORY
     ===================================================== */
 
-    function toggleSidebar() {
+    function createEmptyMemory() {
 
-        if (!sidebar) {
-            return;
-        }
+        return {
 
-        sidebar.classList.toggle("expanded");
+            version: APP_VERSION,
+
+            created:
+                new Date().toISOString(),
+
+            updated:
+                new Date().toISOString(),
+
+            settings: {
+
+                minimumScore: 0.30,
+
+                rememberConversations: true,
+
+                caseSensitive: false
+
+            },
+
+            training: [],
+
+            conversations: [],
+
+            users: [],
+
+            statistics: {
+
+                totalMessages: 0,
+
+                totalResponses: 0,
+
+                totalTraining: 0
+
+            }
+
+        };
 
     }
 
 
-    if (sidebar) {
+    /* =====================================================
+       LOAD MEMORY
+    ===================================================== */
 
-        sidebar.addEventListener("click", function (event) {
+    function loadMemory() {
 
-            const clickedButton =
-                event.target.closest(".sidebar-button");
+        try {
 
-            const clickedLogo =
-                event.target.closest(".sidebar-logo");
+            const stored =
+                localStorage.getItem(
+                    MEMORY_KEY
+                );
 
+            if (!stored) {
 
-            /*
-             * Logo always toggles sidebar.
-             */
+                const fresh =
+                    createEmptyMemory();
 
-            if (clickedLogo) {
+                saveMemory(fresh);
 
-                toggleSidebar();
-
-                return;
-
-            }
-
-
-            /*
-             * If they clicked a real button,
-             * don't toggle the sidebar.
-             */
-
-            if (clickedButton) {
-
-                return;
+                return fresh;
 
             }
 
+            const parsed =
+                JSON.parse(stored);
 
-            /*
-             * Anything else inside the sidebar
-             * is empty space.
-             */
+            return normalizeMemory(parsed);
 
-            toggleSidebar();
+        } catch (error) {
+
+            console.error(
+                "MoonPlug memory error:",
+                error
+            );
+
+            return createEmptyMemory();
+
+        }
+
+    }
+
+
+    /* =====================================================
+       NORMALIZE MEMORY
+    ===================================================== */
+
+    function normalizeMemory(data) {
+
+        if (
+            !data ||
+            typeof data !== "object"
+        ) {
+
+            return createEmptyMemory();
+
+        }
+
+
+        const fresh =
+            createEmptyMemory();
+
+
+        fresh.version =
+            data.version ||
+            APP_VERSION;
+
+        fresh.created =
+            data.created ||
+            fresh.created;
+
+        fresh.updated =
+            data.updated ||
+            fresh.updated;
+
+
+        if (
+            data.settings &&
+            typeof data.settings === "object"
+        ) {
+
+            fresh.settings =
+                {
+                    ...fresh.settings,
+                    ...data.settings
+                };
+
+        }
+
+
+        if (
+            Array.isArray(
+                data.training
+            )
+        ) {
+
+            fresh.training =
+                data.training;
+
+        }
+
+
+        if (
+            Array.isArray(
+                data.conversations
+            )
+        ) {
+
+            fresh.conversations =
+                data.conversations;
+
+        }
+
+
+        if (
+            Array.isArray(
+                data.users
+            )
+        ) {
+
+            fresh.users =
+                data.users;
+
+        }
+
+
+        if (
+            data.statistics &&
+            typeof data.statistics === "object"
+        ) {
+
+            fresh.statistics =
+                {
+                    ...fresh.statistics,
+                    ...data.statistics
+                };
+
+        }
+
+
+        return fresh;
+
+    }
+
+
+    /* =====================================================
+       SAVE MEMORY
+    ===================================================== */
+
+    function saveMemory(data = memory) {
+
+        try {
+
+            data.updated =
+                new Date().toISOString();
+
+            localStorage.setItem(
+                MEMORY_KEY,
+                JSON.stringify(data)
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Could not save MoonPlug memory:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       BACKUP MEMORY
+    ===================================================== */
+
+    function createBackup() {
+
+        const backup = {
+
+            exported:
+                new Date().toISOString(),
+
+            version:
+                APP_VERSION,
+
+            memory:
+                memory
+
+        };
+
+
+        downloadJSON(
+            backup,
+            `moonplug_backup_${Date.now()}.json`
+        );
+
+    }
+
+
+    /* =====================================================
+       CLEAN TEXT
+    ===================================================== */
+
+    function cleanText(text) {
+
+        if (
+            typeof text !== "string"
+        ) {
+
+            return "";
+
+        }
+
+        return text
+            .trim()
+            .replace(/\s+/g, " ");
+
+    }
+
+
+    /* =====================================================
+       TOKENIZE
+    ===================================================== */
+
+    const STOP_WORDS = new Set([
+
+        "a",
+        "an",
+        "the",
+        "and",
+        "or",
+        "but",
+        "if",
+        "then",
+        "is",
+        "are",
+        "am",
+        "was",
+        "were",
+        "be",
+        "to",
+        "of",
+        "in",
+        "on",
+        "for",
+        "with",
+        "at",
+        "by",
+        "from",
+        "it",
+        "this",
+        "that",
+        "i",
+        "you",
+        "we",
+        "they",
+        "he",
+        "she",
+        "my",
+        "your",
+        "our",
+        "me"
+
+    ]);
+
+
+    function tokenize(text) {
+
+        const cleaned =
+            cleanText(text)
+                .toLowerCase();
+
+        const words =
+            cleaned.match(
+                /[a-zA-Z0-9']+/g
+            ) || [];
+
+
+        return words.filter(
+            word =>
+                !STOP_WORDS.has(
+                    word
+                )
+        );
+
+    }
+
+
+    /* =====================================================
+       WORD SET
+    ===================================================== */
+
+    function wordSet(text) {
+
+        return new Set(
+            tokenize(text)
+        );
+
+    }
+
+
+    /* =====================================================
+       EXACT MATCH
+    ===================================================== */
+
+    function exactMatchScore(
+        userText,
+        trainingText
+    ) {
+
+        const user =
+            cleanText(
+                userText
+            ).toLowerCase();
+
+        const training =
+            cleanText(
+                trainingText
+            ).toLowerCase();
+
+
+        if (
+            !user ||
+            !training
+        ) {
+
+            return 0;
+
+        }
+
+
+        return user === training
+            ? 1
+            : 0;
+
+    }
+
+
+    /* =====================================================
+       KEYWORD SCORE
+    ===================================================== */
+
+    function keywordScore(
+        userText,
+        trainingText
+    ) {
+
+        const userWords =
+            wordSet(userText);
+
+        const trainingWords =
+            wordSet(trainingText);
+
+
+        if (
+            userWords.size === 0 ||
+            trainingWords.size === 0
+        ) {
+
+            return 0;
+
+        }
+
+
+        let common = 0;
+
+
+        for (
+            const word of userWords
+        ) {
+
+            if (
+                trainingWords.has(word)
+            ) {
+
+                common++;
+
+            }
+
+        }
+
+
+        if (common === 0) {
+
+            return 0;
+
+        }
+
+
+        const userRatio =
+            common /
+            userWords.size;
+
+        const trainingRatio =
+            common /
+            trainingWords.size;
+
+
+        return (
+            userRatio +
+            trainingRatio
+        ) / 2;
+
+    }
+
+
+    /* =====================================================
+       SEQUENCE SIMILARITY
+       JavaScript version of SequenceMatcher
+    ===================================================== */
+
+    function sequenceScore(
+        userText,
+        trainingText
+    ) {
+
+        const a =
+            cleanText(
+                userText
+            ).toLowerCase();
+
+        const b =
+            cleanText(
+                trainingText
+            ).toLowerCase();
+
+
+        if (!a || !b) {
+
+            return 0;
+
+        }
+
+
+        return similarityRatio(
+            a,
+            b
+        );
+
+    }
+
+
+    /* =====================================================
+       STRING SIMILARITY
+    ===================================================== */
+
+    function similarityRatio(
+        a,
+        b
+    ) {
+
+        if (a === b) {
+
+            return 1;
+
+        }
+
+
+        if (!a.length || !b.length) {
+
+            return 0;
+
+        }
+
+
+        const matrix =
+            Array.from(
+                {
+                    length:
+                        a.length + 1
+                },
+                () =>
+                    new Array(
+                        b.length + 1
+                    ).fill(0)
+            );
+
+
+        for (
+            let i = 0;
+            i <= a.length;
+            i++
+        ) {
+
+            matrix[i][0] = i;
+
+        }
+
+
+        for (
+            let j = 0;
+            j <= b.length;
+            j++
+        ) {
+
+            matrix[0][j] = j;
+
+        }
+
+
+        for (
+            let i = 1;
+            i <= a.length;
+            i++
+        ) {
+
+            for (
+                let j = 1;
+                j <= b.length;
+                j++
+            ) {
+
+                const cost =
+                    a[i - 1] ===
+                    b[j - 1]
+                        ? 0
+                        : 1;
+
+
+                matrix[i][j] =
+                    Math.min(
+
+                        matrix[i - 1][j] + 1,
+
+                        matrix[i][j - 1] + 1,
+
+                        matrix[i - 1][j - 1] +
+                            cost
+
+                    );
+
+            }
+
+        }
+
+
+        const distance =
+            matrix[a.length][b.length];
+
+        const longest =
+            Math.max(
+                a.length,
+                b.length
+            );
+
+
+        return (
+            1 -
+            distance / longest
+        );
+
+    }
+
+
+    /* =====================================================
+       COMBINED SCORE
+    ===================================================== */
+
+    function combinedScore(
+        userText,
+        trainingText
+    ) {
+
+        const exact =
+            exactMatchScore(
+                userText,
+                trainingText
+            );
+
+
+        const keyword =
+            keywordScore(
+                userText,
+                trainingText
+            );
+
+
+        const sequence =
+            sequenceScore(
+                userText,
+                trainingText
+            );
+
+
+        const score =
+            exact * 0.60 +
+            keyword * 0.25 +
+            sequence * 0.15;
+
+
+        return Math.min(
+            score,
+            1
+        );
+
+    }
+
+
+    /* =====================================================
+       NEXT TRAINING ID
+    ===================================================== */
+
+    function nextTrainingId() {
+
+        if (
+            memory.training.length === 0
+        ) {
+
+            return 1;
+
+        }
+
+
+        const ids =
+            memory.training
+                .map(
+                    item =>
+                        Number(item.id)
+                )
+                .filter(
+                    Number.isFinite
+                );
+
+
+        if (!ids.length) {
+
+            return 1;
+
+        }
+
+
+        return (
+            Math.max(...ids) + 1
+        );
+
+    }
+
+
+    /* =====================================================
+       ADD TRAINING
+    ===================================================== */
+
+    function addTraining(
+        question,
+        answer,
+        category = "general"
+    ) {
+
+        question =
+            cleanText(question);
+
+        answer =
+            cleanText(answer);
+
+        category =
+            cleanText(category) ||
+            "general";
+
+
+        if (!question) {
+
+            return {
+
+                success: false,
+
+                error:
+                    "Question cannot be empty."
+
+            };
+
+        }
+
+
+        if (!answer) {
+
+            return {
+
+                success: false,
+
+                error:
+                    "Answer cannot be empty."
+
+            };
+
+        }
+
+
+        const example = {
+
+            id:
+                nextTrainingId(),
+
+            question,
+
+            answer,
+
+            category,
+
+            created:
+                new Date().toISOString(),
+
+            uses: 0
+
+        };
+
+
+        memory.training.push(
+            example
+        );
+
+
+        memory.statistics.totalTraining =
+            memory.training.length;
+
+
+        saveMemory();
+
+
+        return {
+
+            success: true,
+
+            example
+
+        };
+
+    }
+
+
+    /* =====================================================
+       FIND BEST RESPONSE
+    ===================================================== */
+
+    function findBestResponse(
+        userMessage
+    ) {
+
+        const cleaned =
+            cleanText(
+                userMessage
+            );
+
+
+        if (!cleaned) {
+
+            return null;
+
+        }
+
+
+        let bestExample = null;
+
+        let bestScore = 0;
+
+
+        for (
+            const example
+            of memory.training
+        ) {
+
+            const question =
+                example.question ||
+                "";
+
+
+            const score =
+                combinedScore(
+                    cleaned,
+                    question
+                );
+
+
+            if (
+                score > bestScore
+            ) {
+
+                bestScore =
+                    score;
+
+                bestExample =
+                    example;
+
+            }
+
+        }
+
+
+        const minimumScore =
+            Number(
+                memory.settings
+                    .minimumScore
+            ) || 0.30;
+
+
+        if (
+            !bestExample ||
+            bestScore < minimumScore
+        ) {
+
+            return null;
+
+        }
+
+
+        bestExample.uses =
+            Number(
+                bestExample.uses || 0
+            ) + 1;
+
+
+        memory.statistics.totalResponses++;
+
+        saveMemory();
+
+
+        return {
+
+            answer:
+                bestExample.answer,
+
+            score:
+                bestScore,
+
+            trainingId:
+                bestExample.id,
+
+            question:
+                bestExample.question
+
+        };
+
+    }
+
+
+    /* =====================================================
+       SAVE CONVERSATION
+    ===================================================== */
+
+    function saveConversation(
+        userMessage,
+        assistantMessage,
+        source = "local"
+    ) {
+
+        if (
+            !memory.settings
+                .rememberConversations
+        ) {
+
+            return;
+
+        }
+
+
+        memory.conversations.push({
+
+            user:
+                userMessage,
+
+            assistant:
+                assistantMessage,
+
+            source,
+
+            time:
+                new Date().toISOString()
 
         });
 
-    }
 
+        /*
+         * Prevent unlimited browser storage growth.
+         * Keep the newest 5,000 conversations.
+         */
 
+        if (
+            memory.conversations.length >
+            5000
+        ) {
 
-    /* =====================================================
-       SETTINGS
-    ===================================================== */
+            memory.conversations =
+                memory.conversations.slice(
+                    -5000
+                );
 
-    function openSettings() {
-
-        if (!settingsPanel) {
-            return;
         }
 
-        settingsPanel.classList.add("open");
 
-        settingsPanel.setAttribute(
-            "aria-hidden",
-            "false"
-        );
+        memory.statistics.totalMessages++;
+
+        saveMemory();
 
     }
-
-
-    function closeSettingsPanel() {
-
-        if (!settingsPanel) {
-            return;
-        }
-
-        settingsPanel.classList.remove("open");
-
-        settingsPanel.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-    }
-
-
-    if (settingsButton) {
-
-        settingsButton.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-
-                event.stopPropagation();
-
-                openSettings();
-
-            }
-        );
-
-    }
-
-
-    if (closeSettings) {
-
-        closeSettings.addEventListener(
-            "click",
-            function () {
-
-                closeSettingsPanel();
-
-            }
-        );
-
-    }
-
-
-    if (settingsPanel) {
-
-        settingsPanel.addEventListener(
-            "click",
-            function (event) {
-
-                if (
-                    event.target === settingsPanel
-                ) {
-
-                    closeSettingsPanel();
-
-                }
-
-            }
-        );
-
-    }
-
 
 
     /* =====================================================
-       THEME
+       ADD CHAT MESSAGE
     ===================================================== */
 
-    if (themeButton) {
-
-        themeButton.addEventListener(
-            "click",
-            function () {
-
-                document.body.classList.toggle(
-                    "light-theme"
-                );
-
-
-                const light =
-                    document.body.classList.contains(
-                        "light-theme"
-                    );
-
-
-                themeButton.textContent =
-                    light
-                        ? "Light"
-                        : "Dark";
-
-            }
-        );
-
-    }
-
-
-
-    /* =====================================================
-       TEXT SIZE
-    ===================================================== */
-
-    const sizeButtons =
-        document.querySelectorAll(
-            ".size-button"
-        );
-
-
-    sizeButtons.forEach(function (button) {
-
-        button.addEventListener(
-            "click",
-            function () {
-
-                const size =
-                    button.dataset.size;
-
-
-                document.body.classList.remove(
-                    "text-small",
-                    "text-medium",
-                    "text-large"
-                );
-
-
-                document.body.classList.add(
-                    "text-" + size
-                );
-
-
-                sizeButtons.forEach(
-                    function (otherButton) {
-
-                        otherButton.classList.remove(
-                            "active"
-                        );
-
-                    }
-                );
-
-
-                button.classList.add("active");
-
-            }
-        );
-
-    });
-
-
-
-    /* =====================================================
-       MESSAGE BUBBLE
-    ===================================================== */
-
-    function addMessage(text, type) {
+    function addMessage(
+        text,
+        type
+    ) {
 
         if (!messages) {
+
             return;
+
         }
 
 
         const bubble =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
         bubble.className =
-            "message-bubble " + type;
+            "message-bubble " +
+            type;
 
 
         bubble.textContent =
@@ -375,17 +1119,10 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        requestAnimationFrame(
-            function () {
-
-                messages.scrollTop =
-                    messages.scrollHeight;
-
-            }
-        );
+        messages.scrollTop =
+            messages.scrollHeight;
 
     }
-
 
 
     /* =====================================================
@@ -409,6 +1146,42 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+    /* =====================================================
+       MOONPLUG RESPONSE
+    ===================================================== */
+
+    function generateResponse(
+        userMessage
+    ) {
+
+        const result =
+            findBestResponse(
+                userMessage
+            );
+
+
+        if (result) {
+
+            return result;
+
+        }
+
+
+        return {
+
+            answer:
+                "I don't have a strong answer for that yet.",
+
+            score: 0,
+
+            trainingId: null,
+
+            question: null
+
+        };
+
+    }
+
 
     /* =====================================================
        SEND MESSAGE
@@ -416,31 +1189,48 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function sendMessage() {
 
-        if (!messageInput) {
+        if (
+            !messageInput ||
+            !messages
+        ) {
+
             return;
+
         }
 
 
         const text =
-            messageInput.value.trim();
+            cleanText(
+                messageInput.value
+            );
 
 
         if (!text) {
+
             return;
+
         }
 
 
         /*
-         * Remove the "What can I help with?"
-         * screen once the first message is sent.
+         * Hidden owner code detection.
          */
+
+        if (
+            isOwnerCode(text)
+        ) {
+
+            messageInput.value = "";
+
+            openOwnerPanel();
+
+            return;
+
+        }
+
 
         removeEmptyChat();
 
-
-        /*
-         * USER BUBBLE
-         */
 
         addMessage(
             text,
@@ -448,16 +1238,8 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /*
-         * CLEAR INPUT
-         */
-
         messageInput.value = "";
 
-
-        /*
-         * SHOW TYPING
-         */
 
         if (typing) {
 
@@ -467,15 +1249,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-         * TEMPORARY RESPONSE
-         *
-         * This is NOT the final AI.
-         * It simply proves the chat system works.
-         */
+        setTimeout(
+            () => {
 
-        window.setTimeout(
-            function () {
+                const result =
+                    generateResponse(
+                        text
+                    );
+
 
                 if (typing) {
 
@@ -486,16 +1267,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 addMessage(
-                    "I'm ready to help.",
+                    result.answer,
                     "ai"
                 );
 
+
+                saveConversation(
+                    text,
+                    result.answer,
+                    "local"
+                );
+
+
             },
-            700
+            450
         );
 
     }
-
 
 
     /* =====================================================
@@ -506,7 +1294,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         sendButton.addEventListener(
             "click",
-            function (event) {
+            event => {
 
                 event.preventDefault();
 
@@ -518,7 +1306,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =====================================================
        ENTER TO SEND
     ===================================================== */
@@ -527,7 +1314,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         messageInput.addEventListener(
             "keydown",
-            function (event) {
+            event => {
 
                 if (
                     event.key === "Enter" &&
@@ -546,58 +1333,107 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =====================================================
-       NEW CHAT
+       SIDEBAR
     ===================================================== */
 
-    const newChatButton =
-        document.getElementById(
-            "newChatButton"
-        );
+    if (sidebar) {
 
-
-    if (newChatButton) {
-
-        newChatButton.addEventListener(
+        sidebar.addEventListener(
             "click",
-            function () {
+            event => {
 
-                if (!messages) {
+                /*
+                 * Buttons don't toggle
+                 * the sidebar.
+                 */
+
+                if (
+                    event.target.closest(
+                        ".sidebar-button"
+                    )
+                ) {
+
                     return;
+
                 }
 
 
-                messages.innerHTML = "";
+                /*
+                 * Any empty sidebar
+                 * area expands/collapses.
+                 */
 
-
-                const empty =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                empty.className =
-                    "empty-chat";
-
-
-                empty.innerHTML =
-                    `
-                    <h1>What can I help with?</h1>
-                    <p>Ask MoonPlug anything.</p>
-                    `;
-
-
-                messages.appendChild(
-                    empty
+                sidebar.classList.toggle(
+                    "expanded"
                 );
 
+            }
+        );
 
-                if (messageInput) {
+    }
 
-                    messageInput.value = "";
 
-                    messageInput.focus();
+    /* =====================================================
+       SETTINGS
+    ===================================================== */
+
+    if (
+        settingsButton &&
+        settingsPanel
+    ) {
+
+        settingsButton.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                settingsPanel.classList.add(
+                    "open"
+                );
+
+            }
+        );
+
+    }
+
+
+    if (
+        closeSettings &&
+        settingsPanel
+    ) {
+
+        closeSettings.addEventListener(
+            "click",
+            () => {
+
+                settingsPanel.classList.remove(
+                    "open"
+                );
+
+            }
+        );
+
+    }
+
+
+    if (settingsPanel) {
+
+        settingsPanel.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target ===
+                    settingsPanel
+                ) {
+
+                    settingsPanel.classList.remove(
+                        "open"
+                    );
 
                 }
 
@@ -606,202 +1442,181 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+
+    /* =====================================================
+       THEME
+    ===================================================== */
+
+    if (themeButton) {
+
+        themeButton.addEventListener(
+            "click",
+            () => {
+
+                document.body.classList.toggle(
+                    "light-theme"
+                );
+
+
+                const light =
+                    document.body.classList.contains(
+                        "light-theme"
+                    );
+
+
+                themeButton.textContent =
+                    light
+                        ? "Light"
+                        : "Dark";
+
+            }
+        );
+
+    }
 
 
     /* =====================================================
        ACCOUNT SCREEN
     ===================================================== */
 
-    function openAccount() {
-
-        if (!accountScreen) {
-            return;
-        }
-
-
-        accountScreen.classList.add(
-            "open"
-        );
-
-
-        accountScreen.setAttribute(
-            "aria-hidden",
-            "false"
-        );
-
-
-        if (accountMessage) {
-
-            accountMessage.textContent =
-                "";
-
-        }
-
-    }
-
-
-    function closeAccountScreen() {
-
-        if (!accountScreen) {
-            return;
-        }
-
-
-        accountScreen.classList.remove(
-            "open"
-        );
-
-
-        accountScreen.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-    }
-
-
-    if (ownerButton) {
+    if (
+        ownerButton &&
+        accountScreen
+    ) {
 
         ownerButton.addEventListener(
             "click",
-            function (event) {
+            event => {
 
                 event.preventDefault();
 
                 event.stopPropagation();
 
-                openAccount();
+                accountScreen.classList.add(
+                    "open"
+                );
 
             }
         );
 
     }
-
-
-    if (closeAccount) {
-
-        closeAccount.addEventListener(
-            "click",
-            function () {
-
-                closeAccountScreen();
-
-            }
-        );
-
-    }
-
 
 
     /* =====================================================
-       LOGIN / SIGNUP TABS
+       LOGIN TAB
     ===================================================== */
 
-    function showLogin() {
-
-        if (
-            !loginForm ||
-            !signupForm ||
-            !loginTab ||
-            !signupTab
-        ) {
-            return;
-        }
-
-
-        loginTab.classList.add(
-            "active"
-        );
-
-        signupTab.classList.remove(
-            "active"
-        );
-
-
-        loginForm.style.display =
-            "flex";
-
-        signupForm.style.display =
-            "none";
-
-
-        if (accountMessage) {
-
-            accountMessage.textContent =
-                "";
-
-        }
-
-    }
-
-
-    function showSignup() {
-
-        if (
-            !loginForm ||
-            !signupForm ||
-            !loginTab ||
-            !signupTab
-        ) {
-            return;
-        }
-
-
-        signupTab.classList.add(
-            "active"
-        );
-
-        loginTab.classList.remove(
-            "active"
-        );
-
-
-        signupForm.style.display =
-            "flex";
-
-        loginForm.style.display =
-            "none";
-
-
-        if (accountMessage) {
-
-            accountMessage.textContent =
-                "";
-
-        }
-
-    }
-
-
-    if (loginTab) {
+    if (
+        loginTab &&
+        signupTab &&
+        loginForm &&
+        signupForm
+    ) {
 
         loginTab.addEventListener(
             "click",
-            showLogin
+            () => {
+
+                loginTab.classList.add(
+                    "active"
+                );
+
+                signupTab.classList.remove(
+                    "active"
+                );
+
+
+                loginForm.style.display =
+                    "flex";
+
+                signupForm.style.display =
+                    "none";
+
+
+                if (accountMessage) {
+
+                    accountMessage.textContent =
+                        "";
+
+                }
+
+            }
         );
 
-    }
 
-
-    if (signupTab) {
+        /* =================================================
+           SIGNUP TAB
+        ================================================= */
 
         signupTab.addEventListener(
             "click",
-            showSignup
+            () => {
+
+                signupTab.classList.add(
+                    "active"
+                );
+
+                loginTab.classList.remove(
+                    "active"
+                );
+
+
+                signupForm.style.display =
+                    "flex";
+
+                loginForm.style.display =
+                    "none";
+
+
+                if (accountMessage) {
+
+                    accountMessage.textContent =
+                        "";
+
+                }
+
+            }
         );
 
     }
 
 
+    /* =====================================================
+       CLOSE ACCOUNT
+    ===================================================== */
+
+    if (
+        closeAccount &&
+        accountScreen
+    ) {
+
+        closeAccount.addEventListener(
+            "click",
+            () => {
+
+                accountScreen.classList.remove(
+                    "open"
+                );
+
+            }
+        );
+
+    }
+
 
     /* =====================================================
-       OWNER CODE CHECK
+       OWNER CODE
     ===================================================== */
 
     function isOwnerCode(value) {
 
-        if (!value) {
+        if (
+            typeof value !==
+            "string"
+        ) {
+
             return false;
+
         }
 
 
@@ -813,16 +1628,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =====================================================
        OPEN OWNER PANEL
     ===================================================== */
 
     function openOwnerPanel() {
-
-        /*
-         * Close account screen.
-         */
 
         if (accountScreen) {
 
@@ -830,45 +1640,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 "open"
             );
 
-            accountScreen.setAttribute(
-                "aria-hidden",
-                "true"
-            );
-
         }
 
-
-        /*
-         * Close owner login.
-         */
-
-        if (ownerLogin) {
-
-            ownerLogin.classList.remove(
-                "open"
-            );
-
-            ownerLogin.setAttribute(
-                "aria-hidden",
-                "true"
-            );
-
-        }
-
-
-        /*
-         * Open owner panel.
-         */
 
         if (ownerPanel) {
 
             ownerPanel.classList.add(
                 "open"
-            );
-
-            ownerPanel.setAttribute(
-                "aria-hidden",
-                "false"
             );
 
         }
@@ -879,205 +1657,38 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =====================================================
-       CLOSE OWNER PANEL
+       OWNER LOGOUT
     ===================================================== */
 
-    function closeOwnerPanel() {
+    if (
+        ownerLogout &&
+        ownerPanel
+    ) {
 
-        if (!ownerPanel) {
-            return;
-        }
-
-
-        ownerPanel.classList.remove(
-            "open"
-        );
-
-
-        ownerPanel.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-    }
-
-
-
-    /* =====================================================
-       OWNER LOGIN POPUP
-       
-       The Account button itself opens the public
-       login/signup screen.
-       
-       The owner code can also be detected inside
-       login/signup fields.
-    ===================================================== */
-
-    function openOwnerLogin() {
-
-        if (!ownerLogin) {
-            return;
-        }
-
-
-        ownerLogin.classList.add(
-            "open"
-        );
-
-
-        ownerLogin.setAttribute(
-            "aria-hidden",
-            "false"
-        );
-
-
-        if (ownerError) {
-
-            ownerError.textContent =
-                "";
-
-        }
-
-
-        if (ownerCodeInput) {
-
-            ownerCodeInput.value = "";
-
-            ownerCodeInput.focus();
-
-        }
-
-    }
-
-
-
-    function closeOwnerLogin() {
-
-        if (!ownerLogin) {
-            return;
-        }
-
-
-        ownerLogin.classList.remove(
-            "open"
-        );
-
-
-        ownerLogin.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-    }
-
-
-
-    /* =====================================================
-       OWNER LOGIN BUTTON
-    ===================================================== */
-
-    if (ownerLoginButton) {
-
-        ownerLoginButton.addEventListener(
+        ownerLogout.addEventListener(
             "click",
-            function () {
+            () => {
 
-                const value =
-                    ownerCodeInput
-                        ? ownerCodeInput.value
-                        : "";
-
-
-                if (
-                    isOwnerCode(value)
-                ) {
-
-                    openOwnerPanel();
-
-                    return;
-
-                }
-
-
-                if (ownerError) {
-
-                    ownerError.textContent =
-                        "Incorrect owner code.";
-
-                }
+                ownerPanel.classList.remove(
+                    "open"
+                );
 
             }
         );
 
     }
-
-
-
-    /* =====================================================
-       OWNER CODE ENTER KEY
-    ===================================================== */
-
-    if (ownerCodeInput) {
-
-        ownerCodeInput.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (
-                    event.key === "Enter"
-                ) {
-
-                    event.preventDefault();
-
-
-                    if (ownerLoginButton) {
-
-                        ownerLoginButton.click();
-
-                    }
-
-                }
-
-            }
-        );
-
-    }
-
-
-
-    /* =====================================================
-       OWNER CANCEL
-    ===================================================== */
-
-    if (ownerCancel) {
-
-        ownerCancel.addEventListener(
-            "click",
-            function () {
-
-                closeOwnerLogin();
-
-            }
-        );
-
-    }
-
 
 
     /* =====================================================
        LOGIN FORM
-       
-       Owner code works if placed in either
-       email OR password.
     ===================================================== */
 
     if (loginForm) {
 
         loginForm.addEventListener(
             "submit",
-            function (event) {
+            event => {
 
                 event.preventDefault();
 
@@ -1095,7 +1706,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 /*
-                 * OWNER DETECTION
+                 * Owner code can be placed
+                 * in either field.
                  */
 
                 if (
@@ -1111,13 +1723,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 /*
-                 * NORMAL LOGIN
+                 * Local demo account system.
                  */
+
+                const user =
+                    memory.users.find(
+                        item =>
+                            item.email ===
+                            email.trim()
+                    );
+
+
+                if (
+                    !user ||
+                    user.password !==
+                    password
+                ) {
+
+                    if (accountMessage) {
+
+                        accountMessage.textContent =
+                            "Incorrect email or password.";
+
+                    }
+
+                    return;
+
+                }
+
 
                 if (accountMessage) {
 
                     accountMessage.textContent =
-                        "Authentication will be connected next.";
+                        "You are logged in.";
 
                 }
 
@@ -1125,7 +1763,6 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
     }
-
 
 
     /* =====================================================
@@ -1136,7 +1773,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         signupForm.addEventListener(
             "submit",
-            function (event) {
+            event => {
 
                 event.preventDefault();
 
@@ -1160,7 +1797,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 /*
-                 * OWNER DETECTION
+                 * Hidden owner access.
                  */
 
                 if (
@@ -1176,34 +1813,569 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                /*
-                 * PASSWORD CHECK
-                 */
-
                 if (
-                    password !== confirm
+                    !email.trim()
                 ) {
 
-                    if (accountMessage) {
-
-                        accountMessage.textContent =
-                            "Passwords do not match.";
-
-                    }
+                    accountMessage.textContent =
+                        "Please enter an email address.";
 
                     return;
 
                 }
 
 
-                /*
-                 * NORMAL SIGNUP
-                 */
+                if (
+                    password.length < 4
+                ) {
+
+                    accountMessage.textContent =
+                        "Password must be at least 4 characters.";
+
+                    return;
+
+                }
+
+
+                if (
+                    password !==
+                    confirm
+                ) {
+
+                    accountMessage.textContent =
+                        "Passwords do not match.";
+
+                    return;
+
+                }
+
+
+                const exists =
+                    memory.users.some(
+                        user =>
+                            user.email ===
+                            email.trim()
+                    );
+
+
+                if (exists) {
+
+                    accountMessage.textContent =
+                        "That account already exists.";
+
+                    return;
+
+                }
+
+
+                memory.users.push({
+
+                    id:
+                        Date.now(),
+
+                    email:
+                        email.trim(),
+
+                    password,
+
+                    created:
+                        new Date().toISOString()
+
+                });
+
+
+                saveMemory();
+
 
                 if (accountMessage) {
 
                     accountMessage.textContent =
-                        "Account creation will be connected to authentication next.";
+                        "Account created successfully!";
+
+                }
+
+
+                updateOwnerStats();
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       OWNER STATISTICS
+    ===================================================== */
+
+    function updateOwnerStats() {
+
+        if (ownerUsers) {
+
+            ownerUsers.textContent =
+                memory.users.length;
+
+        }
+
+
+        if (ownerChats) {
+
+            ownerChats.textContent =
+                memory.conversations.length;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CREATE OWNER TRAINER UI
+    ===================================================== */
+
+    function createTrainerInterface() {
+
+        if (!ownerPanel) {
+
+            return;
+
+        }
+
+
+        if (
+            document.getElementById(
+                "moonplugTrainerArea"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const section =
+            document.createElement(
+                "div"
+            );
+
+
+        section.id =
+            "moonplugTrainerArea";
+
+
+        section.className =
+            "owner-section";
+
+
+        section.innerHTML = `
+
+            <h2>🧠 MoonPlug AI Trainer</h2>
+
+            <p style="
+                color:#888;
+                margin-bottom:18px;
+            ">
+                Train MoonPlug without an API.
+                Training is stored locally in this browser.
+            </p>
+
+            <div class="trainer-actions">
+
+                <button
+                    type="button"
+                    id="trainerTalkButton"
+                >
+                    💬 Talk to Trainer
+                </button>
+
+                <button
+                    type="button"
+                    id="trainerAddButton"
+                >
+                    🧠 Add Training
+                </button>
+
+                <button
+                    type="button"
+                    id="trainerSearchButton"
+                >
+                    🔎 Search Training
+                </button>
+
+                <button
+                    type="button"
+                    id="trainerStatsButton"
+                >
+                    📊 Statistics
+                </button>
+
+                <button
+                    type="button"
+                    id="trainerExportButton"
+                >
+                    📤 Export
+                </button>
+
+                <button
+                    type="button"
+                    id="trainerImportButton"
+                >
+                    📥 Import
+                </button>
+
+                <button
+                    type="button"
+                    id="trainerBackupButton"
+                >
+                    💾 Backup
+                </button>
+
+                <button
+                    type="button"
+                    id="trainerViewButton"
+                >
+                    📚 View Training
+                </button>
+
+            </div>
+
+            <div
+                id="trainerOutput"
+                style="
+                    margin-top:20px;
+                    display:none;
+                "
+            ></div>
+
+        `;
+
+
+        ownerPanel.appendChild(
+            section
+        );
+
+
+        connectTrainerButtons();
+
+    }
+
+
+    /* =====================================================
+       CONNECT TRAINER BUTTONS
+    ===================================================== */
+
+    function connectTrainerButtons() {
+
+        const talk =
+            document.getElementById(
+                "trainerTalkButton"
+            );
+
+        const add =
+            document.getElementById(
+                "trainerAddButton"
+            );
+
+        const search =
+            document.getElementById(
+                "trainerSearchButton"
+            );
+
+        const stats =
+            document.getElementById(
+                "trainerStatsButton"
+            );
+
+        const exportButton =
+            document.getElementById(
+                "trainerExportButton"
+            );
+
+        const importButton =
+            document.getElementById(
+                "trainerImportButton"
+            );
+
+        const backup =
+            document.getElementById(
+                "trainerBackupButton"
+            );
+
+        const view =
+            document.getElementById(
+                "trainerViewButton"
+            );
+
+
+        if (talk) {
+
+            talk.addEventListener(
+                "click",
+                trainerTalk
+            );
+
+        }
+
+
+        if (add) {
+
+            add.addEventListener(
+                "click",
+                trainerAdd
+            );
+
+        }
+
+
+        if (search) {
+
+            search.addEventListener(
+                "click",
+                trainerSearch
+            );
+
+        }
+
+
+        if (stats) {
+
+            stats.addEventListener(
+                "click",
+                trainerStats
+            );
+
+        }
+
+
+        if (exportButton) {
+
+            exportButton.addEventListener(
+                "click",
+                exportTraining
+            );
+
+        }
+
+
+        if (importButton) {
+
+            importButton.addEventListener(
+                "click",
+                importTraining
+            );
+
+        }
+
+
+        if (backup) {
+
+            backup.addEventListener(
+                "click",
+                createBackup
+            );
+
+        }
+
+
+        if (view) {
+
+            view.addEventListener(
+                "click",
+                viewTraining
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       TRAINER OUTPUT
+    ===================================================== */
+
+    function getTrainerOutput() {
+
+        const output =
+            document.getElementById(
+                "trainerOutput"
+            );
+
+
+        if (!output) {
+
+            return null;
+
+        }
+
+
+        output.style.display =
+            "block";
+
+
+        return output;
+
+    }
+
+
+    /* =====================================================
+       TRAINER TALK
+    ===================================================== */
+
+    function trainerTalk() {
+
+        const output =
+            getTrainerOutput();
+
+
+        if (!output) {
+
+            return;
+
+        }
+
+
+        output.innerHTML = `
+
+            <div style="
+                background:#101010;
+                border:1px solid #292929;
+                border-radius:14px;
+                padding:18px;
+            ">
+
+                <strong>💬 Talk to MoonPlug Trainer</strong>
+
+                <input
+                    id="trainerQuestion"
+                    type="text"
+                    placeholder="Ask the trainer something..."
+                    style="
+                        width:100%;
+                        margin-top:14px;
+                        height:44px;
+                        padding:0 12px;
+                        border-radius:9px;
+                        border:1px solid #333;
+                        background:#181818;
+                        color:white;
+                    "
+                >
+
+                <button
+                    id="trainerAskButton"
+                    type="button"
+                    style="
+                        margin-top:10px;
+                    "
+                >
+                    Ask
+                </button>
+
+                <div
+                    id="trainerAnswer"
+                    style="
+                        margin-top:15px;
+                        color:#ccc;
+                    "
+                ></div>
+
+            </div>
+
+        `;
+
+
+        const input =
+            document.getElementById(
+                "trainerQuestion"
+            );
+
+        const ask =
+            document.getElementById(
+                "trainerAskButton"
+            );
+
+        const answer =
+            document.getElementById(
+                "trainerAnswer"
+            );
+
+
+        ask.addEventListener(
+            "click",
+            () => {
+
+                const question =
+                    cleanText(
+                        input.value
+                    );
+
+
+                if (!question) {
+
+                    return;
+
+                }
+
+
+                const result =
+                    findBestResponse(
+                        question
+                    );
+
+
+                if (result) {
+
+                    answer.innerHTML = `
+
+                        <strong>MoonPlug:</strong>
+
+                        ${escapeHTML(
+                            result.answer
+                        )}
+
+                        <br>
+
+                        <small style="color:#777;">
+                            Match:
+                            ${Math.round(
+                                result.score * 100
+                            )}%
+                        </small>
+
+                    `;
+
+                } else {
+
+                    answer.innerHTML = `
+
+                        <strong>MoonPlug:</strong>
+
+                        I don't know that one yet.
+
+                        <br><br>
+
+                        <button
+                            id="quickTrainButton"
+                            type="button"
+                        >
+                            🧠 Teach Me
+                        </button>
+
+                    `;
+
+
+                    document
+                        .getElementById(
+                            "quickTrainButton"
+                        )
+                        .addEventListener(
+                            "click",
+                            () => {
+
+                                trainerAdd(
+                                    question
+                                );
+
+                            }
+                        );
 
                 }
 
@@ -1213,246 +2385,971 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =====================================================
-       OWNER LOGOUT
+       ADD TRAINING
     ===================================================== */
 
-    if (ownerLogout) {
+    function trainerAdd(
+        existingQuestion = ""
+    ) {
 
-        ownerLogout.addEventListener(
-            "click",
-            function () {
+        const output =
+            getTrainerOutput();
 
-                closeOwnerPanel();
 
-            }
-        );
+        if (!output) {
+
+            return;
+
+        }
+
+
+        output.innerHTML = `
+
+            <div style="
+                background:#101010;
+                border:1px solid #292929;
+                border-radius:14px;
+                padding:18px;
+            ">
+
+                <strong>🧠 Add Training Example</strong>
+
+                <input
+                    id="newTrainingQuestion"
+                    type="text"
+                    placeholder="User question"
+                    value="${escapeAttribute(
+                        existingQuestion
+                    )}"
+                    style="
+                        width:100%;
+                        margin-top:14px;
+                        height:44px;
+                        padding:0 12px;
+                        border-radius:9px;
+                        border:1px solid #333;
+                        background:#181818;
+                        color:white;
+                    "
+                >
+
+                <textarea
+                    id="newTrainingAnswer"
+                    placeholder="MoonPlug response"
+                    style="
+                        width:100%;
+                        min-height:110px;
+                        margin-top:10px;
+                        padding:12px;
+                        border-radius:9px;
+                        border:1px solid #333;
+                        background:#181818;
+                        color:white;
+                        resize:vertical;
+                    "
+                ></textarea>
+
+                <input
+                    id="newTrainingCategory"
+                    type="text"
+                    placeholder="Category"
+                    value="general"
+                    style="
+                        width:100%;
+                        margin-top:10px;
+                        height:44px;
+                        padding:0 12px;
+                        border-radius:9px;
+                        border:1px solid #333;
+                        background:#181818;
+                        color:white;
+                    "
+                >
+
+                <button
+                    id="saveTrainingButton"
+                    type="button"
+                    style="
+                        margin-top:12px;
+                    "
+                >
+                    Save Training
+                </button>
+
+                <div
+                    id="trainingSaveMessage"
+                    style="
+                        margin-top:10px;
+                        color:#888;
+                    "
+                ></div>
+
+            </div>
+
+        `;
+
+
+        document
+            .getElementById(
+                "saveTrainingButton"
+            )
+            .addEventListener(
+                "click",
+                () => {
+
+                    const question =
+                        document.getElementById(
+                            "newTrainingQuestion"
+                        ).value;
+
+
+                    const answer =
+                        document.getElementById(
+                            "newTrainingAnswer"
+                        ).value;
+
+
+                    const category =
+                        document.getElementById(
+                            "newTrainingCategory"
+                        ).value;
+
+
+                    const result =
+                        addTraining(
+                            question,
+                            answer,
+                            category
+                        );
+
+
+                    const message =
+                        document.getElementById(
+                            "trainingSaveMessage"
+                        );
+
+
+                    if (result.success) {
+
+                        message.textContent =
+                            `✓ Training #${result.example.id} saved.`;
+
+                        message.style.color =
+                            "#7cff9b";
+
+
+                        updateOwnerStats();
+
+                    } else {
+
+                        message.textContent =
+                            result.error;
+
+                        message.style.color =
+                            "#ff6b6b";
+
+                    }
+
+                }
+            );
 
     }
 
 
-
     /* =====================================================
-       OWNER STATS
+       SEARCH TRAINING
     ===================================================== */
 
-    function updateOwnerStats() {
+    function trainerSearch() {
 
-        const usersElement =
+        const output =
+            getTrainerOutput();
+
+
+        if (!output) {
+
+            return;
+
+        }
+
+
+        output.innerHTML = `
+
+            <div style="
+                background:#101010;
+                border:1px solid #292929;
+                border-radius:14px;
+                padding:18px;
+            ">
+
+                <strong>🔎 Search Training</strong>
+
+                <input
+                    id="trainingSearchInput"
+                    type="text"
+                    placeholder="Search questions or answers..."
+                    style="
+                        width:100%;
+                        margin-top:14px;
+                        height:44px;
+                        padding:0 12px;
+                        border-radius:9px;
+                        border:1px solid #333;
+                        background:#181818;
+                        color:white;
+                    "
+                >
+
+                <div
+                    id="trainingSearchResults"
+                    style="
+                        margin-top:15px;
+                    "
+                ></div>
+
+            </div>
+
+        `;
+
+
+        const input =
             document.getElementById(
-                "ownerUsers"
+                "trainingSearchInput"
+            );
+
+        const results =
+            document.getElementById(
+                "trainingSearchResults"
             );
 
 
-        const chatsElement =
+        input.addEventListener(
+            "input",
+            () => {
+
+                const search =
+                    cleanText(
+                        input.value
+                    ).toLowerCase();
+
+
+                if (!search) {
+
+                    results.innerHTML =
+                        "";
+
+                    return;
+
+                }
+
+
+                const found =
+                    memory.training.filter(
+                        example =>
+
+                            example.question
+                                .toLowerCase()
+                                .includes(search)
+
+                            ||
+
+                            example.answer
+                                .toLowerCase()
+                                .includes(search)
+
+                    );
+
+
+                if (!found.length) {
+
+                    results.innerHTML =
+                        `<p style="color:#777;">
+                            No training found.
+                        </p>`;
+
+                    return;
+
+                }
+
+
+                results.innerHTML =
+                    found
+                        .map(
+                            example => `
+
+                                <div style="
+                                    padding:14px;
+                                    margin-top:8px;
+                                    background:#181818;
+                                    border:1px solid #292929;
+                                    border-radius:10px;
+                                ">
+
+                                    <strong>
+                                        #${example.id}
+                                    </strong>
+
+                                    <p style="
+                                        margin-top:7px;
+                                        color:#ddd;
+                                    ">
+                                        Q:
+                                        ${escapeHTML(
+                                            example.question
+                                        )}
+                                    </p>
+
+                                    <p style="
+                                        margin-top:5px;
+                                        color:#999;
+                                    ">
+                                        A:
+                                        ${escapeHTML(
+                                            example.answer
+                                        )}
+                                    </p>
+
+                                </div>
+
+                            `
+                        )
+                        .join("");
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       VIEW TRAINING
+    ===================================================== */
+
+    function viewTraining() {
+
+        const output =
+            getTrainerOutput();
+
+
+        if (!output) {
+
+            return;
+
+        }
+
+
+        if (
+            memory.training.length === 0
+        ) {
+
+            output.innerHTML = `
+
+                <div style="
+                    padding:18px;
+                    color:#888;
+                ">
+                    No training examples yet.
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        output.innerHTML = `
+
+            <div style="
+                background:#101010;
+                border:1px solid #292929;
+                border-radius:14px;
+                padding:18px;
+                max-height:400px;
+                overflow:auto;
+            ">
+
+                <strong>
+                    📚 Training Examples
+                </strong>
+
+                <div id="trainingList"></div>
+
+            </div>
+
+        `;
+
+
+        const list =
             document.getElementById(
-                "ownerChats"
+                "trainingList"
             );
 
 
-        /*
-         * These are placeholders until we
-         * connect a real database/storage system.
-         */
+        list.innerHTML =
+            memory.training
+                .map(
+                    example => `
 
-        if (usersElement) {
+                        <div style="
+                            padding:14px 0;
+                            border-bottom:1px solid #292929;
+                        ">
 
-            usersElement.textContent =
-                "0";
+                            <strong>
+                                #${example.id}
+                            </strong>
+
+                            <p style="
+                                margin-top:6px;
+                            ">
+                                ${escapeHTML(
+                                    example.question
+                                )}
+                            </p>
+
+                            <p style="
+                                margin-top:5px;
+                                color:#888;
+                            ">
+                                ${escapeHTML(
+                                    example.answer
+                                )}
+                            </p>
+
+                            <button
+                                type="button"
+                                class="delete-training-button"
+                                data-id="${example.id}"
+                                style="
+                                    margin-top:8px;
+                                "
+                            >
+                                🗑️ Delete
+                            </button>
+
+                        </div>
+
+                    `
+                )
+                .join("");
+
+
+        list
+            .querySelectorAll(
+                ".delete-training-button"
+            )
+            .forEach(
+                button => {
+
+                    button.addEventListener(
+                        "click",
+                        () => {
+
+                            deleteTraining(
+                                Number(
+                                    button.dataset.id
+                                )
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+    }
+
+
+    /* =====================================================
+       DELETE TRAINING
+    ===================================================== */
+
+    function deleteTraining(
+        id
+    ) {
+
+        const index =
+            memory.training.findIndex(
+                item =>
+                    Number(item.id) ===
+                    Number(id)
+            );
+
+
+        if (index === -1) {
+
+            return;
 
         }
 
 
-        if (chatsElement) {
-
-            const chatCount =
-                document.querySelectorAll(
-                    ".message-bubble.user"
-                ).length;
+        const confirmed =
+            confirm(
+                "Delete this training example?"
+            );
 
 
-            chatsElement.textContent =
-                chatCount;
+        if (!confirmed) {
+
+            return;
+
+        }
+
+
+        memory.training.splice(
+            index,
+            1
+        );
+
+
+        memory.statistics.totalTraining =
+            memory.training.length;
+
+
+        saveMemory();
+
+
+        viewTraining();
+
+        updateOwnerStats();
+
+    }
+
+
+    /* =====================================================
+       STATISTICS
+    ===================================================== */
+
+    function trainerStats() {
+
+        const output =
+            getTrainerOutput();
+
+
+        if (!output) {
+
+            return;
 
         }
 
-    }
+
+        const categories = {};
 
 
+        for (
+            const example
+            of memory.training
+        ) {
 
-    /* =====================================================
-       OWNER CONTROL BUTTONS
-    ===================================================== */
-
-    const manageUsersButton =
-        document.getElementById(
-            "manageUsersButton"
-        );
-
-
-    const manageChatsButton =
-        document.getElementById(
-            "manageChatsButton"
-        );
+            const category =
+                example.category ||
+                "general";
 
 
-    const appSettingsButton =
-        document.getElementById(
-            "appSettingsButton"
-        );
-
-
-    const trainerButton =
-        document.getElementById(
-            "trainerButton"
-        );
-
-
-    if (manageUsersButton) {
-
-        manageUsersButton.addEventListener(
-            "click",
-            function () {
-
-                alert(
-                    "User management will be added to the Owner Panel."
-                );
-
-            }
-        );
-
-    }
-
-
-    if (manageChatsButton) {
-
-        manageChatsButton.addEventListener(
-            "click",
-            function () {
-
-                alert(
-                    "Chat management will be added to the Owner Panel."
-                );
-
-            }
-        );
-
-    }
-
-
-    if (appSettingsButton) {
-
-        appSettingsButton.addEventListener(
-            "click",
-            function () {
-
-                closeOwnerPanel();
-
-                openSettings();
-
-            }
-        );
-
-    }
-
-
-    if (trainerButton) {
-
-        trainerButton.addEventListener(
-            "click",
-            function () {
-
-                alert(
-                    "The MoonPlug AI Trainer will go here."
-                );
-
-            }
-        );
-
-    }
-
-
-
-    /* =====================================================
-       ESCAPE KEY
-    ===================================================== */
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key !== "Escape"
-            ) {
-                return;
-            }
-
-
-            closeSettingsPanel();
-
-            closeAccountScreen();
-
-            closeOwnerLogin();
-
-            closeOwnerPanel();
+            categories[category] =
+                (
+                    categories[category] ||
+                    0
+                ) + 1;
 
         }
-    );
+
+
+        const totalUses =
+            memory.training.reduce(
+                (
+                    total,
+                    item
+                ) =>
+                    total +
+                    Number(
+                        item.uses || 0
+                    ),
+                0
+            );
+
+
+        output.innerHTML = `
+
+            <div style="
+                background:#101010;
+                border:1px solid #292929;
+                border-radius:14px;
+                padding:18px;
+            ">
+
+                <strong>📊 MoonPlug Statistics</strong>
+
+                <div style="
+                    margin-top:15px;
+                    display:grid;
+                    gap:10px;
+                ">
+
+                    <div>
+                        Training examples:
+                        <strong>
+                            ${memory.training.length}
+                        </strong>
+                    </div>
+
+                    <div>
+                        Conversations:
+                        <strong>
+                            ${memory.conversations.length}
+                        </strong>
+                    </div>
+
+                    <div>
+                        Total messages:
+                        <strong>
+                            ${memory.statistics.totalMessages}
+                        </strong>
+                    </div>
+
+                    <div>
+                        Response uses:
+                        <strong>
+                            ${totalUses}
+                        </strong>
+                    </div>
+
+                    <div>
+                        Saved users:
+                        <strong>
+                            ${memory.users.length}
+                        </strong>
+                    </div>
+
+                </div>
+
+                <h3 style="
+                    margin-top:20px;
+                ">
+                    Categories
+                </h3>
+
+                <div style="
+                    margin-top:10px;
+                    color:#aaa;
+                ">
+
+                    ${
+                        Object.keys(
+                            categories
+                        ).length
+
+                        ?
+
+                        Object.entries(
+                            categories
+                        )
+                        .map(
+                            ([name, count]) =>
+                                `<div>
+                                    ${escapeHTML(name)}
+                                    — ${count}
+                                </div>`
+                        )
+                        .join("")
+
+                        :
+
+                        "No categories yet."
+
+                    }
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
 
 
     /* =====================================================
-       INITIAL STATE
+       EXPORT TRAINING
     ===================================================== */
 
-    /*
-     * Make sure the sidebar starts thin
-     * on tablet/phone through CSS.
-     */
+    function exportTraining() {
 
-    if (sidebar) {
+        const data = {
 
-        sidebar.classList.remove(
-            "expanded"
+            exported:
+                new Date().toISOString(),
+
+            version:
+                APP_VERSION,
+
+            training:
+                memory.training
+
+        };
+
+
+        downloadJSON(
+            data,
+            `moonplug_training_${Date.now()}.json`
         );
 
     }
 
 
-    /*
-     * Make sure owner screens start closed.
-     */
+    /* =====================================================
+       IMPORT TRAINING
+    ===================================================== */
 
-    if (ownerPanel) {
+    function importTraining() {
 
-        ownerPanel.classList.remove(
-            "open"
+        const input =
+            document.createElement(
+                "input"
+            );
+
+
+        input.type =
+            "file";
+
+        input.accept =
+            ".json,application/json";
+
+
+        input.addEventListener(
+            "change",
+            async () => {
+
+                const file =
+                    input.files[0];
+
+
+                if (!file) {
+
+                    return;
+
+                }
+
+
+                try {
+
+                    const text =
+                        await file.text();
+
+
+                    const data =
+                        JSON.parse(
+                            text
+                        );
+
+
+                    const examples =
+                        Array.isArray(
+                            data.training
+                        )
+                            ? data.training
+                            : [];
+
+
+                    let imported = 0;
+
+
+                    for (
+                        const example
+                        of examples
+                    ) {
+
+                        const result =
+                            addTraining(
+                                example.question,
+                                example.answer,
+                                example.category ||
+                                    "general"
+                            );
+
+
+                        if (
+                            result.success
+                        ) {
+
+                            imported++;
+
+                        }
+
+                    }
+
+
+                    alert(
+                        `Imported ${imported} training examples.`
+                    );
+
+
+                    updateOwnerStats();
+
+
+                } catch (error) {
+
+                    alert(
+                        "Could not import that file."
+                    );
+
+                    console.error(
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+
+        input.click();
+
+    }
+
+
+    /* =====================================================
+       DOWNLOAD JSON
+    ===================================================== */
+
+    function downloadJSON(
+        data,
+        filename
+    ) {
+
+        const blob =
+            new Blob(
+                [
+                    JSON.stringify(
+                        data,
+                        null,
+                        2
+                    )
+                ],
+                {
+                    type:
+                        "application/json"
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+
+        link.href =
+            url;
+
+        link.download =
+            filename;
+
+
+        document.body.appendChild(
+            link
+        );
+
+
+        link.click();
+
+
+        link.remove();
+
+
+        URL.revokeObjectURL(
+            url
         );
 
     }
 
 
-    if (ownerLogin) {
+    /* =====================================================
+       ESCAPE HTML
+    ===================================================== */
 
-        ownerLogin.classList.remove(
-            "open"
+    function escapeHTML(
+        value
+    ) {
+
+        return String(value)
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    /* =====================================================
+       ESCAPE ATTRIBUTE
+    ===================================================== */
+
+    function escapeAttribute(
+        value
+    ) {
+
+        return escapeHTML(
+            value
         );
 
     }
 
 
-    if (accountScreen) {
+    /* =====================================================
+       CREATE TRAINER
+    ===================================================== */
 
-        accountScreen.classList.remove(
-            "open"
-        );
+    createTrainerInterface();
 
-    }
 
+    /* =====================================================
+       INITIAL OWNER STATS
+    ===================================================== */
+
+    updateOwnerStats();
+
+
+    /* =====================================================
+       DEBUG INFORMATION
+    ===================================================== */
 
     console.log(
-        "MoonPlug AI loaded successfully."
+        `%c🌙 ${APP_NAME} Trainer ${APP_VERSION}`,
+        "font-size:16px;font-weight:bold;"
+    );
+
+    console.log(
+        "Training examples:",
+        memory.training.length
+    );
+
+    console.log(
+        "Conversations:",
+        memory.conversations.length
     );
 
 });
-
