@@ -1,17 +1,32 @@
+/* =====================================================
+   MOONPLUG AI
+   COMPLETE JAVASCRIPT
+   NO API REQUIRED
+===================================================== */
+
 document.addEventListener("DOMContentLoaded", () => {
+
+    "use strict";
+
 
     /* =================================================
        ELEMENTS
     ================================================= */
 
     const sidebar =
-        document.querySelector(".sidebar");
+        document.getElementById("sidebar");
 
     const sidebarLogo =
         document.getElementById("sidebarLogo");
 
+    const chatSection =
+        document.getElementById("chatSection");
+
     const messages =
         document.getElementById("messages");
+
+    const emptyChat =
+        document.getElementById("emptyChat");
 
     const messageInput =
         document.getElementById("messageInput");
@@ -37,14 +52,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeButton =
         document.getElementById("themeButton");
 
+    const sidebarToggleSetting =
+        document.getElementById("sidebarToggleSetting");
+
 
     /* ACCOUNT */
+
+    const accountButton =
+        document.getElementById("accountButton");
 
     const accountScreen =
         document.getElementById("accountScreen");
 
-    const ownerButton =
-        document.getElementById("ownerButton");
+    const closeAccount =
+        document.getElementById("closeAccount");
 
     const loginTab =
         document.getElementById("loginTab");
@@ -58,19 +79,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const signupForm =
         document.getElementById("signupForm");
 
-    const closeAccount =
-        document.getElementById("closeAccount");
-
     const accountMessage =
         document.getElementById("accountMessage");
 
 
-    /* OWNER LOGIN */
+    /* OWNER */
 
     const ownerLogin =
         document.getElementById("ownerLogin");
 
-    const ownerCodeInput =
+    const ownerCode =
         document.getElementById("ownerCode");
 
     const ownerLoginButton =
@@ -82,9 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const ownerError =
         document.getElementById("ownerError");
 
-
-    /* OWNER PANEL */
-
     const ownerPanel =
         document.getElementById("ownerPanel");
 
@@ -92,54 +107,228 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("ownerLogout");
 
 
+    /* OWNER STATISTICS */
+
+    const ownerUsers =
+        document.getElementById("ownerUsers");
+
+    const ownerChats =
+        document.getElementById("ownerChats");
+
+    const ownerMessages =
+        document.getElementById("ownerMessages");
+
+
+    /* OWNER CONTROLS */
+
+    const manageUsersButton =
+        document.getElementById("manageUsersButton");
+
+    const manageChatsButton =
+        document.getElementById("manageChatsButton");
+
+    const appSettingsButton =
+        document.getElementById("appSettingsButton");
+
+    const ownerActionMessage =
+        document.getElementById("ownerActionMessage");
+
+
     /* TRAINER */
 
-    const trainerStart =
-        document.getElementById("trainerStart");
+    const trainingInput =
+        document.getElementById("trainingInput");
 
-    const trainerPause =
-        document.getElementById("trainerPause");
+    const saveTrainingButton =
+        document.getElementById("saveTrainingButton");
 
-    const trainerStop =
-        document.getElementById("trainerStop");
+    const clearTrainingButton =
+        document.getElementById("clearTrainingButton");
 
-    const trainerStatusBadge =
-        document.getElementById("trainerStatusBadge");
+    const trainingStatus =
+        document.getElementById("trainingStatus");
 
-    const trainerQuestions =
-        document.getElementById("trainerQuestions");
 
-    const trainerKnowledge =
-        document.getElementById("trainerKnowledge");
+    /* OWNER CHAT */
 
-    const trainerSources =
-        document.getElementById("trainerSources");
+    const ownerChatMessages =
+        document.getElementById("ownerChatMessages");
 
-    const trainerProgressBar =
-        document.getElementById("trainerProgressBar");
+    const ownerChatInput =
+        document.getElementById("ownerChatInput");
 
-    const trainerProgressText =
-        document.getElementById("trainerProgressText");
+    const ownerChatSend =
+        document.getElementById("ownerChatSend");
 
-    const trainerCurrent =
-        document.getElementById("trainerCurrent");
 
-    const trainerLog =
-        document.getElementById("trainerLog");
+    /* =================================================
+       STORAGE
+    ================================================= */
 
-    const clearTrainerLog =
-        document.getElementById("clearTrainerLog");
+    const STORAGE = {
 
-    const pythonStatus =
-        document.getElementById("pythonStatus");
+        users: "moonplug_users",
 
-    const pythonStatusDot =
-        document.getElementById("pythonStatusDot");
+        chats: "moonplug_chats",
+
+        messages: "moonplug_messages",
+
+        training: "moonplug_training",
+
+        theme: "moonplug_theme",
+
+        textSize: "moonplug_text_size"
+
+    };
+
+
+    /* =================================================
+       OWNER CODE
+       
+       IMPORTANT:
+       This is only client-side protection.
+       A real secure owner system requires a server.
+    ================================================= */
+
+    const OWNER_CODE =
+        "BumsUp1AI1591";
+
+
+    /* =================================================
+       SAFE STORAGE FUNCTIONS
+    ================================================= */
+
+    function getStorage(key, fallback) {
+
+        try {
+
+            const value =
+                localStorage.getItem(key);
+
+            if (value === null) {
+                return fallback;
+            }
+
+            return JSON.parse(value);
+
+        } catch (error) {
+
+            console.warn(
+                "Storage read error:",
+                error
+            );
+
+            return fallback;
+
+        }
+
+    }
+
+
+    function setStorage(key, value) {
+
+        try {
+
+            localStorage.setItem(
+                key,
+                JSON.stringify(value)
+            );
+
+            return true;
+
+        } catch (error) {
+
+            console.warn(
+                "Storage write error:",
+                error
+            );
+
+            return false;
+
+        }
+
+    }
+
+
+    /* =================================================
+       INITIALIZE STORAGE
+    ================================================= */
+
+    if (!localStorage.getItem(STORAGE.users)) {
+
+        setStorage(
+            STORAGE.users,
+            []
+        );
+
+    }
+
+
+    if (!localStorage.getItem(STORAGE.chats)) {
+
+        setStorage(
+            STORAGE.chats,
+            []
+        );
+
+    }
+
+
+    if (!localStorage.getItem(STORAGE.messages)) {
+
+        setStorage(
+            STORAGE.messages,
+            []
+        );
+
+    }
+
+
+    if (!localStorage.getItem(STORAGE.training)) {
+
+        setStorage(
+            STORAGE.training,
+            []
+        );
+
+    }
 
 
     /* =================================================
        SIDEBAR
     ================================================= */
+
+    function setSidebarExpanded(expanded) {
+
+        if (!sidebar) {
+            return;
+        }
+
+
+        if (expanded) {
+
+            sidebar.classList.add(
+                "expanded"
+            );
+
+            sidebar.classList.remove(
+                "collapsed"
+            );
+
+        } else {
+
+            sidebar.classList.add(
+                "collapsed"
+            );
+
+            sidebar.classList.remove(
+                "expanded"
+            );
+
+        }
+
+    }
+
 
     function toggleSidebar() {
 
@@ -147,37 +336,306 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        sidebar.classList.toggle("expanded");
+
+        const expanded =
+            sidebar.classList.contains(
+                "expanded"
+            );
+
+
+        setSidebarExpanded(
+            !expanded
+        );
 
     }
 
 
-    if (sidebar) {
+    /*
+     * Desktop starts expanded.
+     * iPad/iPhone starts collapsed.
+     */
 
-        sidebar.addEventListener("click", (event) => {
+    function initializeSidebar() {
 
-            const clickedButton =
-                event.target.closest(".sidebar-button");
-
-            const clickedLogo =
-                event.target.closest(".sidebar-logo");
+        if (!sidebar) {
+            return;
+        }
 
 
-            if (clickedButton) {
-                return;
-            }
+        if (
+            window.matchMedia(
+                "(max-width: 1200px)"
+            ).matches
+        ) {
 
-            if (clickedLogo) {
+            setSidebarExpanded(false);
+
+        } else {
+
+            setSidebarExpanded(true);
+
+        }
+
+    }
+
+
+    initializeSidebar();
+
+
+    /*
+     * Clicking the logo toggles sidebar.
+     */
+
+    if (sidebarLogo) {
+
+        sidebarLogo.addEventListener(
+            "click",
+            (event) => {
+
+                event.preventDefault();
+
+                event.stopPropagation();
 
                 toggleSidebar();
 
-                return;
+            }
+        );
+
+    }
+
+
+    /*
+     * Clicking EMPTY SPACE in sidebar
+     * also toggles sidebar.
+     *
+     * Buttons themselves do not.
+     */
+
+    if (sidebar) {
+
+        sidebar.addEventListener(
+            "click",
+            (event) => {
+
+                const clickedButton =
+                    event.target.closest(
+                        ".sidebar-button"
+                    );
+
+
+                const clickedLogo =
+                    event.target.closest(
+                        ".sidebar-logo"
+                    );
+
+
+                if (
+                    clickedButton ||
+                    clickedLogo
+                ) {
+
+                    return;
+
+                }
+
+
+                toggleSidebar();
 
             }
+        );
 
-            toggleSidebar();
+    }
 
-        });
+
+    /* =================================================
+       SIDEBAR BUTTONS
+    ================================================= */
+
+    function sidebarNotice(text) {
+
+        if (messages) {
+
+            removeEmptyChat();
+
+            addMessage(
+                text,
+                "ai"
+            );
+
+        }
+
+    }
+
+
+    const newChatButton =
+        document.getElementById(
+            "newChatButton"
+        );
+
+    if (newChatButton) {
+
+        newChatButton.addEventListener(
+            "click",
+            () => {
+
+                clearChat();
+
+            }
+        );
+
+    }
+
+
+    const learnButton =
+        document.getElementById(
+            "learnButton"
+        );
+
+    if (learnButton) {
+
+        learnButton.addEventListener(
+            "click",
+            () => {
+
+                sidebarNotice(
+                    "AI Learn is ready. You can train MoonPlug from the Owner Panel."
+                );
+
+            }
+        );
+
+    }
+
+
+    const studyButton =
+        document.getElementById(
+            "studyButton"
+        );
+
+    if (studyButton) {
+
+        studyButton.addEventListener(
+            "click",
+            () => {
+
+                sidebarNotice(
+                    "Study mode is ready."
+                );
+
+            }
+        );
+
+    }
+
+
+    const cookButton =
+        document.getElementById(
+            "cookButton"
+        );
+
+    if (cookButton) {
+
+        cookButton.addEventListener(
+            "click",
+            () => {
+
+                sidebarNotice(
+                    "Cook mode is ready."
+                );
+
+            }
+        );
+
+    }
+
+
+    const imagesButton =
+        document.getElementById(
+            "imagesButton"
+        );
+
+    if (imagesButton) {
+
+        imagesButton.addEventListener(
+            "click",
+            () => {
+
+                sidebarNotice(
+                    "Image mode is ready."
+                );
+
+            }
+        );
+
+    }
+
+
+    const codeButton =
+        document.getElementById(
+            "codeButton"
+        );
+
+    if (codeButton) {
+
+        codeButton.addEventListener(
+            "click",
+            () => {
+
+                sidebarNotice(
+                    "Code mode is ready."
+                );
+
+            }
+        );
+
+    }
+
+
+    const switchButton =
+        document.getElementById(
+            "switchButton"
+        );
+
+    if (switchButton) {
+
+        switchButton.addEventListener(
+            "click",
+            () => {
+
+                sidebarNotice(
+                    "AI Switch is ready."
+                );
+
+            }
+        );
+
+    }
+
+
+    const historyButton =
+        document.getElementById(
+            "historyButton"
+        );
+
+    if (historyButton) {
+
+        historyButton.addEventListener(
+            "click",
+            () => {
+
+                const chats =
+                    getStorage(
+                        STORAGE.chats,
+                        []
+                    );
+
+
+                sidebarNotice(
+                    `You currently have ${chats.length} saved chat session(s).`
+                );
+
+            }
+        );
 
     }
 
@@ -186,46 +644,103 @@ document.addEventListener("DOMContentLoaded", () => {
        SETTINGS
     ================================================= */
 
+    function openSettings() {
+
+        if (!settingsPanel) {
+            return;
+        }
+
+
+        settingsPanel.classList.add(
+            "open"
+        );
+
+        settingsPanel.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+    }
+
+
+    function closeSettingsPanel() {
+
+        if (!settingsPanel) {
+            return;
+        }
+
+
+        settingsPanel.classList.remove(
+            "open"
+        );
+
+        settingsPanel.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
     if (settingsButton) {
 
-        settingsButton.addEventListener("click", (event) => {
+        settingsButton.addEventListener(
+            "click",
+            (event) => {
 
-            event.preventDefault();
-            event.stopPropagation();
+                event.preventDefault();
 
-            if (settingsPanel) {
-                settingsPanel.classList.add("open");
+                event.stopPropagation();
+
+                openSettings();
+
             }
-
-        });
+        );
 
     }
 
 
     if (closeSettings) {
 
-        closeSettings.addEventListener("click", () => {
-
-            if (settingsPanel) {
-                settingsPanel.classList.remove("open");
-            }
-
-        });
+        closeSettings.addEventListener(
+            "click",
+            closeSettingsPanel
+        );
 
     }
 
 
     if (settingsPanel) {
 
-        settingsPanel.addEventListener("click", (event) => {
+        settingsPanel.addEventListener(
+            "click",
+            (event) => {
 
-            if (event.target === settingsPanel) {
+                if (
+                    event.target ===
+                    settingsPanel
+                ) {
 
-                settingsPanel.classList.remove("open");
+                    closeSettingsPanel();
+
+                }
 
             }
+        );
 
-        });
+    }
+
+
+    if (sidebarToggleSetting) {
+
+        sidebarToggleSetting.addEventListener(
+            "click",
+            () => {
+
+                toggleSidebar();
+
+            }
+        );
 
     }
 
@@ -234,23 +749,71 @@ document.addEventListener("DOMContentLoaded", () => {
        THEME
     ================================================= */
 
-    if (themeButton) {
+    function loadTheme() {
 
-        themeButton.addEventListener("click", () => {
+        const theme =
+            localStorage.getItem(
+                STORAGE.theme
+            );
 
-            document.body.classList.toggle(
+
+        if (theme === "light") {
+
+            document.body.classList.add(
                 "light-theme"
             );
 
-            const light =
-                document.body.classList.contains(
-                    "light-theme"
+            if (themeButton) {
+                themeButton.textContent =
+                    "Light";
+            }
+
+        } else {
+
+            document.body.classList.remove(
+                "light-theme"
+            );
+
+            if (themeButton) {
+                themeButton.textContent =
+                    "Dark";
+            }
+
+        }
+
+    }
+
+
+    loadTheme();
+
+
+    if (themeButton) {
+
+        themeButton.addEventListener(
+            "click",
+            () => {
+
+                const light =
+                    document.body.classList.toggle(
+                        "light-theme"
+                    );
+
+
+                localStorage.setItem(
+                    STORAGE.theme,
+                    light
+                        ? "light"
+                        : "dark"
                 );
 
-            themeButton.textContent =
-                light ? "Light" : "Dark";
 
-        });
+                themeButton.textContent =
+                    light
+                        ? "Light"
+                        : "Dark";
+
+            }
+        );
 
     }
 
@@ -259,61 +822,353 @@ document.addEventListener("DOMContentLoaded", () => {
        TEXT SIZE
     ================================================= */
 
-    const sizeButtons =
-        document.querySelectorAll(".size-button");
+    function loadTextSize() {
 
-    sizeButtons.forEach((button) => {
+        const size =
+            localStorage.getItem(
+                STORAGE.textSize
+            ) || "medium";
 
-        button.addEventListener("click", () => {
 
-            const size =
-                button.dataset.size;
+        document.body.classList.remove(
+            "text-small",
+            "text-medium",
+            "text-large"
+        );
 
-            document.body.classList.remove(
-                "text-small",
-                "text-medium",
-                "text-large"
-            );
 
-            document.body.classList.add(
-                "text-" + size
-            );
+        document.body.classList.add(
+            "text-" + size
+        );
 
-            sizeButtons.forEach((item) => {
 
-                item.classList.remove("active");
+        document
+            .querySelectorAll(".size-button")
+            .forEach((button) => {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.size === size
+                );
 
             });
 
-            button.classList.add("active");
+    }
+
+
+    loadTextSize();
+
+
+    document
+        .querySelectorAll(".size-button")
+        .forEach((button) => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const size =
+                        button.dataset.size;
+
+
+                    localStorage.setItem(
+                        STORAGE.textSize,
+                        size
+                    );
+
+
+                    loadTextSize();
+
+                }
+            );
 
         });
 
-    });
-
 
     /* =================================================
-       MESSAGE BUBBLES
+       CHAT
     ================================================= */
 
-    function addMessage(text, type) {
+    function removeEmptyChat() {
+
+        const currentEmpty =
+            document.getElementById(
+                "emptyChat"
+            );
+
+
+        if (currentEmpty) {
+
+            currentEmpty.remove();
+
+        }
+
+    }
+
+
+    function addMessage(
+        text,
+        type,
+        save = true
+    ) {
 
         if (!messages) {
+            return null;
+        }
+
+
+        removeEmptyChat();
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+
+        bubble.className =
+            "message-bubble " +
+            type;
+
+
+        bubble.textContent =
+            text;
+
+
+        messages.appendChild(
+            bubble
+        );
+
+
+        requestAnimationFrame(
+            () => {
+
+                messages.scrollTop =
+                    messages.scrollHeight;
+
+            }
+        );
+
+
+        if (save) {
+
+            const savedMessages =
+                getStorage(
+                    STORAGE.messages,
+                    []
+                );
+
+
+            savedMessages.push({
+
+                text: text,
+
+                type: type,
+
+                time:
+                    new Date()
+                    .toISOString()
+
+            });
+
+
+            setStorage(
+                STORAGE.messages,
+                savedMessages
+            );
+
+
+            updateOwnerStats();
+
+        }
+
+
+        return bubble;
+
+    }
+
+
+    function showTyping() {
+
+        if (!typing) {
             return;
         }
 
-        const bubble =
-            document.createElement("div");
 
-        bubble.className =
-            "message-bubble " + type;
+        typing.style.display =
+            "flex";
 
-        bubble.textContent = text;
+    }
 
-        messages.appendChild(bubble);
 
-        messages.scrollTop =
-            messages.scrollHeight;
+    function hideTyping() {
+
+        if (!typing) {
+            return;
+        }
+
+
+        typing.style.display =
+            "none";
+
+    }
+
+
+    /* =================================================
+       LOCAL RESPONSE SYSTEM
+    ================================================= */
+
+    function getTraining() {
+
+        return getStorage(
+            STORAGE.training,
+            []
+        );
+
+    }
+
+
+    function findTrainingResponse(
+        text
+    ) {
+
+        const training =
+            getTraining();
+
+
+        const lower =
+            text.toLowerCase();
+
+
+        for (
+            let i = 0;
+            i < training.length;
+            i++
+        ) {
+
+            const item =
+                training[i];
+
+
+            if (
+                item &&
+                item.input &&
+                lower.includes(
+                    item.input.toLowerCase()
+                )
+            ) {
+
+                return item.response;
+
+            }
+
+        }
+
+
+        return null;
+
+    }
+
+
+    function generateLocalResponse(
+        text
+    ) {
+
+        const lower =
+            text.toLowerCase().trim();
+
+
+        /*
+         * First check owner training.
+         */
+
+        const trained =
+            findTrainingResponse(
+                lower
+            );
+
+
+        if (trained) {
+
+            return trained;
+
+        }
+
+
+        /*
+         * Basic built-in responses.
+         */
+
+        if (
+            lower === "hi" ||
+            lower === "hello" ||
+            lower.includes("hey moonplug")
+        ) {
+
+            return "Hey! I'm MoonPlug AI. What would you like to work on?";
+
+        }
+
+
+        if (
+            lower.includes("who are you")
+        ) {
+
+            return "I'm MoonPlug AI, your local AI assistant.";
+
+        }
+
+
+        if (
+            lower.includes("what can you do")
+        ) {
+
+            return "I can chat, help with coding, explain things, study with you, and use information you've added to my local training system.";
+
+        }
+
+
+        if (
+            lower.includes("python")
+        ) {
+
+            return "Python is a great language to learn. I can help you understand Python concepts and build projects step by step.";
+
+        }
+
+
+        if (
+            lower.includes("thank")
+        ) {
+
+            return "You're welcome!";
+
+        }
+
+
+        if (
+            lower.includes("bye")
+        ) {
+
+            return "See you later!";
+
+        }
+
+
+        if (
+            lower.endsWith("?")
+        ) {
+
+            return "That's a good question. I can work through it with you step by step.";
+
+        }
+
+
+        /*
+         * Default response.
+         */
+
+        return "I received your message. I'm currently running MoonPlug's local response system without an API. You can add custom knowledge through the Owner Panel.";
 
     }
 
@@ -324,23 +1179,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function sendMessage() {
 
-        if (!messageInput || !messages) {
+        if (!messageInput) {
             return;
         }
 
+
         const text =
             messageInput.value.trim();
+
 
         if (!text) {
             return;
         }
 
 
-        const emptyChat =
-            document.querySelector(".empty-chat");
+        /*
+         * HIDDEN OWNER CODE DETECTION
+         *
+         * The code can be typed into the chat.
+         */
 
-        if (emptyChat) {
-            emptyChat.remove();
+        if (
+            text === OWNER_CODE
+        ) {
+
+            messageInput.value = "";
+
+            openOwnerPanel();
+
+            return;
+
         }
 
 
@@ -349,26 +1217,60 @@ document.addEventListener("DOMContentLoaded", () => {
             "user"
         );
 
+
         messageInput.value = "";
 
 
-        if (typing) {
-            typing.style.display = "block";
-        }
+        showTyping();
 
 
-        setTimeout(() => {
-
-            if (typing) {
-                typing.style.display = "none";
-            }
-
-            addMessage(
-                "I'm ready to help.",
-                "ai"
+        const chats =
+            getStorage(
+                STORAGE.chats,
+                []
             );
 
-        }, 800);
+
+        chats.push({
+
+            message: text,
+
+            time:
+                new Date()
+                .toISOString()
+
+        });
+
+
+        setStorage(
+            STORAGE.chats,
+            chats
+        );
+
+
+        updateOwnerStats();
+
+
+        setTimeout(
+            () => {
+
+                hideTyping();
+
+
+                const response =
+                    generateLocalResponse(
+                        text
+                    );
+
+
+                addMessage(
+                    response,
+                    "ai"
+                );
+
+            },
+            650
+        );
 
     }
 
@@ -395,7 +1297,10 @@ document.addEventListener("DOMContentLoaded", () => {
             "keydown",
             (event) => {
 
-                if (event.key === "Enter") {
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
 
                     event.preventDefault();
 
@@ -410,21 +1315,117 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =================================================
+       NEW CHAT
+    ================================================= */
+
+    function clearChat() {
+
+        if (!messages) {
+            return;
+        }
+
+
+        messages.innerHTML = "";
+
+
+        const newEmpty =
+            document.createElement(
+                "div"
+            );
+
+
+        newEmpty.id =
+            "emptyChat";
+
+
+        newEmpty.className =
+            "empty-chat";
+
+
+        newEmpty.innerHTML = `
+            <h1>What can I help with?</h1>
+            <p>Ask MoonPlug anything.</p>
+        `;
+
+
+        messages.appendChild(
+            newEmpty
+        );
+
+
+        if (messageInput) {
+
+            messageInput.value = "";
+
+            messageInput.focus();
+
+        }
+
+    }
+
+
+    /* =================================================
        ACCOUNT
     ================================================= */
 
-    if (ownerButton) {
+    function openAccount() {
 
-        ownerButton.addEventListener(
+        if (!accountScreen) {
+            return;
+        }
+
+
+        accountScreen.classList.add(
+            "open"
+        );
+
+
+        accountScreen.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        if (loginEmail) {
+
+            loginEmail.focus();
+
+        }
+
+    }
+
+
+    function closeAccountScreen() {
+
+        if (!accountScreen) {
+            return;
+        }
+
+
+        accountScreen.classList.remove(
+            "open"
+        );
+
+
+        accountScreen.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
+    if (accountButton) {
+
+        accountButton.addEventListener(
             "click",
             (event) => {
 
                 event.preventDefault();
+
                 event.stopPropagation();
 
-                if (accountScreen) {
-                    accountScreen.classList.add("open");
-                }
+                openAccount();
 
             }
         );
@@ -432,98 +1433,123 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    if (closeAccount) {
+
+        closeAccount.addEventListener(
+            "click",
+            closeAccountScreen
+        );
+
+    }
+
+
     /* =================================================
-       LOGIN TAB
+       ACCOUNT TABS
     ================================================= */
+
+    function showLogin() {
+
+        if (!loginForm || !signupForm) {
+            return;
+        }
+
+
+        loginForm.hidden =
+            false;
+
+
+        signupForm.hidden =
+            true;
+
+
+        loginTab?.classList.add(
+            "active"
+        );
+
+
+        signupTab?.classList.remove(
+            "active"
+        );
+
+
+        if (accountMessage) {
+
+            accountMessage.textContent =
+                "";
+
+        }
+
+    }
+
+
+    function showSignup() {
+
+        if (!loginForm || !signupForm) {
+            return;
+        }
+
+
+        loginForm.hidden =
+            true;
+
+
+        signupForm.hidden =
+            false;
+
+
+        signupTab?.classList.add(
+            "active"
+        );
+
+
+        loginTab?.classList.remove(
+            "active"
+        );
+
+
+        if (accountMessage) {
+
+            accountMessage.textContent =
+                "";
+
+        }
+
+    }
+
 
     if (loginTab) {
 
-        loginTab.addEventListener("click", () => {
-
-            loginTab.classList.add("active");
-
-            if (signupTab) {
-                signupTab.classList.remove("active");
-            }
-
-            if (loginForm) {
-                loginForm.style.display = "flex";
-            }
-
-            if (signupForm) {
-                signupForm.style.display = "none";
-            }
-
-            if (accountMessage) {
-                accountMessage.textContent = "";
-            }
-
-        });
+        loginTab.addEventListener(
+            "click",
+            showLogin
+        );
 
     }
 
-
-    /* =================================================
-       SIGNUP TAB
-    ================================================= */
 
     if (signupTab) {
 
-        signupTab.addEventListener("click", () => {
-
-            signupTab.classList.add("active");
-
-            if (loginTab) {
-                loginTab.classList.remove("active");
-            }
-
-            if (signupForm) {
-                signupForm.style.display = "flex";
-            }
-
-            if (loginForm) {
-                loginForm.style.display = "none";
-            }
-
-            if (accountMessage) {
-                accountMessage.textContent = "";
-            }
-
-        });
+        signupTab.addEventListener(
+            "click",
+            showSignup
+        );
 
     }
 
 
     /* =================================================
-       CLOSE ACCOUNT
+       LOGIN
     ================================================= */
 
-    if (closeAccount) {
+    const loginEmail =
+        document.getElementById(
+            "loginEmail"
+        );
 
-        closeAccount.addEventListener("click", () => {
-
-            if (accountScreen) {
-                accountScreen.classList.remove("open");
-            }
-
-        });
-
-    }
-
-
-    /* =================================================
-       OWNER CODE
-    ================================================= */
-
-    /*
-     * IMPORTANT:
-     * This is only client-side testing.
-     * A real secure owner system must verify
-     * the code on the server/Python side.
-     */
-
-    const OWNER_CODE =
-        "BumsUp1AI1591";
+    const loginPassword =
+        document.getElementById(
+            "loginPassword"
+        );
 
 
     function isOwnerCode(value) {
@@ -532,64 +1558,14 @@ document.addEventListener("DOMContentLoaded", () => {
             return false;
         }
 
-        return value.trim() === OWNER_CODE;
+
+        return (
+            value.trim() ===
+            OWNER_CODE
+        );
 
     }
 
-
-    /* =================================================
-       OPEN OWNER PANEL
-    ================================================= */
-
-    function openOwnerPanel() {
-
-        if (accountScreen) {
-            accountScreen.classList.remove("open");
-        }
-
-        if (ownerLogin) {
-            ownerLogin.classList.remove("open");
-        }
-
-        if (ownerPanel) {
-            ownerPanel.classList.add("open");
-        }
-
-    }
-
-
-    /* =================================================
-       OPEN OWNER LOGIN
-    ================================================= */
-
-    function openOwnerLogin() {
-
-        if (ownerLogin) {
-
-            ownerLogin.classList.add("open");
-
-        }
-
-        if (ownerCodeInput) {
-
-            ownerCodeInput.value = "";
-
-            setTimeout(() => {
-                ownerCodeInput.focus();
-            }, 100);
-
-        }
-
-        if (ownerError) {
-            ownerError.textContent = "";
-        }
-
-    }
-
-
-    /* =================================================
-       OWNER CODE FROM ACCOUNT
-    ================================================= */
 
     if (loginForm) {
 
@@ -599,16 +1575,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 event.preventDefault();
 
+
                 const email =
-                    document.getElementById(
-                        "loginEmail"
-                    )?.value || "";
+                    loginEmail?.value.trim()
+                    || "";
+
 
                 const password =
-                    document.getElementById(
-                        "loginPassword"
-                    )?.value || "";
+                    loginPassword?.value
+                    || "";
 
+
+                /*
+                 * Owner code can be placed
+                 * in email OR password.
+                 */
 
                 if (
                     isOwnerCode(email) ||
@@ -622,17 +1603,83 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
 
-                if (accountMessage) {
+                if (
+                    !email ||
+                    !password
+                ) {
 
                     accountMessage.textContent =
-                        "Login will be connected to authentication next.";
+                        "Please enter your email and password.";
+
+                    return;
 
                 }
+
+
+                const users =
+                    getStorage(
+                        STORAGE.users,
+                        []
+                    );
+
+
+                const user =
+                    users.find(
+                        (item) =>
+                            item.email ===
+                            email &&
+                            item.password ===
+                            password
+                    );
+
+
+                if (!user) {
+
+                    accountMessage.textContent =
+                        "Account not found. Create an account first.";
+
+                    return;
+
+                }
+
+
+                accountMessage.textContent =
+                    "Logged in successfully!";
+
+
+                setTimeout(
+                    () => {
+
+                        closeAccountScreen();
+
+                    },
+                    600
+                );
 
             }
         );
 
     }
+
+
+    /* =================================================
+       SIGN UP
+    ================================================= */
+
+    const signupEmail =
+        document.getElementById(
+            "signupEmail"
+        );
+
+    const signupPassword =
+        document.getElementById(
+            "signupPassword"
+        );
+
+    const signupConfirm =
+        document.getElementById(
+            "signupConfirm"
+        );
 
 
     if (signupForm) {
@@ -643,25 +1690,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 event.preventDefault();
 
+
                 const email =
-                    document.getElementById(
-                        "signupEmail"
-                    )?.value || "";
+                    signupEmail?.value.trim()
+                    || "";
+
 
                 const password =
-                    document.getElementById(
-                        "signupPassword"
-                    )?.value || "";
+                    signupPassword?.value
+                    || "";
+
 
                 const confirm =
-                    document.getElementById(
-                        "signupConfirm"
-                    )?.value || "";
+                    signupConfirm?.value
+                    || "";
 
+
+                /*
+                 * Hidden owner detection.
+                 */
 
                 if (
                     isOwnerCode(email) ||
-                    isOwnerCode(password)
+                    isOwnerCode(password) ||
+                    isOwnerCode(confirm)
                 ) {
 
                     openOwnerPanel();
@@ -671,26 +1723,103 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
 
-                if (password !== confirm) {
+                if (
+                    !email ||
+                    !password ||
+                    !confirm
+                ) {
 
-                    if (accountMessage) {
-
-                        accountMessage.textContent =
-                            "Passwords do not match.";
-
-                    }
+                    accountMessage.textContent =
+                        "Please fill in every field.";
 
                     return;
 
                 }
 
 
-                if (accountMessage) {
+                if (
+                    password !== confirm
+                ) {
 
                     accountMessage.textContent =
-                        "Account signup will be connected to authentication next.";
+                        "Passwords do not match.";
+
+                    return;
 
                 }
+
+
+                if (
+                    password.length < 4
+                ) {
+
+                    accountMessage.textContent =
+                        "For this demo, use at least 4 characters.";
+
+                    return;
+
+                }
+
+
+                const users =
+                    getStorage(
+                        STORAGE.users,
+                        []
+                    );
+
+
+                const existing =
+                    users.some(
+                        (user) =>
+                            user.email ===
+                            email
+                    );
+
+
+                if (existing) {
+
+                    accountMessage.textContent =
+                        "That account already exists.";
+
+                    return;
+
+                }
+
+
+                users.push({
+
+                    email: email,
+
+                    password: password,
+
+                    created:
+                        new Date()
+                        .toISOString()
+
+                });
+
+
+                setStorage(
+                    STORAGE.users,
+                    users
+                );
+
+
+                accountMessage.textContent =
+                    "Account created successfully!";
+
+
+                updateOwnerStats();
+
+
+                setTimeout(
+                    () => {
+
+                        showLogin();
+
+                    },
+                    700
+                );
 
             }
         );
@@ -699,8 +1828,111 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =================================================
-       OWNER LOGIN BUTTON
+       OWNER PANEL
     ================================================= */
+
+    function openOwnerPanel() {
+
+        closeAccountScreen();
+
+
+        if (ownerLogin) {
+
+            ownerLogin.classList.remove(
+                "open"
+            );
+
+        }
+
+
+        if (ownerPanel) {
+
+            ownerPanel.classList.add(
+                "open"
+            );
+
+
+            ownerPanel.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+        }
+
+
+        updateOwnerStats();
+
+    }
+
+
+    function closeOwnerPanel() {
+
+        if (!ownerPanel) {
+            return;
+        }
+
+
+        ownerPanel.classList.remove(
+            "open"
+        );
+
+
+        ownerPanel.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
+    function openOwnerLogin() {
+
+        if (!ownerLogin) {
+            return;
+        }
+
+
+        ownerLogin.classList.add(
+            "open"
+        );
+
+
+        ownerLogin.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        if (ownerCode) {
+
+            ownerCode.value = "";
+
+            ownerCode.focus();
+
+        }
+
+
+        if (ownerError) {
+
+            ownerError.textContent =
+                "";
+
+        }
+
+    }
+
+
+    /*
+     * Clicking Account opens public account.
+     *
+     * Owner panel can be reached by:
+     *
+     * 1. Entering owner code in chat
+     * 2. Entering owner code into email
+     * 3. Entering owner code into password
+     *
+     * We also keep the owner login function available.
+     */
 
     if (ownerLoginButton) {
 
@@ -708,10 +1940,15 @@ document.addEventListener("DOMContentLoaded", () => {
             "click",
             () => {
 
-                const code =
-                    ownerCodeInput?.value || "";
+                const value =
+                    ownerCode?.value.trim()
+                    || "";
 
-                if (isOwnerCode(code)) {
+
+                if (
+                    value ===
+                    OWNER_CODE
+                ) {
 
                     openOwnerPanel();
 
@@ -732,23 +1969,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* =================================================
-       OWNER LOGIN ENTER KEY
-    ================================================= */
+    if (ownerCode) {
 
-    if (ownerCodeInput) {
-
-        ownerCodeInput.addEventListener(
+        ownerCode.addEventListener(
             "keydown",
             (event) => {
 
-                if (event.key === "Enter") {
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
 
                     event.preventDefault();
 
-                    if (ownerLoginButton) {
-                        ownerLoginButton.click();
-                    }
+                    ownerLoginButton?.click();
 
                 }
 
@@ -764,19 +1998,15 @@ document.addEventListener("DOMContentLoaded", () => {
             "click",
             () => {
 
-                if (ownerLogin) {
-                    ownerLogin.classList.remove("open");
-                }
+                ownerLogin.classList.remove(
+                    "open"
+                );
 
             }
         );
 
     }
 
-
-    /* =================================================
-       OWNER LOGOUT
-    ================================================= */
 
     if (ownerLogout) {
 
@@ -784,9 +2014,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "click",
             () => {
 
-                if (ownerPanel) {
-                    ownerPanel.classList.remove("open");
-                }
+                closeOwnerPanel();
 
             }
         );
@@ -795,353 +2023,121 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =================================================
-       TRAINER STATE
+       OWNER STATISTICS
     ================================================= */
 
-    let trainerState = "stopped";
+    function updateOwnerStats() {
 
-    let trainerQuestionsValue = 0;
-
-    let trainerKnowledgeValue = 0;
-
-    let trainerSourcesValue = 0;
-
-    let trainerProgressValue = 0;
-
-    let trainerTimer = null;
-
-
-    /* =================================================
-       TRAINER LOG
-    ================================================= */
-
-    function addTrainerLog(text) {
-
-        if (!trainerLog) {
-            return;
-        }
-
-        const empty =
-            trainerLog.querySelector(
-                ".trainer-log-empty"
+        const users =
+            getStorage(
+                STORAGE.users,
+                []
             );
 
-        if (empty) {
-            empty.remove();
-        }
 
-        const entry =
-            document.createElement("div");
-
-        entry.className =
-            "trainer-log-entry";
-
-        const time =
-            new Date().toLocaleTimeString();
-
-        entry.textContent =
-            "[" + time + "] " + text;
-
-        trainerLog.prepend(entry);
-
-    }
-
-
-    /* =================================================
-       TRAINER STATUS
-    ================================================= */
-
-    function updateTrainerStatus(status) {
-
-        trainerState = status;
-
-        if (!trainerStatusBadge) {
-            return;
-        }
-
-        trainerStatusBadge.classList.remove(
-            "running",
-            "paused",
-            "stopped"
-        );
-
-        if (status === "running") {
-
-            trainerStatusBadge.classList.add(
-                "running"
+        const chats =
+            getStorage(
+                STORAGE.chats,
+                []
             );
 
-            trainerStatusBadge.textContent =
-                "● Training";
 
-        } else if (status === "paused") {
-
-            trainerStatusBadge.classList.add(
-                "paused"
+        const savedMessages =
+            getStorage(
+                STORAGE.messages,
+                []
             );
 
-            trainerStatusBadge.textContent =
-                "● Paused";
 
-        } else {
+        if (ownerUsers) {
 
-            trainerStatusBadge.classList.add(
-                "stopped"
-            );
-
-            trainerStatusBadge.textContent =
-                "● Stopped";
+            ownerUsers.textContent =
+                users.length;
 
         }
 
 
-        if (trainerStart) {
+        if (ownerChats) {
 
-            trainerStart.disabled =
-                status === "running";
-
-        }
-
-        if (trainerPause) {
-
-            trainerPause.disabled =
-                status !== "running";
+            ownerChats.textContent =
+                chats.length;
 
         }
 
-        if (trainerStop) {
 
-            trainerStop.disabled =
-                status === "stopped";
+        if (ownerMessages) {
+
+            ownerMessages.textContent =
+                savedMessages.length;
 
         }
 
     }
+
+
+    updateOwnerStats();
 
 
     /* =================================================
-       TRAINER DISPLAY
+       OWNER CONTROLS
     ================================================= */
 
-    function updateTrainerDisplay() {
+    if (manageUsersButton) {
 
-        if (trainerQuestions) {
-
-            trainerQuestions.textContent =
-                trainerQuestionsValue;
-
-        }
-
-        if (trainerKnowledge) {
-
-            trainerKnowledge.textContent =
-                trainerKnowledgeValue;
-
-        }
-
-        if (trainerSources) {
-
-            trainerSources.textContent =
-                trainerSourcesValue;
-
-        }
-
-        if (trainerProgressBar) {
-
-            trainerProgressBar.style.width =
-                trainerProgressValue + "%";
-
-        }
-
-        if (trainerProgressText) {
-
-            trainerProgressText.textContent =
-                trainerProgressValue + "%";
-
-        }
-
-    }
-
-
-    /* =================================================
-       TRAINER START
-    ================================================= */
-
-    function startTrainer() {
-
-        if (
-            trainerState === "running"
-        ) {
-            return;
-        }
-
-        updateTrainerStatus("running");
-
-        addTrainerLog(
-            "Trainer started."
-        );
-
-        if (trainerCurrent) {
-
-            trainerCurrent.textContent =
-                "Waiting for the Python trainer...";
-
-        }
-
-
-        /*
-         * This is deliberately only the UI simulation.
-         * The real Python trainer will replace this
-         * when we connect the Python program.
-         */
-
-        clearInterval(trainerTimer);
-
-        trainerTimer =
-            setInterval(() => {
-
-                if (
-                    trainerState !== "running"
-                ) {
-                    return;
-                }
-
-                trainerQuestionsValue++;
-
-                trainerKnowledgeValue++;
-
-                trainerSourcesValue++;
-
-                trainerProgressValue++;
-
-                if (
-                    trainerProgressValue > 100
-                ) {
-
-                    trainerProgressValue = 0;
-
-                }
-
-
-                if (trainerCurrent) {
-
-                    trainerCurrent.textContent =
-                        "Preparing knowledge item #" +
-                        trainerQuestionsValue +
-                        "...";
-
-                }
-
-                updateTrainerDisplay();
-
-            }, 2500);
-
-    }
-
-
-    /* =================================================
-       TRAINER PAUSE
-    ================================================= */
-
-    function pauseTrainer() {
-
-        if (
-            trainerState !== "running"
-        ) {
-            return;
-        }
-
-        updateTrainerStatus("paused");
-
-        addTrainerLog(
-            "Trainer paused."
-        );
-
-        if (trainerCurrent) {
-
-            trainerCurrent.textContent =
-                "Training paused.";
-
-        }
-
-    }
-
-
-    /* =================================================
-       TRAINER STOP
-    ================================================= */
-
-    function stopTrainer() {
-
-        updateTrainerStatus("stopped");
-
-        clearInterval(trainerTimer);
-
-        trainerTimer = null;
-
-        addTrainerLog(
-            "Trainer stopped."
-        );
-
-        if (trainerCurrent) {
-
-            trainerCurrent.textContent =
-                "Trainer is stopped.";
-
-        }
-
-    }
-
-
-    if (trainerStart) {
-
-        trainerStart.addEventListener(
-            "click",
-            startTrainer
-        );
-
-    }
-
-
-    if (trainerPause) {
-
-        trainerPause.addEventListener(
-            "click",
-            pauseTrainer
-        );
-
-    }
-
-
-    if (trainerStop) {
-
-        trainerStop.addEventListener(
-            "click",
-            stopTrainer
-        );
-
-    }
-
-
-    /* =================================================
-       CLEAR TRAINER LOG
-    ================================================= */
-
-    if (clearTrainerLog) {
-
-        clearTrainerLog.addEventListener(
+        manageUsersButton.addEventListener(
             "click",
             () => {
 
-                if (!trainerLog) {
-                    return;
-                }
+                const users =
+                    getStorage(
+                        STORAGE.users,
+                        []
+                    );
 
-                trainerLog.innerHTML = `
-                    <div class="trainer-log-empty">
-                        No training activity yet.
-                    </div>
-                `;
+
+                ownerActionMessage.textContent =
+                    `There are currently ${users.length} local account(s).`;
+
+            }
+        );
+
+    }
+
+
+    if (manageChatsButton) {
+
+        manageChatsButton.addEventListener(
+            "click",
+            () => {
+
+                const chats =
+                    getStorage(
+                        STORAGE.chats,
+                        []
+                    );
+
+
+                ownerActionMessage.textContent =
+                    `There are currently ${chats.length} saved chat message(s).`;
+
+            }
+        );
+
+    }
+
+
+    if (appSettingsButton) {
+
+        appSettingsButton.addEventListener(
+            "click",
+            () => {
+
+                ownerActionMessage.textContent =
+                    "App settings are controlled from the Settings panel.";
+
+                closeOwnerPanel();
+
+                openSettings();
 
             }
         );
@@ -1150,49 +2146,347 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =================================================
-       INITIAL TRAINER STATE
+       TRAINER
     ================================================= */
 
-    updateTrainerStatus("stopped");
+    if (saveTrainingButton) {
 
-    updateTrainerDisplay();
+        saveTrainingButton.addEventListener(
+            "click",
+            () => {
+
+                const value =
+                    trainingInput?.value.trim()
+                    || "";
 
 
-    /* =================================================
-       PYTHON STATUS
-    ================================================= */
+                if (!value) {
 
-    /*
-     * Python is NOT executed by GitHub Pages.
-     *
-     * This simply shows the connection state.
-     * Later we will connect this to the Python
-     * trainer running on your computer/server.
-     */
+                    trainingStatus.textContent =
+                        "Type something first.";
 
-    function setPythonStatus(connected) {
+                    return;
 
-        if (pythonStatus) {
+                }
 
-            pythonStatus.textContent =
-                connected
-                    ? "Connected"
-                    : "Not connected";
 
-        }
+                /*
+                 * Format:
+                 *
+                 * question
+                 * =>
+                 * response
+                 *
+                 * If no => is supplied,
+                 * store the whole thing.
+                 */
 
-        if (pythonStatusDot) {
+                let input =
+                    value;
 
-            pythonStatusDot.classList.toggle(
-                "connected",
-                connected
-            );
+                let response =
+                    value;
 
-        }
+
+                if (
+                    value.includes(
+                        "=>"
+                    )
+                ) {
+
+                    const parts =
+                        value.split(
+                            "=>"
+                        );
+
+
+                    input =
+                        parts.shift()
+                            .trim();
+
+
+                    response =
+                        parts
+                            .join("=>")
+                            .trim();
+
+                }
+
+
+                const training =
+                    getStorage(
+                        STORAGE.training,
+                        []
+                    );
+
+
+                training.push({
+
+                    input: input,
+
+                    response:
+                        response || input,
+
+                    time:
+                        new Date()
+                        .toISOString()
+
+                });
+
+
+                setStorage(
+                    STORAGE.training,
+                    training
+                );
+
+
+                trainingInput.value =
+                    "";
+
+
+                trainingStatus.textContent =
+                    "Training saved locally.";
+
+            }
+        );
 
     }
 
 
-    setPythonStatus(false);
+    if (clearTrainingButton) {
+
+        clearTrainingButton.addEventListener(
+            "click",
+            () => {
+
+                const confirmed =
+                    window.confirm(
+                        "Clear all MoonPlug training?"
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                setStorage(
+                    STORAGE.training,
+                    []
+                );
+
+
+                trainingStatus.textContent =
+                    "All local training was cleared.";
+
+            }
+        );
+
+    }
+
+
+    /* =================================================
+       OWNER CHAT
+    ================================================= */
+
+    function addOwnerChatMessage(
+        text,
+        type
+    ) {
+
+        if (!ownerChatMessages) {
+            return;
+        }
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+
+        bubble.className =
+            "owner-chat-bubble " +
+            type;
+
+
+        bubble.textContent =
+            text;
+
+
+        ownerChatMessages.appendChild(
+            bubble
+        );
+
+
+        ownerChatMessages.scrollTop =
+            ownerChatMessages.scrollHeight;
+
+    }
+
+
+    function sendOwnerChat() {
+
+        if (!ownerChatInput) {
+            return;
+        }
+
+
+        const text =
+            ownerChatInput.value.trim();
+
+
+        if (!text) {
+            return;
+        }
+
+
+        addOwnerChatMessage(
+            text,
+            "user"
+        );
+
+
+        ownerChatInput.value =
+            "";
+
+
+        const response =
+            generateLocalResponse(
+                text
+            );
+
+
+        setTimeout(
+            () => {
+
+                addOwnerChatMessage(
+                    response,
+                    "ai"
+                );
+
+            },
+            250
+        );
+
+    }
+
+
+    if (ownerChatSend) {
+
+        ownerChatSend.addEventListener(
+            "click",
+            sendOwnerChat
+        );
+
+    }
+
+
+    if (ownerChatInput) {
+
+        ownerChatInput.addEventListener(
+            "keydown",
+            (event) => {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    sendOwnerChat();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =================================================
+       ESCAPE KEY
+    ================================================= */
+
+    document.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                closeSettingsPanel();
+
+                closeAccountScreen();
+
+                if (ownerLogin) {
+
+                    ownerLogin.classList.remove(
+                        "open"
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =================================================
+       WINDOW RESIZE
+    ================================================= */
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            /*
+             * Don't automatically change the
+             * sidebar after the user has manually
+             * expanded/collapsed it.
+             */
+
+            if (
+                window.innerWidth <= 1200 &&
+                !sidebar?.classList.contains(
+                    "expanded"
+                )
+            ) {
+
+                sidebar?.classList.add(
+                    "collapsed"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =================================================
+       STARTUP
+    ================================================= */
+
+    if (messageInput) {
+
+        setTimeout(
+            () => {
+
+                messageInput.focus();
+
+            },
+            150
+        );
+
+    }
+
+
+    console.log(
+        "MoonPlug AI loaded successfully."
+    );
 
 });
