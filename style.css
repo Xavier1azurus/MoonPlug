@@ -1926,3 +1926,47 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+/* ============================================================
+   LARGER CHAT BUBBLES
+============================================================ */
+
+.message {
+    max-width: 75%;
+    padding: 14px 18px;
+    border-radius: 18px;
+    font-size: 18px;
+    line-height: 1.5;
+    margin: 12px 0;
+    word-wrap: break-word;
+}
+
+
+/* User messages → RIGHT side */
+
+.user-message {
+    margin-left: auto;
+    margin-right: 10px;
+    text-align: left;
+}
+
+
+/* MoonPlug messages → LEFT side */
+
+.ai-message {
+    margin-right: auto;
+    margin-left: 10px;
+    text-align: left;
+}
+
+
+/* Bigger text on phones/tablets */
+
+@media (max-width: 700px) {
+
+    .message {
+        max-width: 82%;
+        font-size: 18px;
+        padding: 14px 17px;
+    }
+
+}
