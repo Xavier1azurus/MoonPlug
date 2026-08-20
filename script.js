@@ -1657,3 +1657,26 @@ if (
     initializeMoonPlug();
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+
+    const accountButton = document.getElementById("ownerButton");
+    const accountScreen = document.getElementById("accountScreen");
+
+    if (!accountButton) {
+        console.error("MoonPlug: Account button not found.");
+        return;
+    }
+
+    if (!accountScreen) {
+        console.error("MoonPlug: Account screen not found.");
+        return;
+    }
+
+    accountButton.onclick = function () {
+
+        accountScreen.style.display = "flex";
+        accountScreen.setAttribute("aria-hidden", "false");
+
+    };
+
+});
