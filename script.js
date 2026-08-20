@@ -1381,25 +1381,12 @@ function setupButtons() {
         closeSettings
     );
 
-
-    $("ownerButton")?.addEventListener(
-        "click",
-        async () => {
-
-            const authenticated =
-                await checkOwnerSession();
-
-
-            if (authenticated) {
-
-                await openOwnerPanel();
-
-            } else {
-
-                showOwnerLogin();
-            }
-        }
-    );
+$("ownerButton")?.addEventListener(
+    "click",
+    () => {
+        openAccount();
+    }
+);
 
 
     $("ownerLoginButton")?.addEventListener(
