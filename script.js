@@ -1339,19 +1339,17 @@ function setupOwnerPanelButtons() {
     );
 
 
-    $("trainerButton")?.addEventListener(
-        "click",
-        async () => {
+   $("trainerButton")?.addEventListener(
+    "click",
+    async () => {
 
-            const training =
-                await loadTraining();
+        const training =
+            await loadTraining();
 
-            alert(
-                `MoonPlug has ${training.length} training example(s).`
-            );
-        }
-    );
-}
+        showTrainer(training);
+
+    }
+);
 
 
 // ============================================================
