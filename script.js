@@ -21,7 +21,7 @@ The actual owner password is NOT stored here.
 // CONFIGURATION
 // ============================================================
 
-const API_BASE = "http://127.0.0.1:5000";
+const API_BASE = "https://moonplug.onrender.com";
 
 
 // ============================================================
