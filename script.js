@@ -1,54 +1,26 @@
 
-/* ============================================================
-   MOONPLUG AI
-   SECURE FRONT-END STRUCTURE
-   ============================================================
-
-   IMPORTANT SECURITY NOTE
-   ------------------------------------------------------------
-   MoonPlug is currently hosted on GitHub Pages.
-
-   GitHub Pages is a static hosting service, which means that
-   JavaScript running in the browser cannot contain a truly
-   secret password.
-
-   This version improves the front-end security by:
-
-   • Never storing the owner code in plain text
-   • SHA-256 hashing the entered owner code
-   • Failed-login protection
-   • Temporary lockout after too many attempts
-   • sessionStorage owner sessions
-   • No automatic owner access
-   • Separate owner authentication flow
-   • Safer DOM handling
-   • Existing MoonPlug chat functionality
-   • Existing account screen functionality
-
-   For TRUE authentication later:
-       MoonPlug Website
-              ↓
-       Secure Backend
-              ↓
-       Password verification
-              ↓
-       Owner session/token
-              ↓
-       Owner Panel
-
-   ============================================================ */
-
-
-/* ============================================================
-   DOM READY
-   ============================================================ */
-
 document.addEventListener("DOMContentLoaded", () => {
 
+    /* =====================================================
+       MOONPLUG AI
+       SECURE-STRUCTURE FRONTEND
+       =====================================================
 
-    /* ========================================================
+       IMPORTANT:
+       This is a frontend security structure.
+
+       GitHub Pages is static hosting, so a secret stored
+       inside JavaScript can still be discovered.
+
+       Real authentication should eventually be handled by
+       a backend/server.
+
+       ===================================================== */
+
+
+    /* =====================================================
        BASIC ELEMENTS
-    ======================================================== */
+       ===================================================== */
 
     const sidebar =
         document.querySelector(".sidebar");
@@ -66,9 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("typing");
 
 
-    /* ========================================================
+    /* =====================================================
        SETTINGS
-    ======================================================== */
+       ===================================================== */
 
     const settingsButton =
         document.getElementById("settingsButton");
@@ -83,9 +55,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("themeButton");
 
 
-    /* ========================================================
+    /* =====================================================
        ACCOUNT
-    ======================================================== */
+       ===================================================== */
 
     const accountScreen =
         document.getElementById("accountScreen");
@@ -112,9 +84,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("accountMessage");
 
 
-    /* ========================================================
+    /* =====================================================
        OWNER PANEL
-    ======================================================== */
+       ===================================================== */
 
     const ownerPanel =
         document.getElementById("ownerPanel");
@@ -123,112 +95,56 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("ownerLogout");
 
 
-    /* ========================================================
-       OWNER LOGIN ELEMENTS
-       --------------------------------------------------------
-       These support the owner overlay from your CSS.
+    /* =====================================================
+       OWNER LOGIN
+       ===================================================== */
 
-       Expected HTML IDs:
+    const ownerOverlay =
+        document.getElementById("ownerOverlay");
 
-           ownerLogin
-           ownerCode
-           ownerLoginButton
-           ownerCancel
-           ownerError
+    const ownerLoginForm =
+        document.getElementById("ownerLoginForm");
 
-       If some don't exist, the code safely continues.
-    ======================================================== */
-
-    const ownerLogin =
-        document.getElementById("ownerLogin");
-
-    const ownerCodeInput =
-        document.getElementById("ownerCode");
-
-    const ownerLoginButton =
-        document.getElementById("ownerLoginButton");
-
-    const ownerCancel =
-        document.getElementById("ownerCancel");
+    const ownerPassword =
+        document.getElementById("ownerPassword");
 
     const ownerError =
         document.getElementById("ownerError");
 
-
-    /* ========================================================
-       SECURITY CONFIGURATION
-    ======================================================== */
-
-    /*
-     * IMPORTANT:
-     *
-     * This is NOT your owner password.
-     *
-     * It is a SHA-256 hash.
-     *
-     * You should generate the hash of your desired owner
-     * password and put ONLY the hash here.
-     *
-     * Example:
-     *
-     * Password:
-     *     MySecret123
-     *
-     * SHA-256:
-     *     <generated hash>
-     *
-     * The actual password should never be written into
-     * this JavaScript file.
-     */
-
-    const OWNER_PASSWORD_HASH =
-        "REPLACE_WITH_YOUR_SHA256_HASH";
+    const ownerCancel =
+        document.getElementById("ownerCancel");
 
 
-    /*
-     * Maximum failed attempts before temporary lockout.
-     */
-
-    const MAX_OWNER_ATTEMPTS = 5;
-
-
-    /*
-     * Lockout duration.
-     *
-     * 60,000 ms = 1 minute.
-     */
-
-    const LOCKOUT_TIME =
-        60 * 1000;
-
-
-    /*
-     * Session key.
-     */
+    /* =====================================================
+       OWNER SESSION
+       ===================================================== */
 
     const OWNER_SESSION_KEY =
         "moonplug_owner_session";
 
-
-    /*
-     * Failed attempt storage.
-     */
-
-    const OWNER_ATTEMPTS_KEY =
-        "moonplug_owner_attempts";
+    const SESSION_LENGTH =
+        30 * 60 * 1000;
 
 
-    /*
-     * Lockout storage.
-     */
+    /* =====================================================
+       FRONTEND DEMO AUTHENTICATION
+       =====================================================
 
-    const OWNER_LOCKOUT_KEY =
-        "moonplug_owner_lockout";
+       TEMPORARY ONLY.
+
+       DO NOT consider this a real secret on GitHub Pages.
+
+       We will replace this with server-side authentication
+       when the backend is added.
+       ===================================================== */
+
+    const OWNER_SECRET =
+        "BumsUp1AI1591";
 
 
-    /* ========================================================
+    /* =====================================================
        SIDEBAR
-    ======================================================== */
+       ===================================================== */
 
     if (sidebar) {
 
@@ -236,26 +152,13 @@ document.addEventListener("DOMContentLoaded", () => {
             "click",
             (event) => {
 
-                /*
-                 * Clicking an actual sidebar button should
-                 * not expand or collapse the sidebar.
-                 */
-
                 if (
                     event.target.closest(
                         ".sidebar-button"
                     )
                 ) {
-
                     return;
-
                 }
-
-
-                /*
-                 * Clicking the logo or empty sidebar space
-                 * toggles the sidebar.
-                 */
 
                 sidebar.classList.toggle(
                     "expanded"
@@ -267,9 +170,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
+    /* =====================================================
        SETTINGS
-    ======================================================== */
+       ===================================================== */
 
     if (
         settingsButton &&
@@ -294,10 +197,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
-       CLOSE SETTINGS
-    ======================================================== */
-
     if (
         closeSettings &&
         settingsPanel
@@ -316,10 +215,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-
-    /* ========================================================
-       CLICK OUTSIDE SETTINGS
-    ======================================================== */
 
     if (settingsPanel) {
 
@@ -344,9 +239,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
+    /* =====================================================
        THEME
-    ======================================================== */
+       ===================================================== */
 
     if (themeButton) {
 
@@ -358,7 +253,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     "light-theme"
                 );
 
-
                 if (
                     document.body.classList.contains(
                         "light-theme"
@@ -366,12 +260,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 ) {
 
                     themeButton.textContent =
-                        "Dark";
+                        "Light";
 
                 } else {
 
                     themeButton.textContent =
-                        "Light";
+                        "Dark";
 
                 }
 
@@ -381,9 +275,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
-       CREATE MESSAGE
-    ======================================================== */
+    /* =====================================================
+       ADD MESSAGE
+       ===================================================== */
 
     function addMessage(
         text,
@@ -391,39 +285,21 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
 
         if (!messages) {
-
             return;
-
         }
 
-
         const bubble =
-            document.createElement(
-                "div"
-            );
-
+            document.createElement("div");
 
         bubble.className =
-            "message-bubble " +
-            type;
-
-
-        /*
-         * textContent is intentionally used instead
-         * of innerHTML.
-         *
-         * This prevents user messages from injecting
-         * arbitrary HTML into the page.
-         */
+            "message-bubble " + type;
 
         bubble.textContent =
-            String(text);
-
+            text;
 
         messages.appendChild(
             bubble
         );
-
 
         messages.scrollTop =
             messages.scrollHeight;
@@ -431,9 +307,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
+    /* =====================================================
        SEND MESSAGE
-    ======================================================== */
+       ===================================================== */
 
     function sendMessage() {
 
@@ -446,28 +322,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
-
         const text =
             messageInput.value.trim();
 
-
         if (!text) {
-
             return;
-
         }
 
-
-        /*
-         * Remove the empty-chat screen after the first
-         * message.
-         */
 
         const emptyChat =
             document.querySelector(
                 ".empty-chat"
             );
-
 
         if (emptyChat) {
 
@@ -475,10 +341,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
-
-        /*
-         * USER MESSAGE
-         */
 
         addMessage(
             text,
@@ -490,10 +352,6 @@ document.addEventListener("DOMContentLoaded", () => {
             "";
 
 
-        /*
-         * TYPING INDICATOR
-         */
-
         if (typing) {
 
             typing.style.display =
@@ -501,13 +359,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
-
-        /*
-         * TEMPORARY LOCAL AI RESPONSE
-         *
-         * Later this can connect to the MoonPlug
-         * Python/backend AI system.
-         */
 
         setTimeout(
             () => {
@@ -518,7 +369,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         "none";
 
                 }
-
 
                 addMessage(
                     "I'm ready to help.",
@@ -532,9 +382,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
+    /* =====================================================
        SEND BUTTON
-    ======================================================== */
+       ===================================================== */
 
     if (sendButton) {
 
@@ -552,9 +402,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
+    /* =====================================================
        ENTER TO SEND
-    ======================================================== */
+       ===================================================== */
 
     if (messageInput) {
 
@@ -563,8 +413,7 @@ document.addEventListener("DOMContentLoaded", () => {
             (event) => {
 
                 if (
-                    event.key ===
-                    "Enter"
+                    event.key === "Enter"
                 ) {
 
                     event.preventDefault();
@@ -579,13 +428,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
-       ACCOUNT SCREEN
-    ======================================================== */
+    /* =====================================================
+       OWNER LOGIN OPEN
+       ===================================================== */
 
     if (
         ownerButton &&
-        accountScreen
+        ownerOverlay
     ) {
 
         ownerButton.addEventListener(
@@ -596,16 +445,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 event.stopPropagation();
 
-
-                /*
-                 * IMPORTANT:
-                 *
-                 * Clicking Owner does NOT open the
-                 * owner panel directly.
-                 *
-                 * It opens the authentication screen.
-                 */
-
                 openOwnerLogin();
 
             }
@@ -614,9 +453,423 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
-       LOGIN TAB
-    ======================================================== */
+    /* =====================================================
+       OPEN OWNER LOGIN
+       ===================================================== */
+
+    function openOwnerLogin() {
+
+        if (!ownerOverlay) {
+            return;
+        }
+
+        if (ownerError) {
+
+            ownerError.textContent =
+                "";
+
+        }
+
+        if (ownerPassword) {
+
+            ownerPassword.value =
+                "";
+
+        }
+
+        ownerOverlay.classList.add(
+            "open"
+        );
+
+        setTimeout(
+            () => {
+
+                if (ownerPassword) {
+
+                    ownerPassword.focus();
+
+                }
+
+            },
+            50
+        );
+
+    }
+
+
+    /* =====================================================
+       CLOSE OWNER LOGIN
+       ===================================================== */
+
+    function closeOwnerLogin() {
+
+        if (!ownerOverlay) {
+            return;
+        }
+
+        ownerOverlay.classList.remove(
+            "open"
+        );
+
+        if (ownerPassword) {
+
+            ownerPassword.value =
+                "";
+
+        }
+
+        if (ownerError) {
+
+            ownerError.textContent =
+                "";
+
+        }
+
+    }
+
+
+    /* =====================================================
+       OWNER LOGIN FORM
+       ===================================================== */
+
+    if (ownerLoginForm) {
+
+        ownerLoginForm.addEventListener(
+            "submit",
+            (event) => {
+
+                event.preventDefault();
+
+                const enteredCode =
+                    ownerPassword
+                        ?.value
+                        ?.trim() || "";
+
+
+                if (!enteredCode) {
+
+                    showOwnerError(
+                        "Please enter the owner code."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    enteredCode !==
+                    OWNER_SECRET
+                ) {
+
+                    showOwnerError(
+                        "Incorrect owner code."
+                    );
+
+                    return;
+
+                }
+
+
+                createOwnerSession();
+
+                closeOwnerLogin();
+
+                openOwnerPanel();
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       OWNER LOGIN ERROR
+       ===================================================== */
+
+    function showOwnerError(
+        message
+    ) {
+
+        if (!ownerError) {
+            return;
+        }
+
+        ownerError.textContent =
+            message;
+
+    }
+
+
+    /* =====================================================
+       OWNER SESSION
+       ===================================================== */
+
+    function createOwnerSession() {
+
+        const session = {
+
+            authenticated: true,
+
+            created:
+                Date.now(),
+
+            expires:
+                Date.now()
+                + SESSION_LENGTH
+
+        };
+
+
+        try {
+
+            sessionStorage.setItem(
+                OWNER_SESSION_KEY,
+                JSON.stringify(session)
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "Could not create owner session.",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       GET OWNER SESSION
+       ===================================================== */
+
+    function getOwnerSession() {
+
+        try {
+
+            const raw =
+                sessionStorage.getItem(
+                    OWNER_SESSION_KEY
+                );
+
+            if (!raw) {
+                return null;
+            }
+
+            const session =
+                JSON.parse(raw);
+
+            if (
+                !session ||
+                !session.authenticated
+            ) {
+
+                return null;
+
+            }
+
+            return session;
+
+        } catch (error) {
+
+            return null;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CHECK OWNER SESSION
+       ===================================================== */
+
+    function isOwnerAuthenticated() {
+
+        const session =
+            getOwnerSession();
+
+        if (!session) {
+
+            return false;
+
+        }
+
+
+        if (
+            Date.now() >=
+            session.expires
+        ) {
+
+            destroyOwnerSession();
+
+            return false;
+
+        }
+
+
+        return true;
+
+    }
+
+
+    /* =====================================================
+       DESTROY OWNER SESSION
+       ===================================================== */
+
+    function destroyOwnerSession() {
+
+        try {
+
+            sessionStorage.removeItem(
+                OWNER_SESSION_KEY
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "Could not clear owner session.",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       OPEN OWNER PANEL
+       ===================================================== */
+
+    function openOwnerPanel() {
+
+        if (!ownerPanel) {
+            return;
+        }
+
+
+        if (
+            !isOwnerAuthenticated()
+        ) {
+
+            openOwnerLogin();
+
+            return;
+
+        }
+
+
+        if (accountScreen) {
+
+            accountScreen.classList.remove(
+                "open"
+            );
+
+        }
+
+
+        ownerPanel.classList.add(
+            "open"
+        );
+
+    }
+
+
+    /* =====================================================
+       OWNER LOGOUT
+       ===================================================== */
+
+    if (ownerLogout) {
+
+        ownerLogout.addEventListener(
+            "click",
+            () => {
+
+                destroyOwnerSession();
+
+                if (ownerPanel) {
+
+                    ownerPanel.classList.remove(
+                        "open"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       OWNER CANCEL
+       ===================================================== */
+
+    if (ownerCancel) {
+
+        ownerCancel.addEventListener(
+            "click",
+            () => {
+
+                closeOwnerLogin();
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       CLOSE OWNER LOGIN WITH BACKDROP
+       ===================================================== */
+
+    if (ownerOverlay) {
+
+        ownerOverlay.addEventListener(
+            "click",
+            (event) => {
+
+                if (
+                    event.target ===
+                    ownerOverlay
+                ) {
+
+                    closeOwnerLogin();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       ACCOUNT SCREEN
+       ===================================================== */
+
+    if (
+        closeAccount &&
+        accountScreen
+    ) {
+
+        closeAccount.addEventListener(
+            "click",
+            () => {
+
+                accountScreen.classList.remove(
+                    "open"
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       LOGIN / SIGNUP TABS
+       ===================================================== */
 
     if (
         loginTab &&
@@ -624,6 +877,7 @@ document.addEventListener("DOMContentLoaded", () => {
         loginForm &&
         signupForm
     ) {
+
 
         loginTab.addEventListener(
             "click",
@@ -654,10 +908,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         );
 
-
-        /* ====================================================
-           SIGNUP TAB
-        ==================================================== */
 
         signupTab.addEventListener(
             "click",
@@ -691,924 +941,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
-       CLOSE ACCOUNT
-    ======================================================== */
-
-    if (
-        closeAccount &&
-        accountScreen
-    ) {
-
-        closeAccount.addEventListener(
-            "click",
-            () => {
-
-                accountScreen.classList.remove(
-                    "open"
-                );
-
-            }
-        );
-
-    }
-
-
-    /* ========================================================
-       OWNER LOGIN
-    ======================================================== */
-
-    function openOwnerLogin() {
-
-        /*
-         * If the owner is already authenticated,
-         * open the panel directly.
-         */
-
-        if (isOwnerSessionValid()) {
-
-            openOwnerPanel();
-
-            return;
-
-        }
-
-
-        /*
-         * Otherwise show the login overlay.
-         */
-
-        if (ownerLogin) {
-
-            ownerLogin.classList.add(
-                "open"
-            );
-
-        } else if (accountScreen) {
-
-            /*
-             * Fallback for the current account UI.
-             */
-
-            accountScreen.classList.add(
-                "open"
-            );
-
-        }
-
-
-        if (ownerCodeInput) {
-
-            ownerCodeInput.value =
-                "";
-
-            setTimeout(
-                () => {
-
-                    ownerCodeInput.focus();
-
-                },
-                100
-            );
-
-        }
-
-
-        clearOwnerError();
-
-    }
-
-
-    /* ========================================================
-       CLOSE OWNER LOGIN
-    ======================================================== */
-
-    function closeOwnerLogin() {
-
-        if (ownerLogin) {
-
-            ownerLogin.classList.remove(
-                "open"
-            );
-
-        }
-
-
-        if (accountScreen) {
-
-            accountScreen.classList.remove(
-                "open"
-            );
-
-        }
-
-
-        if (ownerCodeInput) {
-
-            ownerCodeInput.value =
-                "";
-
-        }
-
-
-        clearOwnerError();
-
-    }
-
-
-    /* ========================================================
-       OWNER ERROR
-    ======================================================== */
-
-    function showOwnerError(
-        message
-    ) {
-
-        if (ownerError) {
-
-            ownerError.textContent =
-                message;
-
-        }
-
-    }
-
-
-    function clearOwnerError() {
-
-        if (ownerError) {
-
-            ownerError.textContent =
-                "";
-
-        }
-
-    }
-
-
-    /* ========================================================
-       SHA-256 HASH
-    ======================================================== */
-
-    async function sha256(
-        text
-    ) {
-
-        /*
-         * Web Crypto API is built into modern browsers.
-         */
-
-        const encoder =
-            new TextEncoder();
-
-
-        const data =
-            encoder.encode(
-                text
-            );
-
-
-        const hashBuffer =
-            await crypto.subtle.digest(
-                "SHA-256",
-                data
-            );
-
-
-        const hashArray =
-            Array.from(
-                new Uint8Array(
-                    hashBuffer
-                )
-            );
-
-
-        return hashArray
-            .map(
-                byte =>
-                    byte
-                        .toString(16)
-                        .padStart(
-                            2,
-                            "0"
-                        )
-            )
-            .join("");
-
-    }
-
-
-    /* ========================================================
-       OWNER ATTEMPT STORAGE
-    ======================================================== */
-
-    function getOwnerAttempts() {
-
-        const value =
-            sessionStorage.getItem(
-                OWNER_ATTEMPTS_KEY
-            );
-
-
-        const attempts =
-            Number(
-                value
-            );
-
-
-        if (
-            Number.isNaN(
-                attempts
-            )
-        ) {
-
-            return 0;
-
-        }
-
-
-        return attempts;
-
-    }
-
-
-    function setOwnerAttempts(
-        attempts
-    ) {
-
-        sessionStorage.setItem(
-            OWNER_ATTEMPTS_KEY,
-            String(
-                attempts
-            )
-        );
-
-    }
-
-
-    /* ========================================================
-       LOCKOUT
-    ======================================================== */
-
-    function getLockoutTime() {
-
-        const value =
-            sessionStorage.getItem(
-                OWNER_LOCKOUT_KEY
-            );
-
-
-        const timestamp =
-            Number(
-                value
-            );
-
-
-        if (
-            Number.isNaN(
-                timestamp
-            )
-        ) {
-
-            return 0;
-
-        }
-
-
-        return timestamp;
-
-    }
-
-
-    function isOwnerLocked() {
-
-        const lockout =
-            getLockoutTime();
-
-
-        if (!lockout) {
-
-            return false;
-
-        }
-
-
-        if (
-            Date.now() >=
-            lockout
-        ) {
-
-            sessionStorage.removeItem(
-                OWNER_LOCKOUT_KEY
-            );
-
-            setOwnerAttempts(
-                0
-            );
-
-            return false;
-
-        }
-
-
-        return true;
-
-    }
-
-
-    function getRemainingLockoutSeconds() {
-
-        const lockout =
-            getLockoutTime();
-
-
-        if (!lockout) {
-
-            return 0;
-
-        }
-
-
-        const remaining =
-            lockout -
-            Date.now();
-
-
-        return Math.ceil(
-            remaining / 1000
-        );
-
-    }
-
-
-    function lockOwnerLogin() {
-
-        sessionStorage.setItem(
-            OWNER_LOCKOUT_KEY,
-            String(
-                Date.now() +
-                LOCKOUT_TIME
-            )
-        );
-
-    }
-
-
-    /* ========================================================
-       OWNER SESSION
-    ======================================================== */
-
-    function createOwnerSession() {
-
-        /*
-         * A random session identifier is generated.
-         *
-         * This is only a front-end session indicator.
-         *
-         * A real backend should issue a server-side
-         * authenticated session later.
-         */
-
-        const randomValues =
-            new Uint8Array(
-                32
-            );
-
-
-        crypto.getRandomValues(
-            randomValues
-        );
-
-
-        const token =
-            Array.from(
-                randomValues
-            )
-                .map(
-                    value =>
-                        value
-                            .toString(16)
-                            .padStart(
-                                2,
-                                "0"
-                            )
-                )
-                .join("");
-
-
-        sessionStorage.setItem(
-            OWNER_SESSION_KEY,
-            token
-        );
-
-    }
-
-
-    function isOwnerSessionValid() {
-
-        const session =
-            sessionStorage.getItem(
-                OWNER_SESSION_KEY
-            );
-
-
-        return (
-            typeof session ===
-            "string" &&
-            session.length >= 32
-        );
-
-    }
-
-
-    function destroyOwnerSession() {
-
-        sessionStorage.removeItem(
-            OWNER_SESSION_KEY
-        );
-
-        sessionStorage.removeItem(
-            OWNER_ATTEMPTS_KEY
-        );
-
-        sessionStorage.removeItem(
-            OWNER_LOCKOUT_KEY
-        );
-
-    }
-
-
-    /* ========================================================
-       VERIFY OWNER CODE
-    ======================================================== */
-
-    async function verifyOwnerCode(
-        enteredCode
-    ) {
-
-        /*
-         * Check lockout BEFORE processing the password.
-         */
-
-        if (
-            isOwnerLocked()
-        ) {
-
-            const seconds =
-                getRemainingLockoutSeconds();
-
-
-            showOwnerError(
-                "Too many attempts. Try again in " +
-                seconds +
-                " seconds."
-            );
-
-
-            return false;
-
-        }
-
-
-        if (
-            !enteredCode ||
-            !enteredCode.trim()
-        ) {
-
-            showOwnerError(
-                "Please enter the owner code."
-            );
-
-
-            return false;
-
-        }
-
-
-        /*
-         * Hash the entered code.
-         */
-
-        const enteredHash =
-            await sha256(
-                enteredCode.trim()
-            );
-
-
-        /*
-         * Compare hashes.
-         */
-
-        const correct =
-            enteredHash ===
-            OWNER_PASSWORD_HASH;
-
-
-        if (correct) {
-
-            /*
-             * Successful authentication.
-             */
-
-            setOwnerAttempts(
-                0
-            );
-
-
-            sessionStorage.removeItem(
-                OWNER_LOCKOUT_KEY
-            );
-
-
-            createOwnerSession();
-
-
-            return true;
-
-        }
-
-
-        /*
-         * Incorrect password.
-         */
-
-        const attempts =
-            getOwnerAttempts() +
-            1;
-
-
-        setOwnerAttempts(
-            attempts
-        );
-
-
-        const remaining =
-            MAX_OWNER_ATTEMPTS -
-            attempts;
-
-
-        if (
-            attempts >=
-            MAX_OWNER_ATTEMPTS
-        ) {
-
-            lockOwnerLogin();
-
-
-            showOwnerError(
-                "Too many incorrect attempts. " +
-                "Owner login is temporarily locked."
-            );
-
-        } else {
-
-            showOwnerError(
-                "Incorrect owner code. " +
-                remaining +
-                " attempt(s) remaining."
-            );
-
-        }
-
-
-        return false;
-
-    }
-
-
-    /* ========================================================
-       OWNER LOGIN SUBMIT
-    ======================================================== */
-
-    async function handleOwnerLogin() {
-
-        if (
-            !ownerCodeInput
-        ) {
-
-            return;
-
-        }
-
-
-        clearOwnerError();
-
-
-        if (
-            isOwnerLocked()
-        ) {
-
-            const seconds =
-                getRemainingLockoutSeconds();
-
-
-            showOwnerError(
-                "Login locked. Try again in " +
-                seconds +
-                " seconds."
-            );
-
-
-            return;
-
-        }
-
-
-        const code =
-            ownerCodeInput.value;
-
-
-        /*
-         * Disable login button while hashing.
-         */
-
-        if (ownerLoginButton) {
-
-            ownerLoginButton.disabled =
-                true;
-
-            ownerLoginButton.textContent =
-                "Checking...";
-
-        }
-
-
-        try {
-
-            const authenticated =
-                await verifyOwnerCode(
-                    code
-                );
-
-
-            if (authenticated) {
-
-                closeOwnerLogin();
-
-                openOwnerPanel();
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Owner authentication error:",
-                error
-            );
-
-
-            showOwnerError(
-                "Authentication failed. Please try again."
-            );
-
-        } finally {
-
-            if (ownerLoginButton) {
-
-                ownerLoginButton.disabled =
-                    false;
-
-                ownerLoginButton.textContent =
-                    "Enter Owner Panel";
-
-            }
-
-        }
-
-    }
-
-
-    /* ========================================================
-       OWNER LOGIN BUTTON
-    ======================================================== */
-
-    if (ownerLoginButton) {
-
-        ownerLoginButton.addEventListener(
-            "click",
-            (event) => {
-
-                event.preventDefault();
-
-                handleOwnerLogin();
-
-            }
-        );
-
-    }
-
-
-    /* ========================================================
-       ENTER KEY FOR OWNER LOGIN
-    ======================================================== */
-
-    if (ownerCodeInput) {
-
-        ownerCodeInput.addEventListener(
-            "keydown",
-            (event) => {
-
-                if (
-                    event.key ===
-                    "Enter"
-                ) {
-
-                    event.preventDefault();
-
-                    handleOwnerLogin();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* ========================================================
-       CANCEL OWNER LOGIN
-    ======================================================== */
-
-    if (ownerCancel) {
-
-        ownerCancel.addEventListener(
-            "click",
-            (event) => {
-
-                event.preventDefault();
-
-                closeOwnerLogin();
-
-            }
-        );
-
-    }
-
-
-    /* ========================================================
-       CLOSE OWNER LOGIN WITH ESCAPE
-    ======================================================== */
-
-    document.addEventListener(
-        "keydown",
-        (event) => {
-
-            if (
-                event.key !==
-                "Escape"
-            ) {
-
-                return;
-
-            }
-
-
-            if (
-                ownerLogin &&
-                ownerLogin.classList.contains(
-                    "open"
-                )
-            ) {
-
-                closeOwnerLogin();
-
-            }
-
-
-            if (
-                settingsPanel &&
-                settingsPanel.classList.contains(
-                    "open"
-                )
-            ) {
-
-                settingsPanel.classList.remove(
-                    "open"
-                );
-
-            }
-
-        }
-    );
-
-
-    /* ========================================================
-       OPEN OWNER PANEL
-    ======================================================== */
-
-    function openOwnerPanel() {
-
-        /*
-         * NEVER open the owner panel unless a valid
-         * front-end session exists.
-         */
-
-        if (
-            !isOwnerSessionValid()
-        ) {
-
-            openOwnerLogin();
-
-            return;
-
-        }
-
-
-        if (ownerPanel) {
-
-            ownerPanel.classList.add(
-                "open"
-            );
-
-        }
-
-    }
-
-
-    /* ========================================================
-       OWNER LOGOUT
-    ======================================================== */
-
-    if (ownerLogout) {
-
-        ownerLogout.addEventListener(
-            "click",
-            () => {
-
-                /*
-                 * Destroy the owner session.
-                 */
-
-                destroyOwnerSession();
-
-
-                /*
-                 * Close the panel.
-                 */
-
-                if (ownerPanel) {
-
-                    ownerPanel.classList.remove(
-                        "open"
-                    );
-
-                }
-
-
-                /*
-                 * Make sure the login screen is
-                 * ready for another login.
-                 */
-
-                if (ownerCodeInput) {
-
-                    ownerCodeInput.value =
-                        "";
-
-                }
-
-
-                clearOwnerError();
-
-            }
-        );
-
-    }
-
-
-    /* ========================================================
-       PROTECT OWNER PANEL ON PAGE LOAD
-    ======================================================== */
-
-    if (
-        ownerPanel &&
-        ownerPanel.classList.contains(
-            "open"
-        )
-    ) {
-
-        /*
-         * If the HTML accidentally contains
-         * the open class, remove it unless a
-         * valid session exists.
-         */
-
-        if (
-            !isOwnerSessionValid()
-        ) {
-
-            ownerPanel.classList.remove(
-                "open"
-            );
-
-        }
-
-    }
-
-
-    /* ========================================================
+    /* =====================================================
        NORMAL LOGIN
-    ======================================================== */
+       ===================================================== */
 
     if (loginForm) {
 
@@ -1619,15 +954,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 event.preventDefault();
 
 
-                /*
-                 * Normal user authentication is not
-                 * connected to owner authentication.
-                 */
-
                 if (accountMessage) {
 
                     accountMessage.textContent =
-                        "Normal account authentication will be connected later.";
+                        "Normal account authentication will be connected to the MoonPlug backend.";
 
                 }
 
@@ -1637,9 +967,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
+    /* =====================================================
        NORMAL SIGNUP
-    ======================================================== */
+       ===================================================== */
 
     if (signupForm) {
 
@@ -1674,7 +1004,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     }
 
-
                     return;
 
                 }
@@ -1683,7 +1012,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (accountMessage) {
 
                     accountMessage.textContent =
-                        "Account creation will be connected to authentication later.";
+                        "Account signup will be connected to the MoonPlug backend.";
 
                 }
 
@@ -1693,30 +1022,61 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ========================================================
-       OWNER PANEL SAFETY CHECK
-    ======================================================== */
+    /* =====================================================
+       SESSION EXPIRATION CHECK
+       ===================================================== */
 
-    /*
-     * This watches for code attempting to add the
-     * "open" class to the owner panel without an
-     * authenticated session.
-     *
-     * This is not a replacement for backend security,
-     * but it prevents accidental front-end exposure.
-     */
+    setInterval(
+        () => {
 
-    if (ownerPanel) {
+            if (
+                ownerPanel &&
+                ownerPanel.classList.contains(
+                    "open"
+                )
+            ) {
 
-        const observer =
-            new MutationObserver(
-                () => {
+                if (
+                    !isOwnerAuthenticated()
+                ) {
+
+                    ownerPanel.classList.remove(
+                        "open"
+                    );
+
+                    openOwnerLogin();
+
+                }
+
+            }
+
+        },
+        10 * 1000
+    );
+
+
+    /* =====================================================
+       PAGE VISIBILITY SECURITY CHECK
+       ===================================================== */
+
+    document.addEventListener(
+        "visibilitychange",
+        () => {
+
+            if (
+                document.visibilityState ===
+                "visible"
+            ) {
+
+                if (
+                    ownerPanel &&
+                    ownerPanel.classList.contains(
+                        "open"
+                    )
+                ) {
 
                     if (
-                        ownerPanel.classList.contains(
-                            "open"
-                        ) &&
-                        !isOwnerSessionValid()
+                        !isOwnerAuthenticated()
                     ) {
 
                         ownerPanel.classList.remove(
@@ -1728,85 +1088,85 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
 
                 }
-            );
 
-
-        observer.observe(
-            ownerPanel,
-            {
-                attributes: true,
-                attributeFilter: [
-                    "class"
-                ]
             }
-        );
 
-    }
+        }
+    );
 
 
-    /* ========================================================
-       INITIAL STATE
-    ======================================================== */
+    /* =====================================================
+       ESCAPE KEY
+       ===================================================== */
 
-    /*
-     * Owner panel should never automatically appear
-     * without an authenticated session.
-     */
+    document.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key !== "Escape"
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                ownerOverlay &&
+                ownerOverlay.classList.contains(
+                    "open"
+                )
+            ) {
+
+                closeOwnerLogin();
+
+                return;
+
+            }
+
+
+            if (
+                settingsPanel &&
+                settingsPanel.classList.contains(
+                    "open"
+                )
+            ) {
+
+                settingsPanel.classList.remove(
+                    "open"
+                );
+
+                return;
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       STARTUP
+       ===================================================== */
 
     if (
         ownerPanel &&
-        !isOwnerSessionValid()
+        ownerPanel.classList.contains(
+            "open"
+        )
     ) {
 
-        ownerPanel.classList.remove(
-            "open"
-        );
+        if (
+            !isOwnerAuthenticated()
+        ) {
+
+            ownerPanel.classList.remove(
+                "open"
+            );
+
+        }
 
     }
-
-
-    /*
-     * Make sure owner login starts closed.
-     */
-
-    if (ownerLogin) {
-
-        ownerLogin.classList.remove(
-            "open"
-        );
-
-    }
-
-
-    /* ========================================================
-       DEBUG INFORMATION
-    ======================================================== */
-
-    console.log(
-        "%cMoonPlug AI",
-        "font-size:20px;font-weight:bold;"
-    );
-
-
-    console.log(
-        "Secure front-end authentication loaded."
-    );
-
-
-    console.log(
-        "Owner panel protected:",
-        Boolean(ownerPanel)
-    );
-
-
-    console.log(
-        "Owner session:",
-        isOwnerSessionValid()
-            ? "active"
-            : "inactive"
-    );
-
 
 });
-
 
