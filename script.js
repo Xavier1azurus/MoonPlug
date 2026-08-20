@@ -1,17 +1,12 @@
-/* =====================================================
-   MOONPLUG AI
-   COMPLETE JAVASCRIPT
-   NO API REQUIRED
-===================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
 
     "use strict";
 
 
-    /* =================================================
+    /* =====================================================
        ELEMENTS
-    ================================================= */
+    ===================================================== */
 
     const sidebar =
         document.getElementById("sidebar");
@@ -19,14 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const sidebarLogo =
         document.getElementById("sidebarLogo");
 
-    const chatSection =
-        document.getElementById("chatSection");
-
     const messages =
         document.getElementById("messages");
-
-    const emptyChat =
-        document.getElementById("emptyChat");
 
     const messageInput =
         document.getElementById("messageInput");
@@ -52,20 +41,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeButton =
         document.getElementById("themeButton");
 
-    const sidebarToggleSetting =
-        document.getElementById("sidebarToggleSetting");
-
 
     /* ACCOUNT */
 
-    const accountButton =
-        document.getElementById("accountButton");
+    const ownerButton =
+        document.getElementById("ownerButton");
 
     const accountScreen =
         document.getElementById("accountScreen");
-
-    const closeAccount =
-        document.getElementById("closeAccount");
 
     const loginTab =
         document.getElementById("loginTab");
@@ -79,6 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const signupForm =
         document.getElementById("signupForm");
 
+    const closeAccount =
+        document.getElementById("closeAccount");
+
     const accountMessage =
         document.getElementById("accountMessage");
 
@@ -88,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const ownerLogin =
         document.getElementById("ownerLogin");
 
-    const ownerCode =
+    const ownerCodeInput =
         document.getElementById("ownerCode");
 
     const ownerLoginButton =
@@ -107,228 +93,25 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("ownerLogout");
 
 
-    /* OWNER STATISTICS */
 
-    const ownerUsers =
-        document.getElementById("ownerUsers");
-
-    const ownerChats =
-        document.getElementById("ownerChats");
-
-    const ownerMessages =
-        document.getElementById("ownerMessages");
-
-
-    /* OWNER CONTROLS */
-
-    const manageUsersButton =
-        document.getElementById("manageUsersButton");
-
-    const manageChatsButton =
-        document.getElementById("manageChatsButton");
-
-    const appSettingsButton =
-        document.getElementById("appSettingsButton");
-
-    const ownerActionMessage =
-        document.getElementById("ownerActionMessage");
-
-
-    /* TRAINER */
-
-    const trainingInput =
-        document.getElementById("trainingInput");
-
-    const saveTrainingButton =
-        document.getElementById("saveTrainingButton");
-
-    const clearTrainingButton =
-        document.getElementById("clearTrainingButton");
-
-    const trainingStatus =
-        document.getElementById("trainingStatus");
-
-
-    /* OWNER CHAT */
-
-    const ownerChatMessages =
-        document.getElementById("ownerChatMessages");
-
-    const ownerChatInput =
-        document.getElementById("ownerChatInput");
-
-    const ownerChatSend =
-        document.getElementById("ownerChatSend");
-
-
-    /* =================================================
-       STORAGE
-    ================================================= */
-
-    const STORAGE = {
-
-        users: "moonplug_users",
-
-        chats: "moonplug_chats",
-
-        messages: "moonplug_messages",
-
-        training: "moonplug_training",
-
-        theme: "moonplug_theme",
-
-        textSize: "moonplug_text_size"
-
-    };
-
-
-    /* =================================================
+    /* =====================================================
        OWNER CODE
-       
-       IMPORTANT:
-       This is only client-side protection.
-       A real secure owner system requires a server.
-    ================================================= */
+    ===================================================== */
 
     const OWNER_CODE =
         "BumsUp1AI1591";
 
 
-    /* =================================================
-       SAFE STORAGE FUNCTIONS
-    ================================================= */
 
-    function getStorage(key, fallback) {
-
-        try {
-
-            const value =
-                localStorage.getItem(key);
-
-            if (value === null) {
-                return fallback;
-            }
-
-            return JSON.parse(value);
-
-        } catch (error) {
-
-            console.warn(
-                "Storage read error:",
-                error
-            );
-
-            return fallback;
-
-        }
-
-    }
-
-
-    function setStorage(key, value) {
-
-        try {
-
-            localStorage.setItem(
-                key,
-                JSON.stringify(value)
-            );
-
-            return true;
-
-        } catch (error) {
-
-            console.warn(
-                "Storage write error:",
-                error
-            );
-
-            return false;
-
-        }
-
-    }
-
-
-    /* =================================================
-       INITIALIZE STORAGE
-    ================================================= */
-
-    if (!localStorage.getItem(STORAGE.users)) {
-
-        setStorage(
-            STORAGE.users,
-            []
-        );
-
-    }
-
-
-    if (!localStorage.getItem(STORAGE.chats)) {
-
-        setStorage(
-            STORAGE.chats,
-            []
-        );
-
-    }
-
-
-    if (!localStorage.getItem(STORAGE.messages)) {
-
-        setStorage(
-            STORAGE.messages,
-            []
-        );
-
-    }
-
-
-    if (!localStorage.getItem(STORAGE.training)) {
-
-        setStorage(
-            STORAGE.training,
-            []
-        );
-
-    }
-
-
-    /* =================================================
+    /* =====================================================
        SIDEBAR
-    ================================================= */
-
-    function setSidebarExpanded(expanded) {
-
-        if (!sidebar) {
-            return;
-        }
-
-
-        if (expanded) {
-
-            sidebar.classList.add(
-                "expanded"
-            );
-
-            sidebar.classList.remove(
-                "collapsed"
-            );
-
-        } else {
-
-            sidebar.classList.add(
-                "collapsed"
-            );
-
-            sidebar.classList.remove(
-                "expanded"
-            );
-
-        }
-
-    }
-
+       
+       IMPORTANT:
+       Clicking ANY empty sidebar space expands it.
+       
+       Clicking a sidebar button does not accidentally
+       toggle it.
+    ===================================================== */
 
     function toggleSidebar() {
 
@@ -336,313 +119,63 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-
-        const expanded =
-            sidebar.classList.contains(
-                "expanded"
-            );
-
-
-        setSidebarExpanded(
-            !expanded
-        );
+        sidebar.classList.toggle("expanded");
 
     }
 
-
-    /*
-     * Desktop starts expanded.
-     * iPad/iPhone starts collapsed.
-     */
-
-    function initializeSidebar() {
-
-        if (!sidebar) {
-            return;
-        }
-
-
-        if (
-            window.matchMedia(
-                "(max-width: 1200px)"
-            ).matches
-        ) {
-
-            setSidebarExpanded(false);
-
-        } else {
-
-            setSidebarExpanded(true);
-
-        }
-
-    }
-
-
-    initializeSidebar();
-
-
-    /*
-     * Clicking the logo toggles sidebar.
-     */
-
-    if (sidebarLogo) {
-
-        sidebarLogo.addEventListener(
-            "click",
-            (event) => {
-
-                event.preventDefault();
-
-                event.stopPropagation();
-
-                toggleSidebar();
-
-            }
-        );
-
-    }
-
-
-    /*
-     * Clicking EMPTY SPACE in sidebar
-     * also toggles sidebar.
-     *
-     * Buttons themselves do not.
-     */
 
     if (sidebar) {
 
-        sidebar.addEventListener(
-            "click",
-            (event) => {
+        sidebar.addEventListener("click", function (event) {
 
-                const clickedButton =
-                    event.target.closest(
-                        ".sidebar-button"
-                    );
+            const clickedButton =
+                event.target.closest(".sidebar-button");
 
-
-                const clickedLogo =
-                    event.target.closest(
-                        ".sidebar-logo"
-                    );
+            const clickedLogo =
+                event.target.closest(".sidebar-logo");
 
 
-                if (
-                    clickedButton ||
-                    clickedLogo
-                ) {
+            /*
+             * Logo always toggles sidebar.
+             */
 
-                    return;
-
-                }
-
+            if (clickedLogo) {
 
                 toggleSidebar();
 
-            }
-        );
-
-    }
-
-
-    /* =================================================
-       SIDEBAR BUTTONS
-    ================================================= */
-
-    function sidebarNotice(text) {
-
-        if (messages) {
-
-            removeEmptyChat();
-
-            addMessage(
-                text,
-                "ai"
-            );
-
-        }
-
-    }
-
-
-    const newChatButton =
-        document.getElementById(
-            "newChatButton"
-        );
-
-    if (newChatButton) {
-
-        newChatButton.addEventListener(
-            "click",
-            () => {
-
-                clearChat();
+                return;
 
             }
-        );
-
-    }
 
 
-    const learnButton =
-        document.getElementById(
-            "learnButton"
-        );
+            /*
+             * If they clicked a real button,
+             * don't toggle the sidebar.
+             */
 
-    if (learnButton) {
+            if (clickedButton) {
 
-        learnButton.addEventListener(
-            "click",
-            () => {
-
-                sidebarNotice(
-                    "AI Learn is ready. You can train MoonPlug from the Owner Panel."
-                );
+                return;
 
             }
-        );
+
+
+            /*
+             * Anything else inside the sidebar
+             * is empty space.
+             */
+
+            toggleSidebar();
+
+        });
 
     }
 
 
-    const studyButton =
-        document.getElementById(
-            "studyButton"
-        );
 
-    if (studyButton) {
-
-        studyButton.addEventListener(
-            "click",
-            () => {
-
-                sidebarNotice(
-                    "Study mode is ready."
-                );
-
-            }
-        );
-
-    }
-
-
-    const cookButton =
-        document.getElementById(
-            "cookButton"
-        );
-
-    if (cookButton) {
-
-        cookButton.addEventListener(
-            "click",
-            () => {
-
-                sidebarNotice(
-                    "Cook mode is ready."
-                );
-
-            }
-        );
-
-    }
-
-
-    const imagesButton =
-        document.getElementById(
-            "imagesButton"
-        );
-
-    if (imagesButton) {
-
-        imagesButton.addEventListener(
-            "click",
-            () => {
-
-                sidebarNotice(
-                    "Image mode is ready."
-                );
-
-            }
-        );
-
-    }
-
-
-    const codeButton =
-        document.getElementById(
-            "codeButton"
-        );
-
-    if (codeButton) {
-
-        codeButton.addEventListener(
-            "click",
-            () => {
-
-                sidebarNotice(
-                    "Code mode is ready."
-                );
-
-            }
-        );
-
-    }
-
-
-    const switchButton =
-        document.getElementById(
-            "switchButton"
-        );
-
-    if (switchButton) {
-
-        switchButton.addEventListener(
-            "click",
-            () => {
-
-                sidebarNotice(
-                    "AI Switch is ready."
-                );
-
-            }
-        );
-
-    }
-
-
-    const historyButton =
-        document.getElementById(
-            "historyButton"
-        );
-
-    if (historyButton) {
-
-        historyButton.addEventListener(
-            "click",
-            () => {
-
-                const chats =
-                    getStorage(
-                        STORAGE.chats,
-                        []
-                    );
-
-
-                sidebarNotice(
-                    `You currently have ${chats.length} saved chat session(s).`
-                );
-
-            }
-        );
-
-    }
-
-
-    /* =================================================
+    /* =====================================================
        SETTINGS
-    ================================================= */
+    ===================================================== */
 
     function openSettings() {
 
@@ -650,10 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-
-        settingsPanel.classList.add(
-            "open"
-        );
+        settingsPanel.classList.add("open");
 
         settingsPanel.setAttribute(
             "aria-hidden",
@@ -669,10 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-
-        settingsPanel.classList.remove(
-            "open"
-        );
+        settingsPanel.classList.remove("open");
 
         settingsPanel.setAttribute(
             "aria-hidden",
@@ -686,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         settingsButton.addEventListener(
             "click",
-            (event) => {
+            function (event) {
 
                 event.preventDefault();
 
@@ -704,7 +231,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         closeSettings.addEventListener(
             "click",
-            closeSettingsPanel
+            function () {
+
+                closeSettingsPanel();
+
+            }
         );
 
     }
@@ -714,11 +245,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         settingsPanel.addEventListener(
             "click",
-            (event) => {
+            function (event) {
 
                 if (
-                    event.target ===
-                    settingsPanel
+                    event.target === settingsPanel
                 ) {
 
                     closeSettingsPanel();
@@ -731,80 +261,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    if (sidebarToggleSetting) {
 
-        sidebarToggleSetting.addEventListener(
-            "click",
-            () => {
-
-                toggleSidebar();
-
-            }
-        );
-
-    }
-
-
-    /* =================================================
+    /* =====================================================
        THEME
-    ================================================= */
-
-    function loadTheme() {
-
-        const theme =
-            localStorage.getItem(
-                STORAGE.theme
-            );
-
-
-        if (theme === "light") {
-
-            document.body.classList.add(
-                "light-theme"
-            );
-
-            if (themeButton) {
-                themeButton.textContent =
-                    "Light";
-            }
-
-        } else {
-
-            document.body.classList.remove(
-                "light-theme"
-            );
-
-            if (themeButton) {
-                themeButton.textContent =
-                    "Dark";
-            }
-
-        }
-
-    }
-
-
-    loadTheme();
-
+    ===================================================== */
 
     if (themeButton) {
 
         themeButton.addEventListener(
             "click",
-            () => {
+            function () {
+
+                document.body.classList.toggle(
+                    "light-theme"
+                );
+
 
                 const light =
-                    document.body.classList.toggle(
+                    document.body.classList.contains(
                         "light-theme"
                     );
-
-
-                localStorage.setItem(
-                    STORAGE.theme,
-                    light
-                        ? "light"
-                        : "dark"
-                );
 
 
                 themeButton.textContent =
@@ -818,117 +294,76 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* =================================================
+
+    /* =====================================================
        TEXT SIZE
-    ================================================= */
+    ===================================================== */
 
-    function loadTextSize() {
-
-        const size =
-            localStorage.getItem(
-                STORAGE.textSize
-            ) || "medium";
-
-
-        document.body.classList.remove(
-            "text-small",
-            "text-medium",
-            "text-large"
+    const sizeButtons =
+        document.querySelectorAll(
+            ".size-button"
         );
 
 
-        document.body.classList.add(
-            "text-" + size
-        );
+    sizeButtons.forEach(function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                const size =
+                    button.dataset.size;
 
 
-        document
-            .querySelectorAll(".size-button")
-            .forEach((button) => {
-
-                button.classList.toggle(
-                    "active",
-                    button.dataset.size === size
+                document.body.classList.remove(
+                    "text-small",
+                    "text-medium",
+                    "text-large"
                 );
 
-            });
 
-    }
-
-
-    loadTextSize();
+                document.body.classList.add(
+                    "text-" + size
+                );
 
 
-    document
-        .querySelectorAll(".size-button")
-        .forEach((button) => {
+                sizeButtons.forEach(
+                    function (otherButton) {
 
-            button.addEventListener(
-                "click",
-                () => {
+                        otherButton.classList.remove(
+                            "active"
+                        );
 
-                    const size =
-                        button.dataset.size;
-
-
-                    localStorage.setItem(
-                        STORAGE.textSize,
-                        size
-                    );
+                    }
+                );
 
 
-                    loadTextSize();
+                button.classList.add("active");
 
-                }
-            );
+            }
+        );
 
-        });
-
-
-    /* =================================================
-       CHAT
-    ================================================= */
-
-    function removeEmptyChat() {
-
-        const currentEmpty =
-            document.getElementById(
-                "emptyChat"
-            );
+    });
 
 
-        if (currentEmpty) {
 
-            currentEmpty.remove();
+    /* =====================================================
+       MESSAGE BUBBLE
+    ===================================================== */
 
-        }
-
-    }
-
-
-    function addMessage(
-        text,
-        type,
-        save = true
-    ) {
+    function addMessage(text, type) {
 
         if (!messages) {
-            return null;
+            return;
         }
-
-
-        removeEmptyChat();
 
 
         const bubble =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
         bubble.className =
-            "message-bubble " +
-            type;
+            "message-bubble " + type;
 
 
         bubble.textContent =
@@ -941,7 +376,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         requestAnimationFrame(
-            () => {
+            function () {
 
                 messages.scrollTop =
                     messages.scrollHeight;
@@ -949,233 +384,35 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         );
 
-
-        if (save) {
-
-            const savedMessages =
-                getStorage(
-                    STORAGE.messages,
-                    []
-                );
+    }
 
 
-            savedMessages.push({
 
-                text: text,
+    /* =====================================================
+       REMOVE EMPTY CHAT
+    ===================================================== */
 
-                type: type,
+    function removeEmptyChat() {
 
-                time:
-                    new Date()
-                    .toISOString()
-
-            });
-
-
-            setStorage(
-                STORAGE.messages,
-                savedMessages
+        const emptyChat =
+            document.querySelector(
+                ".empty-chat"
             );
 
 
-            updateOwnerStats();
+        if (emptyChat) {
+
+            emptyChat.remove();
 
         }
-
-
-        return bubble;
 
     }
 
 
-    function showTyping() {
 
-        if (!typing) {
-            return;
-        }
-
-
-        typing.style.display =
-            "flex";
-
-    }
-
-
-    function hideTyping() {
-
-        if (!typing) {
-            return;
-        }
-
-
-        typing.style.display =
-            "none";
-
-    }
-
-
-    /* =================================================
-       LOCAL RESPONSE SYSTEM
-    ================================================= */
-
-    function getTraining() {
-
-        return getStorage(
-            STORAGE.training,
-            []
-        );
-
-    }
-
-
-    function findTrainingResponse(
-        text
-    ) {
-
-        const training =
-            getTraining();
-
-
-        const lower =
-            text.toLowerCase();
-
-
-        for (
-            let i = 0;
-            i < training.length;
-            i++
-        ) {
-
-            const item =
-                training[i];
-
-
-            if (
-                item &&
-                item.input &&
-                lower.includes(
-                    item.input.toLowerCase()
-                )
-            ) {
-
-                return item.response;
-
-            }
-
-        }
-
-
-        return null;
-
-    }
-
-
-    function generateLocalResponse(
-        text
-    ) {
-
-        const lower =
-            text.toLowerCase().trim();
-
-
-        /*
-         * First check owner training.
-         */
-
-        const trained =
-            findTrainingResponse(
-                lower
-            );
-
-
-        if (trained) {
-
-            return trained;
-
-        }
-
-
-        /*
-         * Basic built-in responses.
-         */
-
-        if (
-            lower === "hi" ||
-            lower === "hello" ||
-            lower.includes("hey moonplug")
-        ) {
-
-            return "Hey! I'm MoonPlug AI. What would you like to work on?";
-
-        }
-
-
-        if (
-            lower.includes("who are you")
-        ) {
-
-            return "I'm MoonPlug AI, your local AI assistant.";
-
-        }
-
-
-        if (
-            lower.includes("what can you do")
-        ) {
-
-            return "I can chat, help with coding, explain things, study with you, and use information you've added to my local training system.";
-
-        }
-
-
-        if (
-            lower.includes("python")
-        ) {
-
-            return "Python is a great language to learn. I can help you understand Python concepts and build projects step by step.";
-
-        }
-
-
-        if (
-            lower.includes("thank")
-        ) {
-
-            return "You're welcome!";
-
-        }
-
-
-        if (
-            lower.includes("bye")
-        ) {
-
-            return "See you later!";
-
-        }
-
-
-        if (
-            lower.endsWith("?")
-        ) {
-
-            return "That's a good question. I can work through it with you step by step.";
-
-        }
-
-
-        /*
-         * Default response.
-         */
-
-        return "I received your message. I'm currently running MoonPlug's local response system without an API. You can add custom knowledge through the Owner Panel.";
-
-    }
-
-
-    /* =================================================
+    /* =====================================================
        SEND MESSAGE
-    ================================================= */
+    ===================================================== */
 
     function sendMessage() {
 
@@ -1194,23 +431,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         /*
-         * HIDDEN OWNER CODE DETECTION
-         *
-         * The code can be typed into the chat.
+         * Remove the "What can I help with?"
+         * screen once the first message is sent.
          */
 
-        if (
-            text === OWNER_CODE
-        ) {
+        removeEmptyChat();
 
-            messageInput.value = "";
 
-            openOwnerPanel();
-
-            return;
-
-        }
-
+        /*
+         * USER BUBBLE
+         */
 
         addMessage(
             text,
@@ -1218,68 +448,65 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
 
+        /*
+         * CLEAR INPUT
+         */
+
         messageInput.value = "";
 
 
-        showTyping();
+        /*
+         * SHOW TYPING
+         */
+
+        if (typing) {
+
+            typing.style.display =
+                "block";
+
+        }
 
 
-        const chats =
-            getStorage(
-                STORAGE.chats,
-                []
-            );
+        /*
+         * TEMPORARY RESPONSE
+         *
+         * This is NOT the final AI.
+         * It simply proves the chat system works.
+         */
 
+        window.setTimeout(
+            function () {
 
-        chats.push({
+                if (typing) {
 
-            message: text,
+                    typing.style.display =
+                        "none";
 
-            time:
-                new Date()
-                .toISOString()
-
-        });
-
-
-        setStorage(
-            STORAGE.chats,
-            chats
-        );
-
-
-        updateOwnerStats();
-
-
-        setTimeout(
-            () => {
-
-                hideTyping();
-
-
-                const response =
-                    generateLocalResponse(
-                        text
-                    );
+                }
 
 
                 addMessage(
-                    response,
+                    "I'm ready to help.",
                     "ai"
                 );
 
             },
-            650
+            700
         );
 
     }
 
 
+
+    /* =====================================================
+       SEND BUTTON
+    ===================================================== */
+
     if (sendButton) {
 
         sendButton.addEventListener(
             "click",
-            (event) => {
+            function (event) {
 
                 event.preventDefault();
 
@@ -1291,15 +518,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
+    /* =====================================================
+       ENTER TO SEND
+    ===================================================== */
+
     if (messageInput) {
 
         messageInput.addEventListener(
             "keydown",
-            (event) => {
+            function (event) {
 
                 if (
-                    event.key ===
-                    "Enter"
+                    event.key === "Enter" &&
+                    !event.shiftKey
                 ) {
 
                     event.preventDefault();
@@ -1314,59 +546,71 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* =================================================
+
+    /* =====================================================
        NEW CHAT
-    ================================================= */
+    ===================================================== */
 
-    function clearChat() {
-
-        if (!messages) {
-            return;
-        }
-
-
-        messages.innerHTML = "";
-
-
-        const newEmpty =
-            document.createElement(
-                "div"
-            );
-
-
-        newEmpty.id =
-            "emptyChat";
-
-
-        newEmpty.className =
-            "empty-chat";
-
-
-        newEmpty.innerHTML = `
-            <h1>What can I help with?</h1>
-            <p>Ask MoonPlug anything.</p>
-        `;
-
-
-        messages.appendChild(
-            newEmpty
+    const newChatButton =
+        document.getElementById(
+            "newChatButton"
         );
 
 
-        if (messageInput) {
+    if (newChatButton) {
 
-            messageInput.value = "";
+        newChatButton.addEventListener(
+            "click",
+            function () {
 
-            messageInput.focus();
+                if (!messages) {
+                    return;
+                }
 
-        }
+
+                messages.innerHTML = "";
+
+
+                const empty =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                empty.className =
+                    "empty-chat";
+
+
+                empty.innerHTML =
+                    `
+                    <h1>What can I help with?</h1>
+                    <p>Ask MoonPlug anything.</p>
+                    `;
+
+
+                messages.appendChild(
+                    empty
+                );
+
+
+                if (messageInput) {
+
+                    messageInput.value = "";
+
+                    messageInput.focus();
+
+                }
+
+            }
+        );
 
     }
 
 
-    /* =================================================
-       ACCOUNT
-    ================================================= */
+
+    /* =====================================================
+       ACCOUNT SCREEN
+    ===================================================== */
 
     function openAccount() {
 
@@ -1386,9 +630,10 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
 
-        if (loginEmail) {
+        if (accountMessage) {
 
-            loginEmail.focus();
+            accountMessage.textContent =
+                "";
 
         }
 
@@ -1415,11 +660,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    if (accountButton) {
+    if (ownerButton) {
 
-        accountButton.addEventListener(
+        ownerButton.addEventListener(
             "click",
-            (event) => {
+            function (event) {
 
                 event.preventDefault();
 
@@ -1437,39 +682,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
         closeAccount.addEventListener(
             "click",
-            closeAccountScreen
+            function () {
+
+                closeAccountScreen();
+
+            }
         );
 
     }
 
 
-    /* =================================================
-       ACCOUNT TABS
-    ================================================= */
+
+    /* =====================================================
+       LOGIN / SIGNUP TABS
+    ===================================================== */
 
     function showLogin() {
 
-        if (!loginForm || !signupForm) {
+        if (
+            !loginForm ||
+            !signupForm ||
+            !loginTab ||
+            !signupTab
+        ) {
             return;
         }
 
 
-        loginForm.hidden =
-            false;
+        loginTab.classList.add(
+            "active"
+        );
 
-
-        signupForm.hidden =
-            true;
-
-
-        loginTab?.classList.add(
+        signupTab.classList.remove(
             "active"
         );
 
 
-        signupTab?.classList.remove(
-            "active"
-        );
+        loginForm.style.display =
+            "flex";
+
+        signupForm.style.display =
+            "none";
 
 
         if (accountMessage) {
@@ -1484,27 +737,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function showSignup() {
 
-        if (!loginForm || !signupForm) {
+        if (
+            !loginForm ||
+            !signupForm ||
+            !loginTab ||
+            !signupTab
+        ) {
             return;
         }
 
 
-        loginForm.hidden =
-            true;
+        signupTab.classList.add(
+            "active"
+        );
 
-
-        signupForm.hidden =
-            false;
-
-
-        signupTab?.classList.add(
+        loginTab.classList.remove(
             "active"
         );
 
 
-        loginTab?.classList.remove(
-            "active"
-        );
+        signupForm.style.display =
+            "flex";
+
+        loginForm.style.display =
+            "none";
 
 
         if (accountMessage) {
@@ -1537,20 +793,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* =================================================
-       LOGIN
-    ================================================= */
 
-    const loginEmail =
-        document.getElementById(
-            "loginEmail"
-        );
-
-    const loginPassword =
-        document.getElementById(
-            "loginPassword"
-        );
-
+    /* =====================================================
+       OWNER CODE CHECK
+    ===================================================== */
 
     function isOwnerCode(value) {
 
@@ -1567,274 +813,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    if (loginForm) {
 
-        loginForm.addEventListener(
-            "submit",
-            (event) => {
-
-                event.preventDefault();
-
-
-                const email =
-                    loginEmail?.value.trim()
-                    || "";
-
-
-                const password =
-                    loginPassword?.value
-                    || "";
-
-
-                /*
-                 * Owner code can be placed
-                 * in email OR password.
-                 */
-
-                if (
-                    isOwnerCode(email) ||
-                    isOwnerCode(password)
-                ) {
-
-                    openOwnerPanel();
-
-                    return;
-
-                }
-
-
-                if (
-                    !email ||
-                    !password
-                ) {
-
-                    accountMessage.textContent =
-                        "Please enter your email and password.";
-
-                    return;
-
-                }
-
-
-                const users =
-                    getStorage(
-                        STORAGE.users,
-                        []
-                    );
-
-
-                const user =
-                    users.find(
-                        (item) =>
-                            item.email ===
-                            email &&
-                            item.password ===
-                            password
-                    );
-
-
-                if (!user) {
-
-                    accountMessage.textContent =
-                        "Account not found. Create an account first.";
-
-                    return;
-
-                }
-
-
-                accountMessage.textContent =
-                    "Logged in successfully!";
-
-
-                setTimeout(
-                    () => {
-
-                        closeAccountScreen();
-
-                    },
-                    600
-                );
-
-            }
-        );
-
-    }
-
-
-    /* =================================================
-       SIGN UP
-    ================================================= */
-
-    const signupEmail =
-        document.getElementById(
-            "signupEmail"
-        );
-
-    const signupPassword =
-        document.getElementById(
-            "signupPassword"
-        );
-
-    const signupConfirm =
-        document.getElementById(
-            "signupConfirm"
-        );
-
-
-    if (signupForm) {
-
-        signupForm.addEventListener(
-            "submit",
-            (event) => {
-
-                event.preventDefault();
-
-
-                const email =
-                    signupEmail?.value.trim()
-                    || "";
-
-
-                const password =
-                    signupPassword?.value
-                    || "";
-
-
-                const confirm =
-                    signupConfirm?.value
-                    || "";
-
-
-                /*
-                 * Hidden owner detection.
-                 */
-
-                if (
-                    isOwnerCode(email) ||
-                    isOwnerCode(password) ||
-                    isOwnerCode(confirm)
-                ) {
-
-                    openOwnerPanel();
-
-                    return;
-
-                }
-
-
-                if (
-                    !email ||
-                    !password ||
-                    !confirm
-                ) {
-
-                    accountMessage.textContent =
-                        "Please fill in every field.";
-
-                    return;
-
-                }
-
-
-                if (
-                    password !== confirm
-                ) {
-
-                    accountMessage.textContent =
-                        "Passwords do not match.";
-
-                    return;
-
-                }
-
-
-                if (
-                    password.length < 4
-                ) {
-
-                    accountMessage.textContent =
-                        "For this demo, use at least 4 characters.";
-
-                    return;
-
-                }
-
-
-                const users =
-                    getStorage(
-                        STORAGE.users,
-                        []
-                    );
-
-
-                const existing =
-                    users.some(
-                        (user) =>
-                            user.email ===
-                            email
-                    );
-
-
-                if (existing) {
-
-                    accountMessage.textContent =
-                        "That account already exists.";
-
-                    return;
-
-                }
-
-
-                users.push({
-
-                    email: email,
-
-                    password: password,
-
-                    created:
-                        new Date()
-                        .toISOString()
-
-                });
-
-
-                setStorage(
-                    STORAGE.users,
-                    users
-                );
-
-
-                accountMessage.textContent =
-                    "Account created successfully!";
-
-
-                updateOwnerStats();
-
-
-                setTimeout(
-                    () => {
-
-                        showLogin();
-
-                    },
-                    700
-                );
-
-            }
-        );
-
-    }
-
-
-    /* =================================================
-       OWNER PANEL
-    ================================================= */
+    /* =====================================================
+       OPEN OWNER PANEL
+    ===================================================== */
 
     function openOwnerPanel() {
 
-        closeAccountScreen();
+        /*
+         * Close account screen.
+         */
 
+        if (accountScreen) {
+
+            accountScreen.classList.remove(
+                "open"
+            );
+
+            accountScreen.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+        }
+
+
+        /*
+         * Close owner login.
+         */
 
         if (ownerLogin) {
 
@@ -1842,15 +848,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 "open"
             );
 
+            ownerLogin.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
         }
 
+
+        /*
+         * Open owner panel.
+         */
 
         if (ownerPanel) {
 
             ownerPanel.classList.add(
                 "open"
             );
-
 
             ownerPanel.setAttribute(
                 "aria-hidden",
@@ -1864,6 +878,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+
+
+    /* =====================================================
+       CLOSE OWNER PANEL
+    ===================================================== */
 
     function closeOwnerPanel() {
 
@@ -1885,6 +904,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
+    /* =====================================================
+       OWNER LOGIN POPUP
+       
+       The Account button itself opens the public
+       login/signup screen.
+       
+       The owner code can also be detected inside
+       login/signup fields.
+    ===================================================== */
+
     function openOwnerLogin() {
 
         if (!ownerLogin) {
@@ -1903,15 +933,6 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
 
-        if (ownerCode) {
-
-            ownerCode.value = "";
-
-            ownerCode.focus();
-
-        }
-
-
         if (ownerError) {
 
             ownerError.textContent =
@@ -1919,45 +940,101 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
+
+        if (ownerCodeInput) {
+
+            ownerCodeInput.value = "";
+
+            ownerCodeInput.focus();
+
+        }
+
     }
 
 
-    /*
-     * Clicking Account opens public account.
-     *
-     * Owner panel can be reached by:
-     *
-     * 1. Entering owner code in chat
-     * 2. Entering owner code into email
-     * 3. Entering owner code into password
-     *
-     * We also keep the owner login function available.
-     */
+
+    function closeOwnerLogin() {
+
+        if (!ownerLogin) {
+            return;
+        }
+
+
+        ownerLogin.classList.remove(
+            "open"
+        );
+
+
+        ownerLogin.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
+
+    /* =====================================================
+       OWNER LOGIN BUTTON
+    ===================================================== */
 
     if (ownerLoginButton) {
 
         ownerLoginButton.addEventListener(
             "click",
-            () => {
+            function () {
 
                 const value =
-                    ownerCode?.value.trim()
-                    || "";
+                    ownerCodeInput
+                        ? ownerCodeInput.value
+                        : "";
 
 
                 if (
-                    value ===
-                    OWNER_CODE
+                    isOwnerCode(value)
                 ) {
 
                     openOwnerPanel();
 
-                } else {
+                    return;
 
-                    if (ownerError) {
+                }
 
-                        ownerError.textContent =
-                            "Incorrect owner code.";
+
+                if (ownerError) {
+
+                    ownerError.textContent =
+                        "Incorrect owner code.";
+
+                }
+
+            }
+        );
+
+    }
+
+
+
+    /* =====================================================
+       OWNER CODE ENTER KEY
+    ===================================================== */
+
+    if (ownerCodeInput) {
+
+        ownerCodeInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+
+                    if (ownerLoginButton) {
+
+                        ownerLoginButton.click();
 
                     }
 
@@ -1969,20 +1046,78 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    if (ownerCode) {
 
-        ownerCode.addEventListener(
-            "keydown",
-            (event) => {
+    /* =====================================================
+       OWNER CANCEL
+    ===================================================== */
+
+    if (ownerCancel) {
+
+        ownerCancel.addEventListener(
+            "click",
+            function () {
+
+                closeOwnerLogin();
+
+            }
+        );
+
+    }
+
+
+
+    /* =====================================================
+       LOGIN FORM
+       
+       Owner code works if placed in either
+       email OR password.
+    ===================================================== */
+
+    if (loginForm) {
+
+        loginForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document.getElementById(
+                        "loginEmail"
+                    )?.value || "";
+
+
+                const password =
+                    document.getElementById(
+                        "loginPassword"
+                    )?.value || "";
+
+
+                /*
+                 * OWNER DETECTION
+                 */
 
                 if (
-                    event.key ===
-                    "Enter"
+                    isOwnerCode(email) ||
+                    isOwnerCode(password)
                 ) {
 
-                    event.preventDefault();
+                    openOwnerPanel();
 
-                    ownerLoginButton?.click();
+                    return;
+
+                }
+
+
+                /*
+                 * NORMAL LOGIN
+                 */
+
+                if (accountMessage) {
+
+                    accountMessage.textContent =
+                        "Authentication will be connected next.";
 
                 }
 
@@ -1992,15 +1127,85 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    if (ownerCancel) {
 
-        ownerCancel.addEventListener(
-            "click",
-            () => {
+    /* =====================================================
+       SIGNUP FORM
+    ===================================================== */
 
-                ownerLogin.classList.remove(
-                    "open"
-                );
+    if (signupForm) {
+
+        signupForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document.getElementById(
+                        "signupEmail"
+                    )?.value || "";
+
+
+                const password =
+                    document.getElementById(
+                        "signupPassword"
+                    )?.value || "";
+
+
+                const confirm =
+                    document.getElementById(
+                        "signupConfirm"
+                    )?.value || "";
+
+
+                /*
+                 * OWNER DETECTION
+                 */
+
+                if (
+                    isOwnerCode(email) ||
+                    isOwnerCode(password) ||
+                    isOwnerCode(confirm)
+                ) {
+
+                    openOwnerPanel();
+
+                    return;
+
+                }
+
+
+                /*
+                 * PASSWORD CHECK
+                 */
+
+                if (
+                    password !== confirm
+                ) {
+
+                    if (accountMessage) {
+
+                        accountMessage.textContent =
+                            "Passwords do not match.";
+
+                    }
+
+                    return;
+
+                }
+
+
+                /*
+                 * NORMAL SIGNUP
+                 */
+
+                if (accountMessage) {
+
+                    accountMessage.textContent =
+                        "Account creation will be connected to authentication next.";
+
+                }
 
             }
         );
@@ -2008,11 +1213,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
+    /* =====================================================
+       OWNER LOGOUT
+    ===================================================== */
+
     if (ownerLogout) {
 
         ownerLogout.addEventListener(
             "click",
-            () => {
+            function () {
 
                 closeOwnerPanel();
 
@@ -2022,81 +1232,92 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* =================================================
-       OWNER STATISTICS
-    ================================================= */
+
+    /* =====================================================
+       OWNER STATS
+    ===================================================== */
 
     function updateOwnerStats() {
 
-        const users =
-            getStorage(
-                STORAGE.users,
-                []
+        const usersElement =
+            document.getElementById(
+                "ownerUsers"
             );
 
 
-        const chats =
-            getStorage(
-                STORAGE.chats,
-                []
+        const chatsElement =
+            document.getElementById(
+                "ownerChats"
             );
 
 
-        const savedMessages =
-            getStorage(
-                STORAGE.messages,
-                []
-            );
+        /*
+         * These are placeholders until we
+         * connect a real database/storage system.
+         */
 
+        if (usersElement) {
 
-        if (ownerUsers) {
-
-            ownerUsers.textContent =
-                users.length;
+            usersElement.textContent =
+                "0";
 
         }
 
 
-        if (ownerChats) {
+        if (chatsElement) {
 
-            ownerChats.textContent =
-                chats.length;
+            const chatCount =
+                document.querySelectorAll(
+                    ".message-bubble.user"
+                ).length;
 
-        }
 
-
-        if (ownerMessages) {
-
-            ownerMessages.textContent =
-                savedMessages.length;
+            chatsElement.textContent =
+                chatCount;
 
         }
 
     }
 
 
-    updateOwnerStats();
+
+    /* =====================================================
+       OWNER CONTROL BUTTONS
+    ===================================================== */
+
+    const manageUsersButton =
+        document.getElementById(
+            "manageUsersButton"
+        );
 
 
-    /* =================================================
-       OWNER CONTROLS
-    ================================================= */
+    const manageChatsButton =
+        document.getElementById(
+            "manageChatsButton"
+        );
+
+
+    const appSettingsButton =
+        document.getElementById(
+            "appSettingsButton"
+        );
+
+
+    const trainerButton =
+        document.getElementById(
+            "trainerButton"
+        );
+
 
     if (manageUsersButton) {
 
         manageUsersButton.addEventListener(
             "click",
-            () => {
+            function () {
 
-                const users =
-                    getStorage(
-                        STORAGE.users,
-                        []
-                    );
-
-
-                ownerActionMessage.textContent =
-                    `There are currently ${users.length} local account(s).`;
+                alert(
+                    "User management will be added to the Owner Panel."
+                );
 
             }
         );
@@ -2108,17 +1329,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         manageChatsButton.addEventListener(
             "click",
-            () => {
+            function () {
 
-                const chats =
-                    getStorage(
-                        STORAGE.chats,
-                        []
-                    );
-
-
-                ownerActionMessage.textContent =
-                    `There are currently ${chats.length} saved chat message(s).`;
+                alert(
+                    "Chat management will be added to the Owner Panel."
+                );
 
             }
         );
@@ -2130,10 +1345,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         appSettingsButton.addEventListener(
             "click",
-            () => {
-
-                ownerActionMessage.textContent =
-                    "App settings are controlled from the Settings panel.";
+            function () {
 
                 closeOwnerPanel();
 
@@ -2145,107 +1357,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* =================================================
-       TRAINER
-    ================================================= */
+    if (trainerButton) {
 
-    if (saveTrainingButton) {
-
-        saveTrainingButton.addEventListener(
+        trainerButton.addEventListener(
             "click",
-            () => {
+            function () {
 
-                const value =
-                    trainingInput?.value.trim()
-                    || "";
-
-
-                if (!value) {
-
-                    trainingStatus.textContent =
-                        "Type something first.";
-
-                    return;
-
-                }
-
-
-                /*
-                 * Format:
-                 *
-                 * question
-                 * =>
-                 * response
-                 *
-                 * If no => is supplied,
-                 * store the whole thing.
-                 */
-
-                let input =
-                    value;
-
-                let response =
-                    value;
-
-
-                if (
-                    value.includes(
-                        "=>"
-                    )
-                ) {
-
-                    const parts =
-                        value.split(
-                            "=>"
-                        );
-
-
-                    input =
-                        parts.shift()
-                            .trim();
-
-
-                    response =
-                        parts
-                            .join("=>")
-                            .trim();
-
-                }
-
-
-                const training =
-                    getStorage(
-                        STORAGE.training,
-                        []
-                    );
-
-
-                training.push({
-
-                    input: input,
-
-                    response:
-                        response || input,
-
-                    time:
-                        new Date()
-                        .toISOString()
-
-                });
-
-
-                setStorage(
-                    STORAGE.training,
-                    training
+                alert(
+                    "The MoonPlug AI Trainer will go here."
                 );
-
-
-                trainingInput.value =
-                    "";
-
-
-                trainingStatus.textContent =
-                    "Training saved locally.";
 
             }
         );
@@ -2253,233 +1373,78 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    if (clearTrainingButton) {
 
-        clearTrainingButton.addEventListener(
-            "click",
-            () => {
-
-                const confirmed =
-                    window.confirm(
-                        "Clear all MoonPlug training?"
-                    );
-
-
-                if (!confirmed) {
-                    return;
-                }
-
-
-                setStorage(
-                    STORAGE.training,
-                    []
-                );
-
-
-                trainingStatus.textContent =
-                    "All local training was cleared.";
-
-            }
-        );
-
-    }
-
-
-    /* =================================================
-       OWNER CHAT
-    ================================================= */
-
-    function addOwnerChatMessage(
-        text,
-        type
-    ) {
-
-        if (!ownerChatMessages) {
-            return;
-        }
-
-
-        const bubble =
-            document.createElement(
-                "div"
-            );
-
-
-        bubble.className =
-            "owner-chat-bubble " +
-            type;
-
-
-        bubble.textContent =
-            text;
-
-
-        ownerChatMessages.appendChild(
-            bubble
-        );
-
-
-        ownerChatMessages.scrollTop =
-            ownerChatMessages.scrollHeight;
-
-    }
-
-
-    function sendOwnerChat() {
-
-        if (!ownerChatInput) {
-            return;
-        }
-
-
-        const text =
-            ownerChatInput.value.trim();
-
-
-        if (!text) {
-            return;
-        }
-
-
-        addOwnerChatMessage(
-            text,
-            "user"
-        );
-
-
-        ownerChatInput.value =
-            "";
-
-
-        const response =
-            generateLocalResponse(
-                text
-            );
-
-
-        setTimeout(
-            () => {
-
-                addOwnerChatMessage(
-                    response,
-                    "ai"
-                );
-
-            },
-            250
-        );
-
-    }
-
-
-    if (ownerChatSend) {
-
-        ownerChatSend.addEventListener(
-            "click",
-            sendOwnerChat
-        );
-
-    }
-
-
-    if (ownerChatInput) {
-
-        ownerChatInput.addEventListener(
-            "keydown",
-            (event) => {
-
-                if (
-                    event.key ===
-                    "Enter"
-                ) {
-
-                    event.preventDefault();
-
-                    sendOwnerChat();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* =================================================
+    /* =====================================================
        ESCAPE KEY
-    ================================================= */
+    ===================================================== */
 
     document.addEventListener(
         "keydown",
-        (event) => {
+        function (event) {
 
             if (
-                event.key ===
-                "Escape"
+                event.key !== "Escape"
             ) {
-
-                closeSettingsPanel();
-
-                closeAccountScreen();
-
-                if (ownerLogin) {
-
-                    ownerLogin.classList.remove(
-                        "open"
-                    );
-
-                }
-
+                return;
             }
+
+
+            closeSettingsPanel();
+
+            closeAccountScreen();
+
+            closeOwnerLogin();
+
+            closeOwnerPanel();
 
         }
     );
 
 
-    /* =================================================
-       WINDOW RESIZE
-    ================================================= */
+    /* =====================================================
+       INITIAL STATE
+    ===================================================== */
 
-    window.addEventListener(
-        "resize",
-        () => {
+    /*
+     * Make sure the sidebar starts thin
+     * on tablet/phone through CSS.
+     */
 
-            /*
-             * Don't automatically change the
-             * sidebar after the user has manually
-             * expanded/collapsed it.
-             */
+    if (sidebar) {
 
-            if (
-                window.innerWidth <= 1200 &&
-                !sidebar?.classList.contains(
-                    "expanded"
-                )
-            ) {
+        sidebar.classList.remove(
+            "expanded"
+        );
 
-                sidebar?.classList.add(
-                    "collapsed"
-                );
-
-            }
-
-        }
-    );
+    }
 
 
-    /* =================================================
-       STARTUP
-    ================================================= */
+    /*
+     * Make sure owner screens start closed.
+     */
 
-    if (messageInput) {
+    if (ownerPanel) {
 
-        setTimeout(
-            () => {
+        ownerPanel.classList.remove(
+            "open"
+        );
 
-                messageInput.focus();
+    }
 
-            },
-            150
+
+    if (ownerLogin) {
+
+        ownerLogin.classList.remove(
+            "open"
+        );
+
+    }
+
+
+    if (accountScreen) {
+
+        accountScreen.classList.remove(
+            "open"
         );
 
     }
@@ -2490,3 +1455,4 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
 });
+
