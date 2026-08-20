@@ -1865,17 +1865,24 @@ async function initializeMoonPlug() {
     }
 
 
-   await checkOwnerSession();
+    await checkOwnerSession();
 
-hideOwnerLogin();
 
-if (!isOwnerAuthenticated) {
-    hideOwnerPanel();
+    hideOwnerLogin();
+
+
+    if (!isOwnerAuthenticated) {
+
+        hideOwnerPanel();
+    }
+
+
+    console.log(
+        "✓ MoonPlug ready."
+    );
+
 }
 
-console.log(
-    "✓ MoonPlug ready."
-);
 
 // ============================================================
 // START APP
