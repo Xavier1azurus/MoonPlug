@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,32 +17,45 @@
 
     <title>MoonPlug AI</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 
 <body>
 
+
 <!-- =====================================================
      SIDEBAR
 ===================================================== -->
 
-<aside id="sidebar" class="sidebar">
+<aside
+    id="sidebar"
+    class="sidebar"
+>
 
     <!-- LOGO -->
+
     <div
         id="sidebarLogo"
         class="sidebar-logo"
-        title="Expand sidebar"
     >
+
         <span class="logo-moon">🌙</span>
+
         <strong>MOONPLUG</strong>
+
         <span class="logo-ai">AI</span>
+
     </div>
 
 
     <!-- MAIN SIDEBAR -->
+
     <div class="sidebar-buttons">
+
 
         <button
             class="sidebar-button"
@@ -125,11 +139,14 @@
             <span class="sidebar-label">Chat History</span>
         </button>
 
+
     </div>
 
 
     <!-- BOTTOM -->
+
     <div class="sidebar-bottom">
+
 
         <button
             id="settingsButton"
@@ -142,7 +159,7 @@
 
 
         <button
-            id="accountButton"
+            id="ownerButton"
             class="sidebar-button"
             type="button"
         >
@@ -150,82 +167,93 @@
             <span class="sidebar-label">Account</span>
         </button>
 
+
     </div>
 
 </aside>
 
 
+
 <!-- =====================================================
-     MAIN CHAT
+     CHAT
 ===================================================== -->
 
-<main id="chatSection" class="chat-section">
+<main class="chat-section">
+
 
     <div class="chat-container">
 
+
         <!-- HEADER -->
+
         <header class="chat-header">
 
-            <div class="header-left">
+            <div class="header-title">
                 <strong>MoonPlug AI</strong>
             </div>
 
-            <div class="header-right">
-                <span class="online">
-                    ● Online
-                </span>
+            <div class="online">
+                ● Online
             </div>
 
         </header>
 
 
         <!-- DECORATION -->
+
         <div
             class="moonplug-animation"
             aria-hidden="true"
         >
-            <div class="plug">🔌</div>
+
+            <div class="plug">
+                🔌
+            </div>
+
             <div class="cable"></div>
-            <div class="moon">🌙</div>
+
+            <div class="moon">
+                🌙
+            </div>
+
         </div>
 
 
         <!-- MESSAGES -->
+
         <div
             id="messages"
             class="messages"
         >
 
-            <div
-                id="emptyChat"
-                class="empty-chat"
-            >
-                <h1>What can I help with?</h1>
+            <div class="empty-chat">
+
+                <h1>
+                    What can I help with?
+                </h1>
 
                 <p>
                     Ask MoonPlug anything.
                 </p>
+
             </div>
 
         </div>
 
 
         <!-- TYPING -->
+
         <div
             id="typing"
             class="typing"
-            aria-live="polite"
+            style="display: none;"
         >
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
-            <span class="typing-text">
-                MoonPlug is thinking...
-            </span>
+            MoonPlug is thinking...
         </div>
 
 
         <!-- INPUT -->
+
         <div class="chat-input-area">
 
             <input
@@ -246,9 +274,11 @@
 
         </div>
 
+
     </div>
 
 </main>
+
 
 
 <!-- =====================================================
@@ -263,9 +293,12 @@
 
     <div class="settings-box">
 
+
         <div class="settings-header">
 
-            <h2>Settings</h2>
+            <h2>
+                Settings
+            </h2>
 
             <button
                 id="closeSettings"
@@ -280,11 +313,14 @@
 
         <div class="setting-item">
 
-            <strong>Appearance</strong>
+            <strong>
+                Appearance
+            </strong>
 
             <span>
                 Choose how MoonPlug looks.
             </span>
+
 
             <div class="appearance-options">
 
@@ -302,11 +338,14 @@
 
         <div class="setting-item">
 
-            <strong>Text Size</strong>
+            <strong>
+                Text Size
+            </strong>
 
             <span>
                 Change the chat text size.
             </span>
+
 
             <div class="appearance-options">
 
@@ -318,6 +357,7 @@
                     Small
                 </button>
 
+
                 <button
                     class="size-button active"
                     data-size="medium"
@@ -325,6 +365,7 @@
                 >
                     Medium
                 </button>
+
 
                 <button
                     class="size-button"
@@ -339,30 +380,10 @@
         </div>
 
 
-        <div class="setting-item">
-
-            <strong>Sidebar</strong>
-
-            <span>
-                Expand or collapse the sidebar.
-            </span>
-
-            <div class="appearance-options">
-
-                <button
-                    id="sidebarToggleSetting"
-                    type="button"
-                >
-                    Toggle Sidebar
-                </button>
-
-            </div>
-
-        </div>
-
     </div>
 
 </div>
+
 
 
 <!-- =====================================================
@@ -377,11 +398,16 @@
 
     <div class="account-box">
 
+
         <div class="account-logo">
             🌙
         </div>
 
-        <h1>Welcome to MoonPlug</h1>
+
+        <h1>
+            Welcome to MoonPlug
+        </h1>
+
 
         <p class="account-subtitle">
             Sign in or create your MoonPlug account.
@@ -391,6 +417,7 @@
         <!-- TABS -->
 
         <div class="account-tabs">
+
 
             <button
                 id="loginTab"
@@ -409,10 +436,11 @@
                 Sign Up
             </button>
 
+
         </div>
 
 
-        <!-- LOGIN -->
+        <!-- LOGIN FORM -->
 
         <form
             id="loginForm"
@@ -453,12 +481,12 @@
         </form>
 
 
-        <!-- SIGN UP -->
+        <!-- SIGN UP FORM -->
 
         <form
             id="signupForm"
             class="account-form"
-            hidden
+            style="display: none;"
         >
 
             <label for="signupEmail">
@@ -519,12 +547,13 @@
         <p
             id="accountMessage"
             class="account-message"
-            aria-live="polite"
         ></p>
+
 
     </div>
 
 </div>
+
 
 
 <!-- =====================================================
@@ -539,14 +568,12 @@
 
     <div class="owner-box">
 
-        <div class="owner-logo">
-            👑
-        </div>
-
-        <h2>Owner Access</h2>
+        <h2>
+            Owner Access
+        </h2>
 
         <p>
-            Enter the owner code to continue.
+            Enter the owner code.
         </p>
 
 
@@ -585,6 +612,7 @@
 </div>
 
 
+
 <!-- =====================================================
      OWNER PANEL
 ===================================================== -->
@@ -595,11 +623,15 @@
     aria-hidden="true"
 >
 
-    <header class="owner-header">
+
+    <div class="owner-header">
+
 
         <div>
 
-            <h1>Owner Panel</h1>
+            <h1>
+                Owner Panel
+            </h1>
 
             <span>
                 MoonPlug AI Administration
@@ -615,192 +647,119 @@
             Logout
         </button>
 
-    </header>
+
+    </div>
 
 
-    <div class="owner-content">
+
+    <div class="owner-grid">
 
 
-        <!-- STATISTICS -->
+        <div class="owner-card">
 
-        <div class="owner-grid">
+            <strong>
+                Users
+            </strong>
 
-            <div class="owner-card">
-
-                <strong>Users</strong>
-
-                <span id="ownerUsers">
-                    0
-                </span>
-
-            </div>
-
-
-            <div class="owner-card">
-
-                <strong>Chats</strong>
-
-                <span id="ownerChats">
-                    0
-                </span>
-
-            </div>
-
-
-            <div class="owner-card">
-
-                <strong>Saved Messages</strong>
-
-                <span id="ownerMessages">
-                    0
-                </span>
-
-            </div>
-
-
-            <div class="owner-card">
-
-                <strong>Status</strong>
-
-                <span class="owner-online">
-                    Online
-                </span>
-
-            </div>
+            <span id="ownerUsers">
+                0
+            </span>
 
         </div>
 
 
-        <!-- CONTROLS -->
+        <div class="owner-card">
 
-        <section class="owner-section">
+            <strong>
+                Chats
+            </strong>
 
-            <h2>App Controls</h2>
+            <span id="ownerChats">
+                0
+            </span>
 
-            <div class="owner-actions">
-
-                <button
-                    id="manageUsersButton"
-                    type="button"
-                >
-                    👥 Manage Users
-                </button>
+        </div>
 
 
-                <button
-                    id="manageChatsButton"
-                    type="button"
-                >
-                    💬 Manage Chats
-                </button>
+        <div class="owner-card">
 
+            <strong>
+                Status
+            </strong>
 
-                <button
-                    id="appSettingsButton"
-                    type="button"
-                >
-                    ⚙️ App Settings
-                </button>
+            <span class="status-online">
+                Online
+            </span>
 
-            </div>
-
-            <p
-                id="ownerActionMessage"
-                class="owner-action-message"
-            ></p>
-
-        </section>
-
-
-        <!-- TRAINING -->
-
-        <section class="owner-section">
-
-            <h2>MoonPlug Trainer</h2>
-
-            <p class="owner-description">
-                Add information to MoonPlug's local knowledge
-                base without using an API.
-            </p>
-
-
-            <textarea
-                id="trainingInput"
-                class="training-input"
-                placeholder="Type something MoonPlug should remember..."
-            ></textarea>
-
-
-            <div class="training-actions">
-
-                <button
-                    id="saveTrainingButton"
-                    type="button"
-                >
-                    🧠 Save Training
-                </button>
-
-
-                <button
-                    id="clearTrainingButton"
-                    type="button"
-                >
-                    🗑️ Clear Training
-                </button>
-
-            </div>
-
-
-            <p
-                id="trainingStatus"
-                class="owner-action-message"
-            ></p>
-
-        </section>
-
-
-        <!-- OWNER CHAT -->
-
-        <section class="owner-section">
-
-            <h2>Owner AI Test</h2>
-
-            <p class="owner-description">
-                Test MoonPlug's local response system.
-            </p>
-
-
-            <div
-                id="ownerChatMessages"
-                class="owner-chat-messages"
-            ></div>
-
-
-            <div class="owner-chat-input">
-
-                <input
-                    id="ownerChatInput"
-                    type="text"
-                    placeholder="Talk to MoonPlug..."
-                    autocomplete="off"
-                >
-
-
-                <button
-                    id="ownerChatSend"
-                    type="button"
-                >
-                    ➤
-                </button>
-
-            </div>
-
-        </section>
+        </div>
 
 
     </div>
 
+
+
+    <div class="owner-section">
+
+
+        <h2>
+            App Controls
+        </h2>
+
+
+        <button
+            id="manageUsersButton"
+            type="button"
+        >
+            Manage Users
+        </button>
+
+
+        <button
+            id="manageChatsButton"
+            type="button"
+        >
+            Manage Chats
+        </button>
+
+
+        <button
+            id="appSettingsButton"
+            type="button"
+        >
+            App Settings
+        </button>
+
+
+    </div>
+
+
+
+    <div class="owner-section">
+
+
+        <h2>
+            AI Trainer
+        </h2>
+
+
+        <p class="owner-description">
+            This is where the MoonPlug training system can be connected later.
+        </p>
+
+
+        <button
+            id="trainerButton"
+            type="button"
+        >
+            Open Trainer
+        </button>
+
+
+    </div>
+
+
 </div>
+
 
 
 <!-- =====================================================
@@ -811,3 +770,5 @@
 
 </body>
 </html>
+
+
