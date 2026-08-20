@@ -1664,14 +1664,101 @@ async function teachMoonPlug() {
     }
 
 }
-   $("trainerButton")?.addEventListener(
+  $("trainerButton")?.addEventListener(
     "click",
-    async () => {
+    () => {
 
-        const training =
-            await loadTraining();
+        const trainer =
+            document.getElementById(
+                "trainerPanel"
+            );
 
-        showTrainer(training);
+        if (trainer) {
+
+            trainer.remove();
+
+            return;
+
+        }
+
+        const panel =
+            document.createElement("div");
+
+        panel.id =
+            "trainerPanel";
+
+        panel.innerHTML = `
+
+            <div>
+
+                <h2>
+                    AI Trainer
+                </h2>
+
+                <button
+                    id="closeTrainer"
+                    type="button"
+                >
+                    Close
+                </button>
+
+            </div>
+
+            <label>
+                Question
+            </label>
+
+            <textarea
+                id="trainerQuestion"
+                placeholder="What should MoonPlug learn?"
+            ></textarea>
+
+
+            <label>
+                Answer
+            </label>
+
+            <textarea
+                id="trainerAnswer"
+                placeholder="What should MoonPlug answer?"
+            ></textarea>
+
+
+            <label>
+                Category
+            </label>
+
+            <input
+                id="trainerCategory"
+                type="text"
+                value="general"
+            >
+
+
+            <button
+                id="teachMoonPlug"
+                type="button"
+            >
+                Teach MoonPlug
+            </button>
+
+        `;
+
+        document
+            .getElementById("ownerPanel")
+            .appendChild(panel);
+
+
+        document
+            .getElementById("closeTrainer")
+            .addEventListener(
+                "click",
+                () => {
+
+                    panel.remove();
+
+                }
+            );
 
     }
 );
