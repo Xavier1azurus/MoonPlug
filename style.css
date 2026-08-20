@@ -1,6 +1,5 @@
 /* =====================================================
    MOONPLUG AI
-   RESPONSIVE CSS
    DESKTOP + IPAD + IPHONE
 ===================================================== */
 
@@ -30,7 +29,6 @@ body {
 
 .sidebar {
     position: fixed;
-
     top: 0;
     left: 0;
     bottom: 0;
@@ -38,7 +36,6 @@ body {
     width: 250px;
 
     background: #151515;
-
     border-right: 1px solid #292929;
 
     display: flex;
@@ -50,11 +47,6 @@ body {
 
     overflow: hidden;
 }
-
-
-/* =====================================================
-   SIDEBAR LOGO
-===================================================== */
 
 .sidebar-logo {
     width: 100%;
@@ -86,14 +78,8 @@ body {
     color: #888888;
 }
 
-
-/* =====================================================
-   SIDEBAR BUTTON AREA
-===================================================== */
-
 .sidebar-buttons {
     flex: 1;
-
     min-height: 0;
 
     display: flex;
@@ -144,7 +130,6 @@ body {
 
 .sidebar-divider {
     width: calc(100% - 10px);
-
     height: 1px;
 
     background: #292929;
@@ -153,11 +138,6 @@ body {
 
     flex-shrink: 0;
 }
-
-
-/* =====================================================
-   SIDEBAR BOTTOM
-===================================================== */
 
 .sidebar-bottom {
     padding: 10px;
@@ -172,7 +152,7 @@ body {
 
 
 /* =====================================================
-   CHAT SECTION
+   CHAT
 ===================================================== */
 
 .chat-section {
@@ -181,7 +161,6 @@ body {
     top: 0;
     right: 0;
     bottom: 0;
-
     left: 250px;
 
     height: 100vh;
@@ -200,11 +179,6 @@ body {
     display: flex;
     flex-direction: column;
 }
-
-
-/* =====================================================
-   CHAT HEADER
-===================================================== */
 
 .chat-header {
     height: 64px;
@@ -230,13 +204,12 @@ body {
 
 .online {
     color: #7cff9b;
-
     font-size: 13px;
 }
 
 
 /* =====================================================
-   MOONPLUG ANIMATION
+   ANIMATION
 ===================================================== */
 
 .moonplug-animation {
@@ -275,7 +248,6 @@ body {
 
 .messages {
     flex: 1;
-
     min-height: 0;
 
     overflow-y: auto;
@@ -287,11 +259,6 @@ body {
 
     gap: 15px;
 }
-
-
-/* =====================================================
-   EMPTY CHAT
-===================================================== */
 
 .empty-chat {
     position: absolute;
@@ -308,20 +275,13 @@ body {
 
 .empty-chat h1 {
     font-size: 34px;
-
     margin-bottom: 10px;
 }
 
 .empty-chat p {
     color: #888888;
-
     font-size: 16px;
 }
-
-
-/* =====================================================
-   MESSAGE BUBBLES
-===================================================== */
 
 .message-bubble {
     max-width: 75%;
@@ -335,13 +295,11 @@ body {
 
 .message-bubble.user {
     align-self: flex-end;
-
     background: #292929;
 }
 
 .message-bubble.ai {
     align-self: flex-start;
-
     background: #1c1c1c;
 }
 
@@ -369,7 +327,7 @@ body {
     position: absolute;
 
     left: 50%;
-    bottom: 18px;
+    bottom: 35px;
 
     transform: translateX(-50%);
 
@@ -437,7 +395,7 @@ body {
 
 
 /* =====================================================
-   SETTINGS PANEL
+   SETTINGS
 ===================================================== */
 
 .settings-panel {
@@ -523,7 +481,6 @@ body {
 
 .setting-item > span {
     color: #888888;
-
     font-size: 13px;
 }
 
@@ -536,9 +493,7 @@ body {
 }
 
 .appearance-options button,
-.size-button,
-.sidebar-size-button,
-#themeButton {
+.size-button {
     border: 1px solid #383838;
 
     background: #222222;
@@ -553,452 +508,204 @@ body {
 }
 
 .appearance-options button.active,
-.size-button.active,
-.sidebar-size-button.active {
+.size-button.active {
     background: #ffffff;
-
     color: #111111;
 }
 
 
 /* =====================================================
-   COLLAPSED SIDEBAR
+   ACCOUNT
 ===================================================== */
 
-.sidebar.collapsed {
-    width: 64px;
-}
+.account-screen {
+    position: fixed;
 
-.sidebar.collapsed .sidebar-logo {
-    width: 64px;
+    inset: 0;
 
-    padding: 0;
-
-    justify-content: center;
-}
-
-.sidebar.collapsed .sidebar-logo strong,
-.sidebar.collapsed .sidebar-logo span {
     display: none;
-}
 
-.sidebar.collapsed .sidebar-button {
-    width: 54px;
-    min-width: 54px;
-
-    margin-left: auto;
-    margin-right: auto;
-
-    padding: 0;
-
+    align-items: center;
     justify-content: center;
 
-    gap: 0;
+    background: #0f0f0f;
+
+    z-index: 8000;
+
+    overflow-y: auto;
+
+    padding: 20px;
 }
 
-.sidebar.collapsed .sidebar-button span {
-    display: none;
+.account-screen.open {
+    display: flex;
 }
 
-.sidebar.collapsed .sidebar-bottom {
-    padding: 8px 5px;
+.account-box {
+    width: min(430px, 100%);
+
+    background: #181818;
+
+    border: 1px solid #303030;
+
+    border-radius: 22px;
+
+    padding: 30px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.45);
 }
 
-.sidebar.collapsed ~ .chat-section {
-    left: 64px;
+.account-logo {
+    text-align: center;
+
+    font-size: 38px;
+
+    margin-bottom: 10px;
 }
 
+.account-box h1 {
+    text-align: center;
 
-/* =====================================================
-   EXPANDED SIDEBAR
-===================================================== */
+    font-size: 25px;
 
-.sidebar.expanded {
-    width: 250px;
+    margin-bottom: 8px;
 }
 
-.sidebar.expanded .sidebar-logo {
-    width: 250px;
+.account-subtitle {
+    text-align: center;
 
-    padding: 0 20px;
+    color: #888;
 
-    justify-content: flex-start;
+    font-size: 14px;
+
+    margin-bottom: 25px;
 }
 
-.sidebar.expanded .sidebar-logo strong,
-.sidebar.expanded .sidebar-logo span {
-    display: inline;
+.account-tabs {
+    display: flex;
+
+    background: #101010;
+
+    border-radius: 11px;
+
+    padding: 4px;
+
+    margin-bottom: 22px;
 }
 
-.sidebar.expanded .sidebar-buttons {
-    width: 250px;
-}
+.account-tab {
+    flex: 1;
 
-.sidebar.expanded .sidebar-button {
-    width: 230px;
-    max-width: 230px;
+    height: 40px;
 
-    justify-content: flex-start;
+    border: none;
 
-    padding: 0 13px;
+    border-radius: 8px;
 
-    gap: 12px;
-}
+    background: transparent;
 
-.sidebar.expanded .sidebar-button span {
-    display: inline;
-}
+    color: #888;
 
-.sidebar.expanded .sidebar-bottom {
-    width: 250px;
-}
+    cursor: pointer;
 
-.sidebar.expanded .sidebar-bottom .sidebar-button {
-    width: 230px;
-}
-
-.sidebar.expanded ~ .chat-section {
-    left: 250px;
-}
-
-
-/* =====================================================
-   IPAD + IPHONE
-===================================================== */
-
-@media screen and (max-width: 1200px) {
-
-    /* ---------------------------------------------
-       THIN SIDEBAR
-    --------------------------------------------- */
-
-    .sidebar {
-        width: 64px;
-
-        min-width: 64px;
-        max-width: 64px;
-    }
-
-    .sidebar-logo {
-        width: 64px;
-
-        height: 64px;
-
-        padding: 0;
-
-        justify-content: center;
-    }
-
-    .sidebar-logo strong,
-    .sidebar-logo span {
-        display: none;
-    }
-
-    .sidebar-buttons {
-        width: 64px;
-
-        padding: 8px 5px;
-    }
-
-    .sidebar-button {
-        width: 54px;
-
-        min-width: 54px;
-        max-width: 54px;
-
-        height: 46px;
-        min-height: 46px;
-
-        margin: 2px auto;
-
-        padding: 0;
-
-        justify-content: center;
-
-        gap: 0;
-    }
-
-    .sidebar-button span {
-        display: none;
-    }
-
-    .sidebar-bottom {
-        width: 64px;
-
-        padding: 6px 5px 10px;
-    }
-
-    .sidebar-bottom .sidebar-button {
-        width: 54px;
-
-        min-width: 54px;
-    }
-
-
-    /* ---------------------------------------------
-       EXPANDED SIDEBAR ON IPAD / IPHONE
-    --------------------------------------------- */
-
-    .sidebar.expanded {
-        width: 250px;
-
-        min-width: 250px;
-        max-width: 250px;
-    }
-
-    .sidebar.expanded .sidebar-logo {
-        width: 250px;
-
-        padding: 0 20px;
-
-        justify-content: flex-start;
-    }
-
-    .sidebar.expanded .sidebar-logo strong,
-    .sidebar.expanded .sidebar-logo span {
-        display: inline;
-    }
-
-    .sidebar.expanded .sidebar-buttons {
-        width: 250px;
-    }
-
-    .sidebar.expanded .sidebar-button {
-        width: 230px;
-
-        min-width: 230px;
-        max-width: 230px;
-
-        padding: 0 13px;
-
-        justify-content: flex-start;
-
-        gap: 12px;
-    }
-
-    .sidebar.expanded .sidebar-button span {
-        display: inline;
-    }
-
-    .sidebar.expanded .sidebar-bottom {
-        width: 250px;
-    }
-
-    .sidebar.expanded .sidebar-bottom .sidebar-button {
-        width: 230px;
-    }
-
-
-    /* ---------------------------------------------
-       CHAT
-    --------------------------------------------- */
-
-    .chat-section {
-        left: 64px;
-    }
-
-    .sidebar.expanded ~ .chat-section {
-        left: 250px;
-    }
-
-
-    /* ---------------------------------------------
-       ANIMATION
-    --------------------------------------------- */
-
-    .moonplug-animation {
-        display: none;
-    }
-
-
-    /* ---------------------------------------------
-       MESSAGE BAR
-    --------------------------------------------- */
-
-    .chat-input-area {
-        left: 50%;
-
-        bottom: 25px;
-
-        width: calc(100% - 30px);
-
-        min-height: 54px;
-
-        padding: 6px 8px;
-
-        border-radius: 18px;
-    }
-
-    .chat-input-area input {
-        height: 40px;
-
-        font-size: 15px;
-    }
-
-    #sendButton {
-        width: 40px;
-        height: 40px;
-    }
-
-
-    /* ---------------------------------------------
-       EMPTY CHAT
-    --------------------------------------------- */
-
-    .empty-chat {
-        width: calc(100% - 30px);
-    }
-
-    .empty-chat h1 {
-        font-size: 28px;
-    }
-
-    .empty-chat p {
-        font-size: 15px;
-    }
-}
-
-
-/* =====================================================
-   IPHONE
-===================================================== */
-
-@media screen and (max-width: 450px) {
-
-    .chat-header {
-        height: 54px;
-
-        padding: 0 10px;
-    }
-
-    .chat-header strong {
-        font-size: 15px;
-    }
-
-    .online {
-        font-size: 11px;
-    }
-
-    .empty-chat h1 {
-        font-size: 23px;
-    }
-
-    .empty-chat p {
-        font-size: 13px;
-    }
-
-    .chat-input-area {
-        bottom: 18px;
-
-        width: calc(100% - 20px);
-
-        min-height: 52px;
-    }
-
-    .chat-input-area input {
-        height: 38px;
-
-        font-size: 14px;
-    }
-
-    #sendButton {
-        width: 38px;
-        height: 38px;
-    }
-}
-
-
-/* =====================================================
-   LIGHT THEME
-===================================================== */
-
-body.light-theme {
-    background: #f5f5f5;
-
-    color: #111111;
-}
-
-body.light-theme .sidebar {
-    background: #ffffff;
-
-    border-color: #dddddd;
-}
-
-body.light-theme .chat-section {
-    background: #f5f5f5;
-}
-
-body.light-theme .chat-header {
-    border-color: #dddddd;
-}
-
-body.light-theme .sidebar-button {
-    color: #333333;
-}
-
-body.light-theme .sidebar-button:hover {
-    background: #eeeeee;
-}
-
-body.light-theme .chat-input-area {
-    background: #ffffff;
-
-    border-color: #dddddd;
-}
-
-body.light-theme .chat-input-area input {
-    color: #111111;
-}
-
-body.light-theme .settings-box {
-    background: #ffffff;
-
-    color: #111111;
-}
-
-
-/* =====================================================
-   TEXT SIZE
-===================================================== */
-
-body.text-small {
     font-size: 14px;
 }
 
-body.text-medium {
-    font-size: 16px;
+.account-tab.active {
+    background: #292929;
+
+    color: white;
 }
 
-body.text-large {
-    font-size: 18px;
-}
-/* =========================================
-   MOBILE + IPAD MESSAGE BAR
-========================================= */
+.account-form {
+    display: flex;
 
-@media screen and (max-width: 1200px) {
+    flex-direction: column;
 
-    .chat-input-area {
-        bottom: 35px !important;
-    }
-
+    gap: 8px;
 }
 
+.account-form label {
+    color: #bbb;
 
-/* =========================================
-   SMALL IPHONE
-========================================= */
+    font-size: 13px;
 
-@media screen and (max-width: 450px) {
-
-    .chat-input-area {
-        bottom: 28px !important;
-    }
-
+    margin-top: 7px;
 }
-/* =========================================
+
+.account-form input {
+    width: 100%;
+
+    height: 46px;
+
+    padding: 0 13px;
+
+    border: 1px solid #333;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #101010;
+
+    color: white;
+
+    font-size: 14px;
+}
+
+.account-submit {
+    height: 46px;
+
+    margin-top: 14px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: white;
+
+    color: #111;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.account-close {
+    width: 100%;
+
+    height: 42px;
+
+    margin-top: 10px;
+
+    border: 1px solid #333;
+
+    border-radius: 10px;
+
+    background: #222;
+
+    color: #ddd;
+
+    cursor: pointer;
+}
+
+.account-message {
+    min-height: 18px;
+
+    margin-top: 12px;
+
+    text-align: center;
+
+    color: #888;
+
+    font-size: 13px;
+}
+
+
+/* =====================================================
    OWNER LOGIN
-========================================= */
+===================================================== */
 
 .owner-overlay {
     position: fixed;
@@ -1013,6 +720,8 @@ body.text-large {
     justify-content: center;
 
     z-index: 10000;
+
+    padding: 20px;
 }
 
 .owner-overlay.open {
@@ -1020,7 +729,7 @@ body.text-large {
 }
 
 .owner-box {
-    width: min(400px, calc(100% - 30px));
+    width: min(400px, 100%);
 
     background: #181818;
 
@@ -1098,9 +807,9 @@ body.text-large {
 }
 
 
-/* =========================================
+/* =====================================================
    OWNER PANEL
-========================================= */
+===================================================== */
 
 .owner-panel {
     position: fixed;
@@ -1132,10 +841,21 @@ body.text-large {
     display: flex;
 
     align-items: center;
-
     justify-content: space-between;
 
     border-bottom: 1px solid #292929;
+
+    position: sticky;
+
+    top: 0;
+
+    background: #0f0f0f;
+
+    z-index: 5;
+}
+
+.owner-header h1 {
+    font-size: 24px;
 }
 
 .owner-header span {
@@ -1183,6 +903,15 @@ body.text-large {
     font-size: 28px;
 }
 
+.status-online {
+    color: #7cff9b;
+}
+
+
+/* =====================================================
+   OWNER CONTROLS
+===================================================== */
+
 .owner-section {
     margin: 0 25px 25px;
 
@@ -1216,14 +945,622 @@ body.text-large {
 }
 
 
-/* =========================================
-   OWNER MOBILE
-========================================= */
+/* =====================================================
+   AI TRAINER
+===================================================== */
+
+.trainer-section {
+    margin: 0 25px 40px;
+
+    padding: 22px;
+
+    background: #151515;
+
+    border: 1px solid #303030;
+
+    border-radius: 18px;
+}
+
+.trainer-title {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+}
+
+.trainer-title h2 {
+    font-size: 22px;
+
+    margin-bottom: 5px;
+}
+
+.trainer-title p {
+    color: #888;
+
+    font-size: 14px;
+}
+
+.trainer-status-badge {
+    padding: 8px 12px;
+
+    border-radius: 999px;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+
+    background: #242424;
+}
+
+.trainer-status-badge.running {
+    color: #7cff9b;
+}
+
+.trainer-status-badge.paused {
+    color: #ffd66b;
+}
+
+.trainer-status-badge.stopped {
+    color: #999;
+}
+
+
+/* TRAINER BUTTONS */
+
+.trainer-controls {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+.trainer-button {
+    min-height: 44px;
+
+    padding: 0 18px;
+
+    border: 1px solid #333;
+
+    border-radius: 10px;
+
+    background: #242424;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.trainer-button:hover:not(:disabled) {
+    background: #303030;
+}
+
+.trainer-button:disabled {
+    opacity: 0.4;
+
+    cursor: not-allowed;
+}
+
+.trainer-button.start {
+    background: #ffffff;
+
+    color: #111;
+}
+
+.trainer-button.stop {
+    color: #ff7777;
+}
+
+
+/* =====================================================
+   TRAINER STATS
+===================================================== */
+
+.trainer-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.trainer-stat {
+    background: #1d1d1d;
+
+    border: 1px solid #2d2d2d;
+
+    border-radius: 12px;
+
+    padding: 16px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.trainer-stat-label {
+    color: #888;
+
+    font-size: 13px;
+}
+
+.trainer-stat strong {
+    font-size: 26px;
+}
+
+
+/* =====================================================
+   PROGRESS
+===================================================== */
+
+.trainer-progress-container {
+    margin-bottom: 20px;
+}
+
+.trainer-progress-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #aaa;
+
+    font-size: 13px;
+
+    margin-bottom: 8px;
+}
+
+.trainer-progress {
+    width: 100%;
+
+    height: 8px;
+
+    background: #292929;
+
+    border-radius: 999px;
+
+    overflow: hidden;
+}
+
+.trainer-progress-bar {
+    width: 0%;
+
+    height: 100%;
+
+    background: #ffffff;
+
+    border-radius: 999px;
+
+    transition: width 0.3s ease;
+}
+
+
+/* =====================================================
+   CURRENT TRAINING
+===================================================== */
+
+.trainer-current {
+    margin-bottom: 20px;
+}
+
+.trainer-current h3 {
+    font-size: 15px;
+
+    margin-bottom: 8px;
+}
+
+.trainer-current-box {
+    min-height: 60px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 14px;
+
+    background: #101010;
+
+    border: 1px solid #292929;
+
+    border-radius: 10px;
+
+    color: #aaa;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   TRAINER LOG
+===================================================== */
+
+.trainer-log-section {
+    margin-bottom: 20px;
+}
+
+.trainer-log-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+}
+
+.trainer-log-header h3 {
+    font-size: 15px;
+}
+
+.trainer-log-header button {
+    border: 1px solid #333;
+
+    background: #222;
+
+    color: #ccc;
+
+    border-radius: 8px;
+
+    padding: 6px 10px;
+
+    cursor: pointer;
+}
+
+.trainer-log {
+    max-height: 220px;
+
+    overflow-y: auto;
+
+    background: #101010;
+
+    border: 1px solid #292929;
+
+    border-radius: 10px;
+
+    padding: 10px;
+}
+
+.trainer-log-entry {
+    padding: 8px 4px;
+
+    border-bottom: 1px solid #222;
+
+    color: #aaa;
+
+    font-size: 13px;
+}
+
+.trainer-log-entry:last-child {
+    border-bottom: none;
+}
+
+.trainer-log-empty {
+    padding: 15px;
+
+    text-align: center;
+
+    color: #666;
+
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   PYTHON CONNECTION
+===================================================== */
+
+.python-connection {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px;
+
+    background: #101010;
+
+    border: 1px solid #292929;
+
+    border-radius: 12px;
+}
+
+.python-icon {
+    font-size: 24px;
+}
+
+.python-info {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+    flex: 1;
+}
+
+.python-info strong {
+    font-size: 14px;
+}
+
+.python-info span {
+    color: #777;
+
+    font-size: 12px;
+}
+
+.python-status-dot {
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+
+    background: #777;
+}
+
+.python-status-dot.connected {
+    background: #7cff9b;
+}
+
+
+/* =====================================================
+   LIGHT THEME
+===================================================== */
+
+body.light-theme {
+    background: #f5f5f5;
+
+    color: #111111;
+}
+
+body.light-theme .sidebar,
+body.light-theme .owner-panel {
+    background: #ffffff;
+
+    color: #111111;
+}
+
+body.light-theme .chat-section {
+    background: #f5f5f5;
+}
+
+body.light-theme .chat-header,
+body.light-theme .sidebar {
+    border-color: #dddddd;
+}
+
+body.light-theme .sidebar-button {
+    color: #333333;
+}
+
+body.light-theme .sidebar-button:hover {
+    background: #eeeeee;
+}
+
+body.light-theme .chat-input-area {
+    background: #ffffff;
+
+    border-color: #dddddd;
+}
+
+body.light-theme .chat-input-area input {
+    color: #111111;
+}
+
+body.light-theme .settings-box,
+body.light-theme .account-box {
+    background: #ffffff;
+
+    color: #111111;
+}
+
+body.light-theme .trainer-section,
+body.light-theme .owner-card,
+body.light-theme .owner-section,
+body.light-theme .trainer-stat {
+    background: #f5f5f5;
+
+    color: #111111;
+}
+
+
+/* =====================================================
+   TEXT SIZE
+===================================================== */
+
+body.text-small {
+    font-size: 14px;
+}
+
+body.text-medium {
+    font-size: 16px;
+}
+
+body.text-large {
+    font-size: 18px;
+}
+
+
+/* =====================================================
+   IPAD + IPHONE
+===================================================== */
+
+@media screen and (max-width: 1200px) {
+
+    .sidebar {
+        width: 64px;
+
+        min-width: 64px;
+        max-width: 64px;
+    }
+
+    .sidebar-logo {
+        width: 64px;
+
+        height: 64px;
+
+        padding: 0;
+
+        justify-content: center;
+    }
+
+    .sidebar-logo strong,
+    .sidebar-logo span {
+        display: none;
+    }
+
+    .sidebar-buttons {
+        width: 64px;
+
+        padding: 8px 5px;
+    }
+
+    .sidebar-button {
+        width: 54px;
+
+        min-width: 54px;
+        max-width: 54px;
+
+        height: 46px;
+        min-height: 46px;
+
+        margin: 2px auto;
+
+        padding: 0;
+
+        justify-content: center;
+
+        gap: 0;
+    }
+
+    .sidebar-button span {
+        display: none;
+    }
+
+    .sidebar-bottom {
+        width: 64px;
+
+        padding: 6px 5px 10px;
+    }
+
+    .sidebar-bottom .sidebar-button {
+        width: 54px;
+    }
+
+    .sidebar.expanded {
+        width: 250px;
+
+        min-width: 250px;
+        max-width: 250px;
+    }
+
+    .sidebar.expanded .sidebar-logo {
+        width: 250px;
+
+        padding: 0 20px;
+
+        justify-content: flex-start;
+    }
+
+    .sidebar.expanded .sidebar-logo strong,
+    .sidebar.expanded .sidebar-logo span {
+        display: inline;
+    }
+
+    .sidebar.expanded .sidebar-buttons {
+        width: 250px;
+    }
+
+    .sidebar.expanded .sidebar-button {
+        width: 230px;
+
+        min-width: 230px;
+        max-width: 230px;
+
+        padding: 0 13px;
+
+        justify-content: flex-start;
+
+        gap: 12px;
+    }
+
+    .sidebar.expanded .sidebar-button span {
+        display: inline;
+    }
+
+    .sidebar.expanded .sidebar-bottom {
+        width: 250px;
+    }
+
+    .sidebar.expanded .sidebar-bottom .sidebar-button {
+        width: 230px;
+    }
+
+    .chat-section {
+        left: 64px;
+    }
+
+    .sidebar.expanded ~ .chat-section {
+        left: 250px;
+    }
+
+    .moonplug-animation {
+        display: none;
+    }
+
+    .chat-input-area {
+        bottom: 35px !important;
+
+        width: calc(100% - 30px);
+
+        min-height: 54px;
+    }
+
+    .chat-input-area input {
+        height: 40px;
+    }
+
+    #sendButton {
+        width: 40px;
+        height: 40px;
+    }
+
+    .owner-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+
+/* =====================================================
+   IPHONE
+===================================================== */
 
 @media screen and (max-width: 600px) {
 
     .owner-header {
-        padding: 15px;
+        padding: 14px;
+    }
+
+    .owner-header h1 {
+        font-size: 20px;
+    }
+
+    .owner-header span {
+        font-size: 12px;
     }
 
     .owner-grid {
@@ -1234,211 +1571,76 @@ body.text-large {
 
     .owner-section {
         margin: 0 15px 15px;
+
+        padding: 16px;
     }
 
-}
-/* =====================================================
-   PUBLIC ACCOUNT SCREEN
-===================================================== */
+    .trainer-section {
+        margin: 0 15px 30px;
 
-.account-screen {
-    position: fixed;
+        padding: 16px;
+    }
 
-    inset: 0;
+    .trainer-title {
+        align-items: flex-start;
 
-    display: none;
+        flex-direction: column;
 
-    align-items: center;
-    justify-content: center;
+        gap: 12px;
+    }
 
-    background: #0f0f0f;
+    .trainer-stats {
+        grid-template-columns: 1fr;
+    }
 
-    z-index: 8000;
+    .trainer-controls {
+        flex-direction: column;
+    }
 
-    overflow-y: auto;
+    .trainer-button {
+        width: 100%;
+    }
 
-    padding: 20px;
-}
+    .chat-input-area {
+        bottom: 28px !important;
 
-.account-screen.open {
-    display: flex;
-}
+        width: calc(100% - 20px);
 
-.account-box {
-    width: min(430px, 100%);
+        min-height: 52px;
+    }
 
-    background: #181818;
+    .chat-input-area input {
+        height: 38px;
 
-    border: 1px solid #303030;
+        font-size: 14px;
+    }
 
-    border-radius: 22px;
+    #sendButton {
+        width: 38px;
+        height: 38px;
+    }
 
-    padding: 30px;
+    .chat-header {
+        height: 54px;
 
-    box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.45);
-}
+        padding: 0 10px;
+    }
 
-.account-logo {
-    text-align: center;
+    .chat-header strong {
+        font-size: 15px;
+    }
 
-    font-size: 38px;
+    .online {
+        font-size: 11px;
+    }
 
-    margin-bottom: 10px;
-}
+    .empty-chat h1 {
+        font-size: 23px;
+    }
 
-.account-box h1 {
-    text-align: center;
-
-    font-size: 25px;
-
-    margin-bottom: 8px;
-}
-
-.account-subtitle {
-    text-align: center;
-
-    color: #888;
-
-    font-size: 14px;
-
-    margin-bottom: 25px;
-}
-
-
-/* TABS */
-
-.account-tabs {
-    display: flex;
-
-    background: #101010;
-
-    border-radius: 11px;
-
-    padding: 4px;
-
-    margin-bottom: 22px;
-}
-
-.account-tab {
-    flex: 1;
-
-    height: 40px;
-
-    border: none;
-
-    border-radius: 8px;
-
-    background: transparent;
-
-    color: #888;
-
-    cursor: pointer;
-
-    font-size: 14px;
-}
-
-.account-tab.active {
-    background: #292929;
-
-    color: white;
-}
-
-
-/* FORM */
-
-.account-form {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 8px;
-}
-
-.account-form label {
-    color: #bbb;
-
-    font-size: 13px;
-
-    margin-top: 7px;
-}
-
-.account-form input {
-    width: 100%;
-
-    height: 46px;
-
-    padding: 0 13px;
-
-    border: 1px solid #333;
-
-    border-radius: 10px;
-
-    outline: none;
-
-    background: #101010;
-
-    color: white;
-
-    font-size: 14px;
-}
-
-.account-form input:focus {
-    border-color: #666;
-}
-
-.account-submit {
-    height: 46px;
-
-    margin-top: 14px;
-
-    border: none;
-
-    border-radius: 10px;
-
-    background: white;
-
-    color: #111;
-
-    font-weight: bold;
-
-    cursor: pointer;
-}
-
-.account-close {
-    width: 100%;
-
-    height: 42px;
-
-    margin-top: 10px;
-
-    border: 1px solid #333;
-
-    border-radius: 10px;
-
-    background: #222;
-
-    color: #ddd;
-
-    cursor: pointer;
-}
-
-.account-message {
-    min-height: 18px;
-
-    margin-top: 12px;
-
-    text-align: center;
-
-    color: #888;
-
-    font-size: 13px;
-}
-
-
-/* MOBILE */
-
-@media screen and (max-width: 600px) {
+    .empty-chat p {
+        font-size: 13px;
+    }
 
     .account-screen {
         padding: 15px;
@@ -1452,6 +1654,19 @@ body.text-large {
 
     .account-box h1 {
         font-size: 22px;
+    }
+
+}
+
+
+/* =====================================================
+   SMALL IPHONE
+===================================================== */
+
+@media screen and (max-width: 450px) {
+
+    .chat-input-area {
+        bottom: 28px !important;
     }
 
 }
