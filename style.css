@@ -1903,3 +1903,26 @@ body {
     max-width: 100%;
     overflow-x: hidden;
 }
+/* Fix sidebar horizontal overflow */
+.sidebar {
+    overflow-x: hidden !important;
+    overflow-y: auto;
+}
+
+.sidebar-buttons,
+.sidebar-bottom {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.sidebar-button {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.sidebar-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
