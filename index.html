@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -16,12 +15,9 @@
         rel="stylesheet"
         href="style.css"
     >
-
 </head>
 
-
 <body>
-
 
 <!-- =================================================
      SIDEBAR
@@ -29,10 +25,7 @@
 
 <aside class="sidebar">
 
-
-    <!-- LOGO / SIDEBAR TOGGLE -->
-
-    <div class="sidebar-logo">
+    <div class="sidebar-logo" id="sidebarLogo">
 
         🌙
 
@@ -42,100 +35,75 @@
 
     </div>
 
-
-    <!-- SIDEBAR BUTTONS -->
-
     <div class="sidebar-buttons">
 
-
-        <button class="sidebar-button">
+        <button class="sidebar-button" type="button">
             ➕
             <span>New Chat</span>
         </button>
 
-
-        <button class="sidebar-button">
+        <button class="sidebar-button" type="button">
             🧠
             <span>AI Learn</span>
         </button>
 
-
-        <button class="sidebar-button">
+        <button class="sidebar-button" type="button">
             📚
             <span>Study</span>
         </button>
 
-
-        <button class="sidebar-button">
+        <button class="sidebar-button" type="button">
             🍳
             <span>Cook</span>
         </button>
 
-
-        <button class="sidebar-button">
+        <button class="sidebar-button" type="button">
             🖼️
             <span>Images</span>
         </button>
 
-
-        <button class="sidebar-button">
+        <button class="sidebar-button" type="button">
             💻
             <span>Code</span>
         </button>
 
-
-        <button class="sidebar-button">
+        <button class="sidebar-button" type="button">
             🔄
             <span>AI Switch</span>
         </button>
 
-
         <div class="sidebar-divider"></div>
 
-
-        <button class="sidebar-button">
+        <button class="sidebar-button" type="button">
             💬
             <span>Chat History</span>
         </button>
 
-
     </div>
 
-
-    <!-- SIDEBAR BOTTOM -->
-
     <div class="sidebar-bottom">
-
 
         <button
             id="settingsButton"
             class="sidebar-button"
             type="button"
         >
-
             ⚙️
-
             <span>Settings</span>
-
         </button>
 
+        <button
+            id="ownerButton"
+            class="sidebar-button"
+            type="button"
+        >
+            👤
+            <span>Account</span>
+        </button>
 
-       <button
-    id="ownerButton"
-    class="sidebar-button"
-    type="button"
->
-
-    👤
-
-    <span>Account</span>
-
-</button>
     </div>
 
-
 </aside>
-
 
 
 <!-- =================================================
@@ -144,11 +112,7 @@
 
 <main class="chat-section">
 
-
     <div class="chat-container">
-
-
-        <!-- CHAT HEADER -->
 
         <header class="chat-header">
 
@@ -160,73 +124,40 @@
 
         </header>
 
-
-        <!-- DECORATION -->
-
         <div class="moonplug-animation">
 
-            <div class="plug">
-                🔌
-            </div>
+            <div class="plug">🔌</div>
 
             <div class="cable"></div>
 
-            <div class="moon">
-                🌙
-            </div>
+            <div class="moon">🌙</div>
 
         </div>
-
-
-        <!-- =================================================
-             MESSAGES
-        ================================================= -->
 
         <div
             id="messages"
             class="messages"
         >
 
-
-            <!-- EMPTY CHAT -->
-
             <div class="empty-chat">
 
-                <h1>
-                    What can I help with?
-                </h1>
+                <h1>What can I help with?</h1>
 
-                <p>
-                    Ask MoonPlug anything.
-                </p>
+                <p>Ask MoonPlug anything.</p>
 
             </div>
 
-
         </div>
-
-
-        <!-- =================================================
-             TYPING INDICATOR
-        ================================================= -->
 
         <div
             id="typing"
             class="typing"
             style="display: none;"
         >
-
             MoonPlug is thinking...
-
         </div>
 
-
-        <!-- =================================================
-             MESSAGE BAR
-        ================================================= -->
-
         <div class="chat-input-area">
-
 
             <input
                 id="messageInput"
@@ -235,26 +166,19 @@
                 autocomplete="off"
             >
 
-
             <button
                 id="sendButton"
                 type="button"
                 aria-label="Send message"
             >
-
                 ➤
-
             </button>
-
 
         </div>
 
-
     </div>
 
-
 </main>
-
 
 
 <!-- =================================================
@@ -266,42 +190,29 @@
     class="settings-panel"
 >
 
-
     <div class="settings-box">
-
 
         <div class="settings-header">
 
-            <h2>
-                Settings
-            </h2>
-
+            <h2>Settings</h2>
 
             <button
                 id="closeSettings"
                 class="close-settings"
                 type="button"
             >
-
                 ✕
-
             </button>
 
         </div>
 
-
-        <!-- APPEARANCE -->
-
         <div class="setting-item">
 
-            <strong>
-                Appearance
-            </strong>
+            <strong>Appearance</strong>
 
             <span>
                 Choose how MoonPlug looks.
             </span>
-
 
             <div class="appearance-options">
 
@@ -316,19 +227,13 @@
 
         </div>
 
-
-        <!-- TEXT SIZE -->
-
         <div class="setting-item">
 
-            <strong>
-                Text Size
-            </strong>
+            <strong>Text Size</strong>
 
             <span>
                 Change the chat text size.
             </span>
-
 
             <div class="appearance-options">
 
@@ -340,7 +245,6 @@
                     Small
                 </button>
 
-
                 <button
                     class="size-button active"
                     data-size="medium"
@@ -348,7 +252,6 @@
                 >
                     Medium
                 </button>
-
 
                 <button
                     class="size-button"
@@ -362,19 +265,13 @@
 
         </div>
 
-
     </div>
-
 
 </div>
 
 
-
 <!-- =================================================
-     JAVASCRIPT
-================================================= -->
-<!-- =================================================
-     PUBLIC ACCOUNT SCREEN
+     ACCOUNT SCREEN
 ================================================= -->
 
 <div
@@ -393,9 +290,6 @@
         <p class="account-subtitle">
             Sign in or create your MoonPlug account.
         </p>
-
-
-        <!-- TABS -->
 
         <div class="account-tabs">
 
@@ -417,15 +311,12 @@
 
         </div>
 
-
-        <!-- LOGIN -->
-
         <form
             id="loginForm"
             class="account-form"
         >
 
-            <label>
+            <label for="loginEmail">
                 Email address
             </label>
 
@@ -436,8 +327,7 @@
                 autocomplete="email"
             >
 
-
-            <label>
+            <label for="loginPassword">
                 Password
             </label>
 
@@ -448,7 +338,6 @@
                 autocomplete="current-password"
             >
 
-
             <button
                 type="submit"
                 class="account-submit"
@@ -458,16 +347,13 @@
 
         </form>
 
-
-        <!-- SIGN UP -->
-
         <form
             id="signupForm"
             class="account-form"
             style="display: none;"
         >
 
-            <label>
+            <label for="signupEmail">
                 Email address
             </label>
 
@@ -478,8 +364,7 @@
                 autocomplete="email"
             >
 
-
-            <label>
+            <label for="signupPassword">
                 Password
             </label>
 
@@ -490,8 +375,7 @@
                 autocomplete="new-password"
             >
 
-
-            <label>
+            <label for="signupConfirm">
                 Confirm password
             </label>
 
@@ -502,7 +386,6 @@
                 autocomplete="new-password"
             >
 
-
             <button
                 type="submit"
                 class="account-submit"
@@ -512,7 +395,6 @@
 
         </form>
 
-
         <button
             id="closeAccount"
             class="account-close"
@@ -520,7 +402,6 @@
         >
             Continue as guest
         </button>
-
 
         <p
             id="accountMessage"
@@ -530,15 +411,10 @@
     </div>
 
 </div>
-<script src="script.js"></script>
 
 
-</body>
-
-</html>
-  
 <!-- =================================================
-     OWNER PANEL
+     OWNER LOGIN
 ================================================= -->
 
 <div
@@ -584,6 +460,10 @@
 </div>
 
 
+<!-- =================================================
+     OWNER PANEL
+================================================= -->
+
 <div
     id="ownerPanel"
     class="owner-panel"
@@ -592,8 +472,13 @@
     <div class="owner-header">
 
         <div>
+
             <h1>Owner Panel</h1>
-            <span>MoonPlug AI Administration</span>
+
+            <span>
+                MoonPlug AI Administration
+            </span>
+
         </div>
 
         <button
@@ -606,46 +491,294 @@
     </div>
 
 
+    <!-- DASHBOARD -->
+
     <div class="owner-grid">
 
         <div class="owner-card">
+
             <strong>Users</strong>
-            <span id="ownerUsers">0</span>
+
+            <span id="ownerUsers">
+                0
+            </span>
+
         </div>
 
         <div class="owner-card">
+
             <strong>Chats</strong>
-            <span id="ownerChats">0</span>
+
+            <span id="ownerChats">
+                0
+            </span>
+
         </div>
 
         <div class="owner-card">
+
             <strong>Status</strong>
-            <span>Online</span>
+
+            <span class="status-online">
+                Online
+            </span>
+
         </div>
 
     </div>
 
+
+    <!-- APP CONTROLS -->
 
     <div class="owner-section">
 
         <h2>App Controls</h2>
 
-        <button type="button">
+        <button
+            id="manageUsersButton"
+            type="button"
+        >
             Manage Users
         </button>
 
-        <button type="button">
+        <button
+            id="manageChatsButton"
+            type="button"
+        >
             Manage Chats
         </button>
 
-        <button type="button">
+        <button
+            id="appSettingsButton"
+            type="button"
+        >
             App Settings
         </button>
 
     </div>
 
+
+    <!-- =================================================
+         AI TRAINER
+    ================================================= -->
+
+    <section class="trainer-section">
+
+        <div class="trainer-title">
+
+            <div>
+
+                <h2>🧠 AI Trainer</h2>
+
+                <p>
+                    Control MoonPlug's knowledge trainer.
+                </p>
+
+            </div>
+
+            <div
+                id="trainerStatusBadge"
+                class="trainer-status-badge stopped"
+            >
+                ● Stopped
+            </div>
+
+        </div>
+
+
+        <!-- TRAINER CONTROLS -->
+
+        <div class="trainer-controls">
+
+            <button
+                id="trainerStart"
+                class="trainer-button start"
+                type="button"
+            >
+                ▶ Start Training
+            </button>
+
+            <button
+                id="trainerPause"
+                class="trainer-button pause"
+                type="button"
+                disabled
+            >
+                ⏸ Pause
+            </button>
+
+            <button
+                id="trainerStop"
+                class="trainer-button stop"
+                type="button"
+                disabled
+            >
+                ■ Stop
+            </button>
+
+        </div>
+
+
+        <!-- TRAINER STATS -->
+
+        <div class="trainer-stats">
+
+            <div class="trainer-stat">
+
+                <span class="trainer-stat-label">
+                    Questions Trained
+                </span>
+
+                <strong id="trainerQuestions">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="trainer-stat">
+
+                <span class="trainer-stat-label">
+                    Knowledge Entries
+                </span>
+
+                <strong id="trainerKnowledge">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="trainer-stat">
+
+                <span class="trainer-stat-label">
+                    Sources Checked
+                </span>
+
+                <strong id="trainerSources">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- PROGRESS -->
+
+        <div class="trainer-progress-container">
+
+            <div class="trainer-progress-header">
+
+                <span>
+                    Training Progress
+                </span>
+
+                <span id="trainerProgressText">
+                    0%
+                </span>
+
+            </div>
+
+            <div class="trainer-progress">
+
+                <div
+                    id="trainerProgressBar"
+                    class="trainer-progress-bar"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CURRENT TRAINING -->
+
+        <div class="trainer-current">
+
+            <h3>
+                Current Training
+            </h3>
+
+            <div
+                id="trainerCurrent"
+                class="trainer-current-box"
+            >
+                Trainer is waiting to start.
+            </div>
+
+        </div>
+
+
+        <!-- TRAINER LOG -->
+
+        <div class="trainer-log-section">
+
+            <div class="trainer-log-header">
+
+                <h3>
+                    Training Log
+                </h3>
+
+                <button
+                    id="clearTrainerLog"
+                    type="button"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+            <div
+                id="trainerLog"
+                class="trainer-log"
+            >
+
+                <div class="trainer-log-empty">
+                    No training activity yet.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PYTHON CONNECTION -->
+
+        <div class="python-connection">
+
+            <div class="python-icon">
+                🐍
+            </div>
+
+            <div class="python-info">
+
+                <strong>
+                    Python Trainer
+                </strong>
+
+                <span id="pythonStatus">
+                    Not connected
+                </span>
+
+            </div>
+
+            <div
+                id="pythonStatusDot"
+                class="python-status-dot"
+            ></div>
+
+        </div>
+
+    </section>
+
 </div>
+
+
+<!-- =================================================
+     JAVASCRIPT
+================================================= -->
+
 <script src="script.js"></script>
 
 </body>
+
 </html>
