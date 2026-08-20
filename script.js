@@ -888,62 +888,6 @@ function removeEmptyChat() {
 }
 
 
-function addMessage(
-    text,
-    sender
-) {
-
-    const messages =
-        $("messages");
-
-
-    if (!messages) {
-
-        return;
-    }
-
-
-    removeEmptyChat();
-
-
-    const message =
-        document.createElement(
-            "div"
-        );
-
-
-    message.className =
-        `message ${sender}`;
-
-
-    const content =
-        document.createElement(
-            "div"
-        );
-
-
-    content.className =
-        "message-content";
-
-
-    content.textContent =
-        text;
-
-
-    message.appendChild(
-        content
-    );
-
-
-    messages.appendChild(
-        message
-    );
-
-
-    messages.scrollTop =
-        messages.scrollHeight;
-}
-
 
 // ============================================================
 // TYPING INDICATOR
