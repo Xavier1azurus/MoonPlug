@@ -1338,7 +1338,332 @@ function setupOwnerPanelButtons() {
         }
     );
 
+function showTrainer(training) {
 
+    const existing =
+        $("trainerPanel");
+
+    if (existing) {
+
+        existing.remove();
+
+    }
+
+    const panel =
+        document.createElement("div");
+
+    panel.id =
+        "trainerPanel";
+
+    panel.className =
+        "trainer-panel";
+
+    panel.innerHTML = `
+
+        <div class="trainer-header">
+
+            <div>
+
+                <h2>
+                    🧠 MoonPlug Trainer
+                </h2>
+
+                <p>
+                    Teach MoonPlug new knowledge.
+                </p>
+
+            </div>
+
+            <button
+                id="closeTrainer"
+                type="button"
+            >
+                Close
+            </button>
+
+        </div>
+
+
+        <div class="trainer-form">
+
+            <label>
+                Question
+            </label>
+
+            <textarea
+                id="trainerQuestion"
+                placeholder="What should MoonPlug learn?"
+                maxlength="2000"
+            ></textarea>
+
+
+            <label>
+                Answer
+            </label>
+
+            <textarea
+                id="trainerAnswer"
+                placeholder="What should MoonPlug answer?"
+                maxlength="10000"
+            ></textarea>
+
+
+            <label>
+                Category
+            </label>
+
+            <input
+                id="trainerCategory"
+                type="text"
+                placeholder="general"
+                value="general"
+            >
+
+
+            <button
+                id="teachMoonPlug"
+                type="button"
+            >
+                + Teach MoonPlug
+            </button>
+
+        </div>
+
+
+        <div class="trainer-knowledge">
+
+            <div class="trainer-knowledge-header">
+
+                <h3>
+                    Learned Knowledge
+                </h3>
+
+                <button
+                    id="refreshTraining"
+                    type="button"
+                >
+                    Refresh
+                </button>
+
+            </div>
+
+            <div id="trainingList"></div>
+
+        </div>
+
+    `;
+
+    document.body.appendChild(panel);
+
+
+    renderTrainingList(training);
+
+
+    $("closeTrainer")?.addEventListener(
+        "click",
+        () => {
+
+            panel.remove();
+
+        }
+    );
+
+
+    $("refreshTraining")?.addEventListener(
+        "click",
+        async () => {
+
+            const updated =
+                await loadTraining();
+
+            renderTrainingList(updated);
+
+        }
+    );
+
+
+    $("teachMoonPlug")?.addEventListener(
+        "click",
+        teachMoonPlug
+    );
+
+}
+
+
+function renderTrainingList(training) {
+
+    const list =
+        $("trainingList");
+
+    if (!list) return;
+
+
+    list.innerHTML = "";
+
+
+    if (!training.length) {
+
+        list.innerHTML = `
+            <p class="trainer-empty">
+                MoonPlug hasn't been taught anything yet.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    training.forEach(
+        item => {
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "training-card";
+
+            card.innerHTML = `
+
+                <strong>
+                    ${escapeHTML(item.question)}
+                </strong>
+
+                <p>
+                    ${escapeHTML(item.answer)}
+                </p>
+
+                <small>
+                    Category:
+                    ${escapeHTML(item.category || "general")}
+                </small>
+
+            `;
+
+            list.appendChild(card);
+
+        }
+    );
+
+}
+
+
+async function teachMoonPlug() {
+
+    const question =
+        $("trainerQuestion")?.value.trim();
+
+    const answer =
+        $("trainerAnswer")?.value.trim();
+
+    const category =
+        $("trainerCategory")?.value.trim()
+        || "general";
+
+
+    if (!question) {
+
+        alert("Please enter a question.");
+
+        return;
+
+    }
+
+
+    if (!answer) {
+
+        alert("Please enter an answer.");
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/api/owner/training`,
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    credentials:
+                        "include",
+
+                    body:
+                        JSON.stringify({
+
+                            question,
+
+                            answer,
+
+                            category
+
+                        })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok ||
+            !result.success) {
+
+            throw new Error(
+                result.error ||
+                "Training failed."
+            );
+
+        }
+
+
+        $("trainerQuestion").value =
+            "";
+
+        $("trainerAnswer").value =
+            "";
+
+        $("trainerCategory").value =
+            "general";
+
+
+        const training =
+            await loadTraining();
+
+        renderTrainingList(training);
+
+
+        alert(
+            "MoonPlug learned something new!"
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Trainer error:",
+            error
+        );
+
+        alert(
+            error.message ||
+            "Could not teach MoonPlug."
+        );
+
+    }
+
+}
    $("trainerButton")?.addEventListener(
     "click",
     async () => {
