@@ -1,1172 +1,1672 @@
 
-document.addEventListener("DOMContentLoaded", () => {
 
-    /* =====================================================
-       MOONPLUG AI
-       SECURE-STRUCTURE FRONTEND
-       =====================================================
+/*
+=============================================================
+                     MOONPLUG AI
+                 FRONTEND CONTROLLER
+=============================================================
 
-       IMPORTANT:
-       This is a frontend security structure.
+Connects the GitHub MoonPlug website to the local Python
+backend.
 
-       GitHub Pages is static hosting, so a secret stored
-       inside JavaScript can still be discovered.
+Backend:
+    http://127.0.0.1:5000
 
-       Real authentication should eventually be handled by
-       a backend/server.
+Security:
+    - No owner password is stored in this file.
+    - Login is handled by the Python backend.
+    - Owner session is checked by the backend.
+    - Owner routes require server authentication.
 
-       ===================================================== */
-
-
-    /* =====================================================
-       BASIC ELEMENTS
-       ===================================================== */
-
-    const sidebar =
-        document.querySelector(".sidebar");
-
-    const messages =
-        document.getElementById("messages");
-
-    const messageInput =
-        document.getElementById("messageInput");
-
-    const sendButton =
-        document.getElementById("sendButton");
-
-    const typing =
-        document.getElementById("typing");
+=============================================================
+*/
 
 
-    /* =====================================================
-       SETTINGS
-       ===================================================== */
+// ============================================================
+// CONFIGURATION
+// ============================================================
 
-    const settingsButton =
-        document.getElementById("settingsButton");
-
-    const settingsPanel =
-        document.getElementById("settingsPanel");
-
-    const closeSettings =
-        document.getElementById("closeSettings");
-
-    const themeButton =
-        document.getElementById("themeButton");
+const API_BASE = "http://127.0.0.1:5000";
 
 
-    /* =====================================================
-       ACCOUNT
-       ===================================================== */
+// ============================================================
+// GLOBAL STATE
+// ============================================================
 
-    const accountScreen =
-        document.getElementById("accountScreen");
+let currentChat = [];
 
-    const ownerButton =
-        document.getElementById("ownerButton");
+let isOwnerAuthenticated = false;
 
-    const loginTab =
-        document.getElementById("loginTab");
-
-    const signupTab =
-        document.getElementById("signupTab");
-
-    const loginForm =
-        document.getElementById("loginForm");
-
-    const signupForm =
-        document.getElementById("signupForm");
-
-    const closeAccount =
-        document.getElementById("closeAccount");
-
-    const accountMessage =
-        document.getElementById("accountMessage");
+let currentTextSize = "medium";
 
 
-    /* =====================================================
-       OWNER PANEL
-       ===================================================== */
+// ============================================================
+// DOM HELPERS
+// ============================================================
 
-    const ownerPanel =
-        document.getElementById("ownerPanel");
-
-    const ownerLogout =
-        document.getElementById("ownerLogout");
+function $(id) {
+    return document.getElementById(id);
+}
 
 
-    /* =====================================================
-       OWNER LOGIN
-       ===================================================== */
+function showElement(element) {
 
-    const ownerOverlay =
-        document.getElementById("ownerOverlay");
-
-    const ownerLoginForm =
-        document.getElementById("ownerLoginForm");
-
-    const ownerPassword =
-        document.getElementById("ownerPassword");
-
-    const ownerError =
-        document.getElementById("ownerError");
-
-    const ownerCancel =
-        document.getElementById("ownerCancel");
-
-
-    /* =====================================================
-       OWNER SESSION
-       ===================================================== */
-
-    const OWNER_SESSION_KEY =
-        "moonplug_owner_session";
-
-    const SESSION_LENGTH =
-        30 * 60 * 1000;
-
-
-    /* =====================================================
-       FRONTEND DEMO AUTHENTICATION
-       =====================================================
-
-       TEMPORARY ONLY.
-
-       DO NOT consider this a real secret on GitHub Pages.
-
-       We will replace this with server-side authentication
-       when the backend is added.
-       ===================================================== */
-
-    const OWNER_SECRET =
-        "BumsUp1AI1591";
-
-
-    /* =====================================================
-       SIDEBAR
-       ===================================================== */
-
-    if (sidebar) {
-
-        sidebar.addEventListener(
-            "click",
-            (event) => {
-
-                if (
-                    event.target.closest(
-                        ".sidebar-button"
-                    )
-                ) {
-                    return;
-                }
-
-                sidebar.classList.toggle(
-                    "expanded"
-                );
-
-            }
-        );
-
+    if (!element) {
+        return;
     }
 
+    element.style.display = "";
+    element.setAttribute("aria-hidden", "false");
+}
 
-    /* =====================================================
-       SETTINGS
-       ===================================================== */
 
-    if (
-        settingsButton &&
-        settingsPanel
-    ) {
+function hideElement(element) {
 
-        settingsButton.addEventListener(
-            "click",
-            (event) => {
-
-                event.preventDefault();
-
-                event.stopPropagation();
-
-                settingsPanel.classList.add(
-                    "open"
-                );
-
-            }
-        );
-
+    if (!element) {
+        return;
     }
 
-
-    if (
-        closeSettings &&
-        settingsPanel
-    ) {
-
-        closeSettings.addEventListener(
-            "click",
-            () => {
-
-                settingsPanel.classList.remove(
-                    "open"
-                );
-
-            }
-        );
-
-    }
+    element.style.display = "none";
+    element.setAttribute("aria-hidden", "true");
+}
 
 
-    if (settingsPanel) {
+// ============================================================
+// API REQUEST HELPER
+// ============================================================
 
-        settingsPanel.addEventListener(
-            "click",
-            (event) => {
+async function apiRequest(
+    endpoint,
+    options = {}
+) {
 
-                if (
-                    event.target ===
-                    settingsPanel
-                ) {
+    const url = `${API_BASE}${endpoint}`;
 
-                    settingsPanel.classList.remove(
-                        "open"
-                    );
+    const config = {
+        ...options,
 
-                }
+        credentials: "include",
 
-            }
-        );
+        headers: {
+            "Content-Type": "application/json",
 
-    }
-
-
-    /* =====================================================
-       THEME
-       ===================================================== */
-
-    if (themeButton) {
-
-        themeButton.addEventListener(
-            "click",
-            () => {
-
-                document.body.classList.toggle(
-                    "light-theme"
-                );
-
-                if (
-                    document.body.classList.contains(
-                        "light-theme"
-                    )
-                ) {
-
-                    themeButton.textContent =
-                        "Light";
-
-                } else {
-
-                    themeButton.textContent =
-                        "Dark";
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       ADD MESSAGE
-       ===================================================== */
-
-    function addMessage(
-        text,
-        type
-    ) {
-
-        if (!messages) {
-            return;
+            ...(options.headers || {})
         }
-
-        const bubble =
-            document.createElement("div");
-
-        bubble.className =
-            "message-bubble " + type;
-
-        bubble.textContent =
-            text;
-
-        messages.appendChild(
-            bubble
-        );
-
-        messages.scrollTop =
-            messages.scrollHeight;
-
-    }
+    };
 
 
-    /* =====================================================
-       SEND MESSAGE
-       ===================================================== */
+    try {
 
-    function sendMessage() {
-
-        if (
-            !messageInput ||
-            !messages
-        ) {
-
-            return;
-
-        }
-
-        const text =
-            messageInput.value.trim();
-
-        if (!text) {
-            return;
-        }
-
-
-        const emptyChat =
-            document.querySelector(
-                ".empty-chat"
-            );
-
-        if (emptyChat) {
-
-            emptyChat.remove();
-
-        }
-
-
-        addMessage(
-            text,
-            "user"
+        const response = await fetch(
+            url,
+            config
         );
 
 
-        messageInput.value =
-            "";
-
-
-        if (typing) {
-
-            typing.style.display =
-                "block";
-
-        }
-
-
-        setTimeout(
-            () => {
-
-                if (typing) {
-
-                    typing.style.display =
-                        "none";
-
-                }
-
-                addMessage(
-                    "I'm ready to help.",
-                    "ai"
-                );
-
-            },
-            800
-        );
-
-    }
-
-
-    /* =====================================================
-       SEND BUTTON
-       ===================================================== */
-
-    if (sendButton) {
-
-        sendButton.addEventListener(
-            "click",
-            (event) => {
-
-                event.preventDefault();
-
-                sendMessage();
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       ENTER TO SEND
-       ===================================================== */
-
-    if (messageInput) {
-
-        messageInput.addEventListener(
-            "keydown",
-            (event) => {
-
-                if (
-                    event.key === "Enter"
-                ) {
-
-                    event.preventDefault();
-
-                    sendMessage();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       OWNER LOGIN OPEN
-       ===================================================== */
-
-    if (
-        ownerButton &&
-        ownerOverlay
-    ) {
-
-        ownerButton.addEventListener(
-            "click",
-            (event) => {
-
-                event.preventDefault();
-
-                event.stopPropagation();
-
-                openOwnerLogin();
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       OPEN OWNER LOGIN
-       ===================================================== */
-
-    function openOwnerLogin() {
-
-        if (!ownerOverlay) {
-            return;
-        }
-
-        if (ownerError) {
-
-            ownerError.textContent =
-                "";
-
-        }
-
-        if (ownerPassword) {
-
-            ownerPassword.value =
-                "";
-
-        }
-
-        ownerOverlay.classList.add(
-            "open"
-        );
-
-        setTimeout(
-            () => {
-
-                if (ownerPassword) {
-
-                    ownerPassword.focus();
-
-                }
-
-            },
-            50
-        );
-
-    }
-
-
-    /* =====================================================
-       CLOSE OWNER LOGIN
-       ===================================================== */
-
-    function closeOwnerLogin() {
-
-        if (!ownerOverlay) {
-            return;
-        }
-
-        ownerOverlay.classList.remove(
-            "open"
-        );
-
-        if (ownerPassword) {
-
-            ownerPassword.value =
-                "";
-
-        }
-
-        if (ownerError) {
-
-            ownerError.textContent =
-                "";
-
-        }
-
-    }
-
-
-    /* =====================================================
-       OWNER LOGIN FORM
-       ===================================================== */
-
-    if (ownerLoginForm) {
-
-        ownerLoginForm.addEventListener(
-            "submit",
-            (event) => {
-
-                event.preventDefault();
-
-                const enteredCode =
-                    ownerPassword
-                        ?.value
-                        ?.trim() || "";
-
-
-                if (!enteredCode) {
-
-                    showOwnerError(
-                        "Please enter the owner code."
-                    );
-
-                    return;
-
-                }
-
-
-                if (
-                    enteredCode !==
-                    OWNER_SECRET
-                ) {
-
-                    showOwnerError(
-                        "Incorrect owner code."
-                    );
-
-                    return;
-
-                }
-
-
-                createOwnerSession();
-
-                closeOwnerLogin();
-
-                openOwnerPanel();
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       OWNER LOGIN ERROR
-       ===================================================== */
-
-    function showOwnerError(
-        message
-    ) {
-
-        if (!ownerError) {
-            return;
-        }
-
-        ownerError.textContent =
-            message;
-
-    }
-
-
-    /* =====================================================
-       OWNER SESSION
-       ===================================================== */
-
-    function createOwnerSession() {
-
-        const session = {
-
-            authenticated: true,
-
-            created:
-                Date.now(),
-
-            expires:
-                Date.now()
-                + SESSION_LENGTH
-
-        };
+        let data = null;
 
 
         try {
 
-            sessionStorage.setItem(
-                OWNER_SESSION_KEY,
-                JSON.stringify(session)
+            data = await response.json();
+
+        } catch {
+
+            data = {
+                success: false,
+                error: "Server returned an invalid response."
+            };
+
+        }
+
+
+        if (!response.ok) {
+
+            const error = new Error(
+                data.error ||
+                `Request failed with status ${response.status}.`
             );
 
-        } catch (error) {
+            error.status = response.status;
 
-            console.warn(
-                "Could not create owner session.",
-                error
-            );
+            error.data = data;
 
+            throw error;
         }
 
+
+        return data;
+
+    } catch (error) {
+
+        console.error(
+            "MoonPlug API error:",
+            error
+        );
+
+        throw error;
     }
+}
 
 
-    /* =====================================================
-       GET OWNER SESSION
-       ===================================================== */
+// ============================================================
+// BACKEND HEALTH CHECK
+// ============================================================
 
-    function getOwnerSession() {
+async function checkBackendHealth() {
 
-        try {
+    try {
 
-            const raw =
-                sessionStorage.getItem(
-                    OWNER_SESSION_KEY
-                );
-
-            if (!raw) {
-                return null;
+        const data = await apiRequest(
+            "/api/health",
+            {
+                method: "GET"
             }
-
-            const session =
-                JSON.parse(raw);
-
-            if (
-                !session ||
-                !session.authenticated
-            ) {
-
-                return null;
-
-            }
-
-            return session;
-
-        } catch (error) {
-
-            return null;
-
-        }
-
-    }
+        );
 
 
-    /* =====================================================
-       CHECK OWNER SESSION
-       ===================================================== */
-
-    function isOwnerAuthenticated() {
-
-        const session =
-            getOwnerSession();
-
-        if (!session) {
-
-            return false;
-
-        }
-
-
-        if (
-            Date.now() >=
-            session.expires
-        ) {
-
-            destroyOwnerSession();
-
-            return false;
-
-        }
+        console.log(
+            "MoonPlug backend:",
+            data
+        );
 
 
         return true;
 
+    } catch (error) {
+
+        console.warn(
+            "MoonPlug backend is unavailable."
+        );
+
+
+        return false;
+    }
+}
+
+
+// ============================================================
+// OWNER SESSION CHECK
+// ============================================================
+
+async function checkOwnerSession() {
+
+    try {
+
+        const data = await apiRequest(
+            "/api/owner/session",
+            {
+                method: "GET"
+            }
+        );
+
+
+        isOwnerAuthenticated =
+            data.authenticated === true;
+
+
+        if (isOwnerAuthenticated) {
+
+            console.log(
+                "Owner session is active."
+            );
+
+        } else {
+
+            console.log(
+                "No owner session."
+            );
+        }
+
+
+        return isOwnerAuthenticated;
+
+    } catch (error) {
+
+        isOwnerAuthenticated = false;
+
+        return false;
+    }
+}
+
+
+// ============================================================
+// OWNER LOGIN
+// ============================================================
+
+async function loginOwner() {
+
+    const codeInput = $("ownerCode");
+
+    const errorElement = $("ownerError");
+
+    const loginButton = $("ownerLoginButton");
+
+
+    if (!codeInput) {
+
+        console.error(
+            "ownerCode element not found."
+        );
+
+        return;
     }
 
 
-    /* =====================================================
-       DESTROY OWNER SESSION
-       ===================================================== */
+    const password =
+        codeInput.value;
 
-    function destroyOwnerSession() {
 
-        try {
+    if (!password) {
 
-            sessionStorage.removeItem(
-                OWNER_SESSION_KEY
-            );
+        if (errorElement) {
 
-        } catch (error) {
-
-            console.warn(
-                "Could not clear owner session.",
-                error
-            );
-
+            errorElement.textContent =
+                "Please enter the owner code.";
         }
 
+        return;
     }
 
 
-    /* =====================================================
-       OPEN OWNER PANEL
-       ===================================================== */
+    if (password.length > 256) {
 
-    function openOwnerPanel() {
+        if (errorElement) {
 
-        if (!ownerPanel) {
-            return;
+            errorElement.textContent =
+                "Invalid owner code.";
         }
+
+        return;
+    }
+
+
+    if (loginButton) {
+
+        loginButton.disabled = true;
+
+        loginButton.textContent =
+            "Checking...";
+    }
+
+
+    if (errorElement) {
+
+        errorElement.textContent = "";
+    }
+
+
+    try {
+
+        const data = await apiRequest(
+            "/api/owner/login",
+            {
+                method: "POST",
+
+                body: JSON.stringify({
+                    password: password
+                })
+            }
+        );
 
 
         if (
-            !isOwnerAuthenticated()
+            data.success &&
+            data.authenticated
         ) {
 
-            openOwnerLogin();
+            isOwnerAuthenticated = true;
 
-            return;
 
+            codeInput.value = "";
+
+
+            hideOwnerLogin();
+
+
+            await openOwnerPanel();
+
+
+        } else {
+
+            throw new Error(
+                data.error ||
+                "Owner login failed."
+            );
         }
 
 
-        if (accountScreen) {
+    } catch (error) {
 
-            accountScreen.classList.remove(
-                "open"
+        isOwnerAuthenticated = false;
+
+
+        if (errorElement) {
+
+            if (error.status === 429) {
+
+                errorElement.textContent =
+                    "Too many attempts. Please wait a few minutes.";
+
+            } else {
+
+                errorElement.textContent =
+                    error.message ||
+                    "Incorrect owner code.";
+            }
+        }
+
+
+    } finally {
+
+        if (loginButton) {
+
+            loginButton.disabled = false;
+
+            loginButton.textContent =
+                "Enter";
+        }
+    }
+}
+
+
+// ============================================================
+// OWNER LOGOUT
+// ============================================================
+
+async function logoutOwner() {
+
+    try {
+
+        await apiRequest(
+            "/api/owner/logout",
+            {
+                method: "POST"
+            }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Logout request failed:",
+            error
+        );
+
+    } finally {
+
+        isOwnerAuthenticated = false;
+
+        hideOwnerPanel();
+    }
+}
+
+
+// ============================================================
+// OWNER LOGIN UI
+// ============================================================
+
+function showOwnerLogin() {
+
+    const overlay =
+        $("ownerLogin");
+
+    const errorElement =
+        $("ownerError");
+
+    const codeInput =
+        $("ownerCode");
+
+
+    if (!overlay) {
+        return;
+    }
+
+
+    showElement(
+        overlay
+    );
+
+
+    if (errorElement) {
+
+        errorElement.textContent = "";
+    }
+
+
+    if (codeInput) {
+
+        codeInput.value = "";
+
+        setTimeout(
+            () => codeInput.focus(),
+            50
+        );
+    }
+}
+
+
+function hideOwnerLogin() {
+
+    const overlay =
+        $("ownerLogin");
+
+
+    hideElement(
+        overlay
+    );
+}
+
+
+// ============================================================
+// OWNER PANEL
+// ============================================================
+
+async function openOwnerPanel() {
+
+    if (!isOwnerAuthenticated) {
+
+        showOwnerLogin();
+
+        return;
+    }
+
+
+    const panel =
+        $("ownerPanel");
+
+
+    if (!panel) {
+
+        console.error(
+            "Owner panel not found."
+        );
+
+        return;
+    }
+
+
+    showElement(
+        panel
+    );
+
+
+    await loadOwnerDashboard();
+}
+
+
+function hideOwnerPanel() {
+
+    const panel =
+        $("ownerPanel");
+
+
+    hideElement(
+        panel
+    );
+}
+
+
+// ============================================================
+// OWNER DASHBOARD
+// ============================================================
+
+async function loadOwnerDashboard() {
+
+    if (!isOwnerAuthenticated) {
+
+        return;
+    }
+
+
+    try {
+
+        const data =
+            await apiRequest(
+                "/api/owner/dashboard",
+                {
+                    method: "GET"
+                }
             );
 
+
+        if (!data.success) {
+
+            return;
         }
 
 
-        ownerPanel.classList.add(
-            "open"
+        const stats =
+            data.stats || {};
+
+
+        const users =
+            $("ownerUsers");
+
+        const chats =
+            $("ownerChats");
+
+
+        if (users) {
+
+            users.textContent =
+                stats.users ?? 0;
+        }
+
+
+        if (chats) {
+
+            chats.textContent =
+                stats.chats ?? 0;
+        }
+
+
+        console.log(
+            "Owner dashboard loaded:",
+            data
         );
 
+
+    } catch (error) {
+
+        if (error.status === 401) {
+
+            isOwnerAuthenticated =
+                false;
+
+            hideOwnerPanel();
+
+            showOwnerLogin();
+
+            return;
+        }
+
+
+        console.error(
+            "Could not load owner dashboard:",
+            error
+        );
+    }
+}
+
+
+// ============================================================
+// LOAD TRAINING
+// ============================================================
+
+async function loadTraining() {
+
+    if (!isOwnerAuthenticated) {
+
+        return [];
     }
 
 
-    /* =====================================================
-       OWNER LOGOUT
-       ===================================================== */
+    try {
 
-    if (ownerLogout) {
-
-        ownerLogout.addEventListener(
-            "click",
-            () => {
-
-                destroyOwnerSession();
-
-                if (ownerPanel) {
-
-                    ownerPanel.classList.remove(
-                        "open"
-                    );
-
+        const data =
+            await apiRequest(
+                "/api/owner/training",
+                {
+                    method: "GET"
                 }
+            );
 
-            }
-        );
 
+        return data.training || [];
+
+
+    } catch (error) {
+
+        if (error.status === 401) {
+
+            isOwnerAuthenticated =
+                false;
+
+            hideOwnerPanel();
+        }
+
+
+        return [];
+    }
+}
+
+
+// ============================================================
+// ADD TRAINING
+// ============================================================
+
+async function addTraining(
+    question,
+    answer,
+    category = "general"
+) {
+
+    if (!isOwnerAuthenticated) {
+
+        return {
+            success: false,
+            error: "Owner authentication required."
+        };
     }
 
 
-    /* =====================================================
-       OWNER CANCEL
-       ===================================================== */
+    try {
 
-    if (ownerCancel) {
+        const data =
+            await apiRequest(
+                "/api/owner/training",
+                {
+                    method: "POST",
 
-        ownerCancel.addEventListener(
-            "click",
-            () => {
-
-                closeOwnerLogin();
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       CLOSE OWNER LOGIN WITH BACKDROP
-       ===================================================== */
-
-    if (ownerOverlay) {
-
-        ownerOverlay.addEventListener(
-            "click",
-            (event) => {
-
-                if (
-                    event.target ===
-                    ownerOverlay
-                ) {
-
-                    closeOwnerLogin();
-
+                    body: JSON.stringify({
+                        question,
+                        answer,
+                        category
+                    })
                 }
+            );
+
+
+        return data;
+
+
+    } catch (error) {
+
+        if (error.status === 401) {
+
+            isOwnerAuthenticated =
+                false;
+
+            hideOwnerPanel();
+        }
+
+
+        return {
+            success: false,
+
+            error:
+                error.message ||
+                "Could not add training."
+        };
+    }
+}
+
+
+// ============================================================
+// DELETE TRAINING
+// ============================================================
+
+async function deleteTraining(
+    trainingId
+) {
+
+    if (!isOwnerAuthenticated) {
+
+        return {
+            success: false,
+            error: "Owner authentication required."
+        };
+    }
+
+
+    try {
+
+        const data =
+            await apiRequest(
+                `/api/owner/training/${encodeURIComponent(trainingId)}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        return data;
+
+
+    } catch (error) {
+
+        if (error.status === 401) {
+
+            isOwnerAuthenticated =
+                false;
+
+            hideOwnerPanel();
+        }
+
+
+        return {
+            success: false,
+
+            error:
+                error.message ||
+                "Could not delete training."
+        };
+    }
+}
+
+
+// ============================================================
+// OWNER USERS
+// ============================================================
+
+async function loadOwnerUsers() {
+
+    if (!isOwnerAuthenticated) {
+
+        return [];
+    }
+
+
+    try {
+
+        const data =
+            await apiRequest(
+                "/api/owner/users",
+                {
+                    method: "GET"
+                }
+            );
+
+
+        return data.users || [];
+
+
+    } catch (error) {
+
+        if (error.status === 401) {
+
+            isOwnerAuthenticated =
+                false;
+
+            hideOwnerPanel();
+        }
+
+
+        return [];
+    }
+}
+
+
+// ============================================================
+// OWNER SETTINGS
+// ============================================================
+
+async function loadOwnerSettings() {
+
+    if (!isOwnerAuthenticated) {
+
+        return null;
+    }
+
+
+    try {
+
+        const data =
+            await apiRequest(
+                "/api/owner/settings",
+                {
+                    method: "GET"
+                }
+            );
+
+
+        return data.settings || null;
+
+
+    } catch (error) {
+
+        return null;
+    }
+}
+
+
+async function updateOwnerSettings(
+    settings
+) {
+
+    if (!isOwnerAuthenticated) {
+
+        return {
+            success: false,
+            error: "Owner authentication required."
+        };
+    }
+
+
+    try {
+
+        return await apiRequest(
+            "/api/owner/settings",
+            {
+                method: "POST",
+
+                body: JSON.stringify(
+                    settings
+                )
+            }
+        );
+
+
+    } catch (error) {
+
+        if (error.status === 401) {
+
+            isOwnerAuthenticated =
+                false;
+
+            hideOwnerPanel();
+        }
+
+
+        return {
+            success: false,
+
+            error:
+                error.message ||
+                "Could not update settings."
+        };
+    }
+}
+
+
+// ============================================================
+// CHAT UI
+// ============================================================
+
+function removeEmptyChat() {
+
+    const empty =
+        document.querySelector(
+            ".empty-chat"
+        );
+
+
+    if (empty) {
+
+        empty.remove();
+    }
+}
+
+
+function addMessage(
+    text,
+    sender
+) {
+
+    const messages =
+        $("messages");
+
+
+    if (!messages) {
+
+        return;
+    }
+
+
+    removeEmptyChat();
+
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+
+    message.className =
+        `message ${sender}`;
+
+
+    const content =
+        document.createElement(
+            "div"
+        );
+
+
+    content.className =
+        "message-content";
+
+
+    content.textContent =
+        text;
+
+
+    message.appendChild(
+        content
+    );
+
+
+    messages.appendChild(
+        message
+    );
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+}
+
+
+// ============================================================
+// TYPING INDICATOR
+// ============================================================
+
+function showTyping() {
+
+    const typing =
+        $("typing");
+
+
+    if (typing) {
+
+        typing.style.display =
+            "block";
+    }
+}
+
+
+function hideTyping() {
+
+    const typing =
+        $("typing");
+
+
+    if (typing) {
+
+        typing.style.display =
+            "none";
+    }
+}
+
+
+// ============================================================
+// LOCAL CHAT
+// ============================================================
+
+async function sendMessage() {
+
+    const input =
+        $("messageInput");
+
+    if (!input) {
+
+        return;
+    }
+
+
+    const message =
+        input.value.trim();
+
+
+    if (!message) {
+
+        return;
+    }
+
+
+    input.value = "";
+
+
+    addMessage(
+        message,
+        "user"
+    );
+
+
+    currentChat.push({
+        role: "user",
+        content: message
+    });
+
+
+    showTyping();
+
+
+    /*
+        The current Python backend is primarily an
+        owner/training backend.
+
+        It does not yet provide a public AI generation
+        endpoint, so we don't pretend that it does.
+
+        For now, MoonPlug gives a clear response.
+    */
+
+
+    await new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                500
+            )
+    );
+
+
+    hideTyping();
+
+
+    const response =
+        "I'm connected to the MoonPlug backend. The AI chat engine can be connected next.";
+
+
+    addMessage(
+        response,
+        "assistant"
+    );
+
+
+    currentChat.push({
+        role: "assistant",
+        content: response
+    });
+}
+
+
+// ============================================================
+// NEW CHAT
+// ============================================================
+
+function startNewChat() {
+
+    const messages =
+        $("messages");
+
+
+    if (!messages) {
+
+        return;
+    }
+
+
+    currentChat = [];
+
+
+    messages.innerHTML = `
+        <div class="empty-chat">
+            <h1>What can I help with?</h1>
+            <p>Ask MoonPlug anything.</p>
+        </div>
+    `;
+}
+
+
+// ============================================================
+// SETTINGS
+// ============================================================
+
+function openSettings() {
+
+    showElement(
+        $("settingsPanel")
+    );
+}
+
+
+function closeSettings() {
+
+    hideElement(
+        $("settingsPanel")
+    );
+}
+
+
+function updateTextSize(
+    size
+) {
+
+    currentTextSize =
+        size;
+
+
+    document.body.dataset.textSize =
+        size;
+
+
+    document
+        .querySelectorAll(
+            ".size-button"
+        )
+        .forEach(
+            button => {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.size === size
+                );
 
             }
         );
 
-    }
+
+    localStorage.setItem(
+        "moonplug_text_size",
+        size
+    );
+}
 
 
-    /* =====================================================
-       ACCOUNT SCREEN
-       ===================================================== */
+function loadTextSize() {
+
+    const saved =
+        localStorage.getItem(
+            "moonplug_text_size"
+        );
+
 
     if (
-        closeAccount &&
-        accountScreen
+        saved === "small" ||
+        saved === "medium" ||
+        saved === "large"
     ) {
 
-        closeAccount.addEventListener(
-            "click",
-            () => {
-
-                accountScreen.classList.remove(
-                    "open"
-                );
-
-            }
+        updateTextSize(
+            saved
         );
 
+    } else {
+
+        updateTextSize(
+            "medium"
+        );
+    }
+}
+
+
+// ============================================================
+// ACCOUNT SCREEN
+// ============================================================
+
+function openAccount() {
+
+    showElement(
+        $("accountScreen")
+    );
+}
+
+
+function closeAccount() {
+
+    hideElement(
+        $("accountScreen")
+    );
+}
+
+
+// ============================================================
+// ACCOUNT TABS
+// ============================================================
+
+function showLoginTab() {
+
+    const loginForm =
+        $("loginForm");
+
+    const signupForm =
+        $("signupForm");
+
+    const loginTab =
+        $("loginTab");
+
+    const signupTab =
+        $("signupTab");
+
+
+    if (loginForm) {
+
+        loginForm.style.display =
+            "flex";
     }
 
 
-    /* =====================================================
-       LOGIN / SIGNUP TABS
-       ===================================================== */
+    if (signupForm) {
 
-    if (
-        loginTab &&
-        signupTab &&
-        loginForm &&
-        signupForm
-    ) {
-
-
-        loginTab.addEventListener(
-            "click",
-            () => {
-
-                loginTab.classList.add(
-                    "active"
-                );
-
-                signupTab.classList.remove(
-                    "active"
-                );
-
-                loginForm.style.display =
-                    "flex";
-
-                signupForm.style.display =
-                    "none";
-
-
-                if (accountMessage) {
-
-                    accountMessage.textContent =
-                        "";
-
-                }
-
-            }
-        );
-
-
-        signupTab.addEventListener(
-            "click",
-            () => {
-
-                signupTab.classList.add(
-                    "active"
-                );
-
-                loginTab.classList.remove(
-                    "active"
-                );
-
-                signupForm.style.display =
-                    "flex";
-
-                loginForm.style.display =
-                    "none";
-
-
-                if (accountMessage) {
-
-                    accountMessage.textContent =
-                        "";
-
-                }
-
-            }
-        );
-
+        signupForm.style.display =
+            "none";
     }
 
 
-    /* =====================================================
-       NORMAL LOGIN
-       ===================================================== */
+    loginTab?.classList.add(
+        "active"
+    );
+
+    signupTab?.classList.remove(
+        "active"
+    );
+}
+
+
+function showSignupTab() {
+
+    const loginForm =
+        $("loginForm");
+
+    const signupForm =
+        $("signupForm");
+
+    const loginTab =
+        $("loginTab");
+
+    const signupTab =
+        $("signupTab");
+
+
+    if (loginForm) {
+
+        loginForm.style.display =
+            "none";
+    }
+
+
+    if (signupForm) {
+
+        signupForm.style.display =
+            "flex";
+    }
+
+
+    loginTab?.classList.remove(
+        "active"
+    );
+
+    signupTab?.classList.add(
+        "active"
+    );
+}
+
+
+// ============================================================
+// PUBLIC ACCOUNT FORMS
+// ============================================================
+
+function setupAccountForms() {
+
+    const loginForm =
+        $("loginForm");
+
+
+    const signupForm =
+        $("signupForm");
+
 
     if (loginForm) {
 
         loginForm.addEventListener(
             "submit",
-            (event) => {
+            event => {
 
                 event.preventDefault();
 
 
-                if (accountMessage) {
+                const message =
+                    $("accountMessage");
 
-                    accountMessage.textContent =
-                        "Normal account authentication will be connected to the MoonPlug backend.";
 
+                if (message) {
+
+                    message.textContent =
+                        "Public accounts are not connected yet.";
                 }
 
             }
         );
-
     }
 
-
-    /* =====================================================
-       NORMAL SIGNUP
-       ===================================================== */
 
     if (signupForm) {
 
         signupForm.addEventListener(
             "submit",
-            (event) => {
+            event => {
 
                 event.preventDefault();
 
 
-                const password =
-                    document.getElementById(
-                        "signupPassword"
-                    )?.value || "";
+                const message =
+                    $("accountMessage");
 
 
-                const confirm =
-                    document.getElementById(
-                        "signupConfirm"
-                    )?.value || "";
+                if (message) {
 
-
-                if (
-                    password !==
-                    confirm
-                ) {
-
-                    if (accountMessage) {
-
-                        accountMessage.textContent =
-                            "Passwords do not match.";
-
-                    }
-
-                    return;
-
-                }
-
-
-                if (accountMessage) {
-
-                    accountMessage.textContent =
-                        "Account signup will be connected to the MoonPlug backend.";
-
+                    message.textContent =
+                        "Public accounts are not connected yet.";
                 }
 
             }
         );
-
     }
+}
 
 
-    /* =====================================================
-       SESSION EXPIRATION CHECK
-       ===================================================== */
+// ============================================================
+// BUTTON EVENTS
+// ============================================================
 
-    setInterval(
-        () => {
+function setupButtons() {
 
-            if (
-                ownerPanel &&
-                ownerPanel.classList.contains(
-                    "open"
-                )
-            ) {
-
-                if (
-                    !isOwnerAuthenticated()
-                ) {
-
-                    ownerPanel.classList.remove(
-                        "open"
-                    );
-
-                    openOwnerLogin();
-
-                }
-
-            }
-
-        },
-        10 * 1000
+    $("sendButton")?.addEventListener(
+        "click",
+        sendMessage
     );
 
 
-    /* =====================================================
-       PAGE VISIBILITY SECURITY CHECK
-       ===================================================== */
-
-    document.addEventListener(
-        "visibilitychange",
-        () => {
+    $("messageInput")?.addEventListener(
+        "keydown",
+        event => {
 
             if (
-                document.visibilityState ===
-                "visible"
+                event.key === "Enter" &&
+                !event.shiftKey
             ) {
 
-                if (
-                    ownerPanel &&
-                    ownerPanel.classList.contains(
-                        "open"
-                    )
-                ) {
+                event.preventDefault();
 
-                    if (
-                        !isOwnerAuthenticated()
-                    ) {
-
-                        ownerPanel.classList.remove(
-                            "open"
-                        );
-
-                        openOwnerLogin();
-
-                    }
-
-                }
-
+                sendMessage();
             }
-
         }
     );
 
 
-    /* =====================================================
-       ESCAPE KEY
-       ===================================================== */
+    $("newChatButton")?.addEventListener(
+        "click",
+        startNewChat
+    );
 
-    document.addEventListener(
+
+    $("settingsButton")?.addEventListener(
+        "click",
+        openSettings
+    );
+
+
+    $("closeSettings")?.addEventListener(
+        "click",
+        closeSettings
+    );
+
+
+    $("ownerButton")?.addEventListener(
+        "click",
+        async () => {
+
+            const authenticated =
+                await checkOwnerSession();
+
+
+            if (authenticated) {
+
+                await openOwnerPanel();
+
+            } else {
+
+                showOwnerLogin();
+            }
+        }
+    );
+
+
+    $("ownerLoginButton")?.addEventListener(
+        "click",
+        loginOwner
+    );
+
+
+    $("ownerCode")?.addEventListener(
         "keydown",
-        (event) => {
+        event => {
 
-            if (
-                event.key !== "Escape"
-            ) {
+            if (event.key === "Enter") {
 
-                return;
+                event.preventDefault();
+
+                loginOwner();
+            }
+        }
+    );
+
+
+    $("ownerCancel")?.addEventListener(
+        "click",
+        hideOwnerLogin
+    );
+
+
+    $("ownerLogout")?.addEventListener(
+        "click",
+        logoutOwner
+    );
+
+
+    $("closeAccount")?.addEventListener(
+        "click",
+        closeAccount
+    );
+
+
+    $("loginTab")?.addEventListener(
+        "click",
+        showLoginTab
+    );
+
+
+    $("signupTab")?.addEventListener(
+        "click",
+        showSignupTab
+    );
+
+
+    document
+        .querySelectorAll(
+            ".size-button"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        updateTextSize(
+                            button.dataset.size
+                        );
+
+                    }
+                );
 
             }
+        );
+}
 
 
-            if (
-                ownerOverlay &&
-                ownerOverlay.classList.contains(
-                    "open"
-                )
-            ) {
+// ============================================================
+// OWNER PANEL BUTTONS
+// ============================================================
 
-                closeOwnerLogin();
+function setupOwnerPanelButtons() {
 
-                return;
+    $("manageUsersButton")?.addEventListener(
+        "click",
+        async () => {
 
-            }
+            const users =
+                await loadOwnerUsers();
 
 
-            if (
-                settingsPanel &&
-                settingsPanel.classList.contains(
-                    "open"
-                )
-            ) {
+            alert(
+                `MoonPlug currently has ${users.length} user(s).`
+            );
+        }
+    );
 
-                settingsPanel.classList.remove(
-                    "open"
+
+    $("manageChatsButton")?.addEventListener(
+        "click",
+        async () => {
+
+            const dashboard =
+                await apiRequest(
+                    "/api/owner/dashboard",
+                    {
+                        method: "GET"
+                    }
+                );
+
+
+            alert(
+                `MoonPlug has ${dashboard.stats?.chats ?? 0} saved chat(s).`
+            );
+        }
+    );
+
+
+    $("appSettingsButton")?.addEventListener(
+        "click",
+        async () => {
+
+            const settings =
+                await loadOwnerSettings();
+
+
+            if (!settings) {
+
+                alert(
+                    "Could not load settings."
                 );
 
                 return;
-
             }
 
+
+            alert(
+                `Minimum match score: ${settings.minimum_score}`
+                +
+                `\nRemember conversations: ${settings.remember_conversations}`
+            );
         }
     );
 
 
-    /* =====================================================
-       STARTUP
-       ===================================================== */
+    $("trainerButton")?.addEventListener(
+        "click",
+        async () => {
 
-    if (
-        ownerPanel &&
-        ownerPanel.classList.contains(
-            "open"
-        )
-    ) {
+            const training =
+                await loadTraining();
 
-        if (
-            !isOwnerAuthenticated()
-        ) {
 
-            ownerPanel.classList.remove(
-                "open"
+            alert(
+                `MoonPlug has ${training.length} training example(s).`
             );
-
         }
+    );
+}
 
+
+// ============================================================
+// KEYBOARD SHORTCUTS
+// ============================================================
+
+function setupKeyboardShortcuts() {
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                hideOwnerLogin();
+
+                closeSettings();
+
+                closeAccount();
+            }
+        }
+    );
+}
+
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+
+async function initializeMoonPlug() {
+
+    console.log(
+        "🌙 MoonPlug AI starting..."
+    );
+
+
+    setupButtons();
+
+    setupOwnerPanelButtons();
+
+    setupAccountForms();
+
+    setupKeyboardShortcuts();
+
+    loadTextSize();
+
+
+    /*
+        Check the backend without blocking
+        the entire website.
+    */
+
+    const backendOnline =
+        await checkBackendHealth();
+
+
+    if (backendOnline) {
+
+        console.log(
+            "✓ MoonPlug backend online."
+        );
+
+    } else {
+
+        console.warn(
+            "⚠ MoonPlug backend unavailable."
+        );
     }
 
-});
+
+    /*
+        Check whether an owner session already exists.
+    */
+
+    await checkOwnerSession();
+
+
+    /*
+        Make sure protected screens are hidden
+        when the page first loads.
+    */
+
+    hideOwnerLogin();
+
+    hideOwnerPanel();
+
+
+    console.log(
+        "✓ MoonPlug ready."
+    );
+}
+
+
+// ============================================================
+// START
+// ============================================================
+
+if (
+    document.readyState === "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeMoonPlug
+    );
+
+} else {
+
+    initializeMoonPlug();
+}
 
