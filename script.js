@@ -1680,3 +1680,58 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
 });
+// ============================================================
+// HIDDEN OWNER LOGIN TRIGGER
+// Trigger: 15912014 typed into the normal chat box
+// ============================================================
+
+const messageInput = document.getElementById("messageInput");
+
+if (messageInput) {
+
+    messageInput.addEventListener("input", function () {
+
+        const value = messageInput.value.trim();
+
+        if (value === "15912014") {
+
+            // Clear the code so it isn't sent as a chat message
+            messageInput.value = "";
+
+            // Open the hidden owner login
+            const ownerLogin =
+                document.getElementById("ownerLogin");
+
+            if (ownerLogin) {
+
+                ownerLogin.style.display = "flex";
+
+                ownerLogin.setAttribute(
+                    "aria-hidden",
+                    "false"
+                );
+
+                const ownerCode =
+                    document.getElementById("ownerCode");
+
+                if (ownerCode) {
+
+                    ownerCode.value = "";
+
+                    setTimeout(function () {
+                        ownerCode.focus();
+                    }, 100);
+                }
+
+            } else {
+
+                console.error(
+                    "MoonPlug: ownerLogin element not found."
+                );
+
+            }
+        }
+
+    });
+
+}
