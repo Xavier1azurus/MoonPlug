@@ -133,12 +133,11 @@ app.config["SECRET_KEY"] = SECRET_KEY
 
 # Session security.
 
-app.config["SESSION_COOKIE_SAMESITE"] = "None"
-app.config["SESSION_COOKIE_SECURE"] = True
-# Set this to True when the backend is served exclusively
-# over HTTPS.
+app.config["SESSION_COOKIE_HTTPONLY"] = True
 
-app.config["SESSION_COOKIE_SECURE"] = False
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+
+app.config["SESSION_COOKIE_SECURE"] = True
 
 # Session lifetime.
 
