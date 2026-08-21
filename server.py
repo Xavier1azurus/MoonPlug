@@ -637,26 +637,6 @@ def owner_login():
 # OWNER SESSION CHECK
 # ============================================================
 
-@app.route(
-    "/api/owner/session",
-    methods=["GET"]
-)
-def owner_session():
-
-    authenticated = session.get(
-        "owner_authenticated",
-        False
-    )
-
-    return jsonify({
-
-        "success": True,
-
-        "authenticated": bool(
-            authenticated
-        ),
-
-    })
 
 
 # ============================================================
