@@ -769,23 +769,6 @@ def owner_session():
 # OWNER LOGOUT
 # ============================================================
 
-@app.route(
-    "/api/owner/logout",
-    methods=["POST"]
-)
-def owner_logout():
-
-    session.clear()
-
-    return jsonify({
-
-        "success": True,
-
-        "authenticated": False,
-
-        "message": "Owner logged out."
-
-    })
 
 
 # ============================================================
