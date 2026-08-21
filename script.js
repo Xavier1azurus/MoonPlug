@@ -1244,6 +1244,10 @@ function setupPasswordToggle() {
 // TRAINER
 // ============================================================
 
+// ============================================================
+// TRAINER
+// ============================================================
+
 function openTrainer() {
 
     if (!isOwnerAuthenticated) {
@@ -1264,9 +1268,7 @@ function openTrainer() {
     }
 
     const panel =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
     panel.id =
         "trainerPanel";
@@ -1285,7 +1287,7 @@ function openTrainer() {
                 </h2>
 
                 <p>
-                    Teach MoonPlug new knowledge.
+                    Generate training knowledge for MoonPlug.
                 </p>
 
             </div>
@@ -1300,7 +1302,110 @@ function openTrainer() {
         </div>
 
 
+        <!-- GENERATOR -->
+
+        <div class="trainer-generator">
+
+            <h3>
+                Generate Training
+            </h3>
+
+            <p>
+                Choose a category and how many training examples
+                MoonPlug should generate.
+            </p>
+
+
+            <label for="trainingCategory">
+                Category
+            </label>
+
+            <input
+                id="trainingCategory"
+                type="text"
+                placeholder="Example: Python"
+                autocomplete="off"
+            >
+
+
+            <label for="trainingAmount">
+                Amount
+            </label>
+
+            <select
+                id="trainingAmount"
+            >
+
+                <option value="1">
+                    1
+                </option>
+
+                <option value="5">
+                    5
+                </option>
+
+                <option value="10" selected>
+                    10
+                </option>
+
+                <option value="25">
+                    25
+                </option>
+
+                <option value="50">
+                    50
+                </option>
+
+            </select>
+
+
+            <button
+                id="generateTraining"
+                type="button"
+            >
+                Generate
+            </button>
+
+
+            <p
+                id="trainingGenerateStatus"
+                class="training-generate-status"
+            ></p>
+
+        </div>
+
+
+        <!-- GENERATED RESULTS -->
+
+        <div
+            id="generatedTrainingSection"
+            class="trainer-knowledge"
+            style="display: none;"
+        >
+
+            <div class="trainer-knowledge-header">
+
+                <h3>
+                    Generated Training
+                </h3>
+
+            </div>
+
+
+            <div
+                id="generatedTrainingResults"
+            ></div>
+
+        </div>
+
+
+        <!-- MANUAL TRAINING -->
+
         <div class="trainer-form">
+
+            <h3>
+                Add Training Manually
+            </h3>
 
             <label>
                 Question
@@ -1346,6 +1451,8 @@ function openTrainer() {
         </div>
 
 
+        <!-- LEARNED KNOWLEDGE -->
+
         <div class="trainer-knowledge">
 
             <div class="trainer-knowledge-header">
@@ -1370,24 +1477,35 @@ function openTrainer() {
         </div>
     `;
 
+
     $("ownerPanel")?.appendChild(
         panel
     );
+
 
     $("closeTrainer")?.addEventListener(
         "click",
         closeTrainer
     );
 
+
     $("refreshTraining")?.addEventListener(
         "click",
         refreshTraining
     );
 
+
     $("teachMoonPlug")?.addEventListener(
         "click",
         teachMoonPlug
     );
+
+
+    $("generateTraining")?.addEventListener(
+        "click",
+        generateTraining
+    );
+
 
     loadAndRenderTraining();
 }
@@ -1404,6 +1522,308 @@ function closeTrainer() {
     }
 }
 
+
+// ============================================================
+// GENERATE TRAINING
+// ============================================================
+
+async function generateTraining() {
+
+    if (!isOwnerAuthenticated) {
+
+        showOwnerLogin();
+
+        return;
+    }
+
+
+    const categoryInput =
+        $("trainingCategory");
+
+    const amountInput =
+        $("trainingAmount");
+
+    const generateButton =
+        $("generateTraining");
+
+    const status =
+        $("trainingGenerateStatus");
+
+    const resultsSection =
+        $("generatedTrainingSection");
+
+    const resultsContainer =
+        $("generatedTrainingResults");
+
+
+    const category =
+        categoryInput?.value.trim();
+
+
+    const amount =
+        Number(
+            amountInput?.value
+        );
+
+
+    if (!category) {
+
+        if (status) {
+
+            status.textContent =
+                "Please enter a category.";
+        }
+
+        categoryInput?.focus();
+
+        return;
+    }
+
+
+    if (
+        !Number.isInteger(amount) ||
+        amount < 1
+    ) {
+
+        if (status) {
+
+            status.textContent =
+                "Please choose a valid amount.";
+        }
+
+        return;
+    }
+
+
+    if (generateButton) {
+
+        generateButton.disabled =
+            true;
+
+        generateButton.textContent =
+            "Generating...";
+    }
+
+
+    if (status) {
+
+        status.textContent =
+            "MoonPlug is generating training...";
+    }
+
+
+    if (resultsSection) {
+
+        resultsSection.style.display =
+            "none";
+    }
+
+
+    if (resultsContainer) {
+
+        resultsContainer.innerHTML =
+            "";
+    }
+
+
+    try {
+
+        const data =
+            await apiRequest(
+                "/api/owner/training/generate",
+                {
+                    method: "POST",
+
+                    body:
+                        JSON.stringify({
+                            category,
+                            amount
+                        })
+                }
+            );
+
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error ||
+                "Training generation failed."
+            );
+        }
+
+
+        /*
+         * The backend may return the generated
+         * training under one of these names.
+         */
+
+        const generated =
+            data.training ||
+            data.results ||
+            data.generated ||
+            [];
+
+
+        if (
+            !Array.isArray(generated) ||
+            generated.length === 0
+        ) {
+
+            throw new Error(
+                "The server generated no training examples."
+            );
+        }
+
+
+        renderGeneratedTraining(
+            generated
+        );
+
+
+        if (resultsSection) {
+
+            resultsSection.style.display =
+                "block";
+        }
+
+
+        if (status) {
+
+            status.textContent =
+                `Generated ${generated.length} training example${
+                    generated.length === 1 ? "" : "s"
+                }.`;
+        }
+
+
+        /*
+         * Refresh the learned knowledge list
+         * because the backend may automatically
+         * save generated training.
+         */
+
+        await loadAndRenderTraining();
+
+
+    } catch (error) {
+
+        console.error(
+            "Training generation error:",
+            error
+        );
+
+
+        if (status) {
+
+            status.textContent =
+                error.message ||
+                "Could not generate training.";
+        }
+
+    } finally {
+
+        if (generateButton) {
+
+            generateButton.disabled =
+                false;
+
+            generateButton.textContent =
+                "Generate";
+        }
+    }
+}
+
+
+// ============================================================
+// RENDER GENERATED TRAINING
+// ============================================================
+
+function renderGeneratedTraining(
+    training
+) {
+
+    const container =
+        $("generatedTrainingResults");
+
+
+    if (!container) {
+
+        return;
+    }
+
+
+    container.innerHTML =
+        "";
+
+
+    training.forEach(
+        (item, index) => {
+
+            const question =
+                item.question ||
+                item.prompt ||
+                "";
+
+
+            const answer =
+                item.answer ||
+                item.response ||
+                "";
+
+
+            const category =
+                item.category ||
+                "general";
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "training-card generated";
+
+
+            card.innerHTML = `
+
+                <strong>
+                    ${escapeHTML(
+                        question ||
+                        `Training Example ${index + 1}`
+                    )}
+                </strong>
+
+
+                <p>
+                    ${escapeHTML(
+                        answer
+                    )}
+                </p>
+
+
+                <small>
+                    Category:
+                    ${escapeHTML(
+                        category
+                    )}
+                </small>
+
+            `;
+
+
+            container.appendChild(
+                card
+            );
+        }
+    );
+}
+
+
+// ============================================================
+// LEARNED TRAINING
+// ============================================================
 
 async function loadAndRenderTraining() {
 
@@ -1429,12 +1849,16 @@ function renderTrainingList(
     const list =
         $("trainingList");
 
+
     if (!list) {
+
         return;
     }
 
+
     list.innerHTML =
         "";
+
 
     if (!training.length) {
 
@@ -1447,6 +1871,7 @@ function renderTrainingList(
         return;
     }
 
+
     training.forEach(
         item => {
 
@@ -1455,8 +1880,10 @@ function renderTrainingList(
                     "div"
                 );
 
+
             card.className =
                 "training-card";
+
 
             card.innerHTML = `
 
@@ -1466,11 +1893,13 @@ function renderTrainingList(
                     )}
                 </strong>
 
+
                 <p>
                     ${escapeHTML(
                         item.answer
                     )}
                 </p>
+
 
                 <small>
                     Category:
@@ -1480,7 +1909,9 @@ function renderTrainingList(
                     )}
                 </small>
 
+
                 <br>
+
 
                 <button
                     type="button"
@@ -1491,12 +1922,15 @@ function renderTrainingList(
                 >
                     Delete
                 </button>
+
             `;
+
 
             const deleteButton =
                 card.querySelector(
                     ".delete-training-button"
                 );
+
 
             deleteButton?.addEventListener(
                 "click",
@@ -1507,14 +1941,18 @@ function renderTrainingList(
                             "Delete this training example?"
                         );
 
+
                     if (!confirmed) {
+
                         return;
                     }
+
 
                     const result =
                         await deleteTraining(
                             item.id
                         );
+
 
                     if (
                         result.success === true
@@ -1532,6 +1970,7 @@ function renderTrainingList(
                 }
             );
 
+
             list.appendChild(
                 card
             );
@@ -1540,17 +1979,24 @@ function renderTrainingList(
 }
 
 
+// ============================================================
+// MANUAL TRAINING
+// ============================================================
+
 async function teachMoonPlug() {
 
     const question =
         $("trainerQuestion")?.value.trim();
 
+
     const answer =
         $("trainerAnswer")?.value.trim();
+
 
     const category =
         $("trainerCategory")?.value.trim() ||
         "general";
+
 
     if (!question) {
 
@@ -1561,6 +2007,7 @@ async function teachMoonPlug() {
         return;
     }
 
+
     if (!answer) {
 
         alert(
@@ -1570,12 +2017,14 @@ async function teachMoonPlug() {
         return;
     }
 
+
     const result =
         await addTraining(
             question,
             answer,
             category
         );
+
 
     if (
         !result ||
@@ -1590,16 +2039,21 @@ async function teachMoonPlug() {
         return;
     }
 
+
     $("trainerQuestion").value =
         "";
+
 
     $("trainerAnswer").value =
         "";
 
+
     $("trainerCategory").value =
         "general";
 
+
     await loadAndRenderTraining();
+
 
     alert(
         "MoonPlug learned something new!"
