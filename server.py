@@ -686,6 +686,283 @@ def owner_logout():
 # OWNER DASHBOARD
 # ============================================================
 
+# ============================================================
+# OWNER AUTHENTICATION
+# ============================================================
+
+OWNER_PASSWORD = os.environ.get(
+    "MOONPLUG_OWNER_PASSWORD"
+)
+
+OWNER_PASSWORD_HASH = None
+
+if OWNER_PASSWORD:
+
+    OWNER_PASSWORD_HASH = generate_password_hash(
+        OWNER_PASSWORD
+    )
+
+else:
+
+    print()
+    print("WARNING:")
+    print(
+        "MOONPLUG_OWNER_PASSWORD is not configured."
+    )
+    print(
+        "Owner login will NOT work until you configure it."
+    )
+    print()
+
+
+# ============================================================
+# OWNER AUTHORIZATION
+# ============================================================
+
+def owner_required(function):
+    """
+    Protect an API route so only authenticated owners
+    can access it.
+    """
+
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+
+        print(
+            "OWNER SESSION:",
+            dict(session)
+        )
+
+        if not session.get(
+            "owner_authenticated",
+            False
+        ):
+
+            return jsonify({
+
+                "success": False,
+
+                "authenticated": False,
+
+                "error": "Owner authentication required."
+
+            }), 401
+
+        return function(
+            *args,
+            **kwargs
+        )
+
+    return wrapper
+
+
+# ============================================================
+# OWNER LOGIN
+# ============================================================
+
+@app.route(
+    "/api/owner/login",
+    methods=["POST"]
+)
+def owner_login():
+
+    if is_rate_limited():
+
+        return jsonify({
+
+            "success": False,
+
+            "error": (
+                "Too many login attempts. "
+                "Please wait a few minutes."
+            ),
+
+        }), 429
+
+
+    if OWNER_PASSWORD_HASH is None:
+
+        return jsonify({
+
+            "success": False,
+
+            "error": (
+                "Owner authentication is not configured "
+                "on the server."
+            ),
+
+        }), 503
+
+
+    data = request.get_json(
+        silent=True
+    )
+
+
+    if not isinstance(
+        data,
+        dict
+    ):
+
+        return jsonify({
+
+            "success": False,
+
+            "error": "Invalid request."
+
+        }), 400
+
+
+    password = data.get(
+        "password",
+        ""
+    )
+
+
+    if not isinstance(
+        password,
+        str
+    ):
+
+        record_failed_login()
+
+        return jsonify({
+
+            "success": False,
+
+            "error": "Invalid password."
+
+        }), 401
+
+
+    if len(password) > 256:
+
+        record_failed_login()
+
+        return jsonify({
+
+            "success": False,
+
+            "error": "Invalid password."
+
+        }), 401
+
+
+    if not check_password_hash(
+        OWNER_PASSWORD_HASH,
+        password
+    ):
+
+        record_failed_login()
+
+        return jsonify({
+
+            "success": False,
+
+            "error": "Incorrect owner code."
+
+        }), 401
+
+
+    # Clear failed login attempts.
+
+    ip = get_client_ip()
+
+    login_attempts.pop(
+        ip,
+        None
+    )
+
+
+    # Create fresh authenticated session.
+
+    session.clear()
+
+    session.permanent = True
+
+    session["owner_authenticated"] = True
+
+    session["login_time"] = (
+        datetime.now().isoformat()
+    )
+
+    session["session_id"] = secrets.token_hex(
+        16
+    )
+
+
+    print(
+        "OWNER LOGIN SUCCESSFUL"
+    )
+
+    print(
+        "OWNER SESSION:",
+        dict(session)
+    )
+
+
+    return jsonify({
+
+        "success": True,
+
+        "authenticated": True,
+
+        "message": "Owner login successful."
+
+    })
+
+
+# ============================================================
+# OWNER SESSION
+# ============================================================
+
+@app.route(
+    "/api/owner/session",
+    methods=["GET"]
+)
+def owner_session():
+
+    authenticated = session.get(
+        "owner_authenticated",
+        False
+    )
+
+    return jsonify({
+
+        "success": True,
+
+        "authenticated": authenticated,
+
+    })
+
+
+# ============================================================
+# OWNER LOGOUT
+# ============================================================
+
+@app.route(
+    "/api/owner/logout",
+    methods=["POST"]
+)
+def owner_logout():
+
+    session.clear()
+
+    return jsonify({
+
+        "success": True,
+
+        "authenticated": False,
+
+        "message": "Owner logged out."
+
+    })
+
+
+# ============================================================
+# OWNER DASHBOARD
+# ============================================================
+
 @app.route(
     "/api/owner/dashboard",
     methods=["GET"]
@@ -695,22 +972,27 @@ def owner_dashboard():
 
     memory = load_memory()
 
+
     training = memory.get(
         "training",
         []
     )
+
 
     conversations = memory.get(
         "conversations",
         []
     )
 
+
     users = memory.get(
         "users",
         []
     )
 
+
     total_uses = 0
+
 
     for example in training:
 
@@ -730,7 +1012,9 @@ def owner_dashboard():
 
             pass
 
+
     categories = {}
+
 
     for example in training:
 
@@ -739,6 +1023,7 @@ def owner_dashboard():
             "general"
         )
 
+
         categories[category] = (
             categories.get(
                 category,
@@ -746,6 +1031,7 @@ def owner_dashboard():
             )
             + 1
         )
+
 
     return jsonify({
 
@@ -774,8 +1060,6 @@ def owner_dashboard():
         },
 
     })
-
-
 # ============================================================
 # GET TRAINING DATA
 # ============================================================
