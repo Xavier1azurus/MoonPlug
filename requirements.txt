@@ -1,4 +1,6 @@
 Flask
 flask-cors
-Werkzeug
 gunicorn
+psycopg[binary]
+Werkzeug
+ollama
