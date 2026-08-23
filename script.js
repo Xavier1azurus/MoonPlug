@@ -826,6 +826,10 @@ function hideTyping() {
 // SEND MESSAGE
 // ============================================================
 
+// ============================================================
+// SEND MESSAGE
+// ============================================================
+
 async function sendMessage() {
 
     const input =
@@ -847,18 +851,26 @@ async function sendMessage() {
         return;
     }
 
+
+    // ========================================================
+    // HIDDEN OWNER ACCESS
+    // ========================================================
+
     if (message === "15912014") {
 
-        input.value =
-            "";
+        input.value = "";
 
         showOwnerLogin();
 
         return;
     }
 
-    input.value =
-        "";
+
+    // ========================================================
+    // ADD USER MESSAGE
+    // ========================================================
+
+    input.value = "";
 
     addMessage(
         message,
@@ -870,30 +882,93 @@ async function sendMessage() {
         content: message
     });
 
+
+    // ========================================================
+    // SHOW TYPING
+    // ========================================================
+
     showTyping();
 
-    await new Promise(
-        resolve =>
-            setTimeout(
-                resolve,
-                500
-            )
-    );
 
-    hideTyping();
+    try {
 
-    const response =
-        "I'm connected to the MoonPlug backend. The AI chat engine can be connected next.";
+        // ====================================================
+        // SEND MESSAGE TO MOONPLUG BACKEND
+        // ====================================================
 
-    addMessage(
-        response,
-        "ai"
-    );
+        const data =
+            await apiRequest(
+                "/api/chat",
+                {
+                    method: "POST",
 
-    currentChat.push({
-        role: "assistant",
-        content: response
-    });
+                    body:
+                        JSON.stringify({
+                            message: message,
+                            history: currentChat
+                        })
+                }
+            );
+
+
+        // ====================================================
+        // GET AI RESPONSE
+        // ====================================================
+
+        const response =
+            data.response ||
+            data.message ||
+            data.reply ||
+            data.answer;
+
+
+        if (!response) {
+
+            throw new Error(
+                data.error ||
+                "The backend returned no AI response."
+            );
+        }
+
+
+        // ====================================================
+        // ADD AI MESSAGE
+        // ====================================================
+
+        addMessage(
+            response,
+            "ai"
+        );
+
+        currentChat.push({
+            role: "assistant",
+            content: response
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "MoonPlug chat error:",
+            error
+        );
+
+
+        addMessage(
+            error.message ||
+            "Sorry, MoonPlug couldn't connect to the AI backend.",
+            "ai"
+        );
+
+    } finally {
+
+        // ====================================================
+        // HIDE TYPING
+        // ====================================================
+
+        hideTyping();
+
+    }
 }
 
 
