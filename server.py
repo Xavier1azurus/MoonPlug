@@ -432,6 +432,35 @@ def get_ollama_client():
 
 def ollama_available():
 
+@app.route("/api/owner/ollama/pull", methods=["POST"])
+@owner_required
+def pull_ollama_model():
+
+    try:
+
+        client = get_ollama_client()
+
+        client.pull("tinyllama")
+
+        return jsonify({
+            "success": True,
+            "model": "tinyllama",
+            "message": "TinyLlama downloaded successfully."
+        })
+
+    except Exception as error:
+
+        print(
+            "Ollama model pull failed:",
+            error
+        )
+
+        return jsonify({
+            "success": False,
+            "error": str(error)
+        }), 503
+
+
     if not ollama_configured():
 
         return False
