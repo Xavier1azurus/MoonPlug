@@ -1,3 +1,4 @@
+
 /*
 =============================================================
                     MOONPLUG AI
@@ -14,6 +15,7 @@ const API_BASE = "https://moonplug.onrender.com";
 let currentChat = [];
 let isOwnerAuthenticated = false;
 let currentTextSize = "medium";
+let backendStatus = null;
 
 
 // ============================================================
@@ -34,33 +36,53 @@ async function apiRequest(endpoint, options = {}) {
     const url = `${API_BASE}${endpoint}`;
 
     const config = {
+        method: options.method || "GET",
+        credentials: "include",
         ...options,
 
-        credentials: "include",
-
         headers: {
+            Accept: "application/json",
             "Content-Type": "application/json",
             ...(options.headers || {})
         }
     };
 
-    const response = await fetch(url, config);
-
-    let data;
+    let response;
 
     try {
+
+        response = await fetch(url, config);
+
+    } catch (error) {
+
+        const networkError = new Error(
+            "Could not connect to the MoonPlug backend."
+        );
+
+        networkError.network = true;
+        networkError.originalError = error;
+
+        throw networkError;
+    }
+
+    let data = null;
+
+    try {
+
         data = await response.json();
+
     } catch {
+
         data = {
             success: false,
-            error: "Server returned an invalid response."
+            error: "The backend returned an invalid response."
         };
     }
 
     if (!response.ok) {
 
         const error = new Error(
-            data.error ||
+            data?.error ||
             `Request failed with status ${response.status}.`
         );
 
@@ -97,24 +119,28 @@ async function checkBackendHealth() {
     try {
 
         const data = await apiRequest(
-            "/api/health",
-            {
-                method: "GET"
-            }
+            "/api/health"
         );
 
-        console.log("MoonPlug backend:", data);
+        backendStatus = data;
 
-        return data.success === true;
+        console.log(
+            "MoonPlug backend health:",
+            data
+        );
+
+        return data;
 
     } catch (error) {
+
+        backendStatus = null;
 
         console.warn(
             "MoonPlug backend unavailable:",
             error
         );
 
-        return false;
+        return null;
     }
 }
 
@@ -128,10 +154,7 @@ async function checkOwnerSession() {
     try {
 
         const data = await apiRequest(
-            "/api/owner/session",
-            {
-                method: "GET"
-            }
+            "/api/owner/session"
         );
 
         isOwnerAuthenticated =
@@ -139,7 +162,12 @@ async function checkOwnerSession() {
 
         return isOwnerAuthenticated;
 
-    } catch {
+    } catch (error) {
+
+        console.warn(
+            "Could not check owner session:",
+            error
+        );
 
         isOwnerAuthenticated = false;
 
@@ -159,11 +187,11 @@ async function loginOwner() {
     const loginButton = $("ownerLoginButton");
 
     if (!codeInput) {
-        console.error("MoonPlug: ownerCode not found.");
         return;
     }
 
-    const password = codeInput.value.trim();
+    const password =
+        codeInput.value.trim();
 
     if (!password) {
 
@@ -191,7 +219,6 @@ async function loginOwner() {
             "/api/owner/login",
             {
                 method: "POST",
-
                 body: JSON.stringify({
                     password
                 })
@@ -225,17 +252,9 @@ async function loginOwner() {
 
         if (errorElement) {
 
-            if (error.status === 429) {
-
-                errorElement.textContent =
-                    "Too many attempts. Please wait a few minutes.";
-
-            } else {
-
-                errorElement.textContent =
-                    error.message ||
-                    "Incorrect owner password.";
-            }
+            errorElement.textContent =
+                error.message ||
+                "Owner login failed.";
         }
 
     } finally {
@@ -292,11 +311,6 @@ function showOwnerLogin() {
     const errorElement = $("ownerError");
 
     if (!overlay) {
-
-        console.error(
-            "MoonPlug: ownerLogin not found."
-        );
-
         return;
     }
 
@@ -355,11 +369,6 @@ async function openOwnerPanel() {
     const panel = $("ownerPanel");
 
     if (!panel) {
-
-        console.error(
-            "MoonPlug: ownerPanel not found."
-        );
-
         return;
     }
 
@@ -406,27 +415,29 @@ async function loadOwnerDashboard() {
     try {
 
         const data = await apiRequest(
-            "/api/owner/dashboard",
-            {
-                method: "GET"
-            }
+            "/api/owner/dashboard"
         );
 
         if (!data.success) {
             return;
         }
 
-        const stats = data.stats || {};
+        const stats =
+            data.stats || {};
 
-        const users = $("ownerUsers");
-        const chats = $("ownerChats");
-
-        if (users) {
-            users.textContent = stats.users ?? 0;
+        if ($("ownerUsers")) {
+            $("ownerUsers").textContent =
+                stats.users ?? 0;
         }
 
-        if (chats) {
-            chats.textContent = stats.chats ?? 0;
+        if ($("ownerChats")) {
+            $("ownerChats").textContent =
+                stats.chats ?? 0;
+        }
+
+        if ($("ownerTraining")) {
+            $("ownerTraining").textContent =
+                stats.training ?? 0;
         }
 
     } catch (error) {
@@ -462,13 +473,12 @@ async function loadOwnerUsers() {
     try {
 
         const data = await apiRequest(
-            "/api/owner/users",
-            {
-                method: "GET"
-            }
+            "/api/owner/users"
         );
 
-        return data.users || [];
+        return Array.isArray(data.users)
+            ? data.users
+            : [];
 
     } catch (error) {
 
@@ -496,15 +506,18 @@ async function loadOwnerSettings() {
     try {
 
         const data = await apiRequest(
-            "/api/owner/settings",
-            {
-                method: "GET"
-            }
+            "/api/owner/settings"
         );
 
         return data.settings || null;
 
-    } catch {
+    } catch (error) {
+
+        if (error.status === 401) {
+
+            isOwnerAuthenticated = false;
+            hideOwnerPanel();
+        }
 
         return null;
     }
@@ -555,7 +568,8 @@ async function updateOwnerSettings(settings) {
 
 function removeEmptyChat() {
 
-    const empty = document.querySelector(".empty-chat");
+    const empty =
+        document.querySelector(".empty-chat");
 
     if (empty) {
         empty.remove();
@@ -568,24 +582,21 @@ function addMessage(text, sender) {
     const messages = $("messages");
 
     if (!messages) {
-
-        console.error(
-            "MoonPlug: #messages not found."
-        );
-
         return;
     }
 
     removeEmptyChat();
 
-    const bubble = document.createElement("div");
+    const bubble =
+        document.createElement("div");
 
     bubble.className =
         sender === "user"
             ? "message-bubble user"
             : "message-bubble ai";
 
-    bubble.textContent = String(text ?? "");
+    bubble.textContent =
+        String(text ?? "");
 
     messages.appendChild(bubble);
 
@@ -624,27 +635,24 @@ function hideTyping() {
 
 async function sendMessage() {
 
-    const input = $("messageInput");
+    const input =
+        $("messageInput");
 
     if (!input) {
-
-        console.error(
-            "MoonPlug: messageInput not found."
-        );
-
         return;
     }
 
-    const message = input.value.trim();
+    const message =
+        input.value.trim();
 
     if (!message) {
         return;
     }
 
 
-    // ========================================================
+    // --------------------------------------------------------
     // HIDDEN OWNER ACCESS
-    // ========================================================
+    // --------------------------------------------------------
 
     if (message === "15912014") {
 
@@ -656,59 +664,70 @@ async function sendMessage() {
     }
 
 
-    // ========================================================
+    // --------------------------------------------------------
     // SAVE HISTORY BEFORE CURRENT MESSAGE
-    // ========================================================
+    // --------------------------------------------------------
 
-    const previousHistory = [...currentChat];
+    const previousHistory =
+        currentChat.slice(-20);
 
-
-    // ========================================================
-    // CLEAR INPUT
-    // ========================================================
 
     input.value = "";
-
-
-    // ========================================================
-    // SHOW USER MESSAGE
-    // ========================================================
 
     addMessage(
         message,
         "user"
     );
 
-
-    // ========================================================
-    // SHOW TYPING
-    // ========================================================
-
     showTyping();
 
 
     try {
-
-        // ====================================================
-        // CALL RENDER BACKEND
-        // ====================================================
 
         console.log(
             "Sending message to MoonPlug:",
             message
         );
 
-        const data = await apiRequest(
-            "/api/chat",
-            {
-                method: "POST",
+        const data =
+            await apiRequest(
+                "/api/chat",
+                {
+                    method: "POST",
 
-                body: JSON.stringify({
-                    message: message,
-                    history: previousHistory
-                })
-            }
-        );
+                    body: JSON.stringify({
+                        message,
+                        history:
+                            previousHistory
+                    })
+                }
+            );
+
+
+        if (
+            !data ||
+            data.success !== true
+        ) {
+
+            throw new Error(
+                data?.error ||
+                "MoonPlug returned an error."
+            );
+        }
+
+
+        const response =
+            typeof data.response === "string"
+                ? data.response.trim()
+                : "";
+
+
+        if (!response) {
+
+            throw new Error(
+                "MoonPlug returned an empty response."
+            );
+        }
 
 
         console.log(
@@ -717,47 +736,15 @@ async function sendMessage() {
         );
 
 
-        // ====================================================
-        // CHECK RESPONSE
-        // ====================================================
-
-        if (data.success === false) {
-
-            throw new Error(
-                data.error ||
-                "MoonPlug returned an error."
-            );
-        }
-
-
-        const response =
-            data.response ||
-            data.message ||
-            data.reply ||
-            data.answer;
-
-
-        if (!response) {
-
-            throw new Error(
-                "MoonPlug returned no response."
-            );
-        }
-
-
-        // ====================================================
-        // SHOW AI RESPONSE
-        // ====================================================
-
         addMessage(
             response,
             "ai"
         );
 
 
-        // ====================================================
-        // SAVE BOTH MESSAGES
-        // ====================================================
+        // ----------------------------------------------------
+        // SAVE CHAT HISTORY
+        // ----------------------------------------------------
 
         currentChat.push({
             role: "user",
@@ -770,6 +757,37 @@ async function sendMessage() {
         });
 
 
+        // Keep browser memory from becoming huge.
+        if (currentChat.length > 40) {
+            currentChat =
+                currentChat.slice(-40);
+        }
+
+
+        // ----------------------------------------------------
+        // OPTIONAL DEBUG INFORMATION
+        // ----------------------------------------------------
+
+        if (data.source) {
+
+            console.log(
+                "MoonPlug source:",
+                data.source
+            );
+        }
+
+        if (
+            data.trainingId !== null &&
+            data.trainingId !== undefined
+        ) {
+
+            console.log(
+                "Training ID:",
+                data.trainingId
+            );
+        }
+
+
     } catch (error) {
 
         console.error(
@@ -777,9 +795,32 @@ async function sendMessage() {
             error
         );
 
+
+        let messageText =
+            "MoonPlug couldn't connect to the AI backend.";
+
+
+        if (error.network) {
+
+            messageText =
+                "MoonPlug could not reach the backend.";
+
+        } else if (error.status === 400) {
+
+            messageText =
+                error.message ||
+                "MoonPlug rejected the message.";
+
+        } else if (error.status >= 500) {
+
+            messageText =
+                error.message ||
+                "The MoonPlug server had a problem.";
+        }
+
+
         addMessage(
-            error.message ||
-            "MoonPlug couldn't connect to the AI backend.",
+            messageText,
             "ai"
         );
 
@@ -796,7 +837,8 @@ async function sendMessage() {
 
 function startNewChat() {
 
-    const messages = $("messages");
+    const messages =
+        $("messages");
 
     if (!messages) {
         return;
@@ -819,7 +861,8 @@ function startNewChat() {
 
 function openSettings() {
 
-    const panel = $("settingsPanel");
+    const panel =
+        $("settingsPanel");
 
     if (!panel) {
         return;
@@ -836,7 +879,8 @@ function openSettings() {
 
 function closeSettings() {
 
-    const panel = $("settingsPanel");
+    const panel =
+        $("settingsPanel");
 
     if (!panel) {
         return;
@@ -854,16 +898,19 @@ function closeSettings() {
 function updateTextSize(size) {
 
     if (
-        size !== "small" &&
-        size !== "medium" &&
-        size !== "large"
+        ![
+            "small",
+            "medium",
+            "large"
+        ].includes(size)
     ) {
         return;
     }
 
     currentTextSize = size;
 
-    document.body.dataset.textSize = size;
+    document.body.dataset.textSize =
+        size;
 
     document
         .querySelectorAll(".size-button")
@@ -889,18 +936,15 @@ function loadTextSize() {
             "moonplug_text_size"
         );
 
-    if (
-        saved === "small" ||
-        saved === "medium" ||
-        saved === "large"
-    ) {
-
-        updateTextSize(saved);
-
-    } else {
-
-        updateTextSize("medium");
-    }
+    updateTextSize(
+        [
+            "small",
+            "medium",
+            "large"
+        ].includes(saved)
+            ? saved
+            : "medium"
+    );
 }
 
 
@@ -910,7 +954,8 @@ function loadTextSize() {
 
 function openAccount() {
 
-    const account = $("accountScreen");
+    const account =
+        $("accountScreen");
 
     if (!account) {
         return;
@@ -927,7 +972,8 @@ function openAccount() {
 
 function closeAccount() {
 
-    const account = $("accountScreen");
+    const account =
+        $("accountScreen");
 
     if (!account) {
         return;
@@ -948,43 +994,27 @@ function closeAccount() {
 
 function showLoginTab() {
 
-    const loginForm = $("loginForm");
-    const signupForm = $("signupForm");
+    $("loginForm")?.style &&
+        ($("loginForm").style.display = "flex");
 
-    const loginTab = $("loginTab");
-    const signupTab = $("signupTab");
+    $("signupForm")?.style &&
+        ($("signupForm").style.display = "none");
 
-    if (loginForm) {
-        loginForm.style.display = "flex";
-    }
-
-    if (signupForm) {
-        signupForm.style.display = "none";
-    }
-
-    loginTab?.classList.add("active");
-    signupTab?.classList.remove("active");
+    $("loginTab")?.classList.add("active");
+    $("signupTab")?.classList.remove("active");
 }
 
 
 function showSignupTab() {
 
-    const loginForm = $("loginForm");
-    const signupForm = $("signupForm");
+    $("loginForm")?.style &&
+        ($("loginForm").style.display = "none");
 
-    const loginTab = $("loginTab");
-    const signupTab = $("signupTab");
+    $("signupForm")?.style &&
+        ($("signupForm").style.display = "flex");
 
-    if (loginForm) {
-        loginForm.style.display = "none";
-    }
-
-    if (signupForm) {
-        signupForm.style.display = "flex";
-    }
-
-    loginTab?.classList.remove("active");
-    signupTab?.classList.add("active");
+    $("loginTab")?.classList.remove("active");
+    $("signupTab")?.classList.add("active");
 }
 
 
@@ -994,48 +1024,32 @@ function showSignupTab() {
 
 function setupAccountForms() {
 
-    const loginForm = $("loginForm");
-    const signupForm = $("signupForm");
+    $("loginForm")?.addEventListener(
+        "submit",
+        event => {
 
-    if (loginForm) {
+            event.preventDefault();
 
-        loginForm.addEventListener(
-            "submit",
-            event => {
-
-                event.preventDefault();
-
-                const message =
-                    $("accountMessage");
-
-                if (message) {
-
-                    message.textContent =
-                        "Public accounts are not connected yet.";
-                }
+            if ($("accountMessage")) {
+                $("accountMessage").textContent =
+                    "Public accounts are not connected yet.";
             }
-        );
-    }
+        }
+    );
 
-    if (signupForm) {
 
-        signupForm.addEventListener(
-            "submit",
-            event => {
+    $("signupForm")?.addEventListener(
+        "submit",
+        event => {
 
-                event.preventDefault();
+            event.preventDefault();
 
-                const message =
-                    $("accountMessage");
-
-                if (message) {
-
-                    message.textContent =
-                        "Public accounts are not connected yet.";
-                }
+            if ($("accountMessage")) {
+                $("accountMessage").textContent =
+                    "Public accounts are not connected yet.";
             }
-        );
-    }
+        }
+    );
 }
 
 
@@ -1045,8 +1059,11 @@ function setupAccountForms() {
 
 function setupPasswordToggle() {
 
-    const passwordInput = $("ownerCode");
-    const toggleButton = $("showPassword");
+    const passwordInput =
+        $("ownerCode");
+
+    const toggleButton =
+        $("showPassword");
 
     if (
         !passwordInput ||
@@ -1059,15 +1076,22 @@ function setupPasswordToggle() {
         "click",
         () => {
 
-            if (passwordInput.type === "password") {
+            if (
+                passwordInput.type ===
+                "password"
+            ) {
 
                 passwordInput.type = "text";
-                toggleButton.textContent = "Hide";
+                toggleButton.textContent =
+                    "Hide";
 
             } else {
 
-                passwordInput.type = "password";
-                toggleButton.textContent = "Show";
+                passwordInput.type =
+                    "password";
+
+                toggleButton.textContent =
+                    "Show";
             }
         }
     );
@@ -1086,18 +1110,22 @@ async function loadTraining() {
 
     try {
 
-        const data = await apiRequest(
-            "/api/owner/training",
-            {
-                method: "GET"
-            }
-        );
+        const data =
+            await apiRequest(
+                "/api/owner/training"
+            );
 
         return Array.isArray(data.training)
             ? data.training
             : [];
 
     } catch (error) {
+
+        if (error.status === 401) {
+
+            isOwnerAuthenticated = false;
+            hideOwnerPanel();
+        }
 
         console.error(
             "Could not load training:",
@@ -1119,7 +1147,8 @@ async function addTraining(
 
         return {
             success: false,
-            error: "Owner authentication required."
+            error:
+                "Owner authentication required."
         };
     }
 
@@ -1140,6 +1169,12 @@ async function addTraining(
 
     } catch (error) {
 
+        if (error.status === 401) {
+
+            isOwnerAuthenticated = false;
+            hideOwnerPanel();
+        }
+
         return {
             success: false,
             error:
@@ -1150,13 +1185,16 @@ async function addTraining(
 }
 
 
-async function deleteTraining(trainingId) {
+async function deleteTraining(
+    trainingId
+) {
 
     if (!isOwnerAuthenticated) {
 
         return {
             success: false,
-            error: "Owner authentication required."
+            error:
+                "Owner authentication required."
         };
     }
 
@@ -1170,6 +1208,12 @@ async function deleteTraining(trainingId) {
         );
 
     } catch (error) {
+
+        if (error.status === 401) {
+
+            isOwnerAuthenticated = false;
+            hideOwnerPanel();
+        }
 
         return {
             success: false,
@@ -1194,7 +1238,8 @@ function openTrainer() {
         return;
     }
 
-    const existing = $("trainerPanel");
+    const existing =
+        $("trainerPanel");
 
     if (existing) {
 
@@ -1203,11 +1248,13 @@ function openTrainer() {
         return;
     }
 
+
     const panel =
         document.createElement("div");
 
     panel.id = "trainerPanel";
     panel.className = "trainer-panel";
+
 
     panel.innerHTML = `
 
@@ -1256,25 +1303,11 @@ function openTrainer() {
 
             <select id="trainingAmount">
 
-                <option value="1">
-                    1
-                </option>
-
-                <option value="5">
-                    5
-                </option>
-
-                <option value="10" selected>
-                    10
-                </option>
-
-                <option value="25">
-                    25
-                </option>
-
-                <option value="50">
-                    50
-                </option>
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
 
             </select>
 
@@ -1381,7 +1414,11 @@ function openTrainer() {
         </div>
     `;
 
-    $("ownerPanel")?.appendChild(panel);
+
+    $("ownerPanel")?.appendChild(
+        panel
+    );
+
 
     $("closeTrainer")?.addEventListener(
         "click",
@@ -1403,17 +1440,14 @@ function openTrainer() {
         generateTraining
     );
 
+
     loadAndRenderTraining();
 }
 
 
 function closeTrainer() {
 
-    const panel = $("trainerPanel");
-
-    if (panel) {
-        panel.remove();
-    }
+    $("trainerPanel")?.remove();
 }
 
 
@@ -1429,6 +1463,7 @@ async function generateTraining() {
 
         return;
     }
+
 
     const categoryInput =
         $("trainingCategory");
@@ -1448,11 +1483,13 @@ async function generateTraining() {
     const results =
         $("generatedTrainingResults");
 
+
     const category =
         categoryInput?.value.trim();
 
     const amount =
         Number(amountInput?.value);
+
 
     if (!category) {
 
@@ -1466,23 +1503,27 @@ async function generateTraining() {
         return;
     }
 
+
     if (
         !Number.isInteger(amount) ||
-        amount < 1
+        amount < 1 ||
+        amount > 50
     ) {
 
         if (status) {
             status.textContent =
-                "Please choose a valid amount.";
+                "Choose an amount between 1 and 50.";
         }
 
         return;
     }
 
+
     if (button) {
 
         button.disabled = true;
-        button.textContent = "Generating...";
+        button.textContent =
+            "Generating...";
     }
 
     if (status) {
@@ -1491,28 +1532,34 @@ async function generateTraining() {
     }
 
     if (resultsSection) {
-        resultsSection.style.display = "none";
+        resultsSection.style.display =
+            "none";
     }
 
     if (results) {
         results.innerHTML = "";
     }
 
+
     try {
 
-        const data = await apiRequest(
-            "/api/owner/training/generate",
-            {
-                method: "POST",
+        const data =
+            await apiRequest(
+                "/api/owner/training/generate",
+                {
+                    method: "POST",
 
-                body: JSON.stringify({
-                    category,
-                    amount
-                })
-            }
-        );
+                    body: JSON.stringify({
+                        category,
+                        amount
+                    })
+                }
+            );
 
-        if (data.success === false) {
+
+        if (
+            data.success !== true
+        ) {
 
             throw new Error(
                 data.error ||
@@ -1520,39 +1567,47 @@ async function generateTraining() {
             );
         }
 
-        const generated =
-            data.training ||
-            data.results ||
-            data.generated ||
-            [];
 
-        if (
-            !Array.isArray(generated) ||
-            generated.length === 0
-        ) {
+        const generated =
+            Array.isArray(data.training)
+                ? data.training
+                : [];
+
+
+        if (!generated.length) {
 
             throw new Error(
                 "The server generated no training examples."
             );
         }
 
+
         renderGeneratedTraining(
             generated
         );
 
+
         if (resultsSection) {
-            resultsSection.style.display = "block";
+            resultsSection.style.display =
+                "block";
         }
+
 
         if (status) {
 
             status.textContent =
-                `Generated ${generated.length} training example${
-                    generated.length === 1 ? "" : "s"
+                `Generated and saved ${
+                    generated.length
+                } training example${
+                    generated.length === 1
+                        ? ""
+                        : "s"
                 }.`;
         }
 
+
         await loadAndRenderTraining();
+
 
     } catch (error) {
 
@@ -1562,18 +1617,19 @@ async function generateTraining() {
         );
 
         if (status) {
-
             status.textContent =
                 error.message ||
                 "Could not generate training.";
         }
+
 
     } finally {
 
         if (button) {
 
             button.disabled = false;
-            button.textContent = "Generate";
+            button.textContent =
+                "Generate";
         }
     }
 }
@@ -1583,7 +1639,9 @@ async function generateTraining() {
 // GENERATED TRAINING DISPLAY
 // ============================================================
 
-function renderGeneratedTraining(training) {
+function renderGeneratedTraining(
+    training
+) {
 
     const container =
         $("generatedTrainingResults");
@@ -1594,35 +1652,38 @@ function renderGeneratedTraining(training) {
 
     container.innerHTML = "";
 
+
     training.forEach(
         (item, index) => {
 
             const question =
-                item.question ||
-                item.prompt ||
-                "";
+                item.question || "";
 
             const answer =
-                item.answer ||
-                item.response ||
-                "";
+                item.answer || "";
 
             const category =
                 item.category ||
                 "general";
 
+
             const card =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             card.className =
                 "training-card generated";
+
 
             card.innerHTML = `
 
                 <strong>
                     ${escapeHTML(
                         question ||
-                        `Training Example ${index + 1}`
+                        `Training Example ${
+                            index + 1
+                        }`
                     )}
                 </strong>
 
@@ -1636,7 +1697,10 @@ function renderGeneratedTraining(training) {
                 </small>
             `;
 
-            container.appendChild(card);
+
+            container.appendChild(
+                card
+            );
         }
     );
 }
@@ -1651,7 +1715,9 @@ async function loadAndRenderTraining() {
     const training =
         await loadTraining();
 
-    renderTrainingList(training);
+    renderTrainingList(
+        training
+    );
 }
 
 
@@ -1661,15 +1727,19 @@ async function refreshTraining() {
 }
 
 
-function renderTrainingList(training) {
+function renderTrainingList(
+    training
+) {
 
-    const list = $("trainingList");
+    const list =
+        $("trainingList");
 
     if (!list) {
         return;
     }
 
     list.innerHTML = "";
+
 
     if (!training.length) {
 
@@ -1682,28 +1752,37 @@ function renderTrainingList(training) {
         return;
     }
 
+
     training.forEach(item => {
 
         const card =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         card.className =
             "training-card";
 
+
         card.innerHTML = `
 
             <strong>
-                ${escapeHTML(item.question)}
+                ${escapeHTML(
+                    item.question
+                )}
             </strong>
 
             <p>
-                ${escapeHTML(item.answer)}
+                ${escapeHTML(
+                    item.answer
+                )}
             </p>
 
             <small>
                 Category:
                 ${escapeHTML(
-                    item.category || "general"
+                    item.category ||
+                    "general"
                 )}
             </small>
 
@@ -1717,28 +1796,31 @@ function renderTrainingList(training) {
             </button>
         `;
 
+
         const deleteButton =
             card.querySelector(
                 ".delete-training-button"
             );
 
+
         deleteButton?.addEventListener(
             "click",
             async () => {
 
-                const confirmed =
-                    confirm(
+                if (
+                    !confirm(
                         "Delete this training example?"
-                    );
-
-                if (!confirmed) {
+                    )
+                ) {
                     return;
                 }
+
 
                 const result =
                     await deleteTraining(
                         item.id
                     );
+
 
                 if (
                     result.success === true
@@ -1756,7 +1838,10 @@ function renderTrainingList(training) {
             }
         );
 
-        list.appendChild(card);
+
+        list.appendChild(
+            card
+        );
     });
 }
 
@@ -1774,15 +1859,23 @@ async function teachMoonPlug() {
         return;
     }
 
+
     const question =
-        $("trainerQuestion")?.value.trim();
+        $("trainerQuestion")
+            ?.value
+            .trim();
 
     const answer =
-        $("trainerAnswer")?.value.trim();
+        $("trainerAnswer")
+            ?.value
+            .trim();
 
     const category =
-        $("trainerCategory")?.value.trim() ||
+        $("trainerCategory")
+            ?.value
+            .trim() ||
         "general";
+
 
     if (!question) {
 
@@ -1793,6 +1886,7 @@ async function teachMoonPlug() {
         return;
     }
 
+
     if (!answer) {
 
         alert(
@@ -1802,12 +1896,14 @@ async function teachMoonPlug() {
         return;
     }
 
+
     const result =
         await addTraining(
             question,
             answer,
             category
         );
+
 
     if (
         !result ||
@@ -1822,11 +1918,15 @@ async function teachMoonPlug() {
         return;
     }
 
+
     $("trainerQuestion").value = "";
     $("trainerAnswer").value = "";
-    $("trainerCategory").value = "general";
+    $("trainerCategory").value =
+        "general";
+
 
     await loadAndRenderTraining();
+
 
     alert(
         "MoonPlug learned something new!"
@@ -1845,6 +1945,7 @@ function setupButtons() {
         sendMessage
     );
 
+
     $("messageInput")?.addEventListener(
         "keydown",
         event => {
@@ -1861,51 +1962,62 @@ function setupButtons() {
         }
     );
 
+
     $("newChatButton")?.addEventListener(
         "click",
         startNewChat
     );
+
 
     $("settingsButton")?.addEventListener(
         "click",
         openSettings
     );
 
+
     $("closeSettings")?.addEventListener(
         "click",
         closeSettings
     );
+
 
     $("ownerButton")?.addEventListener(
         "click",
         openAccount
     );
 
+
     $("closeAccount")?.addEventListener(
         "click",
         closeAccount
     );
+
 
     $("loginTab")?.addEventListener(
         "click",
         showLoginTab
     );
 
+
     $("signupTab")?.addEventListener(
         "click",
         showSignupTab
     );
+
 
     $("ownerLoginButton")?.addEventListener(
         "click",
         loginOwner
     );
 
+
     $("ownerCode")?.addEventListener(
         "keydown",
         event => {
 
-            if (event.key === "Enter") {
+            if (
+                event.key === "Enter"
+            ) {
 
                 event.preventDefault();
 
@@ -1914,15 +2026,18 @@ function setupButtons() {
         }
     );
 
+
     $("ownerCancel")?.addEventListener(
         "click",
         hideOwnerLogin
     );
 
+
     $("ownerLogout")?.addEventListener(
         "click",
         logoutOwner
     );
+
 
     document
         .querySelectorAll(".size-button")
@@ -1955,7 +2070,9 @@ function setupOwnerPanelButtons() {
                 await loadOwnerUsers();
 
             alert(
-                `MoonPlug currently has ${users.length} user(s).`
+                `MoonPlug currently has ${
+                    users.length
+                } user(s).`
             );
         }
     );
@@ -1969,10 +2086,7 @@ function setupOwnerPanelButtons() {
 
                 const dashboard =
                     await apiRequest(
-                        "/api/owner/dashboard",
-                        {
-                            method: "GET"
-                        }
+                        "/api/owner/dashboard"
                     );
 
                 alert(
@@ -1981,9 +2095,10 @@ function setupOwnerPanelButtons() {
                     } saved chat(s).`
                 );
 
-            } catch {
+            } catch (error) {
 
                 alert(
+                    error.message ||
                     "Could not load chat information."
                 );
             }
@@ -1998,6 +2113,7 @@ function setupOwnerPanelButtons() {
             const settings =
                 await loadOwnerSettings();
 
+
             if (!settings) {
 
                 alert(
@@ -2006,6 +2122,7 @@ function setupOwnerPanelButtons() {
 
                 return;
             }
+
 
             alert(
                 `Minimum match score: ${
@@ -2035,7 +2152,9 @@ function setupKeyboardShortcuts() {
         "keydown",
         event => {
 
-            if (event.key === "Escape") {
+            if (
+                event.key === "Escape"
+            ) {
 
                 hideOwnerLogin();
                 closeSettings();
@@ -2057,27 +2176,38 @@ async function initializeMoonPlug() {
         "🌙 MoonPlug AI starting..."
     );
 
+
     setupButtons();
-
     setupOwnerPanelButtons();
-
     setupAccountForms();
-
     setupPasswordToggle();
-
     setupKeyboardShortcuts();
-
     loadTextSize();
 
 
-    const backendOnline =
+    const health =
         await checkBackendHealth();
 
 
-    if (backendOnline) {
+    if (health) {
 
         console.log(
             "✓ MoonPlug backend online."
+        );
+
+        console.log(
+            "Database:",
+            health.database
+        );
+
+        console.log(
+            "Ollama configured:",
+            health.ollama_configured
+        );
+
+        console.log(
+            "Model:",
+            health.ollama_model
         );
 
     } else {
@@ -2122,3 +2252,5 @@ if (
 
     initializeMoonPlug();
 }
+
+
