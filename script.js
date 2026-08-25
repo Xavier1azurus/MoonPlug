@@ -1,12 +1,7 @@
-# /*
-
-```
-                MOONPLUG AI
-          FRONTEND CONTROLLER
-```
-
-=============================================================
-*/
+/* ============================================================
+MOONPLUG AI
+COMPLETE FRONTEND CONTROLLER
+============================================================ */
 
 const API_BASE = "https://moonplug.onrender.com";
 
@@ -29,7 +24,6 @@ API REQUEST
 
 async function apiRequest(endpoint, options = {}) {
 
-```
 const url = `${API_BASE}${endpoint}`;
 
 const config = {
@@ -48,7 +42,9 @@ const config = {
 let response;
 
 try {
+
     response = await fetch(url, config);
+
 } catch (error) {
 
     const networkError = new Error(
@@ -107,7 +103,6 @@ if (!response.ok) {
 }
 
 return data || {};
-```
 
 }
 
@@ -117,13 +112,11 @@ HTML SAFETY
 
 function escapeHTML(value) {
 
-```
 const div = document.createElement("div");
 
 div.textContent = String(value ?? "");
 
 return div.innerHTML;
-```
 
 }
 
@@ -133,12 +126,10 @@ BACKEND HEALTH
 
 async function checkBackendHealth() {
 
-```
 try {
 
-    const data = await apiRequest(
-        "/api/health"
-    );
+    const data =
+        await apiRequest("/api/health");
 
     console.log(
         "MoonPlug backend health:",
@@ -156,7 +147,6 @@ try {
 
     return false;
 }
-```
 
 }
 
@@ -166,12 +156,10 @@ OWNER SESSION
 
 async function checkOwnerSession() {
 
-```
 try {
 
-    const data = await apiRequest(
-        "/api/owner/session"
-    );
+    const data =
+        await apiRequest("/api/owner/session");
 
     isOwnerAuthenticated =
         data.authenticated === true;
@@ -184,7 +172,6 @@ try {
 
     return false;
 }
-```
 
 }
 
@@ -194,12 +181,16 @@ OWNER LOGIN
 
 async function loginOwner() {
 
-```
 const codeInput = $("ownerCode");
 const errorElement = $("ownerError");
 const loginButton = $("ownerLoginButton");
 
 if (!codeInput) {
+
+    console.error(
+        "MoonPlug: #ownerCode was not found."
+    );
+
     return;
 }
 
@@ -228,16 +219,17 @@ if (errorElement) {
 
 try {
 
-    const data = await apiRequest(
-        "/api/owner/login",
-        {
-            method: "POST",
+    const data =
+        await apiRequest(
+            "/api/owner/login",
+            {
+                method: "POST",
 
-            body: JSON.stringify({
-                password
-            })
-        }
-    );
+                body: JSON.stringify({
+                    password
+                })
+            }
+        );
 
     if (
         data.success === true &&
@@ -281,7 +273,6 @@ try {
         loginButton.textContent = "Enter";
     }
 }
-```
 
 }
 
@@ -291,7 +282,6 @@ OWNER LOGOUT
 
 async function logoutOwner() {
 
-```
 try {
 
     await apiRequest(
@@ -315,7 +305,6 @@ try {
     hideOwnerPanel();
     closeTrainer();
 }
-```
 
 }
 
@@ -325,12 +314,16 @@ OWNER LOGIN UI
 
 function showOwnerLogin() {
 
-```
 const overlay = $("ownerLogin");
 const codeInput = $("ownerCode");
 const errorElement = $("ownerError");
 
 if (!overlay) {
+
+    console.error(
+        "MoonPlug: #ownerLogin was not found."
+    );
+
     return;
 }
 
@@ -353,13 +346,11 @@ if (codeInput) {
         codeInput.focus();
     }, 100);
 }
-```
 
 }
 
 function hideOwnerLogin() {
 
-```
 const overlay = $("ownerLogin");
 
 if (!overlay) {
@@ -372,7 +363,6 @@ overlay.setAttribute(
     "aria-hidden",
     "true"
 );
-```
 
 }
 
@@ -382,7 +372,6 @@ OWNER PANEL
 
 async function openOwnerPanel() {
 
-```
 if (!isOwnerAuthenticated) {
 
     showOwnerLogin();
@@ -393,6 +382,11 @@ if (!isOwnerAuthenticated) {
 const panel = $("ownerPanel");
 
 if (!panel) {
+
+    console.error(
+        "MoonPlug: #ownerPanel was not found."
+    );
+
     return;
 }
 
@@ -404,13 +398,11 @@ panel.setAttribute(
 );
 
 await loadOwnerDashboard();
-```
 
 }
 
 function hideOwnerPanel() {
 
-```
 const panel = $("ownerPanel");
 
 if (!panel) {
@@ -425,7 +417,6 @@ panel.setAttribute(
 );
 
 closeTrainer();
-```
 
 }
 
@@ -435,26 +426,28 @@ OWNER DASHBOARD
 
 async function loadOwnerDashboard() {
 
-```
 if (!isOwnerAuthenticated) {
     return;
 }
 
 try {
 
-    const data = await apiRequest(
-        "/api/owner/dashboard"
-    );
+    const data =
+        await apiRequest(
+            "/api/owner/dashboard"
+        );
 
     const stats =
         data.stats || {};
 
     if ($("ownerUsers")) {
+
         $("ownerUsers").textContent =
             stats.users ?? 0;
     }
 
     if ($("ownerChats")) {
+
         $("ownerChats").textContent =
             stats.chats ?? 0;
     }
@@ -476,7 +469,6 @@ try {
         error
     );
 }
-```
 
 }
 
@@ -486,16 +478,16 @@ OWNER USERS
 
 async function loadOwnerUsers() {
 
-```
 if (!isOwnerAuthenticated) {
     return [];
 }
 
 try {
 
-    const data = await apiRequest(
-        "/api/owner/users"
-    );
+    const data =
+        await apiRequest(
+            "/api/owner/users"
+        );
 
     return Array.isArray(data.users)
         ? data.users
@@ -512,7 +504,6 @@ try {
 
     return [];
 }
-```
 
 }
 
@@ -522,16 +513,16 @@ OWNER SETTINGS
 
 async function loadOwnerSettings() {
 
-```
 if (!isOwnerAuthenticated) {
     return null;
 }
 
 try {
 
-    const data = await apiRequest(
-        "/api/owner/settings"
-    );
+    const data =
+        await apiRequest(
+            "/api/owner/settings"
+        );
 
     return data.settings || null;
 
@@ -540,18 +531,17 @@ try {
     if (error.status === 401) {
 
         isOwnerAuthenticated = false;
+
         hideOwnerPanel();
     }
 
     return null;
 }
-```
 
 }
 
 async function updateOwnerSettings(settings) {
 
-```
 if (!isOwnerAuthenticated) {
 
     return {
@@ -566,7 +556,10 @@ try {
         "/api/owner/settings",
         {
             method: "POST",
-            body: JSON.stringify(settings || {})
+
+            body: JSON.stringify(
+                settings || {}
+            )
         }
     );
 
@@ -575,6 +568,7 @@ try {
     if (error.status === 401) {
 
         isOwnerAuthenticated = false;
+
         hideOwnerPanel();
     }
 
@@ -585,30 +579,26 @@ try {
             "Could not update settings."
     };
 }
-```
 
 }
 
 /* ============================================================
-CHAT UI
+CHAT
 ============================================================ */
 
 function removeEmptyChat() {
 
-```
 const empty =
     document.querySelector(".empty-chat");
 
 if (empty) {
     empty.remove();
 }
-```
 
 }
 
 function addMessage(text, sender) {
 
-```
 const messages = $("messages");
 
 if (!messages) {
@@ -632,7 +622,6 @@ messages.appendChild(bubble);
 
 messages.scrollTop =
     messages.scrollHeight;
-```
 
 }
 
@@ -642,25 +631,21 @@ TYPING
 
 function showTyping() {
 
-```
 const typing = $("typing");
 
 if (typing) {
     typing.style.display = "flex";
 }
-```
 
 }
 
 function hideTyping() {
 
-```
 const typing = $("typing");
 
 if (typing) {
     typing.style.display = "none";
 }
-```
 
 }
 
@@ -670,7 +655,6 @@ SEND MESSAGE
 
 async function sendMessage() {
 
-```
 const input = $("messageInput");
 
 if (!input) {
@@ -684,12 +668,10 @@ if (!message) {
     return;
 }
 
-
 /*
    PRIVATE OWNER TRIGGER
-
-   This is intentionally NOT displayed
-   as a public owner button.
+   ---------------------
+   This is NOT shown as a public button.
 */
 
 if (message === "15912014") {
@@ -701,13 +683,11 @@ if (message === "15912014") {
     return;
 }
 
-
 const previousHistory =
     currentChat.map(item => ({
         role: item.role,
         content: item.content
     }));
-
 
 input.value = "";
 
@@ -718,21 +698,20 @@ addMessage(
 
 showTyping();
 
-
 try {
 
-    const data = await apiRequest(
-        "/api/chat",
-        {
-            method: "POST",
+    const data =
+        await apiRequest(
+            "/api/chat",
+            {
+                method: "POST",
 
-            body: JSON.stringify({
-                message,
-                history: previousHistory
-            })
-        }
-    );
-
+                body: JSON.stringify({
+                    message,
+                    history: previousHistory
+                })
+            }
+        );
 
     if (data.success === false) {
 
@@ -742,13 +721,11 @@ try {
         );
     }
 
-
     const response =
         data.response ??
         data.message ??
         data.reply ??
         data.answer;
-
 
     if (
         response === undefined ||
@@ -761,16 +738,13 @@ try {
         );
     }
 
-
     const responseText =
         String(response);
-
 
     addMessage(
         responseText,
         "ai"
     );
-
 
     currentChat.push({
         role: "user",
@@ -781,7 +755,6 @@ try {
         role: "assistant",
         content: responseText
     });
-
 
 } catch (error) {
 
@@ -809,7 +782,6 @@ try {
 
     hideTyping();
 }
-```
 
 }
 
@@ -819,7 +791,6 @@ NEW CHAT
 
 function startNewChat() {
 
-```
 const messages = $("messages");
 
 if (!messages) {
@@ -836,7 +807,6 @@ messages.innerHTML = `
 `;
 
 $("messageInput")?.focus();
-```
 
 }
 
@@ -846,7 +816,6 @@ SETTINGS
 
 function openSettings() {
 
-```
 const panel = $("settingsPanel");
 
 if (!panel) {
@@ -859,13 +828,11 @@ panel.setAttribute(
     "aria-hidden",
     "false"
 );
-```
 
 }
 
 function closeSettings() {
 
-```
 const panel = $("settingsPanel");
 
 if (!panel) {
@@ -878,7 +845,6 @@ panel.setAttribute(
     "aria-hidden",
     "true"
 );
-```
 
 }
 
@@ -888,7 +854,6 @@ TEXT SIZE
 
 function updateTextSize(size) {
 
-```
 if (
     !["small", "medium", "large"].includes(size)
 ) {
@@ -921,13 +886,11 @@ localStorage.setItem(
     "moonplug_text_size",
     size
 );
-```
 
 }
 
 function loadTextSize() {
 
-```
 const saved =
     localStorage.getItem(
         "moonplug_text_size"
@@ -938,7 +901,6 @@ updateTextSize(
         ? saved
         : "medium"
 );
-```
 
 }
 
@@ -948,7 +910,6 @@ THEME
 
 function applyTheme(theme) {
 
-```
 currentTheme =
     theme === "light"
         ? "light"
@@ -974,25 +935,21 @@ localStorage.setItem(
     "moonplug_theme",
     currentTheme
 );
-```
 
 }
 
 function toggleTheme() {
 
-```
 applyTheme(
     currentTheme === "dark"
         ? "light"
         : "dark"
 );
-```
 
 }
 
 function loadTheme() {
 
-```
 const saved =
     localStorage.getItem(
         "moonplug_theme"
@@ -1003,7 +960,6 @@ applyTheme(
         ? "light"
         : "dark"
 );
-```
 
 }
 
@@ -1013,8 +969,8 @@ ACCOUNT
 
 function openAccount() {
 
-```
-const account = $("accountScreen");
+const account =
+    $("accountScreen");
 
 if (!account) {
     return;
@@ -1026,14 +982,13 @@ account.setAttribute(
     "aria-hidden",
     "false"
 );
-```
 
 }
 
 function closeAccount() {
 
-```
-const account = $("accountScreen");
+const account =
+    $("accountScreen");
 
 if (!account) {
     return;
@@ -1045,7 +1000,6 @@ account.setAttribute(
     "aria-hidden",
     "true"
 );
-```
 
 }
 
@@ -1055,45 +1009,45 @@ ACCOUNT TABS
 
 function showLoginTab() {
 
-```
 const loginForm = $("loginForm");
 const signupForm = $("signupForm");
 
 if (loginForm) {
+
     loginForm.hidden = false;
     loginForm.style.display = "flex";
 }
 
 if (signupForm) {
+
     signupForm.hidden = true;
     signupForm.style.display = "none";
 }
 
 $("loginTab")?.classList.add("active");
 $("signupTab")?.classList.remove("active");
-```
 
 }
 
 function showSignupTab() {
 
-```
 const loginForm = $("loginForm");
 const signupForm = $("signupForm");
 
 if (loginForm) {
+
     loginForm.hidden = true;
     loginForm.style.display = "none";
 }
 
 if (signupForm) {
+
     signupForm.hidden = false;
     signupForm.style.display = "flex";
 }
 
 $("loginTab")?.classList.remove("active");
 $("signupTab")?.classList.add("active");
-```
 
 }
 
@@ -1103,7 +1057,6 @@ ACCOUNT FORMS
 
 function setupAccountForms() {
 
-```
 $("loginForm")?.addEventListener(
     "submit",
     event => {
@@ -1111,12 +1064,12 @@ $("loginForm")?.addEventListener(
         event.preventDefault();
 
         if ($("accountMessage")) {
+
             $("accountMessage").textContent =
                 "Public accounts are not connected yet.";
         }
     }
 );
-
 
 $("signupForm")?.addEventListener(
     "submit",
@@ -1125,12 +1078,12 @@ $("signupForm")?.addEventListener(
         event.preventDefault();
 
         if ($("accountMessage")) {
+
             $("accountMessage").textContent =
                 "Public accounts are not connected yet.";
         }
     }
 );
-```
 
 }
 
@@ -1140,7 +1093,6 @@ PASSWORD TOGGLE
 
 function setupPasswordToggle() {
 
-```
 const passwordInput =
     $("ownerCode");
 
@@ -1153,7 +1105,9 @@ if (!passwordInput || !toggleButton) {
 
 toggleButton.addEventListener(
     "click",
-    () => {
+    event => {
+
+        event.preventDefault();
 
         const showing =
             passwordInput.type === "text";
@@ -1169,7 +1123,6 @@ toggleButton.addEventListener(
                 : "Hide";
     }
 );
-```
 
 }
 
@@ -1179,8 +1132,8 @@ SIDEBAR
 
 function toggleSidebar() {
 
-```
-const sidebar = $("sidebar");
+const sidebar =
+    $("sidebar");
 
 if (!sidebar) {
     return;
@@ -1188,26 +1141,28 @@ if (!sidebar) {
 
 if (window.innerWidth <= 1200) {
 
-    sidebar.classList.toggle("expanded");
+    sidebar.classList.toggle(
+        "expanded"
+    );
 
 } else {
 
-    sidebar.classList.toggle("collapsed");
+    sidebar.classList.toggle(
+        "collapsed"
+    );
 }
-```
 
 }
 
 function setupSidebar() {
 
-```
-const logo = $("sidebarLogo");
+const logo =
+    $("sidebarLogo");
 
 logo?.addEventListener(
     "click",
     toggleSidebar
 );
-
 
 document
     .querySelectorAll(".sidebar-button")
@@ -1224,12 +1179,13 @@ document
                 ) {
 
                     $("sidebar")
-                        ?.classList.remove("expanded");
+                        ?.classList.remove(
+                            "expanded"
+                        );
                 }
             }
         );
     });
-```
 
 }
 
@@ -1239,7 +1195,6 @@ TRAINING API
 
 async function loadTraining() {
 
-```
 if (!isOwnerAuthenticated) {
     return [];
 }
@@ -1266,7 +1221,6 @@ try {
 
     return [];
 }
-```
 
 }
 
@@ -1276,7 +1230,6 @@ answer,
 category = "general"
 ) {
 
-```
 if (!isOwnerAuthenticated) {
 
     return {
@@ -1316,13 +1269,11 @@ try {
             "Could not add training."
     };
 }
-```
 
 }
 
 async function deleteTraining(trainingId) {
 
-```
 if (!isOwnerAuthenticated) {
 
     return {
@@ -1368,7 +1319,6 @@ try {
             "Could not delete training."
     };
 }
-```
 
 }
 
@@ -1378,7 +1328,6 @@ TRAINER PANEL
 
 function openTrainer() {
 
-```
 if (!isOwnerAuthenticated) {
 
     showOwnerLogin();
@@ -1387,6 +1336,9 @@ if (!isOwnerAuthenticated) {
 }
 
 if ($("trainerPanel")) {
+
+    $("trainerPanel").style.display = "block";
+
     return;
 }
 
@@ -1426,12 +1378,12 @@ panel.innerHTML = `
             Choose a category and amount.
         </p>
 
-        <label for="trainingCategory">
+        <label for="trainingGenerationCategory">
             Category
         </label>
 
         <input
-            id="trainingCategory"
+            id="trainingGenerationCategory"
             type="text"
             placeholder="Example: Python"
             autocomplete="off"
@@ -1573,15 +1525,12 @@ $("generateTraining")?.addEventListener(
 );
 
 loadAndRenderTraining();
-```
 
 }
 
 function closeTrainer() {
 
-```
 $("trainerPanel")?.remove();
-```
 
 }
 
@@ -1591,7 +1540,6 @@ GENERATE TRAINING
 
 async function generateTraining() {
 
-```
 if (!isOwnerAuthenticated) {
 
     showOwnerLogin();
@@ -1600,7 +1548,7 @@ if (!isOwnerAuthenticated) {
 }
 
 const categoryInput =
-    $("trainingCategory");
+    $("trainingGenerationCategory");
 
 const amountInput =
     $("trainingAmount");
@@ -1623,10 +1571,10 @@ const category =
 const amount =
     Number(amountInput?.value);
 
-
 if (!category) {
 
     if (status) {
+
         status.textContent =
             "Please enter a category.";
     }
@@ -1636,13 +1584,13 @@ if (!category) {
     return;
 }
 
-
 if (
     !Number.isInteger(amount) ||
     amount < 1
 ) {
 
     if (status) {
+
         status.textContent =
             "Please choose a valid amount.";
     }
@@ -1650,26 +1598,29 @@ if (
     return;
 }
 
-
 if (button) {
 
     button.disabled = true;
-    button.textContent = "Generating...";
+    button.textContent =
+        "Generating...";
 }
 
 if (status) {
+
     status.textContent =
         "MoonPlug is generating training...";
 }
 
 if (resultsSection) {
-    resultsSection.style.display = "none";
+
+    resultsSection.style.display =
+        "none";
 }
 
 if (results) {
+
     results.innerHTML = "";
 }
-
 
 try {
 
@@ -1686,7 +1637,6 @@ try {
             }
         );
 
-
     if (data.success === false) {
 
         throw new Error(
@@ -1694,7 +1644,6 @@ try {
             "Training generation failed."
         );
     }
-
 
     const generated =
         Array.isArray(data.training)
@@ -1705,7 +1654,6 @@ try {
                     ? data.generated
                     : [];
 
-
     if (!generated.length) {
 
         throw new Error(
@@ -1713,16 +1661,15 @@ try {
         );
     }
 
-
     renderGeneratedTraining(
         generated
     );
 
-
     if (resultsSection) {
-        resultsSection.style.display = "block";
-    }
 
+        resultsSection.style.display =
+            "block";
+    }
 
     if (status) {
 
@@ -1734,7 +1681,6 @@ try {
             }.`;
     }
 
-
     await loadAndRenderTraining();
 
 } catch (error) {
@@ -1745,6 +1691,7 @@ try {
     );
 
     if (status) {
+
         status.textContent =
             error.message ||
             "Could not generate training.";
@@ -1755,10 +1702,10 @@ try {
     if (button) {
 
         button.disabled = false;
-        button.textContent = "Generate";
+        button.textContent =
+            "Generate";
     }
 }
-```
 
 }
 
@@ -1768,7 +1715,6 @@ GENERATED TRAINING
 
 function renderGeneratedTraining(training) {
 
-```
 const container =
     $("generatedTrainingResults");
 
@@ -1802,6 +1748,7 @@ training.forEach(
             "training-card generated";
 
         card.innerHTML = `
+
             <strong>
                 ${escapeHTML(
                     question ||
@@ -1822,7 +1769,6 @@ training.forEach(
         container.appendChild(card);
     }
 );
-```
 
 }
 
@@ -1832,26 +1778,23 @@ TRAINING LIST
 
 async function loadAndRenderTraining() {
 
-```
 const training =
     await loadTraining();
 
-renderTrainingList(training);
-```
+renderTrainingList(
+    training
+);
 
 }
 
 async function refreshTraining() {
 
-```
 await loadAndRenderTraining();
-```
 
 }
 
 function renderTrainingList(training) {
 
-```
 const list =
     $("trainingList");
 
@@ -1872,7 +1815,6 @@ if (!training.length) {
     return;
 }
 
-
 training.forEach(item => {
 
     const card =
@@ -1882,6 +1824,7 @@ training.forEach(item => {
         "training-card";
 
     card.innerHTML = `
+
         <strong>
             ${escapeHTML(
                 item?.question ||
@@ -1914,12 +1857,10 @@ training.forEach(item => {
         </button>
     `;
 
-
     const deleteButton =
         card.querySelector(
             ".delete-training-button"
         );
-
 
     deleteButton?.addEventListener(
         "click",
@@ -1937,7 +1878,6 @@ training.forEach(item => {
                 return;
             }
 
-
             if (
                 !confirm(
                     "Delete this training example?"
@@ -1946,17 +1886,16 @@ training.forEach(item => {
                 return;
             }
 
+            deleteButton.disabled =
+                true;
 
-            deleteButton.disabled = true;
             deleteButton.textContent =
                 "Deleting...";
-
 
             const result =
                 await deleteTraining(
                     item.id
                 );
-
 
             if (
                 result?.success === true
@@ -1966,7 +1905,9 @@ training.forEach(item => {
 
             } else {
 
-                deleteButton.disabled = false;
+                deleteButton.disabled =
+                    false;
+
                 deleteButton.textContent =
                     "Delete";
 
@@ -1978,10 +1919,8 @@ training.forEach(item => {
         }
     );
 
-
     list.appendChild(card);
 });
-```
 
 }
 
@@ -1991,14 +1930,12 @@ MANUAL TRAINING
 
 async function teachMoonPlug() {
 
-```
 if (!isOwnerAuthenticated) {
 
     showOwnerLogin();
 
     return;
 }
-
 
 const question =
     $("trainerQuestion")
@@ -2013,7 +1950,6 @@ const category =
         ?.value.trim() ||
     "general";
 
-
 if (!question) {
 
     alert(
@@ -2022,7 +1958,6 @@ if (!question) {
 
     return;
 }
-
 
 if (!answer) {
 
@@ -2033,18 +1968,16 @@ if (!answer) {
     return;
 }
 
-
 const button =
     $("teachMoonPlug");
-
 
 if (button) {
 
     button.disabled = true;
+
     button.textContent =
         "Teaching...";
 }
-
 
 try {
 
@@ -2054,7 +1987,6 @@ try {
             answer,
             category
         );
-
 
     if (
         !result ||
@@ -2067,19 +1999,16 @@ try {
         );
     }
 
-
     $("trainerQuestion").value = "";
     $("trainerAnswer").value = "";
-    $("trainerCategory").value = "general";
-
+    $("trainerCategory").value =
+        "general";
 
     await loadAndRenderTraining();
-
 
     alert(
         "MoonPlug learned something new!"
     );
-
 
 } catch (error) {
 
@@ -2098,26 +2027,26 @@ try {
     if (button) {
 
         button.disabled = false;
+
         button.textContent =
             "Teach MoonPlug";
     }
 }
-```
 
 }
 
 /* ============================================================
-BUTTON EVENTS
+MAIN BUTTON EVENTS
 ============================================================ */
 
 function setupButtons() {
 
-```
+/* CHAT */
+
 $("sendButton")?.addEventListener(
     "click",
     sendMessage
 );
-
 
 $("messageInput")?.addEventListener(
     "keydown",
@@ -2136,17 +2065,20 @@ $("messageInput")?.addEventListener(
 );
 
 
+/* NEW CHAT */
+
 $("newChatButton")?.addEventListener(
     "click",
     startNewChat
 );
 
 
+/* SETTINGS */
+
 $("settingsButton")?.addEventListener(
     "click",
     openSettings
 );
-
 
 $("closeSettings")?.addEventListener(
     "click",
@@ -2154,17 +2086,43 @@ $("closeSettings")?.addEventListener(
 );
 
 
+/* THEME */
+
 $("themeButton")?.addEventListener(
     "click",
     toggleTheme
 );
 
 
+/*
+   IMPORTANT FIX:
+
+   The old code sent ownerButton to
+   openAccount().
+
+   That meant clicking the owner button
+   could NEVER open the owner login.
+
+   It now opens the owner login.
+*/
+
 $("ownerButton")?.addEventListener(
     "click",
-    openAccount
+    () => {
+
+        if (isOwnerAuthenticated) {
+
+            openOwnerPanel();
+
+        } else {
+
+            showOwnerLogin();
+        }
+    }
 );
 
+
+/* ACCOUNT */
 
 $("closeAccount")?.addEventListener(
     "click",
@@ -2183,6 +2141,8 @@ $("signupTab")?.addEventListener(
     showSignupTab
 );
 
+
+/* OWNER LOGIN */
 
 $("ownerLoginButton")?.addEventListener(
     "click",
@@ -2210,11 +2170,15 @@ $("ownerCancel")?.addEventListener(
 );
 
 
+/* OWNER LOGOUT */
+
 $("ownerLogout")?.addEventListener(
     "click",
     logoutOwner
 );
 
+
+/* TEXT SIZE */
 
 document
     .querySelectorAll(".size-button")
@@ -2230,7 +2194,6 @@ document
             }
         );
     });
-```
 
 }
 
@@ -2240,7 +2203,6 @@ OWNER PANEL BUTTONS
 
 function setupOwnerPanelButtons() {
 
-```
 $("manageUsersButton")?.addEventListener(
     "click",
     async () => {
@@ -2276,7 +2238,8 @@ $("manageChatsButton")?.addEventListener(
 
             if (error.status === 401) {
 
-                isOwnerAuthenticated = false;
+                isOwnerAuthenticated =
+                    false;
 
                 hideOwnerPanel();
                 showOwnerLogin();
@@ -2330,13 +2293,14 @@ $("ownerPanel")?.addEventListener(
     event => {
 
         if (
-            event.target === $("ownerPanel")
+            event.target ===
+            $("ownerPanel")
         ) {
+
             hideOwnerPanel();
         }
     }
 );
-```
 
 }
 
@@ -2346,7 +2310,6 @@ KEYBOARD SHORTCUTS
 
 function setupKeyboardShortcuts() {
 
-```
 document.addEventListener(
     "keydown",
     event => {
@@ -2361,10 +2324,56 @@ document.addEventListener(
         closeTrainer();
 
         $("sidebar")
-            ?.classList.remove("expanded");
+            ?.classList.remove(
+                "expanded"
+            );
     }
 );
-```
+
+}
+
+/* ============================================================
+DEBUG BUTTON CHECK
+============================================================ */
+
+function checkRequiredElements() {
+
+const required = [
+    "sidebar",
+    "messages",
+    "messageInput",
+    "sendButton",
+    "newChatButton",
+    "settingsButton",
+    "settingsPanel",
+    "ownerLogin",
+    "ownerCode",
+    "ownerLoginButton",
+    "ownerPanel"
+];
+
+const missing = [];
+
+required.forEach(id => {
+
+    if (!$(id)) {
+        missing.push(`#${id}`);
+    }
+});
+
+if (missing.length) {
+
+    console.warn(
+        "MoonPlug missing HTML elements:",
+        missing
+    );
+
+} else {
+
+    console.log(
+        "✓ All main MoonPlug elements found."
+    );
+}
 
 }
 
@@ -2374,11 +2383,11 @@ INITIALIZATION
 
 async function initializeMoonPlug() {
 
-```
 console.log(
     "🌙 MoonPlug AI starting..."
 );
 
+checkRequiredElements();
 
 setupButtons();
 
@@ -2396,10 +2405,8 @@ loadTextSize();
 
 loadTheme();
 
-
 const backendOnline =
     await checkBackendHealth();
-
 
 if (backendOnline) {
 
@@ -2414,9 +2421,7 @@ if (backendOnline) {
     );
 }
 
-
 await checkOwnerSession();
-
 
 /*
    Owner login is NEVER automatically shown.
@@ -2425,16 +2430,13 @@ await checkOwnerSession();
 
 hideOwnerLogin();
 
-
 if (!isOwnerAuthenticated) {
     hideOwnerPanel();
 }
 
-
 console.log(
     "✓ MoonPlug ready."
 );
-```
 
 }
 
@@ -2446,17 +2448,13 @@ if (
 document.readyState === "loading"
 ) {
 
-```
 document.addEventListener(
     "DOMContentLoaded",
     initializeMoonPlug
 );
-```
 
 } else {
 
-```
 initializeMoonPlug();
-```
 
 }
