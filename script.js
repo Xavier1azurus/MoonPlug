@@ -1538,94 +1538,69 @@ $("trainerPanel")?.remove();
 GENERATE TRAINING
 ============================================================ */
 
+/* ============================================================
+   AUTO TRAINER
+============================================================ */
+
 async function generateTraining() {
 
-if (!isOwnerAuthenticated) {
-
-    showOwnerLogin();
-
-    return;
-}
-
-const categoryInput =
-    $("trainingGenerationCategory");
-
-const amountInput =
-    $("trainingAmount");
-
-const button =
-    $("generateTraining");
-
-const status =
-    $("trainingGenerateStatus");
-
-const resultsSection =
-    $("generatedTrainingSection");
-
-const results =
-    $("generatedTrainingResults");
-
-const category =
-    categoryInput?.value.trim();
-
-const amount =
-    Number(amountInput?.value);
-
-if (!category) {
-
-    if (status) {
-
-        status.textContent =
-            "Please enter a category.";
+    if (!isOwnerAuthenticated) {
+        showOwnerLogin();
+        return;
     }
 
-    categoryInput?.focus();
+    const categoryInput = $("trainingCategory");
+    const amountInput = $("trainingAmount");
+    const button = $("generateTraining");
+    const status = $("trainingGenerateStatus");
+    const resultsSection = $("generatedTrainingSection");
+    const results = $("generatedTrainingResults");
 
-    return;
-}
+    const category = categoryInput?.value.trim();
+    const amount = Number(amountInput?.value);
 
-if (
-    !Number.isInteger(amount) ||
-    amount < 1
-) {
+    if (!category) {
+        if (status) {
+            status.textContent = "Please enter a category.";
+        }
 
-    if (status) {
-
-        status.textContent =
-            "Please choose a valid amount.";
+        categoryInput?.focus();
+        return;
     }
 
-    return;
-}
+    if (!Number.isInteger(amount) || amount < 1) {
+        if (status) {
+            status.textContent = "Please choose a valid amount.";
+        }
 
-if (button) {
+        return;
+    }
 
-    button.disabled = true;
-    button.textContent =
-        "Generating...";
-}
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Training...";
+    }
 
-if (status) {
+    if (status) {
+        status.textContent =
+            `Auto Trainer is generating ${amount} ${category} examples...`;
+    }
 
-    status.textContent =
-        "MoonPlug is generating training...";
-}
+    if (resultsSection) {
+        resultsSection.style.display = "none";
+    }
 
-if (resultsSection) {
+    if (results) {
+        results.innerHTML = "";
+    }
 
-    resultsSection.style.display =
-        "none";
-}
+    try {
 
-if (results) {
+        /* ----------------------------------------------------
+           STEP 1 — GENERATE TRAINING
+        ---------------------------------------------------- */
 
-    results.innerHTML = "";
-}
-
-try {
-
-    const data =
-        await apiRequest(
+        const data = await apiRequest(
             "/api/owner/training/generate",
             {
                 method: "POST",
@@ -1637,78 +1612,156 @@ try {
             }
         );
 
-    if (data.success === false) {
+        if (data.success === false) {
+            throw new Error(
+                data.error ||
+                "Auto Trainer failed to generate training."
+            );
+        }
 
-        throw new Error(
-            data.error ||
-            "Training generation failed."
+        const generated =
+            Array.isArray(data.training)
+                ? data.training
+                : Array.isArray(data.results)
+                    ? data.results
+                    : Array.isArray(data.generated)
+                        ? data.generated
+                        : [];
+
+        if (!generated.length) {
+            throw new Error(
+                "The Auto Trainer generated no examples."
+            );
+        }
+
+
+        /* ----------------------------------------------------
+           STEP 2 — DISPLAY GENERATED TRAINING
+        ---------------------------------------------------- */
+
+        renderGeneratedTraining(generated);
+
+        if (resultsSection) {
+            resultsSection.style.display = "block";
+        }
+
+
+        /* ----------------------------------------------------
+           STEP 3 — SAVE EACH EXAMPLE TO MOONPLUG
+        ---------------------------------------------------- */
+
+        let savedCount = 0;
+        let failedCount = 0;
+
+        if (status) {
+            status.textContent =
+                `Generated ${generated.length}. Saving to MoonPlug...`;
+        }
+
+        for (const item of generated) {
+
+            const question =
+                item?.question ??
+                item?.prompt ??
+                "";
+
+            const answer =
+                item?.answer ??
+                item?.response ??
+                "";
+
+            const itemCategory =
+                item?.category ||
+                category ||
+                "general";
+
+            if (!question || !answer) {
+                failedCount++;
+                continue;
+            }
+
+            try {
+
+                const saveResult =
+                    await addTraining(
+                        question,
+                        answer,
+                        itemCategory
+                    );
+
+                if (
+                    saveResult &&
+                    saveResult.success === true
+                ) {
+
+                    savedCount++;
+
+                } else {
+
+                    failedCount++;
+                }
+
+            } catch (saveError) {
+
+                console.error(
+                    "Could not save training example:",
+                    saveError
+                );
+
+                failedCount++;
+            }
+        }
+
+
+        /* ----------------------------------------------------
+           STEP 4 — REFRESH LEARNED KNOWLEDGE
+        ---------------------------------------------------- */
+
+        await loadAndRenderTraining();
+
+
+        /* ----------------------------------------------------
+           STEP 5 — FINAL STATUS
+        ---------------------------------------------------- */
+
+        if (status) {
+
+            if (failedCount === 0) {
+
+                status.textContent =
+                    `✓ Auto Trainer finished! MoonPlug learned ${savedCount} new example${
+                        savedCount === 1 ? "" : "s"
+                    } about ${category}.`;
+
+            } else {
+
+                status.textContent =
+                    `Generated ${generated.length}. Saved ${savedCount}; ${failedCount} could not be saved.`;
+            }
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Auto Trainer error:",
+            error
         );
-    }
 
-    const generated =
-        Array.isArray(data.training)
-            ? data.training
-            : Array.isArray(data.results)
-                ? data.results
-                : Array.isArray(data.generated)
-                    ? data.generated
-                    : [];
+        if (status) {
+            status.textContent =
+                error.message ||
+                "Auto Trainer could not complete the training.";
+        }
 
-    if (!generated.length) {
+    } finally {
 
-        throw new Error(
-            "The server generated no training examples."
-        );
-    }
-
-    renderGeneratedTraining(
-        generated
-    );
-
-    if (resultsSection) {
-
-        resultsSection.style.display =
-            "block";
-    }
-
-    if (status) {
-
-        status.textContent =
-            `Generated ${generated.length} training example${
-                generated.length === 1
-                    ? ""
-                    : "s"
-            }.`;
-    }
-
-    await loadAndRenderTraining();
-
-} catch (error) {
-
-    console.error(
-        "Training generation error:",
-        error
-    );
-
-    if (status) {
-
-        status.textContent =
-            error.message ||
-            "Could not generate training.";
-    }
-
-} finally {
-
-    if (button) {
-
-        button.disabled = false;
-        button.textContent =
-            "Generate";
+        if (button) {
+            button.disabled = false;
+            button.textContent = "Generate";
+        }
     }
 }
-
-}
-
 /* ============================================================
 GENERATED TRAINING
 ============================================================ */
