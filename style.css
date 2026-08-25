@@ -1,319 +1,301 @@
 /* =====================================================
-MOONPLUG ADDITIONS
-TRAINER + SIDEBAR + THEME
+   MOONPLUG ADDITIONS
+   TRAINER + SIDEBAR + THEME
 ===================================================== */
 
 .sidebar-logo {
-user-select: none;
+    user-select: none;
 }
 
 @media screen and (max-width: 1200px) {
-.sidebar-logo {
-cursor: pointer;
-}
+    .sidebar-logo {
+        cursor: pointer;
+    }
 }
 
+
 /* =====================================================
-TRAINER PANEL
+   TRAINER PANEL
 ===================================================== */
 
 .trainer-panel {
-position: fixed;
-inset: 0;
+    position: fixed;
+    inset: 0;
+    z-index: 9500;
 
-```
-z-index: 9500;
+    overflow-y: auto;
 
-overflow-y: auto;
+    background: #0f0f0f;
+    color: #ffffff;
 
-background: #0f0f0f;
-color: #ffffff;
-
-padding: 25px;
-```
-
+    padding: 25px;
 }
 
 .trainer-header {
-width: min(1000px, 100%);
-margin: 0 auto 20px;
+    width: min(1000px, 100%);
+    margin: 0 auto 20px;
 
-```
-display: flex;
-align-items: center;
-justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-gap: 15px;
+    gap: 15px;
 
-border-bottom: 1px solid #292929;
-
-padding-bottom: 20px;
-```
-
+    border-bottom: 1px solid #292929;
+    padding-bottom: 20px;
 }
 
 .trainer-header h2 {
-font-size: 25px;
+    font-size: 25px;
+    margin: 0;
 }
 
 .trainer-header p {
-color: #888888;
-margin-top: 5px;
+    color: #888888;
+    margin: 5px 0 0;
 }
 
 .trainer-header button {
-border: none;
-border-radius: 9px;
+    border: none;
+    border-radius: 9px;
 
-```
-padding: 10px 16px;
+    padding: 10px 16px;
 
-background: #ffffff;
-color: #111111;
+    background: #ffffff;
+    color: #111111;
 
-cursor: pointer;
-```
-
+    cursor: pointer;
 }
+
+
+/* =====================================================
+   TRAINER SECTIONS
+===================================================== */
 
 .trainer-generator,
 .trainer-form,
 .trainer-knowledge {
-width: min(1000px, 100%);
-margin: 0 auto 20px;
+    width: min(1000px, 100%);
+    margin: 0 auto 20px;
 
-```
-background: #181818;
+    background: #181818;
 
-border: 1px solid #292929;
-border-radius: 15px;
+    border: 1px solid #292929;
+    border-radius: 15px;
 
-padding: 20px;
-```
-
+    padding: 20px;
 }
 
 .trainer-generator h3,
 .trainer-form h3,
 .trainer-knowledge h3 {
-margin-bottom: 8px;
+    margin: 0 0 8px;
 }
 
 .trainer-generator > p,
 .trainer-form > p {
-color: #888888;
-font-size: 14px;
-margin-bottom: 15px;
+    color: #888888;
+    font-size: 14px;
+    margin: 0 0 15px;
 }
+
+
+/* =====================================================
+   TRAINER INPUTS
+===================================================== */
 
 .trainer-generator label,
 .trainer-form label {
-display: block;
+    display: block;
 
-```
-color: #bbbbbb;
+    color: #bbbbbb;
+    font-size: 13px;
 
-font-size: 13px;
-
-margin: 12px 0 6px;
-```
-
+    margin: 12px 0 6px;
 }
 
 .trainer-generator input,
 .trainer-generator select,
 .trainer-form input,
 .trainer-form textarea {
-width: 100%;
+    width: 100%;
 
-```
-border: 1px solid #333333;
-border-radius: 10px;
+    box-sizing: border-box;
 
-outline: none;
+    border: 1px solid #333333;
+    border-radius: 10px;
 
-background: #101010;
-color: #ffffff;
+    outline: none;
 
-padding: 11px;
+    background: #101010;
+    color: #ffffff;
 
-font-family: Arial, Helvetica, sans-serif;
-```
+    padding: 11px;
 
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .trainer-generator input,
 .trainer-generator select,
 .trainer-form input {
-height: 44px;
+    height: 44px;
 }
 
 .trainer-form textarea {
-min-height: 120px;
-resize: vertical;
+    min-height: 120px;
+    resize: vertical;
 }
 
 .trainer-generator input:focus,
 .trainer-generator select:focus,
 .trainer-form input:focus,
 .trainer-form textarea:focus {
-border-color: #666666;
+    border-color: #666666;
 }
+
+
+/* =====================================================
+   TRAINER BUTTONS
+===================================================== */
 
 .trainer-generator > button,
 .trainer-form > button {
-margin-top: 12px;
+    margin-top: 12px;
 
-```
-border: none;
-border-radius: 9px;
+    border: none;
+    border-radius: 9px;
 
-padding: 11px 16px;
+    padding: 11px 16px;
 
-background: #ffffff;
-color: #111111;
+    background: #ffffff;
+    color: #111111;
 
-font-weight: bold;
+    font-weight: bold;
 
-cursor: pointer;
-```
-
+    cursor: pointer;
 }
 
 .trainer-generator button:disabled,
 .trainer-form button:disabled {
-opacity: 0.5;
-cursor: not-allowed;
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .training-generate-status {
-min-height: 18px;
+    min-height: 18px;
 
-```
-margin-top: 10px;
+    margin-top: 10px;
 
-color: #888888;
-
-font-size: 13px;
-```
-
+    color: #888888;
+    font-size: 13px;
 }
 
+
+/* =====================================================
+   TRAINING LIST HEADER
+===================================================== */
+
 .trainer-knowledge-header {
-display: flex;
-align-items: center;
-justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-```
-gap: 10px;
+    gap: 10px;
 
-margin-bottom: 15px;
-```
-
+    margin-bottom: 15px;
 }
 
 .trainer-knowledge-header button {
-border: 1px solid #333333;
-border-radius: 9px;
+    border: 1px solid #333333;
+    border-radius: 9px;
 
-```
-padding: 8px 12px;
+    padding: 8px 12px;
 
-background: #242424;
-color: #ffffff;
+    background: #242424;
+    color: #ffffff;
 
-cursor: pointer;
-```
-
+    cursor: pointer;
 }
+
+
+/* =====================================================
+   TRAINING RESULTS
+===================================================== */
 
 #trainingList,
 #generatedTrainingResults {
-display: flex;
-flex-direction: column;
-
-```
-gap: 10px;
-```
-
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .training-card {
-background: #101010;
+    background: #101010;
 
-```
-border: 1px solid #292929;
+    border: 1px solid #292929;
+    border-radius: 11px;
 
-border-radius: 11px;
-
-padding: 14px;
-```
-
+    padding: 14px;
 }
 
 .training-card strong {
-display: block;
-
-```
-margin-bottom: 8px;
-```
-
+    display: block;
+    margin-bottom: 8px;
 }
 
 .training-card p {
-color: #cccccc;
+    color: #cccccc;
 
-```
-line-height: 1.5;
+    line-height: 1.5;
 
-white-space: pre-wrap;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 
-overflow-wrap: anywhere;
-
-margin-bottom: 8px;
-```
-
+    margin: 0 0 8px;
 }
 
 .training-card small {
-color: #777777;
+    color: #777777;
 }
 
+
+/* =====================================================
+   DELETE TRAINING
+===================================================== */
+
 .delete-training-button {
-margin-top: 10px;
+    margin-top: 10px;
 
-```
-border: 1px solid #493030;
-border-radius: 8px;
+    border: 1px solid #493030;
+    border-radius: 8px;
 
-padding: 7px 11px;
+    padding: 7px 11px;
 
-background: #241717;
-color: #ff8a8a;
+    background: #241717;
+    color: #ff8a8a;
 
-cursor: pointer;
-```
-
+    cursor: pointer;
 }
 
 .delete-training-button:hover {
-background: #321d1d;
+    background: #321d1d;
 }
 
+
 /* =====================================================
-LIGHT THEME EXTENSIONS
+   LIGHT THEME
 ===================================================== */
 
 body.light-theme .trainer-panel {
-background: #f5f5f5;
-color: #111111;
+    background: #f5f5f5;
+    color: #111111;
 }
 
 body.light-theme .trainer-generator,
 body.light-theme .trainer-form,
 body.light-theme .trainer-knowledge {
-background: #ffffff;
-border-color: #dddddd;
+    background: #ffffff;
+    border-color: #dddddd;
 }
 
 body.light-theme .trainer-generator input,
@@ -321,101 +303,102 @@ body.light-theme .trainer-generator select,
 body.light-theme .trainer-form input,
 body.light-theme .trainer-form textarea,
 body.light-theme .training-card {
-background: #f5f5f5;
-color: #111111;
-border-color: #dddddd;
+    background: #f5f5f5;
+    color: #111111;
+    border-color: #dddddd;
 }
 
 body.light-theme .trainer-generator input::placeholder,
 body.light-theme .trainer-form input::placeholder,
 body.light-theme .trainer-form textarea::placeholder {
-color: #888888;
+    color: #888888;
 }
 
 body.light-theme .training-card p {
-color: #333333;
+    color: #333333;
 }
+
 
 /* =====================================================
-RESPONSIVE TRAINER
-===================================================== */
-
-@media screen and (max-width: 600px) {
-
-```
-.trainer-panel {
-    padding:
-        15px
-        15px
-        calc(15px + env(safe-area-inset-bottom));
-}
-
-.trainer-header {
-    align-items: flex-start;
-}
-
-.trainer-header h2 {
-    font-size: 21px;
-}
-
-.trainer-generator,
-.trainer-form,
-.trainer-knowledge {
-    padding: 15px;
-}
-
-.trainer-header button {
-    flex-shrink: 0;
-}
-```
-
-}
-
-/* =====================================================
-THEME BUTTON
+   THEME BUTTON
 ===================================================== */
 
 #themeButton {
-min-width: 80px;
+    min-width: 80px;
 }
 
 body.light-theme #themeButton {
-background: #111111;
-color: #ffffff;
+    background: #111111;
+    color: #ffffff;
 }
 
+
 /* =====================================================
-OWNER PANEL LIGHT THEME
+   OWNER PANEL LIGHT THEME
 ===================================================== */
 
 body.light-theme .owner-panel {
-background: #f5f5f5;
-color: #111111;
+    background: #f5f5f5;
+    color: #111111;
 }
 
 body.light-theme .owner-card,
 body.light-theme .owner-section {
-background: #ffffff;
-border-color: #dddddd;
+    background: #ffffff;
+    border-color: #dddddd;
 }
 
 body.light-theme .owner-description,
 body.light-theme .owner-header span {
-color: #666666;
+    color: #666666;
 }
 
+
 /* =====================================================
-PREVENT PAGE SHIFT
+   RESPONSIVE TRAINER
+===================================================== */
+
+@media screen and (max-width: 600px) {
+
+    .trainer-panel {
+        padding:
+            15px
+            15px
+            calc(15px + env(safe-area-inset-bottom));
+    }
+
+    .trainer-header {
+        align-items: flex-start;
+    }
+
+    .trainer-header h2 {
+        font-size: 21px;
+    }
+
+    .trainer-generator,
+    .trainer-form,
+    .trainer-knowledge {
+        padding: 15px;
+    }
+
+    .trainer-header button {
+        flex-shrink: 0;
+    }
+}
+
+
+/* =====================================================
+   PAGE STABILITY
 ===================================================== */
 
 html,
 body {
-overscroll-behavior: none;
+    overscroll-behavior: none;
 }
 
 button,
 input,
 textarea,
 select {
-font: inherit;
+    font: inherit;
 }
