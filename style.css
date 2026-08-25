@@ -1,301 +1,1718 @@
-/* =====================================================
-   MOONPLUG ADDITIONS
-   TRAINER + SIDEBAR + THEME
-===================================================== */
+/* =========================================================
+MOONPLUG AI
+COMPLETE STYLE SHEET
+Responsive: Desktop + iPad Air + iPhone
+========================================================= */
+
+/* =========================================================
+RESET
+========================================================= */
+
+{
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+
+html,
+body {
+width: 100%;
+min-height: 100%;
+}
+
+html {
+overscroll-behavior: none;
+}
+
+body {
+font-family:
+Inter,
+-apple-system,
+BlinkMacSystemFont,
+"Segoe UI",
+Arial,
+sans-serif;
+
+background: #0f0f0f;
+color: #ffffff;
+
+overflow: hidden;
+
+-webkit-font-smoothing: antialiased;
+text-rendering: optimizeLegibility;
+
+}
+
+button,
+input,
+textarea,
+select {
+font: inherit;
+}
+
+button {
+border: 0;
+}
+
+button,
+.sidebar-button {
+-webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+textarea,
+select {
+outline: 2px solid #777777;
+outline-offset: 2px;
+}
+
+/* =========================================================
+TEXT SIZE
+========================================================= */
+
+body[data-text-size="small"] {
+font-size: 14px;
+}
+
+body[data-text-size="medium"] {
+font-size: 16px;
+}
+
+body[data-text-size="large"] {
+font-size: 18px;
+}
+
+/* =========================================================
+SIDEBAR
+========================================================= */
+
+.sidebar {
+position: fixed;
+left: 0;
+top: 0;
+bottom: 0;
+
+width: 250px;
+
+display: flex;
+flex-direction: column;
+
+background: #111111;
+
+border-right: 1px solid #242424;
+
+padding: 18px 12px;
+
+z-index: 1000;
+
+transition:
+    width 0.25s ease,
+    transform 0.25s ease;
+
+}
+
+/* =========================================================
+SIDEBAR LOGO
+========================================================= */
 
 .sidebar-logo {
-    user-select: none;
+height: 54px;
+
+display: flex;
+align-items: center;
+
+gap: 8px;
+
+padding: 0 12px;
+
+margin-bottom: 14px;
+
+color: #ffffff;
+
+user-select: none;
+
 }
 
-@media screen and (max-width: 1200px) {
-    .sidebar-logo {
-        cursor: pointer;
-    }
+.logo-moon {
+font-size: 25px;
+line-height: 1;
 }
 
+.sidebar-logo strong {
+font-size: 15px;
+letter-spacing: 1.5px;
+}
 
-/* =====================================================
-   TRAINER PANEL
-===================================================== */
+.logo-ai {
+font-size: 11px;
+
+color: #999999;
+
+margin-left: -4px;
+
+}
+
+/* =========================================================
+SIDEBAR BUTTONS
+========================================================= */
+
+.sidebar-buttons {
+display: flex;
+flex-direction: column;
+
+gap: 5px;
+
+flex: 1;
+
+min-height: 0;
+
+}
+
+.sidebar-bottom {
+display: flex;
+flex-direction: column;
+
+gap: 5px;
+
+margin-top: auto;
+
+}
+
+.sidebar-button {
+width: 100%;
+min-height: 46px;
+
+display: flex;
+align-items: center;
+
+gap: 13px;
+
+padding: 0 13px;
+
+border-radius: 10px;
+
+background: transparent;
+color: #bdbdbd;
+
+cursor: pointer;
+
+text-align: left;
+
+transition:
+    background 0.18s ease,
+    color 0.18s ease;
+
+}
+
+.sidebar-button {
+background: #1d1d1d;
+color: #ffffff;
+}
+
+.sidebar-button {
+background: #242424;
+}
+
+.sidebar-icon {
+width: 25px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+flex-shrink: 0;
+
+font-size: 17px;
+
+}
+
+.sidebar-label {
+white-space: nowrap;
+
+font-size: 14px;
+
+}
+
+.sidebar-divider {
+height: 1px;
+
+background: #252525;
+
+margin: 10px 7px;
+
+}
+
+/* =========================================================
+CHAT SECTION
+========================================================= */
+
+.chat-section {
+position: fixed;
+
+top: 0;
+right: 0;
+bottom: 0;
+left: 250px;
+
+display: flex;
+justify-content: center;
+
+background: #0f0f0f;
+
+min-width: 0;
+
+transition: left 0.25s ease;
+
+}
+
+.chat-container {
+width: min(100%, 1050px);
+
+height: 100%;
+
+display: flex;
+flex-direction: column;
+
+position: relative;
+
+min-width: 0;
+
+}
+
+/* =========================================================
+CHAT HEADER
+========================================================= */
+
+.chat-header {
+height: 64px;
+
+flex-shrink: 0;
+
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+padding: 0 25px;
+
+border-bottom: 1px solid #202020;
+
+}
+
+.header-title strong {
+font-size: 15px;
+font-weight: 600;
+}
+
+.online {
+color: #777777;
+
+font-size: 12px;
+
+white-space: nowrap;
+
+}
+
+/* =========================================================
+MOONPLUG DECORATION
+========================================================= */
+
+.moonplug-animation {
+position: absolute;
+
+top: 78px;
+right: 25px;
+
+display: flex;
+align-items: center;
+
+opacity: 0.12;
+
+pointer-events: none;
+
+transform: scale(0.75);
+
+transform-origin: right top;
+
+}
+
+.plug {
+font-size: 20px;
+}
+
+.cable {
+width: 28px;
+height: 2px;
+
+background: #ffffff;
+
+margin: 0 5px;
+
+}
+
+.moon {
+font-size: 22px;
+}
+
+/* =========================================================
+MESSAGES
+========================================================= */
+
+.messages {
+flex: 1;
+
+width: 100%;
+
+overflow-y: auto;
+overflow-x: hidden;
+
+padding:
+    30px
+    28px
+    170px;
+
+scroll-behavior: smooth;
+
+min-height: 0;
+
+}
+
+.messages::-webkit-scrollbar {
+width: 7px;
+}
+
+.messages::-webkit-scrollbar-track {
+background: transparent;
+}
+
+.messages::-webkit-scrollbar-thumb {
+background: #292929;
+border-radius: 10px;
+}
+
+/* =========================================================
+EMPTY CHAT
+========================================================= */
+
+.empty-chat {
+width: 100%;
+min-height: 100%;
+
+display: flex;
+flex-direction: column;
+
+align-items: center;
+justify-content: center;
+
+text-align: center;
+
+padding: 40px 20px;
+
+}
+
+.empty-chat h1 {
+font-size: clamp(26px, 4vw, 40px);
+
+font-weight: 600;
+
+letter-spacing: -1px;
+
+margin-bottom: 10px;
+
+}
+
+.empty-chat p {
+color: #777777;
+
+font-size: 15px;
+
+}
+
+/* =========================================================
+MESSAGE BUBBLES
+========================================================= */
+
+.message-bubble {
+width: fit-content;
+max-width: min(78%, 760px);
+
+padding: 12px 16px;
+
+margin-bottom: 15px;
+
+border-radius: 15px;
+
+line-height: 1.55;
+
+white-space: pre-wrap;
+overflow-wrap: anywhere;
+
+animation: messageAppear 0.18s ease;
+
+}
+
+.message-bubble.user {
+margin-left: auto;
+
+background: #242424;
+
+color: #ffffff;
+
+border-bottom-right-radius: 5px;
+
+}
+
+.message-bubble.ai {
+margin-right: auto;
+
+background: #181818;
+
+border: 1px solid #252525;
+
+color: #e7e7e7;
+
+border-bottom-left-radius: 5px;
+
+}
+
+@keyframes messageAppear {
+from {
+opacity: 0;
+transform: translateY(5px);
+}
+
+to {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+}
+
+/* =========================================================
+TYPING INDICATOR
+========================================================= */
+
+.typing {
+position: absolute;
+
+left: 28px;
+bottom: 108px;
+
+color: #777777;
+
+font-size: 13px;
+
+animation: typingPulse 1.3s ease-in-out infinite;
+
+}
+
+@keyframes typingPulse {
+0%,
+100% {
+opacity: 0.45;
+}
+
+50% {
+    opacity: 1;
+}
+
+}
+
+/* =========================================================
+INPUT AREA
+========================================================= */
+
+.chat-input-area {
+position: absolute;
+
+left: 25px;
+right: 25px;
+bottom: 24px;
+
+display: flex;
+align-items: center;
+
+gap: 10px;
+
+padding: 7px 8px 7px 17px;
+
+background: #181818;
+
+border: 1px solid #303030;
+
+border-radius: 18px;
+
+box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.28);
+
+z-index: 20;
+
+}
+
+.chat-input-area input {
+flex: 1;
+
+width: 100%;
+min-width: 0;
+
+height: 42px;
+
+border: 0;
+outline: none;
+
+background: transparent;
+
+color: #ffffff;
+
+font-size: 15px;
+
+}
+
+.chat-input-area input::placeholder {
+color: #707070;
+}
+
+.chat-input-area button {
+width: 42px;
+height: 42px;
+
+flex-shrink: 0;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+border-radius: 12px;
+
+background: #ffffff;
+
+color: #111111;
+
+cursor: pointer;
+
+font-size: 18px;
+
+transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+
+}
+
+.chat-input-area button {
+transform: scale(1.04);
+}
+
+.chat-input-area button {
+transform: scale(0.95);
+}
+
+/* =========================================================
+SETTINGS PANEL
+========================================================= */
+
+.settings-panel {
+position: fixed;
+
+inset: 0;
+
+z-index: 5000;
+
+display: none;
+
+align-items: center;
+justify-content: center;
+
+padding: 20px;
+
+background: rgba(0, 0, 0, 0.68);
+
+backdrop-filter: blur(5px);
+
+}
+
+.settings-box {
+width: min(520px, 100%);
+
+max-height: calc(100vh - 40px);
+
+overflow-y: auto;
+
+background: #181818;
+
+border: 1px solid #2c2c2c;
+
+border-radius: 18px;
+
+padding: 24px;
+
+box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.5);
+
+}
+
+.settings-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+margin-bottom: 25px;
+
+}
+
+.settings-header h2 {
+font-size: 22px;
+}
+
+.close-settings {
+width: 36px;
+height: 36px;
+
+border-radius: 10px;
+
+background: #242424;
+color: #ffffff;
+
+cursor: pointer;
+
+}
+
+.setting-item {
+display: flex;
+flex-direction: column;
+
+gap: 7px;
+
+padding: 17px 0;
+
+border-top: 1px solid #282828;
+
+}
+
+.setting-item strong {
+font-size: 15px;
+}
+
+.setting-item > span {
+color: #888888;
+
+font-size: 13px;
+
+}
+
+.appearance-options {
+display: flex;
+
+flex-wrap: wrap;
+
+gap: 8px;
+
+margin-top: 7px;
+
+}
+
+.appearance-options button {
+padding: 9px 14px;
+
+border: 1px solid #333333;
+
+border-radius: 9px;
+
+background: #222222;
+
+color: #dddddd;
+
+cursor: pointer;
+
+}
+
+.appearance-options button,
+.appearance-options button.active {
+background: #ffffff;
+color: #111111;
+}
+
+#themeButton {
+min-width: 80px;
+}
+
+/* =========================================================
+ACCOUNT SCREEN
+========================================================= */
+
+.account-screen {
+position: fixed;
+
+inset: 0;
+
+z-index: 4500;
+
+display: none;
+
+align-items: center;
+justify-content: center;
+
+padding: 20px;
+
+background: rgba(0, 0, 0, 0.75);
+
+backdrop-filter: blur(6px);
+
+}
+
+.account-box {
+width: min(440px, 100%);
+
+max-height: calc(100vh - 40px);
+
+overflow-y: auto;
+
+background: #181818;
+
+border: 1px solid #2d2d2d;
+
+border-radius: 20px;
+
+padding: 30px;
+
+text-align: center;
+
+box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.5);
+
+}
+
+.account-logo {
+font-size: 38px;
+
+margin-bottom: 10px;
+
+}
+
+.account-box h1 {
+font-size: 25px;
+
+margin-bottom: 8px;
+
+}
+
+.account-subtitle {
+color: #888888;
+
+font-size: 14px;
+
+margin-bottom: 22px;
+
+}
+
+.account-tabs {
+display: grid;
+grid-template-columns: 1fr 1fr;
+
+gap: 5px;
+
+padding: 4px;
+
+background: #101010;
+
+border-radius: 11px;
+
+margin-bottom: 20px;
+
+}
+
+.account-tab {
+padding: 10px;
+
+border-radius: 8px;
+
+background: transparent;
+
+color: #888888;
+
+cursor: pointer;
+
+}
+
+.account-tab.active {
+background: #252525;
+color: #ffffff;
+}
+
+.account-form {
+display: flex;
+flex-direction: column;
+
+gap: 8px;
+
+text-align: left;
+
+}
+
+.account-form label {
+color: #bbbbbb;
+
+font-size: 13px;
+
+margin-top: 6px;
+
+}
+
+.account-form input {
+width: 100%;
+height: 44px;
+
+border: 1px solid #333333;
+
+border-radius: 10px;
+
+outline: none;
+
+background: #101010;
+
+color: #ffffff;
+
+padding: 0 12px;
+
+}
+
+.account-form input {
+border-color: #666666;
+}
+
+.account-submit {
+height: 44px;
+
+margin-top: 10px;
+
+border-radius: 10px;
+
+background: #ffffff;
+
+color: #111111;
+
+font-weight: 600;
+
+cursor: pointer;
+
+}
+
+.account-close {
+width: 100%;
+
+margin-top: 15px;
+
+padding: 11px;
+
+border-radius: 10px;
+
+background: transparent;
+
+color: #888888;
+
+cursor: pointer;
+
+}
+
+.account-close {
+color: #ffffff;
+}
+
+.account-message {
+min-height: 20px;
+
+margin-top: 12px;
+
+color: #999999;
+
+font-size: 13px;
+
+}
+
+/* =========================================================
+OWNER LOGIN
+========================================================= */
+
+.owner-overlay {
+position: fixed;
+
+inset: 0;
+
+z-index: 10000;
+
+display: none;
+
+align-items: center;
+justify-content: center;
+
+padding: 20px;
+
+background: rgba(0, 0, 0, 0.82);
+
+backdrop-filter: blur(7px);
+
+}
+
+.owner-box {
+width: min(400px, 100%);
+
+background: #181818;
+
+border: 1px solid #333333;
+
+border-radius: 18px;
+
+padding: 28px;
+
+text-align: center;
+
+box-shadow:
+    0 30px 100px rgba(0, 0, 0, 0.65);
+
+}
+
+.owner-box h2 {
+font-size: 23px;
+
+margin-bottom: 8px;
+
+}
+
+.owner-box > p {
+color: #888888;
+
+font-size: 14px;
+
+margin-bottom: 18px;
+
+}
+
+.owner-box input {
+width: 100%;
+
+height: 46px;
+
+border: 1px solid #333333;
+
+border-radius: 10px;
+
+outline: none;
+
+background: #101010;
+
+color: #ffffff;
+
+padding: 0 13px;
+
+margin-bottom: 10px;
+
+}
+
+.owner-box input {
+border-color: #666666;
+}
+
+#ownerLoginButton {
+width: 100%;
+
+height: 44px;
+
+border-radius: 10px;
+
+background: #ffffff;
+
+color: #111111;
+
+font-weight: 600;
+
+cursor: pointer;
+
+}
+
+#ownerLoginButton {
+opacity: 0.5;
+
+cursor: not-allowed;
+
+}
+
+.owner-error {
+min-height: 20px;
+
+color: #ff8585 !important;
+
+margin:
+    10px
+    0
+    4px !important;
+
+}
+
+.owner-cancel {
+background: transparent;
+
+color: #777777;
+
+cursor: pointer;
+
+padding: 8px;
+
+}
+
+.owner-cancel {
+color: #ffffff;
+}
+
+/* =========================================================
+OWNER PANEL
+========================================================= */
+
+.owner-panel {
+position: fixed;
+
+inset: 0;
+
+z-index: 9000;
+
+display: none;
+
+flex-direction: column;
+
+overflow-y: auto;
+
+background: #0f0f0f;
+
+color: #ffffff;
+
+padding: 28px;
+
+-webkit-overflow-scrolling: touch;
+
+}
+
+.owner-header {
+width: min(1100px, 100%);
+
+margin: 0 auto 25px;
+
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+gap: 20px;
+
+padding-bottom: 20px;
+
+border-bottom: 1px solid #292929;
+
+}
+
+.owner-header h1 {
+font-size: 25px;
+
+margin-bottom: 5px;
+
+}
+
+.owner-header span {
+color: #777777;
+
+font-size: 13px;
+
+}
+
+#ownerLogout {
+padding: 10px 16px;
+
+border-radius: 9px;
+
+background: #242424;
+
+color: #ffffff;
+
+cursor: pointer;
+
+}
+
+#ownerLogout {
+background: #303030;
+}
+
+.owner-grid {
+width: min(1100px, 100%);
+
+margin: 0 auto 25px;
+
+display: grid;
+
+grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+gap: 15px;
+
+}
+
+.owner-card {
+min-height: 120px;
+
+display: flex;
+flex-direction: column;
+
+justify-content: space-between;
+
+background: #181818;
+
+border: 1px solid #292929;
+
+border-radius: 15px;
+
+padding: 18px;
+
+}
+
+.owner-card strong {
+color: #aaaaaa;
+
+font-size: 13px;
+
+font-weight: 500;
+
+}
+
+.owner-card span {
+font-size: 28px;
+
+font-weight: 600;
+
+}
+
+.owner-card .status-online {
+color: #9bd89b;
+
+font-size: 20px;
+
+}
+
+.owner-section {
+width: min(1100px, 100%);
+
+margin: 0 auto 20px;
+
+background: #181818;
+
+border: 1px solid #292929;
+
+border-radius: 15px;
+
+padding: 20px;
+
+}
+
+.owner-section h2 {
+font-size: 18px;
+
+margin-bottom: 8px;
+
+}
+
+.owner-section button {
+margin:
+8px
+8px
+0
+0;
+
+padding: 10px 14px;
+
+border-radius: 9px;
+
+background: #252525;
+
+color: #ffffff;
+
+border: 1px solid #333333;
+
+cursor: pointer;
+
+}
+
+.owner-section button {
+background: #303030;
+}
+
+.owner-description {
+color: #888888;
+
+font-size: 14px;
+
+margin-bottom: 7px;
+
+}
+
+/* =========================================================
+TRAINER
+========================================================= */
 
 .trainer-panel {
-    position: fixed;
-    inset: 0;
-    z-index: 9500;
+position: fixed;
 
-    overflow-y: auto;
+inset: 0;
 
-    background: #0f0f0f;
-    color: #ffffff;
+z-index: 9500;
 
-    padding: 25px;
+overflow-y: auto;
+
+background: #0f0f0f;
+
+color: #ffffff;
+
+padding:
+    25px
+    25px
+    calc(25px + env(safe-area-inset-bottom));
+
 }
 
 .trainer-header {
-    width: min(1000px, 100%);
-    margin: 0 auto 20px;
+width: min(1000px, 100%);
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+margin: 0 auto 20px;
 
-    gap: 15px;
+display: flex;
 
-    border-bottom: 1px solid #292929;
-    padding-bottom: 20px;
+align-items: center;
+
+justify-content: space-between;
+
+gap: 15px;
+
+border-bottom: 1px solid #292929;
+
+padding-bottom: 20px;
+
 }
 
 .trainer-header h2 {
-    font-size: 25px;
-    margin: 0;
+font-size: 25px;
+
+margin: 0;
+
 }
 
 .trainer-header p {
-    color: #888888;
-    margin: 5px 0 0;
+color: #888888;
+
+margin-top: 5px;
+
 }
 
 .trainer-header button {
-    border: none;
-    border-radius: 9px;
+border: none;
 
-    padding: 10px 16px;
+border-radius: 9px;
 
-    background: #ffffff;
-    color: #111111;
+padding: 10px 16px;
 
-    cursor: pointer;
+background: #ffffff;
+
+color: #111111;
+
+cursor: pointer;
+
+flex-shrink: 0;
+
 }
-
-
-/* =====================================================
-   TRAINER SECTIONS
-===================================================== */
 
 .trainer-generator,
 .trainer-form,
 .trainer-knowledge {
-    width: min(1000px, 100%);
-    margin: 0 auto 20px;
+width: min(1000px, 100%);
 
-    background: #181818;
+margin: 0 auto 20px;
 
-    border: 1px solid #292929;
-    border-radius: 15px;
+background: #181818;
 
-    padding: 20px;
+border: 1px solid #292929;
+
+border-radius: 15px;
+
+padding: 20px;
+
 }
 
 .trainer-generator h3,
 .trainer-form h3,
 .trainer-knowledge h3 {
-    margin: 0 0 8px;
+margin-bottom: 8px;
 }
 
 .trainer-generator > p,
 .trainer-form > p {
-    color: #888888;
-    font-size: 14px;
-    margin: 0 0 15px;
+color: #888888;
+
+font-size: 14px;
+
+margin-bottom: 15px;
+
 }
-
-
-/* =====================================================
-   TRAINER INPUTS
-===================================================== */
 
 .trainer-generator label,
 .trainer-form label {
-    display: block;
+display: block;
 
-    color: #bbbbbb;
-    font-size: 13px;
+color: #bbbbbb;
 
-    margin: 12px 0 6px;
+font-size: 13px;
+
+margin: 12px 0 6px;
+
 }
 
 .trainer-generator input,
 .trainer-generator select,
 .trainer-form input,
 .trainer-form textarea {
-    width: 100%;
+width: 100%;
 
-    box-sizing: border-box;
+border: 1px solid #333333;
 
-    border: 1px solid #333333;
-    border-radius: 10px;
+border-radius: 10px;
 
-    outline: none;
+outline: none;
 
-    background: #101010;
-    color: #ffffff;
+background: #101010;
 
-    padding: 11px;
+color: #ffffff;
 
-    font-family: Arial, Helvetica, sans-serif;
+padding: 11px;
+
+font-family: inherit;
+
 }
 
 .trainer-generator input,
 .trainer-generator select,
 .trainer-form input {
-    height: 44px;
+height: 44px;
 }
 
 .trainer-form textarea {
-    min-height: 120px;
-    resize: vertical;
+min-height: 120px;
+
+resize: vertical;
+
 }
 
-.trainer-generator input:focus,
-.trainer-generator select:focus,
-.trainer-form input:focus,
-.trainer-form textarea:focus {
-    border-color: #666666;
+.trainer-generator input,
+.trainer-generator select,
+.trainer-form input,
+.trainer-form textarea {
+border-color: #666666;
 }
-
-
-/* =====================================================
-   TRAINER BUTTONS
-===================================================== */
 
 .trainer-generator > button,
 .trainer-form > button {
-    margin-top: 12px;
+margin-top: 12px;
 
-    border: none;
-    border-radius: 9px;
+border: none;
 
-    padding: 11px 16px;
+border-radius: 9px;
 
-    background: #ffffff;
-    color: #111111;
+padding: 11px 16px;
 
-    font-weight: bold;
+background: #ffffff;
 
-    cursor: pointer;
+color: #111111;
+
+font-weight: bold;
+
+cursor: pointer;
+
 }
 
-.trainer-generator button:disabled,
-.trainer-form button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.trainer-generator button,
+.trainer-form button {
+opacity: 0.5;
+
+cursor: not-allowed;
+
 }
 
 .training-generate-status {
-    min-height: 18px;
+min-height: 18px;
 
-    margin-top: 10px;
+margin-top: 10px;
 
-    color: #888888;
-    font-size: 13px;
+color: #888888;
+
+font-size: 13px;
+
 }
 
-
-/* =====================================================
-   TRAINING LIST HEADER
-===================================================== */
-
 .trainer-knowledge-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+display: flex;
 
-    gap: 10px;
+align-items: center;
 
-    margin-bottom: 15px;
+justify-content: space-between;
+
+gap: 10px;
+
+margin-bottom: 15px;
+
 }
 
 .trainer-knowledge-header button {
-    border: 1px solid #333333;
-    border-radius: 9px;
+border: 1px solid #333333;
 
-    padding: 8px 12px;
+border-radius: 9px;
 
-    background: #242424;
-    color: #ffffff;
+padding: 8px 12px;
 
-    cursor: pointer;
+background: #242424;
+
+color: #ffffff;
+
+cursor: pointer;
+
 }
-
-
-/* =====================================================
-   TRAINING RESULTS
-===================================================== */
 
 #trainingList,
 #generatedTrainingResults {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+display: flex;
+
+flex-direction: column;
+
+gap: 10px;
+
 }
 
 .training-card {
-    background: #101010;
+background: #101010;
 
-    border: 1px solid #292929;
-    border-radius: 11px;
+border: 1px solid #292929;
 
-    padding: 14px;
+border-radius: 11px;
+
+padding: 14px;
+
 }
 
 .training-card strong {
-    display: block;
-    margin-bottom: 8px;
+display: block;
+
+margin-bottom: 8px;
+
 }
 
 .training-card p {
-    color: #cccccc;
+color: #cccccc;
 
-    line-height: 1.5;
+line-height: 1.5;
 
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
+white-space: pre-wrap;
 
-    margin: 0 0 8px;
+overflow-wrap: anywhere;
+
+margin-bottom: 8px;
+
 }
 
 .training-card small {
-    color: #777777;
+color: #777777;
 }
-
-
-/* =====================================================
-   DELETE TRAINING
-===================================================== */
 
 .delete-training-button {
-    margin-top: 10px;
+margin-top: 10px;
 
-    border: 1px solid #493030;
-    border-radius: 8px;
+border: 1px solid #493030;
 
-    padding: 7px 11px;
+border-radius: 8px;
 
-    background: #241717;
-    color: #ff8a8a;
+padding: 7px 11px;
 
-    cursor: pointer;
+background: #241717;
+
+color: #ff8a8a;
+
+cursor: pointer;
+
 }
 
-.delete-training-button:hover {
-    background: #321d1d;
+.delete-training-button {
+background: #321d1d;
 }
 
+/* =========================================================
+LIGHT THEME SUPPORT
+========================================================= */
 
-/* =====================================================
-   LIGHT THEME
-===================================================== */
+body.light-theme {
+background: #f5f5f5;
 
+color: #111111;
+
+}
+
+body.light-theme .sidebar {
+background: #ffffff;
+
+border-color: #dddddd;
+
+}
+
+body.light-theme .sidebar-logo {
+color: #111111;
+}
+
+body.light-theme .sidebar-button {
+color: #666666;
+}
+
+body.light-theme .sidebar-button {
+background: #eeeeee;
+
+color: #111111;
+
+}
+
+body.light-theme .sidebar-divider {
+background: #dddddd;
+}
+
+body.light-theme .chat-section {
+background: #f5f5f5;
+}
+
+body.light-theme .chat-header {
+border-color: #dddddd;
+}
+
+body.light-theme .online {
+color: #777777;
+}
+
+body.light-theme .empty-chat p {
+color: #777777;
+}
+
+body.light-theme .message-bubble.ai {
+background: #ffffff;
+
+color: #222222;
+
+border-color: #dddddd;
+
+}
+
+body.light-theme .message-bubble.user {
+background: #e7e7e7;
+
+color: #111111;
+
+}
+
+body.light-theme .chat-input-area {
+background: #ffffff;
+
+border-color: #d5d5d5;
+
+}
+
+body.light-theme .chat-input-area input {
+color: #111111;
+}
+
+body.light-theme .settings-box,
+body.light-theme .account-box,
+body.light-theme .owner-box {
+background: #ffffff;
+
+border-color: #dddddd;
+
+color: #111111;
+
+}
+
+body.light-theme .setting-item {
+border-color: #dddddd;
+}
+
+body.light-theme .setting-item > span {
+color: #777777;
+}
+
+body.light-theme .appearance-options button {
+background: #eeeeee;
+
+border-color: #dddddd;
+
+color: #333333;
+
+}
+
+body.light-theme .appearance-options button.active,
+body.light-theme .appearance-options button {
+background: #111111;
+
+color: #ffffff;
+
+}
+
+body.light-theme .account-tabs {
+background: #eeeeee;
+}
+
+body.light-theme .account-tab {
+color: #666666;
+}
+
+body.light-theme .account-tab.active {
+background: #ffffff;
+
+color: #111111;
+
+}
+
+body.light-theme .account-form input,
+body.light-theme .owner-box input {
+background: #f5f5f5;
+
+color: #111111;
+
+border-color: #dddddd;
+
+}
+
+body.light-theme .account-form label {
+color: #444444;
+}
+
+body.light-theme .owner-panel,
 body.light-theme .trainer-panel {
-    background: #f5f5f5;
-    color: #111111;
+background: #f5f5f5;
+
+color: #111111;
+
 }
 
+body.light-theme .owner-header {
+border-color: #dddddd;
+}
+
+body.light-theme .owner-card,
+body.light-theme .owner-section,
 body.light-theme .trainer-generator,
 body.light-theme .trainer-form,
 body.light-theme .trainer-knowledge {
-    background: #ffffff;
-    border-color: #dddddd;
+background: #ffffff;
+
+border-color: #dddddd;
+
+}
+
+body.light-theme .owner-description,
+body.light-theme .owner-header span {
+color: #666666;
 }
 
 body.light-theme .trainer-generator input,
@@ -303,102 +1720,516 @@ body.light-theme .trainer-generator select,
 body.light-theme .trainer-form input,
 body.light-theme .trainer-form textarea,
 body.light-theme .training-card {
-    background: #f5f5f5;
-    color: #111111;
-    border-color: #dddddd;
-}
+background: #f5f5f5;
 
-body.light-theme .trainer-generator input::placeholder,
-body.light-theme .trainer-form input::placeholder,
-body.light-theme .trainer-form textarea::placeholder {
-    color: #888888;
+color: #111111;
+
+border-color: #dddddd;
+
 }
 
 body.light-theme .training-card p {
-    color: #333333;
+color: #333333;
 }
 
+/* =========================================================
+DESKTOP
+========================================================= */
 
-/* =====================================================
-   THEME BUTTON
-===================================================== */
+@media screen and (min-width: 1201px) {
 
-#themeButton {
-    min-width: 80px;
+.sidebar {
+    width: 250px;
 }
 
-body.light-theme #themeButton {
-    background: #111111;
-    color: #ffffff;
+.chat-section {
+    left: 250px;
 }
 
-
-/* =====================================================
-   OWNER PANEL LIGHT THEME
-===================================================== */
-
-body.light-theme .owner-panel {
-    background: #f5f5f5;
-    color: #111111;
 }
 
-body.light-theme .owner-card,
-body.light-theme .owner-section {
-    background: #ffffff;
-    border-color: #dddddd;
+/* =========================================================
+TABLET / IPAD
+========================================================= */
+
+@media screen and (min-width: 601px) and (max-width: 1200px) {
+
+.sidebar {
+    width: 72px;
+
+    padding:
+        16px 10px;
 }
 
-body.light-theme .owner-description,
-body.light-theme .owner-header span {
-    color: #666666;
+.sidebar-logo {
+    justify-content: center;
+
+    padding: 0;
+
+    cursor: pointer;
 }
 
+.sidebar-logo strong,
+.sidebar-logo .logo-ai {
+    display: none;
+}
 
-/* =====================================================
-   RESPONSIVE TRAINER
-===================================================== */
+.sidebar-button {
+    justify-content: center;
+
+    padding: 0;
+
+    gap: 0;
+}
+
+.sidebar-label {
+    display: none;
+}
+
+.sidebar-icon {
+    width: 100%;
+
+    font-size: 18px;
+}
+
+.sidebar:hover,
+.sidebar:focus-within {
+    width: 220px;
+}
+
+.sidebar:hover .sidebar-button,
+.sidebar:focus-within .sidebar-button {
+    justify-content: flex-start;
+
+    padding: 0 13px;
+
+    gap: 13px;
+}
+
+.sidebar:hover .sidebar-label,
+.sidebar:focus-within .sidebar-label {
+    display: inline;
+}
+
+.sidebar:hover .sidebar-logo,
+.sidebar:focus-within .sidebar-logo {
+    justify-content: flex-start;
+
+    padding: 0 12px;
+}
+
+.sidebar:hover .sidebar-logo strong,
+.sidebar:focus-within .sidebar-logo strong {
+    display: inline;
+}
+
+.sidebar:hover .sidebar-logo .logo-ai,
+.sidebar:focus-within .sidebar-logo .logo-ai {
+    display: inline;
+}
+
+.chat-section {
+    left: 72px;
+}
+
+.chat-header {
+    padding-left: 22px;
+    padding-right: 22px;
+}
+
+.messages {
+    padding-left: 22px;
+    padding-right: 22px;
+}
+
+.chat-input-area {
+    left: 22px;
+    right: 22px;
+}
+
+}
+
+/* =========================================================
+PHONE
+========================================================= */
 
 @media screen and (max-width: 600px) {
 
-    .trainer-panel {
-        padding:
-            15px
-            15px
-            calc(15px + env(safe-area-inset-bottom));
-    }
-
-    .trainer-header {
-        align-items: flex-start;
-    }
-
-    .trainer-header h2 {
-        font-size: 21px;
-    }
-
-    .trainer-generator,
-    .trainer-form,
-    .trainer-knowledge {
-        padding: 15px;
-    }
-
-    .trainer-header button {
-        flex-shrink: 0;
-    }
-}
-
-
-/* =====================================================
-   PAGE STABILITY
-===================================================== */
-
-html,
 body {
-    overscroll-behavior: none;
+    overflow: hidden;
 }
 
-button,
-input,
-textarea,
-select {
-    font: inherit;
+.sidebar {
+    width: 62px;
+
+    padding:
+        12px 7px;
+
+    z-index: 2000;
+}
+
+.sidebar-logo {
+    height: 48px;
+
+    justify-content: center;
+
+    padding: 0;
+
+    margin-bottom: 10px;
+
+    cursor: pointer;
+}
+
+.sidebar-logo strong,
+.sidebar-logo .logo-ai {
+    display: none;
+}
+
+.sidebar-button {
+    min-height: 44px;
+
+    justify-content: center;
+
+    padding: 0;
+
+    gap: 0;
+
+    border-radius: 10px;
+}
+
+.sidebar-icon {
+    width: 100%;
+
+    font-size: 17px;
+}
+
+.sidebar-label {
+    display: none;
+}
+
+.sidebar-divider {
+    margin:
+        8px 3px;
+}
+
+.sidebar:hover,
+.sidebar:focus-within {
+    width: 215px;
+}
+
+.sidebar:hover .sidebar-button,
+.sidebar:focus-within .sidebar-button {
+    justify-content: flex-start;
+
+    padding: 0 11px;
+
+    gap: 11px;
+}
+
+.sidebar:hover .sidebar-label,
+.sidebar:focus-within .sidebar-label {
+    display: inline;
+
+    font-size: 13px;
+}
+
+.sidebar:hover .sidebar-logo,
+.sidebar:focus-within .sidebar-logo {
+    justify-content: flex-start;
+
+    padding-left: 10px;
+}
+
+.sidebar:hover .sidebar-logo strong,
+.sidebar:focus-within .sidebar-logo strong {
+    display: inline;
+
+    font-size: 13px;
+}
+
+.sidebar:hover .sidebar-logo .logo-ai,
+.sidebar:focus-within .sidebar-logo .logo-ai {
+    display: inline;
+}
+
+.chat-section {
+    left: 62px;
+}
+
+.chat-header {
+    height: 58px;
+
+    padding:
+        0 15px;
+}
+
+.header-title strong {
+    font-size: 14px;
+}
+
+.online {
+    font-size: 11px;
+}
+
+.moonplug-animation {
+    display: none;
+}
+
+.messages {
+    padding:
+        22px
+        14px
+        150px;
+}
+
+.empty-chat {
+    padding:
+        20px
+        12px;
+}
+
+.empty-chat h1 {
+    font-size: 25px;
+
+    letter-spacing: -0.5px;
+}
+
+.empty-chat p {
+    font-size: 14px;
+}
+
+.message-bubble {
+    max-width: 88%;
+
+    padding:
+        11px
+        13px;
+
+    border-radius: 14px;
+
+    margin-bottom: 12px;
+}
+
+.chat-input-area {
+    left: 10px;
+    right: 10px;
+    bottom: 12px;
+
+    padding:
+        6px
+        6px
+        6px
+        13px;
+
+    border-radius: 16px;
+}
+
+.chat-input-area input {
+    height: 40px;
+
+    font-size: 14px;
+}
+
+.chat-input-area button {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 11px;
+}
+
+.typing {
+    left: 14px;
+    bottom: 88px;
+
+    font-size: 12px;
+}
+
+.settings-panel,
+.account-screen,
+.owner-overlay {
+    padding:
+        12px;
+}
+
+.settings-box,
+.account-box,
+.owner-box {
+    max-height: calc(100vh - 24px);
+
+    border-radius: 16px;
+
+    padding: 20px;
+}
+
+.settings-header h2 {
+    font-size: 20px;
+}
+
+.account-box h1 {
+    font-size: 22px;
+}
+
+.owner-box h2 {
+    font-size: 21px;
+}
+
+.owner-panel {
+    padding:
+        18px
+        14px
+        calc(18px + env(safe-area-inset-bottom));
+}
+
+.owner-header {
+    align-items: flex-start;
+
+    margin-bottom: 18px;
+}
+
+.owner-header h1 {
+    font-size: 21px;
+}
+
+.owner-grid {
+    grid-template-columns: 1fr;
+
+    gap: 10px;
+}
+
+.owner-card {
+    min-height: 95px;
+}
+
+.owner-section {
+    padding: 15px;
+}
+
+.owner-section button {
+    width: 100%;
+
+    margin:
+        7px
+        0
+        0;
+}
+
+.trainer-panel {
+    padding:
+        15px
+        12px
+        calc(15px + env(safe-area-inset-bottom));
+}
+
+.trainer-header {
+    align-items: flex-start;
+}
+
+.trainer-header h2 {
+    font-size: 21px;
+}
+
+.trainer-generator,
+.trainer-form,
+.trainer-knowledge {
+    padding: 15px;
+
+    border-radius: 13px;
+}
+
+.trainer-generator > button,
+.trainer-form > button {
+    width: 100%;
+}
+
+.trainer-knowledge-header {
+    align-items: flex-start;
+}
+
+}
+
+/* =========================================================
+VERY SMALL PHONES
+========================================================= */
+
+@media screen and (max-width: 380px) {
+
+.sidebar {
+    width: 56px;
+}
+
+.chat-section {
+    left: 56px;
+}
+
+.sidebar-button {
+    min-height: 42px;
+}
+
+.messages {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.chat-input-area {
+    left: 7px;
+    right: 7px;
+}
+
+.empty-chat h1 {
+    font-size: 22px;
+}
+
+}
+
+/* =========================================================
+TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+.sidebar:hover {
+    width: 62px;
+}
+
+.sidebar:hover .sidebar-button {
+    justify-content: center;
+
+    padding: 0;
+
+    gap: 0;
+}
+
+.sidebar:hover .sidebar-label {
+    display: none;
+}
+
+.sidebar:hover .sidebar-logo {
+    justify-content: center;
+
+    padding: 0;
+}
+
+.sidebar:hover .sidebar-logo strong,
+.sidebar:hover .sidebar-logo .logo-ai {
+    display: none;
+}
+
+}
+
+/* =========================================================
+SAFE AREA
+========================================================= */
+
+@supports (padding: env(safe-area-inset-bottom)) {
+
+.sidebar {
+    padding-bottom:
+        calc(12px + env(safe-area-inset-bottom));
+}
+
+.chat-input-area {
+    bottom:
+        calc(12px + env(safe-area-inset-bottom));
+}
+
 }
