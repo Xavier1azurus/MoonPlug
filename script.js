@@ -50,7 +50,9 @@ async function apiRequest(endpoint, options = {}) {
     let response;
 
     try {
+
         response = await fetch(url, config);
+
     } catch (error) {
 
         const networkError = new Error(
@@ -71,17 +73,22 @@ async function apiRequest(endpoint, options = {}) {
     if (contentType.includes("application/json")) {
 
         try {
+
             data = await response.json();
+
         } catch {
+
             data = null;
         }
 
     } else {
 
         try {
+
             const text = await response.text();
 
             if (text) {
+
                 data = {
                     success: false,
                     error: text
@@ -89,6 +96,7 @@ async function apiRequest(endpoint, options = {}) {
             }
 
         } catch {
+
             data = null;
         }
     }
@@ -134,10 +142,7 @@ async function checkBackendHealth() {
     try {
 
         const data = await apiRequest(
-            "/api/health",
-            {
-                method: "GET"
-            }
+            "/api/health"
         );
 
         console.log(
@@ -168,10 +173,7 @@ async function checkOwnerSession() {
     try {
 
         const data = await apiRequest(
-            "/api/owner/session",
-            {
-                method: "GET"
-            }
+            "/api/owner/session"
         );
 
         isOwnerAuthenticated =
@@ -179,7 +181,7 @@ async function checkOwnerSession() {
 
         return isOwnerAuthenticated;
 
-    } catch (error) {
+    } catch {
 
         isOwnerAuthenticated = false;
 
@@ -213,6 +215,7 @@ async function loginOwner() {
     if (!password) {
 
         if (errorElement) {
+
             errorElement.textContent =
                 "Please enter the owner password.";
         }
@@ -227,6 +230,7 @@ async function loginOwner() {
     }
 
     if (errorElement) {
+
         errorElement.textContent = "";
     }
 
@@ -353,6 +357,7 @@ function showOwnerLogin() {
     );
 
     if (errorElement) {
+
         errorElement.textContent = "";
     }
 
@@ -451,10 +456,7 @@ async function loadOwnerDashboard() {
     try {
 
         const data = await apiRequest(
-            "/api/owner/dashboard",
-            {
-                method: "GET"
-            }
+            "/api/owner/dashboard"
         );
 
         if (data.success === false) {
@@ -471,11 +473,13 @@ async function loadOwnerDashboard() {
             $("ownerChats");
 
         if (users) {
+
             users.textContent =
                 stats.users ?? 0;
         }
 
         if (chats) {
+
             chats.textContent =
                 stats.chats ?? 0;
         }
@@ -513,10 +517,7 @@ async function loadOwnerUsers() {
     try {
 
         const data = await apiRequest(
-            "/api/owner/users",
-            {
-                method: "GET"
-            }
+            "/api/owner/users"
         );
 
         return Array.isArray(data.users)
@@ -555,10 +556,7 @@ async function loadOwnerSettings() {
     try {
 
         const data = await apiRequest(
-            "/api/owner/settings",
-            {
-                method: "GET"
-            }
+            "/api/owner/settings"
         );
 
         return data.settings || null;
@@ -666,7 +664,9 @@ function addMessage(text, sender) {
     bubble.textContent =
         String(text ?? "");
 
-    messages.appendChild(bubble);
+    messages.appendChild(
+        bubble
+    );
 
     messages.scrollTop =
         messages.scrollHeight;
@@ -683,6 +683,7 @@ function showTyping() {
         $("typing");
 
     if (typing) {
+
         typing.style.display = "flex";
     }
 }
@@ -694,6 +695,7 @@ function hideTyping() {
         $("typing");
 
     if (typing) {
+
         typing.style.display = "none";
     }
 }
@@ -740,7 +742,7 @@ async function sendMessage() {
 
 
     // ========================================================
-    // SAVE PREVIOUS HISTORY
+    // PREVIOUS HISTORY
     // ========================================================
 
     const previousHistory =
@@ -798,7 +800,6 @@ async function sendMessage() {
             data
         );
 
-
         if (data.success === false) {
 
             throw new Error(
@@ -807,13 +808,11 @@ async function sendMessage() {
             );
         }
 
-
         const response =
             data.response ??
             data.message ??
             data.reply ??
             data.answer;
-
 
         if (
             response === undefined ||
@@ -825,7 +824,6 @@ async function sendMessage() {
                 "MoonPlug returned no response."
             );
         }
-
 
         const responseText =
             String(response);
@@ -842,7 +840,7 @@ async function sendMessage() {
 
 
         // ====================================================
-        // SAVE BOTH MESSAGES
+        // SAVE HISTORY
         // ====================================================
 
         currentChat.push({
@@ -854,7 +852,6 @@ async function sendMessage() {
             role: "assistant",
             content: responseText
         });
-
 
     } catch (error) {
 
@@ -1063,15 +1060,24 @@ function showLoginTab() {
         $("signupTab");
 
     if (loginForm) {
-        loginForm.style.display = "flex";
+
+        loginForm.style.display =
+            "flex";
     }
 
     if (signupForm) {
-        signupForm.style.display = "none";
+
+        signupForm.style.display =
+            "none";
     }
 
-    loginTab?.classList.add("active");
-    signupTab?.classList.remove("active");
+    loginTab?.classList.add(
+        "active"
+    );
+
+    signupTab?.classList.remove(
+        "active"
+    );
 }
 
 
@@ -1090,15 +1096,24 @@ function showSignupTab() {
         $("signupTab");
 
     if (loginForm) {
-        loginForm.style.display = "none";
+
+        loginForm.style.display =
+            "none";
     }
 
     if (signupForm) {
-        signupForm.style.display = "flex";
+
+        signupForm.style.display =
+            "flex";
     }
 
-    loginTab?.classList.remove("active");
-    signupTab?.classList.add("active");
+    loginTab?.classList.remove(
+        "active"
+    );
+
+    signupTab?.classList.add(
+        "active"
+    );
 }
 
 
@@ -1219,10 +1234,7 @@ async function loadTraining() {
 
         const data =
             await apiRequest(
-                "/api/owner/training",
-                {
-                    method: "GET"
-                }
+                "/api/owner/training"
             );
 
         return Array.isArray(
@@ -1392,13 +1404,11 @@ function openTrainer() {
         <div class="trainer-header">
 
             <div>
-
                 <h2>AI Trainer</h2>
 
                 <p>
                     Teach MoonPlug new knowledge.
                 </p>
-
             </div>
 
             <button
@@ -1411,6 +1421,8 @@ function openTrainer() {
         </div>
 
 
+        <!-- GENERATOR -->
+
         <div class="trainer-generator">
 
             <h3>Generate Training</h3>
@@ -1419,12 +1431,12 @@ function openTrainer() {
                 Choose a category and amount.
             </p>
 
-            <label for="trainingCategory">
+            <label for="trainingGenerateCategory">
                 Category
             </label>
 
             <input
-                id="trainingCategory"
+                id="trainingGenerateCategory"
                 type="text"
                 placeholder="Example: Python"
                 autocomplete="off"
@@ -1474,6 +1486,8 @@ function openTrainer() {
         </div>
 
 
+        <!-- GENERATED TRAINING -->
+
         <div
             id="generatedTrainingSection"
             class="trainer-knowledge"
@@ -1492,6 +1506,8 @@ function openTrainer() {
 
         </div>
 
+
+        <!-- MANUAL TRAINING -->
 
         <div class="trainer-form">
 
@@ -1519,12 +1535,12 @@ function openTrainer() {
                 maxlength="10000"
             ></textarea>
 
-            <label for="trainerCategory">
+            <label for="trainerManualCategory">
                 Category
             </label>
 
             <input
-                id="trainerCategory"
+                id="trainerManualCategory"
                 type="text"
                 value="general"
                 placeholder="general"
@@ -1540,6 +1556,8 @@ function openTrainer() {
 
         </div>
 
+
+        <!-- LEARNED KNOWLEDGE -->
 
         <div class="trainer-knowledge">
 
@@ -1569,11 +1587,15 @@ function openTrainer() {
     );
 
 
+    // CLOSE
+
     $("closeTrainer")?.addEventListener(
         "click",
         closeTrainer
     );
 
+
+    // REFRESH
 
     $("refreshTraining")?.addEventListener(
         "click",
@@ -1581,11 +1603,15 @@ function openTrainer() {
     );
 
 
+    // MANUAL TRAINING
+
     $("teachMoonPlug")?.addEventListener(
         "click",
         teachMoonPlug
     );
 
+
+    // GENERATE
 
     $("generateTraining")?.addEventListener(
         "click",
@@ -1622,7 +1648,7 @@ async function generateTraining() {
     }
 
     const categoryInput =
-        $("trainingCategory");
+        $("trainingGenerateCategory");
 
     const amountInput =
         $("trainingAmount");
@@ -1679,6 +1705,7 @@ async function generateTraining() {
     if (button) {
 
         button.disabled = true;
+
         button.textContent =
             "Generating...";
     }
@@ -1692,12 +1719,14 @@ async function generateTraining() {
 
 
     if (resultsSection) {
+
         resultsSection.style.display =
             "none";
     }
 
 
     if (results) {
+
         results.innerHTML = "";
     }
 
@@ -1778,7 +1807,6 @@ async function generateTraining() {
             error
         );
 
-
         if (status) {
 
             status.textContent =
@@ -1786,12 +1814,12 @@ async function generateTraining() {
                 "Could not generate training.";
         }
 
-
     } finally {
 
         if (button) {
 
             button.disabled = false;
+
             button.textContent =
                 "Generate";
         }
@@ -1803,9 +1831,7 @@ async function generateTraining() {
 // GENERATED TRAINING DISPLAY
 // ============================================================
 
-function renderGeneratedTraining(
-    training
-) {
+function renderGeneratedTraining(training) {
 
     const container =
         $("generatedTrainingResults");
@@ -1891,9 +1917,7 @@ async function refreshTraining() {
 }
 
 
-function renderTrainingList(
-    training
-) {
+function renderTrainingList(training) {
 
     const list =
         $("trainingList");
@@ -1950,8 +1974,6 @@ function renderTrainingList(
                 )}
             </small>
 
-            <br>
-
             <button
                 type="button"
                 class="delete-training-button"
@@ -1996,6 +2018,7 @@ function renderTrainingList(
 
 
                 deleteButton.disabled = true;
+
                 deleteButton.textContent =
                     "Deleting...";
 
@@ -2059,7 +2082,7 @@ async function teachMoonPlug() {
             ?.value.trim();
 
     const category =
-        $("trainerCategory")
+        $("trainerManualCategory")
             ?.value.trim() ||
         "general";
 
@@ -2091,6 +2114,7 @@ async function teachMoonPlug() {
     if (button) {
 
         button.disabled = true;
+
         button.textContent =
             "Teaching...";
     }
@@ -2124,7 +2148,7 @@ async function teachMoonPlug() {
         $("trainerAnswer").value =
             "";
 
-        $("trainerCategory").value =
+        $("trainerManualCategory").value =
             "general";
 
 
@@ -2153,6 +2177,7 @@ async function teachMoonPlug() {
         if (button) {
 
             button.disabled = false;
+
             button.textContent =
                 "Teach MoonPlug";
         }
@@ -2166,11 +2191,15 @@ async function teachMoonPlug() {
 
 function setupButtons() {
 
+    // SEND
+
     $("sendButton")?.addEventListener(
         "click",
         sendMessage
     );
 
+
+    // ENTER TO SEND
 
     $("messageInput")?.addEventListener(
         "keydown",
@@ -2189,11 +2218,15 @@ function setupButtons() {
     );
 
 
+    // NEW CHAT
+
     $("newChatButton")?.addEventListener(
         "click",
         startNewChat
     );
 
+
+    // SETTINGS
 
     $("settingsButton")?.addEventListener(
         "click",
@@ -2206,6 +2239,8 @@ function setupButtons() {
         closeSettings
     );
 
+
+    // ACCOUNT
 
     $("ownerButton")?.addEventListener(
         "click",
@@ -2230,6 +2265,8 @@ function setupButtons() {
         showSignupTab
     );
 
+
+    // OWNER LOGIN
 
     $("ownerLoginButton")?.addEventListener(
         "click",
@@ -2257,11 +2294,15 @@ function setupButtons() {
     );
 
 
+    // OWNER LOGOUT
+
     $("ownerLogout")?.addEventListener(
         "click",
         logoutOwner
     );
 
+
+    // TEXT SIZE
 
     document
         .querySelectorAll(".size-button")
@@ -2286,6 +2327,8 @@ function setupButtons() {
 
 function setupOwnerPanelButtons() {
 
+    // USERS
+
     $("manageUsersButton")?.addEventListener(
         "click",
         async () => {
@@ -2300,6 +2343,8 @@ function setupOwnerPanelButtons() {
     );
 
 
+    // CHATS
+
     $("manageChatsButton")?.addEventListener(
         "click",
         async () => {
@@ -2308,10 +2353,7 @@ function setupOwnerPanelButtons() {
 
                 const dashboard =
                     await apiRequest(
-                        "/api/owner/dashboard",
-                        {
-                            method: "GET"
-                        }
+                        "/api/owner/dashboard"
                     );
 
 
@@ -2344,6 +2386,8 @@ function setupOwnerPanelButtons() {
     );
 
 
+    // APP SETTINGS
+
     $("appSettingsButton")?.addEventListener(
         "click",
         async () => {
@@ -2373,6 +2417,8 @@ function setupOwnerPanelButtons() {
     );
 
 
+    // TRAINER
+
     $("trainerButton")?.addEventListener(
         "click",
         openTrainer
@@ -2390,13 +2436,14 @@ function setupKeyboardShortcuts() {
         "keydown",
         event => {
 
-            if (
-                event.key === "Escape"
-            ) {
+            if (event.key === "Escape") {
 
                 hideOwnerLogin();
+
                 closeSettings();
+
                 closeAccount();
+
                 closeTrainer();
             }
         }
@@ -2451,20 +2498,21 @@ async function initializeMoonPlug() {
 
 
     // --------------------------------------------------------
-    // OWNER SESSION CHECK
+    // OWNER SESSION
     // --------------------------------------------------------
 
     await checkOwnerSession();
 
 
     // --------------------------------------------------------
-    // HIDE PRIVATE OWNER UI ON STARTUP
+    // HIDE PRIVATE OWNER UI
     // --------------------------------------------------------
 
     hideOwnerLogin();
 
 
     if (!isOwnerAuthenticated) {
+
         hideOwnerPanel();
     }
 
@@ -2493,4 +2541,6 @@ if (
 
     initializeMoonPlug();
 }
+
+
 
