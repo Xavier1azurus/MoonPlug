@@ -426,7 +426,11 @@ def proxy_health():
     try:
 
         response = requests.get(
+<<<<<<< HEAD
             f"{OLLAMA_HOST}/api/tags",
+=======
+        f"{OLLAMA_HOST}/api/tags",
+>>>>>>> 094a4eec77c81dad2f88d803af914f5975a88ff4
             headers=proxy_headers(),
             timeout=30
         )

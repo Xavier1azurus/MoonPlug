@@ -6,6 +6,7 @@
 
 const API_BASE = "https://move-benefit-washer-horizontal.trycloudflare.com";
 
+
 let currentChat = [];
 let isOwnerAuthenticated = false;
 let currentTextSize = "medium";
