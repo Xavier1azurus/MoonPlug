@@ -5,3 +5,4 @@ psycopg[binary]
 Werkzeug
 ollama
 httpx
+requests
