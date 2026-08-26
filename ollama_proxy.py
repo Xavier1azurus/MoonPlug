@@ -20,9 +20,9 @@ PROXY_KEY = os.environ.get(
 def authorized():
 
     supplied_key = request.headers.get(
-        "X-Proxy-Key",
-        ""
-    ).strip()
+    "X-MoonPlug-Key",
+    ""
+).strip()
 
     return bool(PROXY_KEY) and supplied_key == PROXY_KEY
 
