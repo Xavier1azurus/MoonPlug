@@ -4,7 +4,8 @@
           FRONTEND CONTROLLER
 ===================================================== */
 
-const API_BASE = "https://move-benefit-washer-horizontal.trycloudflare.com";
+const API_BASE = "http://127.0.0.1:5000";
+
 
 let currentChat = [];
 let isOwnerAuthenticated = false;
