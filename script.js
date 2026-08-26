@@ -4,7 +4,7 @@
           FRONTEND CONTROLLER
 ===================================================== */
 
-const API_BASE = "https://computation-matched-gibson-sleeps.trycloudflare.com";
+const API_BASE = "https://move-benefit-washer-horizontal.trycloudflare.com";
 
 let currentChat = [];
 let isOwnerAuthenticated = false;
