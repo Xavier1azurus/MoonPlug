@@ -4,7 +4,7 @@
           FRONTEND CONTROLLER
 ===================================================== */
 
-const API_BASE = "https://frost-aimed-through-extraction.trycloudflare.com";
+const API_BASE = "https://computation-matched-gibson-sleeps.trycloudflare.com";
 
 let currentChat = [];
 let isOwnerAuthenticated = false;
