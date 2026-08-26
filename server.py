@@ -2535,6 +2535,7 @@ def method_not_allowed(error):
 @app.errorhandler(500)
 def internal_error(error):
 
+
 print()
 print("=" * 60)
 print("MOONPLUG INTERNAL SERVER ERROR")
@@ -2558,6 +2559,7 @@ return jsonify({
         "Internal server error."
 
 }), 500
+
 
 # ============================================================
 # STARTUP
