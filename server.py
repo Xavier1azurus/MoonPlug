@@ -395,18 +395,18 @@ def ollama_configured():
     )
 
 
+
 def proxy_headers():
 
     headers = {
-        "Content-Type":
-            "application/json"
+        "Content-Type": "application/json"
     }
 
-  if MOONPLUG_PROXY_KEY:
+    if MOONPLUG_PROXY_KEY:
 
-    headers[
-        "X-Proxy-Key"
-    ] = MOONPLUG_PROXY_KEY
+        headers["X-MoonPlug-Key"] = (
+            MOONPLUG_PROXY_KEY
+        )
 
     return headers
 
