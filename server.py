@@ -1,4 +1,4 @@
-MoonPlug server.py
+
 from __future__ import annotations
 
 import json
@@ -7,6 +7,7 @@ import secrets
 from datetime import datetime, timedelta
 from functools import wraps
 
+import httpx
 import ollama
 import psycopg
 
@@ -22,7 +23,7 @@ from werkzeug.security import check_password_hash
 # ============================================================
 
 APP_NAME = "MoonPlug AI"
-APP_VERSION = "7.0.0"
+APP_VERSION = "7.1.0"
 
 
 # ============================================================
@@ -56,7 +57,7 @@ FRONTEND_ORIGIN = os.environ.get(
 
 
 # ============================================================
-# OLLAMA
+# OLLAMA / PROXY
 # ============================================================
 
 OLLAMA_HOST = os.environ.get(
@@ -66,15 +67,23 @@ OLLAMA_HOST = os.environ.get(
 
 OLLAMA_MODEL = os.environ.get(
     "OLLAMA_MODEL",
-    "tinyllama"
+    "llama3.2:latest"
 ).strip()
 
 # IMPORTANT:
-# This must be the SAME key configured in proxy.py.
-MOONPLUG_PROXY_KEY = os.environ.get(
+# This is the secret key used by your Ollama proxy.
+#
+# Render environment variable:
+#
+# MOONPLUG_PROXY_KEY
+#
+# The key is NEVER hard-coded into this file.
+PROXY_KEY = os.environ.get(
     "MOONPLUG_PROXY_KEY",
     ""
 ).strip()
+
+PROXY_HEADER_NAME = "X-MoonPlug-Key"
 
 
 # ============================================================
@@ -104,9 +113,7 @@ if not SECRET_KEY:
 app.config["SECRET_KEY"] = SECRET_KEY
 
 app.config["SESSION_COOKIE_HTTPONLY"] = True
-
 app.config["SESSION_COOKIE_SECURE"] = True
-
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
 
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(
@@ -140,6 +147,240 @@ CORS(
     supports_credentials=True,
     origins=allowed_origins
 )
+
+
+# ============================================================
+# PROXY CONFIGURATION
+# ============================================================
+
+def proxy_configured() -> bool:
+    return bool(
+        OLLAMA_HOST and PROXY_KEY
+    )
+
+
+def get_proxy_headers() -> dict[str, str]:
+    """
+    Headers sent to the external Ollama proxy.
+
+    The proxy key is added to EVERY Ollama request.
+    """
+
+    if not PROXY_KEY:
+
+        raise RuntimeError(
+            "MOONPLUG_PROXY_KEY is not configured."
+        )
+
+    return {
+        PROXY_HEADER_NAME: PROXY_KEY,
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    }
+
+
+def get_ollama_client():
+    """
+    Creates an Ollama client with the proxy
+    authentication header attached.
+
+    Every request made by this client therefore
+    includes X-MoonPlug-Key.
+    """
+
+    if not OLLAMA_HOST:
+
+        raise RuntimeError(
+            "OLLAMA_HOST is not configured."
+        )
+
+    if not PROXY_KEY:
+
+        raise RuntimeError(
+            "MOONPLUG_PROXY_KEY is not configured."
+        )
+
+    return ollama.Client(
+        host=OLLAMA_HOST,
+        headers=get_proxy_headers()
+    )
+
+
+# ============================================================
+# DIRECT PROXY REQUEST
+# ============================================================
+
+def proxy_request(
+    method: str,
+    endpoint: str,
+    *,
+    json_data=None,
+    timeout: float = 60.0
+):
+    """
+    Makes a direct HTTP request to the Ollama proxy.
+
+    This is used for endpoints such as /api/tags
+    where we want complete control over the headers.
+    """
+
+    if not OLLAMA_HOST:
+
+        raise RuntimeError(
+            "OLLAMA_HOST is not configured."
+        )
+
+    if not PROXY_KEY:
+
+        raise RuntimeError(
+            "MOONPLUG_PROXY_KEY is not configured."
+        )
+
+    url = (
+        OLLAMA_HOST.rstrip("/")
+        + "/"
+        + endpoint.lstrip("/")
+    )
+
+    headers = get_proxy_headers()
+
+    with httpx.Client(
+        timeout=timeout,
+        follow_redirects=True
+    ) as client:
+
+        response = client.request(
+            method.upper(),
+            url,
+            headers=headers,
+            json=json_data
+        )
+
+    return response
+
+
+# ============================================================
+# PROXY TAGS
+# ============================================================
+
+def get_ollama_models():
+    """
+    Calls /api/tags directly.
+
+    The proxy key is explicitly attached.
+    """
+
+    try:
+
+        response = proxy_request(
+            "GET",
+            "/api/tags",
+            timeout=30
+        )
+
+        if response.status_code >= 400:
+
+            raise RuntimeError(
+                f"Proxy returned HTTP "
+                f"{response.status_code}: "
+                f"{response.text[:500]}"
+            )
+
+        data = response.json()
+
+        models = []
+
+        for item in data.get(
+            "models",
+            []
+        ):
+
+            if not isinstance(
+                item,
+                dict
+            ):
+
+                continue
+
+            name = (
+                item.get("name")
+                or item.get("model")
+            )
+
+            if name:
+
+                models.append(
+                    str(name)
+                )
+
+        return models
+
+    except Exception as error:
+
+        print(
+            "Could not get Ollama models:",
+            error
+        )
+
+        return []
+
+
+# ============================================================
+# OLLAMA HEALTH CHECK
+# ============================================================
+
+def ollama_available():
+
+    if not OLLAMA_HOST:
+
+        print(
+            "OLLAMA HEALTH CHECK: "
+            "OLLAMA_HOST is not configured."
+        )
+
+        return False
+
+    if not PROXY_KEY:
+
+        print(
+            "OLLAMA HEALTH CHECK: "
+            "MOONPLUG_PROXY_KEY is not configured."
+        )
+
+        return False
+
+    try:
+
+        response = proxy_request(
+            "GET",
+            "/api/tags",
+            timeout=30
+        )
+
+        if response.status_code == 200:
+
+            print(
+                "OLLAMA HEALTH CHECK: OK"
+            )
+
+            return True
+
+        print(
+            "OLLAMA HEALTH CHECK FAILED:",
+            response.status_code,
+            response.text[:500]
+        )
+
+        return False
+
+    except Exception as error:
+
+        print(
+            "OLLAMA CONNECTION TEST FAILED:",
+            repr(error)
+        )
+
+        return False
 
 
 # ============================================================
@@ -289,12 +530,21 @@ def initialize_database():
                 cursor.execute(
                     """
                     CREATE TABLE IF NOT EXISTS training (
+
                         id BIGSERIAL PRIMARY KEY,
+
                         question TEXT NOT NULL,
+
                         answer TEXT NOT NULL,
-                        category TEXT NOT NULL DEFAULT 'general',
-                        created TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                        uses BIGINT NOT NULL DEFAULT 0
+
+                        category TEXT NOT NULL
+                            DEFAULT 'general',
+
+                        created TIMESTAMPTZ NOT NULL
+                            DEFAULT NOW(),
+
+                        uses BIGINT NOT NULL
+                            DEFAULT 0
                     )
                     """
                 )
@@ -302,11 +552,17 @@ def initialize_database():
                 cursor.execute(
                     """
                     CREATE TABLE IF NOT EXISTS conversations (
+
                         id BIGSERIAL PRIMARY KEY,
+
                         session_id TEXT,
+
                         message TEXT NOT NULL,
+
                         response TEXT NOT NULL,
-                        created TIMESTAMPTZ NOT NULL DEFAULT NOW()
+
+                        created TIMESTAMPTZ NOT NULL
+                            DEFAULT NOW()
                     )
                     """
                 )
@@ -314,11 +570,15 @@ def initialize_database():
                 cursor.execute(
                     """
                     CREATE TABLE IF NOT EXISTS app_settings (
+
                         id INTEGER PRIMARY KEY,
+
                         minimum_score DOUBLE PRECISION
                             NOT NULL DEFAULT 0.30,
+
                         remember_conversations BOOLEAN
                             NOT NULL DEFAULT TRUE,
+
                         case_sensitive BOOLEAN
                             NOT NULL DEFAULT FALSE
                     )
@@ -346,7 +606,9 @@ def initialize_database():
 
             connection.commit()
 
-        print("✓ PostgreSQL database ready.")
+        print(
+            "Database ready."
+        )
 
         return True
 
@@ -354,67 +616,6 @@ def initialize_database():
 
         print(
             "Database initialization failed:",
-            error
-        )
-
-        return False
-
-
-# ============================================================
-# OLLAMA CONFIGURATION
-# ============================================================
-
-def ollama_configured():
-
-    return bool(OLLAMA_HOST)
-
-
-def get_ollama_client():
-
-    if not OLLAMA_HOST:
-
-        raise RuntimeError(
-            "OLLAMA_HOST is not configured."
-        )
-
-    if not MOONPLUG_PROXY_KEY:
-
-        raise RuntimeError(
-            "MOONPLUG_PROXY_KEY is not configured."
-        )
-
-    # IMPORTANT:
-    # Send the proxy key to proxy.py.
-    return ollama.Client(
-        host=OLLAMA_HOST,
-        headers={
-            "X-MoonPlug-Key": MOONPLUG_PROXY_KEY
-        }
-    )
-
-
-def ollama_available():
-
-    if not ollama_configured():
-
-        return False
-
-    if not MOONPLUG_PROXY_KEY:
-
-        return False
-
-    try:
-
-        client = get_ollama_client()
-
-        client.list()
-
-        return True
-
-    except Exception as error:
-
-        print(
-            "Ollama unavailable:",
             error
         )
 
@@ -448,55 +649,6 @@ def owner_required(function):
         )
 
     return wrapper
-
-
-# ============================================================
-# OLLAMA MODEL STATUS
-# ============================================================
-
-def get_ollama_models():
-
-    if not ollama_configured():
-
-        return []
-
-    try:
-
-        client = get_ollama_client()
-
-        result = client.list()
-
-        models = []
-
-        for item in result.get(
-            "models",
-            []
-        ):
-
-            if isinstance(
-                item,
-                dict
-            ):
-
-                name = (
-                    item.get("name")
-                    or item.get("model")
-                )
-
-                if name:
-
-                    models.append(name)
-
-        return models
-
-    except Exception as error:
-
-        print(
-            "Could not get Ollama models:",
-            error
-        )
-
-        return []
 
 
 # ============================================================
@@ -657,6 +809,12 @@ def owner_logout():
 )
 def health():
 
+    ollama_status = False
+
+    if OLLAMA_HOST and PROXY_KEY:
+
+        ollama_status = ollama_available()
+
     return jsonify({
 
         "success": True,
@@ -673,13 +831,16 @@ def health():
             else "not_configured",
 
         "ollamaConfigured":
-            ollama_configured(),
+            bool(OLLAMA_HOST),
+
+        "proxyKeyConfigured":
+            bool(PROXY_KEY),
 
         "ollamaHostConfigured":
             bool(OLLAMA_HOST),
 
-        "ollamaProxyKeyConfigured":
-            bool(MOONPLUG_PROXY_KEY),
+        "ollamaAvailable":
+            ollama_status,
 
         "ollamaModel":
             OLLAMA_MODEL,
@@ -796,10 +957,10 @@ def owner_dashboard():
                 ollama_available(),
 
             "ollamaConfigured":
-                ollama_configured(),
+                bool(OLLAMA_HOST),
 
-            "ollamaProxyKeyConfigured":
-                bool(MOONPLUG_PROXY_KEY),
+            "proxyKeyConfigured":
+                bool(PROXY_KEY),
 
             "model":
                 OLLAMA_MODEL
@@ -990,7 +1151,6 @@ def find_best_training_match(message):
             if score > best_score:
 
                 best_score = score
-
                 best_match = item
 
         if not best_match:
@@ -1192,7 +1352,6 @@ def add_training():
 
     question = question.strip()
     answer = answer.strip()
-
     category = (
         category.strip()
         or "general"
@@ -1292,24 +1451,18 @@ def generate_training():
                 "Database unavailable."
         }), 503
 
-    if not ollama_configured():
+    if not OLLAMA_HOST:
 
         return jsonify({
-
             "success": False,
-
             "error":
-                "Ollama is not configured. "
-                "Add OLLAMA_HOST to your Render "
-                "environment variables."
+                "OLLAMA_HOST is not configured."
         }), 503
 
-    if not MOONPLUG_PROXY_KEY:
+    if not PROXY_KEY:
 
         return jsonify({
-
             "success": False,
-
             "error":
                 "MOONPLUG_PROXY_KEY is not configured."
         }), 503
@@ -1324,9 +1477,7 @@ def generate_training():
     ):
 
         return jsonify({
-
             "success": False,
-
             "error":
                 "Invalid JSON request."
         }), 400
@@ -1341,9 +1492,7 @@ def generate_training():
     ):
 
         return jsonify({
-
             "success": False,
-
             "error":
                 "Category must be text."
         }), 400
@@ -1353,9 +1502,7 @@ def generate_training():
     if not category:
 
         return jsonify({
-
             "success": False,
-
             "error":
                 "Category cannot be empty."
         }), 400
@@ -1375,9 +1522,7 @@ def generate_training():
     ):
 
         return jsonify({
-
             "success": False,
-
             "error":
                 "Amount must be a number."
         }), 400
@@ -1391,66 +1536,57 @@ def generate_training():
     )
 
     # --------------------------------------------------------
-    # CONNECT TO OLLAMA
-    # --------------------------------------------------------
-
-    try:
-
-        client = get_ollama_client()
-
-        client.list()
-
-    except Exception as error:
-
-        print(
-            "OLLAMA CONNECTION ERROR:",
-            error
-        )
-
-        return jsonify({
-
-            "success": False,
-
-            "error":
-                "Could not connect to the Ollama server. "
-                "Check OLLAMA_HOST and MOONPLUG_PROXY_KEY "
-                "in Render and make sure the Ollama proxy "
-                "is online."
-        }), 503
-
-    # --------------------------------------------------------
-    # CHECK MODEL
+    # TEST PROXY /api/tags
     # --------------------------------------------------------
 
     try:
 
         models = get_ollama_models()
 
-        model_exists = any(
-            model == OLLAMA_MODEL
-            or model.startswith(
-                OLLAMA_MODEL + ":"
-            )
-            for model in models
+        print(
+            "Ollama models returned:",
+            models
         )
-
-        if not model_exists:
-
-            return jsonify({
-
-                "success": False,
-
-                "error":
-                    f"The model '{OLLAMA_MODEL}' "
-                    "was not found on the Ollama server."
-            }), 503
 
     except Exception as error:
 
         print(
-            "OLLAMA MODEL CHECK ERROR:",
-            error
+            "OLLAMA /api/tags ERROR:",
+            repr(error)
         )
+
+        return jsonify({
+            "success": False,
+            "error":
+                "Could not authenticate with the "
+                "Ollama proxy. Check "
+                "MOONPLUG_PROXY_KEY."
+        }), 503
+
+    # --------------------------------------------------------
+    # CHECK MODEL
+    # --------------------------------------------------------
+
+    model_exists = any(
+        model == OLLAMA_MODEL
+        or model.startswith(
+            OLLAMA_MODEL + ":"
+        )
+        for model in models
+    )
+
+    if not model_exists:
+
+        return jsonify({
+
+            "success": False,
+
+            "error":
+                f"The model '{OLLAMA_MODEL}' "
+                f"was not found on the Ollama server. "
+                f"Available models: {', '.join(models)}"
+
+        }), 503
 
     # --------------------------------------------------------
     # PROMPT
@@ -1487,10 +1623,18 @@ Required JSON format:
 """
 
     # --------------------------------------------------------
-    # GENERATE
+    # GENERATE USING AUTHENTICATED OLLAMA CLIENT
     # --------------------------------------------------------
 
     try:
+
+        client = get_ollama_client()
+
+        print(
+            "Sending Auto Trainer request to Ollama:",
+            OLLAMA_HOST,
+            OLLAMA_MODEL
+        )
 
         result = client.chat(
 
@@ -1541,7 +1685,7 @@ Required JSON format:
 
         print(
             "AUTO TRAINER ERROR:",
-            error
+            repr(error)
         )
 
         return jsonify({
@@ -1550,7 +1694,10 @@ Required JSON format:
 
             "error":
                 "TinyLlama could not generate "
-                "valid training data."
+                "valid training data. "
+                "Check the Ollama proxy key "
+                "and model connection."
+
         }), 500
 
     # --------------------------------------------------------
@@ -1589,15 +1736,19 @@ Required JSON format:
                     ).strip()
 
                     if not question:
+
                         continue
 
                     if not answer:
+
                         continue
 
                     if len(question) > 2000:
+
                         continue
 
                     if len(answer) > 10000:
+
                         continue
 
                     cursor.execute(
@@ -1630,6 +1781,7 @@ Required JSON format:
                     row = cursor.fetchone()
 
                     if row:
+
                         saved.append(row)
 
             connection.commit()
@@ -1673,6 +1825,7 @@ Required JSON format:
             "error":
                 "Training was generated but "
                 "could not be saved."
+
         }), 500
 
 
@@ -1733,6 +1886,7 @@ def delete_training(training_id):
 
             "message":
                 "Training example deleted."
+
         })
 
     except Exception as error:
@@ -1853,7 +2007,18 @@ def chat():
     # OLLAMA
     # --------------------------------------------------------
 
-    if ollama_configured():
+    if OLLAMA_HOST:
+
+        if not PROXY_KEY:
+
+            return jsonify({
+
+                "success": False,
+
+                "error":
+                    "MoonPlug proxy key is not configured."
+
+            }), 503
 
         try:
 
@@ -1948,6 +2113,12 @@ def chat():
                         message
                 })
 
+            print(
+                "Sending chat request to Ollama:",
+                OLLAMA_HOST,
+                OLLAMA_MODEL
+            )
+
             result = client.chat(
 
                 model=OLLAMA_MODEL,
@@ -1990,8 +2161,19 @@ def chat():
 
             print(
                 "OLLAMA CHAT ERROR:",
-                error
+                repr(error)
             )
+
+            return jsonify({
+
+                "success": False,
+
+                "error":
+                    "Could not connect to the "
+                    "Ollama server. Check the "
+                    "proxy URL and MOONPLUG_PROXY_KEY."
+
+            }), 503
 
     # --------------------------------------------------------
     # FALLBACK
@@ -2261,6 +2443,7 @@ def update_settings():
 
             "message":
                 "Settings updated."
+
         })
 
     except Exception as error:
@@ -2291,7 +2474,13 @@ def update_settings():
 @owner_required
 def ollama_status():
 
-    configured = ollama_configured()
+    configured = bool(
+        OLLAMA_HOST
+    )
+
+    key_configured = bool(
+        PROXY_KEY
+    )
 
     available = False
 
@@ -2299,38 +2488,19 @@ def ollama_status():
 
     error_message = None
 
-    if configured:
+    if configured and key_configured:
 
         try:
 
-            client = get_ollama_client()
-
-            result = client.list()
+            models = get_ollama_models()
 
             available = True
 
-            for item in result.get(
-                "models",
-                []
-            ):
-
-                if isinstance(
-                    item,
-                    dict
-                ):
-
-                    name = (
-                        item.get("name")
-                        or item.get("model")
-                    )
-
-                    if name:
-
-                        models.append(name)
-
         except Exception as error:
 
-            error_message = str(error)
+            error_message = str(
+                error
+            )
 
     return jsonify({
 
@@ -2346,7 +2516,7 @@ def ollama_status():
             bool(OLLAMA_HOST),
 
         "proxyKeyConfigured":
-            bool(MOONPLUG_PROXY_KEY),
+            key_configured,
 
         "model":
             OLLAMA_MODEL,
@@ -2390,13 +2560,13 @@ def owner_status():
             database_available(),
 
         "ollamaConfigured":
-            ollama_configured(),
+            bool(OLLAMA_HOST),
+
+        "proxyKeyConfigured":
+            bool(PROXY_KEY),
 
         "ollamaHostConfigured":
             bool(OLLAMA_HOST),
-
-        "ollamaProxyKeyConfigured":
-            bool(MOONPLUG_PROXY_KEY),
 
         "ollamaModel":
             OLLAMA_MODEL
@@ -2509,13 +2679,13 @@ def startup():
     )
 
     print(
-        "Ollama configured:",
-        ollama_configured()
+        "Ollama host configured:",
+        bool(OLLAMA_HOST)
     )
 
     print(
-        "Ollama proxy key configured:",
-        bool(MOONPLUG_PROXY_KEY)
+        "Proxy key configured:",
+        bool(PROXY_KEY)
     )
 
     print(
@@ -2539,6 +2709,19 @@ def startup():
     print()
 
     initialize_database()
+
+    print()
+
+    if OLLAMA_HOST and PROXY_KEY:
+
+        ollama_available()
+
+    else:
+
+        print(
+            "Ollama health check skipped: "
+            "host or proxy key missing."
+        )
 
     print()
 
@@ -2578,47 +2761,5 @@ if __name__ == "__main__":
 else:
 
     initialize_database()
-Render environment variables
 
-Make sure Render has these:
 
-DATABASE_URL=your PostgreSQL connection string
-
-MOONPLUG_OWNER_PASSWORD=your private owner password
-
-MOONPLUG_SECRET_KEY=your random secret
-
-FRONTEND_ORIGIN=https://xavier1azurus.github.io
-
-OLLAMA_HOST=https://less-titten-canvas-rover.trycloudflare.com
-
-OLLAMA_MODEL=tinyllama
-
-MOONPLUG_PROXY_KEY=THE SAME KEY USED BY proxy.py
-Most important change
-
-Your backend now sends:
-
-headers={
-    "X-MoonPlug-Key": MOONPLUG_PROXY_KEY
-}
-
-to the proxy.
-
-So the request becomes:
-
-MoonPlug
-   ↓
-https://moonplug.onrender.com
-   ↓
-https://less-titten-canvas-rover.trycloudflare.com
-   ↓
-X-MoonPlug-Key
-   ↓
-proxy.py
-   ↓
-Ollama
-
-After replacing server.py, push it to GitHub and deploy on Render.
-
-Do not put the actual proxy key inside server.py or your GitHub repository. Keep it only as the Render environment variable and in the local environment where proxy.py runs.
