@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import traceback
 import json
 import os
 import secrets
@@ -2527,22 +2528,35 @@ def method_not_allowed(error):
     }), 405
 
 
+# DEBUG 500 ERROR
+
 @app.errorhandler(500)
 def internal_error(error):
 
-    print(
-        "Internal server error:",
-        error
-    )
 
-    return jsonify({
+print()
+print("=" * 60)
+print("MOONPLUG INTERNAL SERVER ERROR")
+print("=" * 60)
 
-        "success": False,
+print(
+    "ERROR:",
+    repr(error)
+)
 
-        "error":
-            "Internal server error."
+traceback.print_exc()
 
-    }), 500
+print("=" * 60)
+print()
+
+return jsonify({
+
+    "success": False,
+
+    "error":
+        "Internal server error."
+
+}), 500
 
 
 # ============================================================
