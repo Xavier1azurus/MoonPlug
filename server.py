@@ -2530,9 +2530,10 @@ def method_not_allowed(error):
 
 # DEBUG 500 ERROR
 
+# DEBUG 500 ERROR
+
 @app.errorhandler(500)
 def internal_error(error):
-
 
 print()
 print("=" * 60)
@@ -2557,7 +2558,6 @@ return jsonify({
         "Internal server error."
 
 }), 500
-
 
 # ============================================================
 # STARTUP
