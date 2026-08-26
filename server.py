@@ -402,11 +402,11 @@ def proxy_headers():
             "application/json"
     }
 
-    if MOONPLUG_PROXY_KEY:
+  if MOONPLUG_PROXY_KEY:
 
-        headers[
-            "X-MoonPlug-Key"
-        ] = MOONPLUG_PROXY_KEY
+    headers[
+        "X-Proxy-Key"
+    ] = MOONPLUG_PROXY_KEY
 
     return headers
 
