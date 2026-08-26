@@ -1,3 +1,4 @@
+MoonPlug server.py
 from __future__ import annotations
 
 import json
@@ -33,24 +34,20 @@ DATABASE_URL = os.environ.get(
     ""
 ).strip()
 
-
 OWNER_PASSWORD = os.environ.get(
     "MOONPLUG_OWNER_PASSWORD",
     ""
 ).strip()
-
 
 OWNER_PASSWORD_HASH = os.environ.get(
     "MOONPLUG_OWNER_PASSWORD_HASH",
     ""
 ).strip()
 
-
 SECRET_KEY = os.environ.get(
     "MOONPLUG_SECRET_KEY",
     ""
 ).strip()
-
 
 FRONTEND_ORIGIN = os.environ.get(
     "FRONTEND_ORIGIN",
@@ -61,33 +58,22 @@ FRONTEND_ORIGIN = os.environ.get(
 # ============================================================
 # OLLAMA
 # ============================================================
-#
-# IMPORTANT:
-#
-# Render does NOT normally have Ollama running locally.
-#
-# You must provide the URL of your external Ollama server
-# through a Render environment variable:
-#
-# OLLAMA_HOST=https://your-ollama-server.example.com
-#
-# Do NOT put the URL directly into this Python file.
-#
-# The Ollama server must have TinyLlama installed:
-#
-# ollama pull tinyllama
-#
-# ============================================================
 
 OLLAMA_HOST = os.environ.get(
     "OLLAMA_HOST",
     ""
 ).strip().rstrip("/")
 
-
 OLLAMA_MODEL = os.environ.get(
     "OLLAMA_MODEL",
     "tinyllama"
+).strip()
+
+# IMPORTANT:
+# This must be the SAME key configured in proxy.py.
+MOONPLUG_PROXY_KEY = os.environ.get(
+    "MOONPLUG_PROXY_KEY",
+    ""
 ).strip()
 
 
@@ -141,7 +127,6 @@ allowed_origins = [
     "http://127.0.0.1:5500",
 ]
 
-
 allowed_origins = list(
     dict.fromkeys(
         origin
@@ -149,7 +134,6 @@ allowed_origins = list(
         if origin
     )
 )
-
 
 CORS(
     app,
@@ -182,14 +166,12 @@ def verify_owner_password(password: str) -> bool:
 
             return False
 
-
     if OWNER_PASSWORD:
 
         return secrets.compare_digest(
             password,
             OWNER_PASSWORD
         )
-
 
     return False
 
@@ -199,7 +181,6 @@ def verify_owner_password(password: str) -> bool:
 # ============================================================
 
 LOGIN_WINDOW_SECONDS = 300
-
 MAX_LOGIN_ATTEMPTS = 5
 
 login_attempts = {}
@@ -299,89 +280,50 @@ def initialize_database():
 
         return False
 
-
     try:
 
         with get_db() as connection:
 
             with connection.cursor() as cursor:
 
-                # ------------------------------------------------
-                # TRAINING
-                # ------------------------------------------------
-
                 cursor.execute(
                     """
                     CREATE TABLE IF NOT EXISTS training (
-
                         id BIGSERIAL PRIMARY KEY,
-
                         question TEXT NOT NULL,
-
                         answer TEXT NOT NULL,
-
-                        category TEXT NOT NULL
-                            DEFAULT 'general',
-
-                        created TIMESTAMPTZ NOT NULL
-                            DEFAULT NOW(),
-
-                        uses BIGINT NOT NULL
-                            DEFAULT 0
+                        category TEXT NOT NULL DEFAULT 'general',
+                        created TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                        uses BIGINT NOT NULL DEFAULT 0
                     )
                     """
                 )
-
-
-                # ------------------------------------------------
-                # CONVERSATIONS
-                # ------------------------------------------------
 
                 cursor.execute(
                     """
                     CREATE TABLE IF NOT EXISTS conversations (
-
                         id BIGSERIAL PRIMARY KEY,
-
                         session_id TEXT,
-
                         message TEXT NOT NULL,
-
                         response TEXT NOT NULL,
-
-                        created TIMESTAMPTZ NOT NULL
-                            DEFAULT NOW()
+                        created TIMESTAMPTZ NOT NULL DEFAULT NOW()
                     )
                     """
                 )
 
-
-                # ------------------------------------------------
-                # SETTINGS
-                # ------------------------------------------------
-
                 cursor.execute(
                     """
                     CREATE TABLE IF NOT EXISTS app_settings (
-
                         id INTEGER PRIMARY KEY,
-
                         minimum_score DOUBLE PRECISION
                             NOT NULL DEFAULT 0.30,
-
                         remember_conversations BOOLEAN
                             NOT NULL DEFAULT TRUE,
-
                         case_sensitive BOOLEAN
                             NOT NULL DEFAULT FALSE
                     )
                     """
                 )
-
-
-                # ------------------------------------------------
-                # DEFAULT SETTINGS
-                # ------------------------------------------------
 
                 cursor.execute(
                     """
@@ -397,22 +339,16 @@ def initialize_database():
                         TRUE,
                         FALSE
                     )
-
                     ON CONFLICT (id)
                     DO NOTHING
                     """
                 )
 
-
             connection.commit()
 
-
-        print(
-            "✓ PostgreSQL database ready."
-        )
+        print("✓ PostgreSQL database ready.")
 
         return True
-
 
     except Exception as error:
 
@@ -441,9 +377,19 @@ def get_ollama_client():
             "OLLAMA_HOST is not configured."
         )
 
+    if not MOONPLUG_PROXY_KEY:
 
+        raise RuntimeError(
+            "MOONPLUG_PROXY_KEY is not configured."
+        )
+
+    # IMPORTANT:
+    # Send the proxy key to proxy.py.
     return ollama.Client(
-        host=OLLAMA_HOST
+        host=OLLAMA_HOST,
+        headers={
+            "X-MoonPlug-Key": MOONPLUG_PROXY_KEY
+        }
     )
 
 
@@ -453,6 +399,9 @@ def ollama_available():
 
         return False
 
+    if not MOONPLUG_PROXY_KEY:
+
+        return False
 
     try:
 
@@ -461,7 +410,6 @@ def ollama_available():
         client.list()
 
         return True
-
 
     except Exception as error:
 
@@ -494,12 +442,10 @@ def owner_required(function):
                     "Owner authentication required."
             }), 401
 
-
         return function(
             *args,
             **kwargs
         )
-
 
     return wrapper
 
@@ -514,7 +460,6 @@ def get_ollama_models():
 
         return []
 
-
     try:
 
         client = get_ollama_client()
@@ -522,7 +467,6 @@ def get_ollama_models():
         result = client.list()
 
         models = []
-
 
         for item in result.get(
             "models",
@@ -543,9 +487,7 @@ def get_ollama_models():
 
                     models.append(name)
 
-
         return models
-
 
     except Exception as error:
 
@@ -576,7 +518,6 @@ def owner_login():
                 "Please wait a few minutes."
         }), 429
 
-
     if not OWNER_PASSWORD and not OWNER_PASSWORD_HASH:
 
         return jsonify({
@@ -586,11 +527,9 @@ def owner_login():
                 "not configured on the server."
         }), 503
 
-
     data = request.get_json(
         silent=True
     )
-
 
     if not isinstance(
         data,
@@ -603,12 +542,10 @@ def owner_login():
                 "Invalid request."
         }), 400
 
-
     password = data.get(
         "password",
         ""
     )
-
 
     if not isinstance(
         password,
@@ -623,9 +560,7 @@ def owner_login():
                 "Invalid password."
         }), 401
 
-
     password = password.strip()
-
 
     if not password or len(password) > 256:
 
@@ -637,7 +572,6 @@ def owner_login():
                 "Invalid password."
         }), 401
 
-
     if not verify_owner_password(password):
 
         record_failed_login()
@@ -648,12 +582,10 @@ def owner_login():
                 "Incorrect owner code."
         }), 401
 
-
     login_attempts.pop(
         get_client_ip(),
         None
     )
-
 
     session.clear()
 
@@ -668,7 +600,6 @@ def owner_login():
     session["session_id"] = (
         secrets.token_hex(16)
     )
-
 
     return jsonify({
         "success": True,
@@ -690,7 +621,6 @@ def owner_session():
 
     return jsonify({
         "success": True,
-
         "authenticated":
             session.get(
                 "owner_authenticated",
@@ -748,6 +678,9 @@ def health():
         "ollamaHostConfigured":
             bool(OLLAMA_HOST),
 
+        "ollamaProxyKeyConfigured":
+            bool(MOONPLUG_PROXY_KEY),
+
         "ollamaModel":
             OLLAMA_MODEL,
 
@@ -773,7 +706,6 @@ def owner_dashboard():
 
     total_uses = 0
 
-
     for item in training:
 
         category = (
@@ -781,14 +713,12 @@ def owner_dashboard():
             or "general"
         )
 
-
         categories[category] = (
             categories.get(
                 category,
                 0
             ) + 1
         )
-
 
         try:
 
@@ -806,9 +736,7 @@ def owner_dashboard():
 
             pass
 
-
     chats = 0
-
 
     if database_available():
 
@@ -831,14 +759,12 @@ def owner_dashboard():
                         result["count"]
                     )
 
-
         except Exception as error:
 
             print(
                 "Could not count chats:",
                 error
             )
-
 
     return jsonify({
 
@@ -871,6 +797,9 @@ def owner_dashboard():
 
             "ollamaConfigured":
                 ollama_configured(),
+
+            "ollamaProxyKeyConfigured":
+                bool(MOONPLUG_PROXY_KEY),
 
             "model":
                 OLLAMA_MODEL
@@ -905,7 +834,6 @@ def get_all_training():
 
         return []
 
-
     try:
 
         with get_db() as connection:
@@ -928,7 +856,6 @@ def get_all_training():
 
                 return cursor.fetchall()
 
-
     except Exception as error:
 
         print(
@@ -944,7 +871,6 @@ def get_minimum_score():
     if not database_available():
 
         return 0.30
-
 
     try:
 
@@ -962,13 +888,11 @@ def get_minimum_score():
 
                 result = cursor.fetchone()
 
-
                 if result:
 
                     return float(
                         result["minimum_score"]
                     )
-
 
     except Exception as error:
 
@@ -976,7 +900,6 @@ def get_minimum_score():
             "Could not load minimum score:",
             error
         )
-
 
     return 0.30
 
@@ -987,16 +910,13 @@ def find_best_training_match(message):
 
         return None
 
-
     message_clean = (
         message.strip().lower()
     )
 
-
     if not message_clean:
 
         return None
-
 
     try:
 
@@ -1019,16 +939,12 @@ def find_best_training_match(message):
 
                 training = cursor.fetchall()
 
-
         message_words = set(
             message_clean.split()
         )
 
-
         best_match = None
-
         best_score = 0.0
-
 
         for item in training:
 
@@ -1036,49 +952,40 @@ def find_best_training_match(message):
                 item["question"] or ""
             ).strip().lower()
 
-
             if not stored_question:
 
                 continue
-
 
             stored_words = set(
                 stored_question.split()
             )
 
-
             if not stored_words:
 
                 continue
-
 
             intersection = (
                 message_words &
                 stored_words
             )
 
-
             union = (
                 message_words |
                 stored_words
             )
 
-
             if not union:
 
                 continue
-
 
             score = (
                 len(intersection) /
                 len(union)
             )
 
-
             if message_clean == stored_question:
 
                 score = 1.0
-
 
             if score > best_score:
 
@@ -1086,16 +993,13 @@ def find_best_training_match(message):
 
                 best_match = item
 
-
         if not best_match:
 
             return None
 
-
         if best_score < get_minimum_score():
 
             return None
-
 
         try:
 
@@ -1116,7 +1020,6 @@ def find_best_training_match(message):
 
                 connection.commit()
 
-
         except Exception as error:
 
             print(
@@ -1124,11 +1027,9 @@ def find_best_training_match(message):
                 error
             )
 
-
         best_match["score"] = best_score
 
         return best_match
-
 
     except Exception as error:
 
@@ -1152,7 +1053,6 @@ def save_conversation(
     if not database_available():
 
         return
-
 
     try:
 
@@ -1183,7 +1083,6 @@ def save_conversation(
                 )
 
             connection.commit()
-
 
     except Exception as error:
 
@@ -1232,11 +1131,9 @@ def add_training():
                 "Database unavailable."
         }), 503
 
-
     data = request.get_json(
         silent=True
     )
-
 
     if not isinstance(
         data,
@@ -1249,24 +1146,20 @@ def add_training():
                 "Invalid request."
         }), 400
 
-
     question = data.get(
         "question",
         ""
     )
-
 
     answer = data.get(
         "answer",
         ""
     )
 
-
     category = data.get(
         "category",
         "general"
     )
-
 
     if not isinstance(
         question,
@@ -1279,7 +1172,6 @@ def add_training():
                 "Question must be text."
         }), 400
 
-
     if not isinstance(
         answer,
         str
@@ -1291,7 +1183,6 @@ def add_training():
                 "Answer must be text."
         }), 400
 
-
     if not isinstance(
         category,
         str
@@ -1299,16 +1190,13 @@ def add_training():
 
         category = "general"
 
-
     question = question.strip()
-
     answer = answer.strip()
 
     category = (
         category.strip()
         or "general"
     )
-
 
     if not question:
 
@@ -1318,7 +1206,6 @@ def add_training():
                 "Question cannot be empty."
         }), 400
 
-
     if not answer:
 
         return jsonify({
@@ -1326,7 +1213,6 @@ def add_training():
             "error":
                 "Answer cannot be empty."
         }), 400
-
 
     try:
 
@@ -1363,9 +1249,7 @@ def add_training():
 
                 saved = cursor.fetchone()
 
-
             connection.commit()
-
 
         return jsonify({
 
@@ -1374,7 +1258,6 @@ def add_training():
             "training": saved
 
         }), 201
-
 
     except Exception as error:
 
@@ -1409,7 +1292,6 @@ def generate_training():
                 "Database unavailable."
         }), 503
 
-
     if not ollama_configured():
 
         return jsonify({
@@ -1422,11 +1304,19 @@ def generate_training():
                 "environment variables."
         }), 503
 
+    if not MOONPLUG_PROXY_KEY:
+
+        return jsonify({
+
+            "success": False,
+
+            "error":
+                "MOONPLUG_PROXY_KEY is not configured."
+        }), 503
 
     data = request.get_json(
         silent=True
     )
-
 
     if not isinstance(
         data,
@@ -1441,15 +1331,9 @@ def generate_training():
                 "Invalid JSON request."
         }), 400
 
-
-    # --------------------------------------------------------
-    # CATEGORY
-    # --------------------------------------------------------
-
     category = data.get(
         "category"
     )
-
 
     if not isinstance(
         category,
@@ -1464,9 +1348,7 @@ def generate_training():
                 "Category must be text."
         }), 400
 
-
     category = category.strip()
-
 
     if not category:
 
@@ -1477,11 +1359,6 @@ def generate_training():
             "error":
                 "Category cannot be empty."
         }), 400
-
-
-    # --------------------------------------------------------
-    # AMOUNT
-    # --------------------------------------------------------
 
     try:
 
@@ -1505,7 +1382,6 @@ def generate_training():
                 "Amount must be a number."
         }), 400
 
-
     amount = max(
         1,
         min(
@@ -1513,7 +1389,6 @@ def generate_training():
             50
         )
     )
-
 
     # --------------------------------------------------------
     # CONNECT TO OLLAMA
@@ -1525,7 +1400,6 @@ def generate_training():
 
         client.list()
 
-
     except Exception as error:
 
         print(
@@ -1533,17 +1407,16 @@ def generate_training():
             error
         )
 
-
         return jsonify({
 
             "success": False,
 
             "error":
                 "Could not connect to the Ollama server. "
-                "Check OLLAMA_HOST in Render and make sure "
-                "the Ollama server is online and reachable."
+                "Check OLLAMA_HOST and MOONPLUG_PROXY_KEY "
+                "in Render and make sure the Ollama proxy "
+                "is online."
         }), 503
-
 
     # --------------------------------------------------------
     # CHECK MODEL
@@ -1553,7 +1426,6 @@ def generate_training():
 
         models = get_ollama_models()
 
-
         model_exists = any(
             model == OLLAMA_MODEL
             or model.startswith(
@@ -1561,7 +1433,6 @@ def generate_training():
             )
             for model in models
         )
-
 
         if not model_exists:
 
@@ -1571,10 +1442,8 @@ def generate_training():
 
                 "error":
                     f"The model '{OLLAMA_MODEL}' "
-                    "was not found on the Ollama server. "
-                    "Install TinyLlama there first."
+                    "was not found on the Ollama server."
             }), 503
-
 
     except Exception as error:
 
@@ -1582,7 +1451,6 @@ def generate_training():
             "OLLAMA MODEL CHECK ERROR:",
             error
         )
-
 
     # --------------------------------------------------------
     # PROMPT
@@ -1618,7 +1486,6 @@ Required JSON format:
 }}
 """
 
-
     # --------------------------------------------------------
     # GENERATE
     # --------------------------------------------------------
@@ -1639,7 +1506,6 @@ Required JSON format:
             format="json"
         )
 
-
         content = (
             result
             .get("message", {})
@@ -1647,24 +1513,20 @@ Required JSON format:
             .strip()
         )
 
-
         if not content:
 
             raise ValueError(
                 "Ollama returned an empty response."
             )
 
-
         generated = json.loads(
             content
         )
-
 
         training_items = generated.get(
             "training",
             []
         )
-
 
         if not isinstance(
             training_items,
@@ -1675,14 +1537,12 @@ Required JSON format:
                 "Invalid training format."
             )
 
-
     except Exception as error:
 
         print(
             "AUTO TRAINER ERROR:",
             error
         )
-
 
         return jsonify({
 
@@ -1693,13 +1553,11 @@ Required JSON format:
                 "valid training data."
         }), 500
 
-
     # --------------------------------------------------------
     # SAVE TRAINING
     # --------------------------------------------------------
 
     saved = []
-
 
     try:
 
@@ -1716,14 +1574,12 @@ Required JSON format:
 
                         continue
 
-
                     question = str(
                         item.get(
                             "question",
                             ""
                         )
                     ).strip()
-
 
                     answer = str(
                         item.get(
@@ -1732,26 +1588,17 @@ Required JSON format:
                         )
                     ).strip()
 
-
                     if not question:
-
                         continue
-
 
                     if not answer:
-
                         continue
-
 
                     if len(question) > 2000:
-
                         continue
-
 
                     if len(answer) > 10000:
-
                         continue
-
 
                     cursor.execute(
                         """
@@ -1780,17 +1627,12 @@ Required JSON format:
                         )
                     )
 
-
                     row = cursor.fetchone()
 
-
                     if row:
-
                         saved.append(row)
 
-
             connection.commit()
-
 
         return jsonify({
 
@@ -1817,14 +1659,12 @@ Required JSON format:
 
         }), 201
 
-
     except Exception as error:
 
         print(
             "TRAINING DATABASE ERROR:",
             error
         )
-
 
         return jsonify({
 
@@ -1855,7 +1695,6 @@ def delete_training(training_id):
                 "Database unavailable."
         }), 503
 
-
     try:
 
         with get_db() as connection:
@@ -1873,12 +1712,9 @@ def delete_training(training_id):
                     )
                 )
 
-
                 deleted = cursor.fetchone()
 
-
             connection.commit()
-
 
         if not deleted:
 
@@ -1891,7 +1727,6 @@ def delete_training(training_id):
 
             }), 404
 
-
         return jsonify({
 
             "success": True,
@@ -1900,14 +1735,12 @@ def delete_training(training_id):
                 "Training example deleted."
         })
 
-
     except Exception as error:
 
         print(
             "Could not delete training:",
             error
         )
-
 
         return jsonify({
 
@@ -1933,7 +1766,6 @@ def chat():
         silent=True
     )
 
-
     if not isinstance(
         data,
         dict
@@ -1948,12 +1780,10 @@ def chat():
 
         }), 400
 
-
     message = data.get(
         "message",
         ""
     )
-
 
     if not isinstance(
         message,
@@ -1969,9 +1799,7 @@ def chat():
 
         }), 400
 
-
     message = message.strip()
-
 
     if not message:
 
@@ -1984,7 +1812,6 @@ def chat():
 
         }), 400
 
-
     # --------------------------------------------------------
     # TRAINED KNOWLEDGE FIRST
     # --------------------------------------------------------
@@ -1993,17 +1820,14 @@ def chat():
         message
     )
 
-
     if match:
 
         response = match["answer"]
-
 
         save_conversation(
             message,
             response
         )
-
 
         return jsonify({
 
@@ -2025,7 +1849,6 @@ def chat():
                 )
         })
 
-
     # --------------------------------------------------------
     # OLLAMA
     # --------------------------------------------------------
@@ -2036,12 +1859,10 @@ def chat():
 
             client = get_ollama_client()
 
-
             history = data.get(
                 "history",
                 []
             )
-
 
             messages = [
 
@@ -2057,7 +1878,6 @@ def chat():
 
             ]
 
-
             if isinstance(
                 history,
                 list
@@ -2072,16 +1892,13 @@ def chat():
 
                         continue
 
-
                     role = item.get(
                         "role"
                     )
 
-
                     content = item.get(
                         "content"
                     )
-
 
                     if role not in (
                         "user",
@@ -2090,7 +1907,6 @@ def chat():
 
                         continue
 
-
                     if not isinstance(
                         content,
                         str
@@ -2098,14 +1914,11 @@ def chat():
 
                         continue
 
-
                     content = content.strip()
-
 
                     if not content:
 
                         continue
-
 
                     messages.append({
 
@@ -2115,7 +1928,6 @@ def chat():
                         "content":
                             content[:10000]
                     })
-
 
             if (
                 not messages
@@ -2136,14 +1948,12 @@ def chat():
                         message
                 })
 
-
             result = client.chat(
 
                 model=OLLAMA_MODEL,
 
                 messages=messages
             )
-
 
             response = (
                 result
@@ -2152,14 +1962,12 @@ def chat():
                 .strip()
             )
 
-
             if response:
 
                 save_conversation(
                     message,
                     response
                 )
-
 
                 return jsonify({
 
@@ -2178,14 +1986,12 @@ def chat():
                         0
                 })
 
-
         except Exception as error:
 
             print(
                 "OLLAMA CHAT ERROR:",
                 error
             )
-
 
     # --------------------------------------------------------
     # FALLBACK
@@ -2197,12 +2003,10 @@ def chat():
         "this through the Trainer."
     )
 
-
     save_conversation(
         message,
         response
     )
-
 
     return jsonify({
 
@@ -2245,7 +2049,6 @@ def get_settings():
             False
     }
 
-
     if database_available():
 
         try:
@@ -2265,9 +2068,7 @@ def get_settings():
                         """
                     )
 
-
                     result = cursor.fetchone()
-
 
                     if result:
 
@@ -2295,14 +2096,12 @@ def get_settings():
                                 )
                         }
 
-
         except Exception as error:
 
             print(
                 "Could not load settings:",
                 error
             )
-
 
     return jsonify({
 
@@ -2335,11 +2134,9 @@ def update_settings():
 
         }), 503
 
-
     data = request.get_json(
         silent=True
     )
-
 
     if not isinstance(
         data,
@@ -2355,7 +2152,6 @@ def update_settings():
 
         }), 400
 
-
     try:
 
         with get_db() as connection:
@@ -2370,7 +2166,6 @@ def update_settings():
                         ]
                     )
 
-
                     if not 0 <= minimum_score <= 1:
 
                         return jsonify({
@@ -2383,7 +2178,6 @@ def update_settings():
 
                         }), 400
 
-
                     cursor.execute(
                         """
                         UPDATE app_settings
@@ -2395,13 +2189,11 @@ def update_settings():
                         )
                     )
 
-
                 if "remember_conversations" in data:
 
                     value = data[
                         "remember_conversations"
                     ]
-
 
                     if not isinstance(
                         value,
@@ -2418,7 +2210,6 @@ def update_settings():
 
                         }), 400
 
-
                     cursor.execute(
                         """
                         UPDATE app_settings
@@ -2430,13 +2221,11 @@ def update_settings():
                         )
                     )
 
-
                 if "case_sensitive" in data:
 
                     value = data[
                         "case_sensitive"
                     ]
-
 
                     if not isinstance(
                         value,
@@ -2453,7 +2242,6 @@ def update_settings():
 
                         }), 400
 
-
                     cursor.execute(
                         """
                         UPDATE app_settings
@@ -2465,9 +2253,7 @@ def update_settings():
                         )
                     )
 
-
             connection.commit()
-
 
         return jsonify({
 
@@ -2477,14 +2263,12 @@ def update_settings():
                 "Settings updated."
         })
 
-
     except Exception as error:
 
         print(
             "Could not update settings:",
             error
         )
-
 
         return jsonify({
 
@@ -2515,7 +2299,6 @@ def ollama_status():
 
     error_message = None
 
-
     if configured:
 
         try:
@@ -2545,11 +2328,9 @@ def ollama_status():
 
                         models.append(name)
 
-
         except Exception as error:
 
             error_message = str(error)
-
 
     return jsonify({
 
@@ -2563,6 +2344,9 @@ def ollama_status():
 
         "hostConfigured":
             bool(OLLAMA_HOST),
+
+        "proxyKeyConfigured":
+            bool(MOONPLUG_PROXY_KEY),
 
         "model":
             OLLAMA_MODEL,
@@ -2610,6 +2394,9 @@ def owner_status():
 
         "ollamaHostConfigured":
             bool(OLLAMA_HOST),
+
+        "ollamaProxyKeyConfigured":
+            bool(MOONPLUG_PROXY_KEY),
 
         "ollamaModel":
             OLLAMA_MODEL
@@ -2679,7 +2466,6 @@ def internal_error(error):
         error
     )
 
-
     return jsonify({
 
         "success": False,
@@ -2703,18 +2489,15 @@ def startup():
     print("=" * 60)
     print()
 
-
     print(
         "Version:",
         APP_VERSION
     )
 
-
     print(
         "Database configured:",
         database_available()
     )
-
 
     print(
         "Owner configured:",
@@ -2725,18 +2508,20 @@ def startup():
         )
     )
 
-
     print(
         "Ollama configured:",
         ollama_configured()
     )
 
+    print(
+        "Ollama proxy key configured:",
+        bool(MOONPLUG_PROXY_KEY)
+    )
 
     print(
         "Ollama model:",
         OLLAMA_MODEL
     )
-
 
     if OLLAMA_HOST:
 
@@ -2751,12 +2536,9 @@ def startup():
             "Ollama host: NOT CONFIGURED"
         )
 
-
     print()
 
-
     initialize_database()
-
 
     print()
 
@@ -2775,14 +2557,12 @@ if __name__ == "__main__":
 
     startup()
 
-
     port = int(
         os.environ.get(
             "PORT",
             "5000"
         )
     )
-
 
     app.run(
         host="0.0.0.0",
@@ -2800,30 +2580,45 @@ else:
     initialize_database()
 Render environment variables
 
-After replacing your backend file, go to your Render service's Environment Variables and make sure these exist:
+Make sure Render has these:
 
-Variable	Value
-DATABASE_URL	Your PostgreSQL connection string
-MOONPLUG_OWNER_PASSWORD	Your private owner password
-MOONPLUG_SECRET_KEY	A long random secret
-FRONTEND_ORIGIN	https://xavier1azurus.github.io
-OLLAMA_HOST	Your external Ollama server URL
-OLLAMA_MODEL	tinyllama
+DATABASE_URL=your PostgreSQL connection string
 
-The important one is:
+MOONPLUG_OWNER_PASSWORD=your private owner password
 
-OLLAMA_HOST
+MOONPLUG_SECRET_KEY=your random secret
 
-It should contain the actual URL of the computer/server running Ollama, not tinyllama.
+FRONTEND_ORIGIN=https://xavier1azurus.github.io
 
-And on that Ollama server, TinyLlama needs to be installed.
+OLLAMA_HOST=https://less-titten-canvas-rover.trycloudflare.com
 
-Once that's connected, the flow will be:
+OLLAMA_MODEL=tinyllama
 
-MoonPlug → Render → Ollama server → TinyLlama → Render → MoonPlug
+MOONPLUG_PROXY_KEY=THE SAME KEY USED BY proxy.py
+Most important change
 
-The Auto Trainer will then send the category and amount to:
+Your backend now sends:
 
-/api/owner/training/generate
+headers={
+    "X-MoonPlug-Key": MOONPLUG_PROXY_KEY
+}
 
-and the backend will generate the training and save it into PostgreSQL.
+to the proxy.
+
+So the request becomes:
+
+MoonPlug
+   ↓
+https://moonplug.onrender.com
+   ↓
+https://less-titten-canvas-rover.trycloudflare.com
+   ↓
+X-MoonPlug-Key
+   ↓
+proxy.py
+   ↓
+Ollama
+
+After replacing server.py, push it to GitHub and deploy on Render.
+
+Do not put the actual proxy key inside server.py or your GitHub repository. Keep it only as the Render environment variable and in the local environment where proxy.py runs.
