@@ -715,6 +715,7 @@ SEND MESSAGE
 ===================================================== */
 
 
+
 async function sendMessage() {
 
     const input = document.getElementById("messageInput");
@@ -725,7 +726,7 @@ async function sendMessage() {
 
     if (!message) return;
 
-    addMessage("user", message);
+    addMessage(message, "user");
 
     input.value = "";
 
@@ -756,17 +757,17 @@ async function sendMessage() {
         if (!response.ok || !data.success) {
 
             addMessage(
-                "assistant",
                 data.error ||
-                "MoonPlug could not get a response."
+                "MoonPlug could not get a response.",
+                "assistant"
             );
 
             return;
         }
 
         addMessage(
-            "assistant",
-            data.response
+            data.response,
+            "assistant"
         );
 
     } catch (error) {
@@ -779,8 +780,8 @@ async function sendMessage() {
         );
 
         addMessage(
-            "assistant",
-            "MoonPlug could not connect to the AI."
+            "MoonPlug could not connect to the AI.",
+            "assistant"
         );
     }
 }
