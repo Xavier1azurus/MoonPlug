@@ -137,6 +137,11 @@
     </div>
 
 
+  # MoonPlug Chat Input Replacement
+
+
+<div class="chat-bottom-area">
+
     <div id="typing" class="typing" aria-live="polite">
 
         <span class="typing-dot"></span>
@@ -152,13 +157,14 @@
 
     <div class="chat-input-area">
 
-        <input
+        <textarea
             id="messageInput"
-            type="text"
+            rows="1"
             placeholder="Ask MoonPlug anything..."
             autocomplete="off"
             enterkeyhint="send"
-        >
+        ></textarea>
+
 
         <button
             id="sendButton"
@@ -171,6 +177,9 @@
     </div>
 
 </div>
+
+</div>
+
 
 
 </main>
