@@ -11,7 +11,7 @@
    CONFIGURATION
 ========================================================= */
 
-const API_BASE = "https://YOUR-RENDER-URL.onrender.com";
+const API_BASE = "https://moonplug.onrender.com";
 
 const STORAGE_KEYS = {
     theme: "moonplug_theme",
