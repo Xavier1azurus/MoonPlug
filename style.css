@@ -29,37 +29,41 @@ body {
 }
 
 
+
 /* =====================================================
-   STAR FIELD
+   MOONPLUG STAR FIELD
 ===================================================== */
 
 .star-field {
     position: fixed;
     inset: 0;
 
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 
     pointer-events: none;
+
     overflow: hidden;
 
-    z-index: 0;
+    z-index: 1;
 }
 
 .random-star {
     position: absolute;
 
+    display: block;
+
     width: var(--star-size, 2px);
     height: var(--star-size, 2px);
 
-    left: var(--star-x, 50%);
-    top: var(--star-y, 50%);
+    left: var(--star-x);
+    top: var(--star-y);
 
     border-radius: 50%;
 
     background: #ffffff;
 
-    opacity: var(--star-opacity, 0.7);
+    opacity: var(--star-opacity, 0.8);
 
     box-shadow:
         0 0 var(--star-glow, 4px) #ffffff;
@@ -78,33 +82,44 @@ body {
 @keyframes moonplugStarMove {
 
     0% {
+        opacity:
+            var(--star-opacity, 0.8);
+
         transform:
             translate(0, 0)
             scale(var(--star-scale, 1));
-
-        opacity:
-            var(--star-opacity, 0.7);
     }
 
     50% {
-        opacity:
-            min(
-                calc(var(--star-opacity, 0.7) + 0.2),
-                1
-            );
+        opacity: 1;
     }
 
     100% {
+        opacity:
+            var(--star-opacity, 0.8);
+
         transform:
             translate(
                 var(--star-move-x, 0px),
                 var(--star-move-y, 0px)
             )
             scale(var(--star-scale, 1));
-
-        opacity:
-            var(--star-opacity, 0.7);
     }
+}
+
+
+/* Keep the actual MoonPlug interface above the stars */
+
+.sidebar,
+.chat-section {
+    z-index: 2;
+}
+
+.chat-header,
+.messages,
+.chat-bottom-area {
+    position: relative;
+    z-index: 3;
 }
 
 
