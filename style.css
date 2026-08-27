@@ -4,7 +4,7 @@
 /* =====================================================
    MOONPLUG AI
    COMPLETE RESPONSIVE CSS
-   DESKTOP + IPAD + IPHONE
+   DESKTOP + IPAD AIR + IPHONE + ANDROID
 ===================================================== */
 
 
@@ -29,7 +29,6 @@ html {
 }
 
 body {
-    width: 100%;
     min-height: 100dvh;
 
     font-family:
@@ -61,8 +60,7 @@ body {
 
     background: #151515;
 
-    border-right:
-        1px solid #292929;
+    border-right: 1px solid #292929;
 
     display: flex;
     flex-direction: column;
@@ -89,14 +87,12 @@ body {
     height: 70px;
     min-height: 70px;
 
-    padding:
-        0 20px;
+    padding: 0 20px;
 
     display: flex;
     align-items: center;
 
-    border-bottom:
-        1px solid #292929;
+    border-bottom: 1px solid #292929;
 
     cursor: pointer;
 
@@ -109,18 +105,16 @@ body {
 
 .sidebar-logo strong {
     margin-left: 8px;
-
     font-size: 17px;
 }
 
 .logo-ai {
     color: #888888;
-
     margin-left: 5px;
 }
 
 
-/* SIDEBAR BUTTON AREA */
+/* SIDEBAR BUTTONS */
 
 .sidebar-buttons {
     flex: 1;
@@ -157,8 +151,7 @@ body {
 
     gap: 12px;
 
-    padding:
-        0 13px;
+    padding: 0 13px;
 
     font-size: 15px;
 
@@ -178,8 +171,7 @@ body {
 }
 
 .sidebar-button:active {
-    transform:
-        scale(0.97);
+    transform: scale(0.97);
 }
 
 .sidebar-icon {
@@ -193,9 +185,7 @@ body {
 
 .sidebar-label {
     white-space: nowrap;
-
     overflow: hidden;
-
     text-overflow: ellipsis;
 }
 
@@ -209,8 +199,7 @@ body {
 
     background: #292929;
 
-    margin:
-        10px 5px;
+    margin: 10px 5px;
 
     flex-shrink: 0;
 }
@@ -221,8 +210,7 @@ body {
 .sidebar-bottom {
     padding: 10px;
 
-    border-top:
-        1px solid #292929;
+    border-top: 1px solid #292929;
 
     display: flex;
     flex-direction: column;
@@ -255,17 +243,14 @@ body {
 
 .sidebar.collapsed .sidebar-buttons {
     width: 64px;
-
-    padding:
-        8px 5px;
+    padding: 8px 5px;
 }
 
 .sidebar.collapsed .sidebar-button {
     width: 54px;
     min-width: 54px;
 
-    margin:
-        2px auto;
+    margin: 2px auto;
 
     padding: 0;
 
@@ -280,9 +265,7 @@ body {
 
 .sidebar.collapsed .sidebar-bottom {
     width: 64px;
-
-    padding:
-        7px 5px 10px;
+    padding: 7px 5px 10px;
 }
 
 .sidebar.collapsed .sidebar-divider {
@@ -309,10 +292,9 @@ body {
 
     background: #0f0f0f;
 
-    transition:
-        left 0.25s ease;
-
     overflow: hidden;
+
+    transition: left 0.25s ease;
 }
 
 .sidebar.collapsed ~ .chat-section {
@@ -345,18 +327,18 @@ body {
 ===================================================== */
 
 .chat-header {
+    width: 100%;
+
     height: 64px;
     min-height: 64px;
 
-    padding:
-        0 24px;
+    padding: 0 24px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    border-bottom:
-        1px solid #292929;
+    border-bottom: 1px solid #292929;
 
     flex-shrink: 0;
 }
@@ -367,7 +349,6 @@ body {
 
 .online {
     color: #7cff9b;
-
     font-size: 14px;
 }
 
@@ -376,6 +357,9 @@ body {
    MOONPLUG ANIMATION
 ===================================================== */
 
+.moonplug-animation {
+    display: none;
+}
 
 
 /* =====================================================
@@ -383,6 +367,8 @@ body {
 ===================================================== */
 
 .messages {
+    position: relative;
+
     flex: 1 1 auto;
 
     width: 100%;
@@ -394,7 +380,9 @@ body {
     overflow-x: hidden;
 
     padding:
-        25px 25px 190px;
+        25px
+        25px
+        170px;
 
     display: flex;
     flex-direction: column;
@@ -411,35 +399,6 @@ body {
 }
 
 
-/* SCROLLBAR */
-
-.messages::-webkit-scrollbar,
-.owner-panel::-webkit-scrollbar,
-.owner-content::-webkit-scrollbar,
-.sidebar::-webkit-scrollbar,
-.sidebar-buttons::-webkit-scrollbar {
-    width: 7px;
-}
-
-.messages::-webkit-scrollbar-track,
-.owner-panel::-webkit-scrollbar-track,
-.owner-content::-webkit-scrollbar-track,
-.sidebar::-webkit-scrollbar-track,
-.sidebar-buttons::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.messages::-webkit-scrollbar-thumb,
-.owner-panel::-webkit-scrollbar-thumb,
-.owner-content::-webkit-scrollbar-thumb,
-.sidebar::-webkit-scrollbar-thumb,
-.sidebar-buttons::-webkit-scrollbar-thumb {
-    background: #383838;
-
-    border-radius: 10px;
-}
-
-
 /* =====================================================
    EMPTY CHAT
 ===================================================== */
@@ -450,14 +409,12 @@ body {
     top: 50%;
     left: 50%;
 
-    transform:
-        translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 
-    width:
-        min(
-            700px,
-            calc(100% - 40px)
-        );
+    width: min(
+        700px,
+        calc(100% - 40px)
+    );
 
     text-align: center;
 
@@ -466,29 +423,28 @@ body {
 
 .empty-chat h1 {
     font-size: 36px;
-
     margin-bottom: 10px;
 }
 
 .empty-chat p {
     color: #888888;
-
     font-size: 17px;
 }
 
 
 /* =====================================================
-   CHAT BUBBLES
+   MESSAGE BUBBLES
 ===================================================== */
-# MoonPlug Desktop Message Bubble Fix
-
 
 .message-bubble {
     display: block;
 
     width: fit-content;
 
-    max-width: 650px;
+    max-width: min(
+        650px,
+        calc(100% - 80px)
+    );
 
     padding: 15px 19px;
 
@@ -498,197 +454,98 @@ body {
 
     font-size: 20px;
 
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-
-    white-space: pre-wrap;
-
     color: #ffffff;
 
-    visibility: visible;
-    opacity: 1;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+
+    white-space: pre-wrap;
 
     animation: bubbleAppear 0.18s ease;
 }
 
 
-/* USER MESSAGE */
+/* USER */
 
 .message-bubble.user {
     align-self: flex-end;
 
-    margin-left: auto;
-    margin-right: 20px;
+    margin-left: 0;
+    margin-right: 25px;
 
     background: #292929;
-
-    color: #ffffff;
 
     border-bottom-right-radius: 5px;
 }
 
 
-/* AI MESSAGE */
+/* AI */
 
 .message-bubble.ai {
     align-self: flex-start;
 
-    margin-right: auto;
-    margin-left: 20px;
+    margin-left: 25px;
+    margin-right: 0;
 
     background: #1c1c1c;
-
-    color: #ffffff;
 
     border-bottom-left-radius: 5px;
 }
 
 
-This makes the message **stop before reaching the edge** and gives both the user and MoonPlug messages some breathing room.
+@keyframes bubbleAppear {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
 
-Your existing mobile rules can still override the `650px` maximum with their `90%` / `93%` settings.
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-====================================================================
-   BOTTOM CHAT AREA
+
+/* =====================================================
+   BOTTOM TASKBAR
 ===================================================== */
 
-.chat-bottom-area {
+.chat-input-area {
     position: absolute;
 
-    left: 0;
-    right: 0;
-    bottom: 0;
+    left: 50%;
 
-    width: 100%;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    padding:
-        0 20px
+    bottom:
         calc(
             18px +
             env(safe-area-inset-bottom)
         );
 
+    transform: translateX(-50%);
+
     z-index: 100;
 
-    pointer-events: none;
-}
-
-
-/* =====================================================
-   THINKING INDICATOR
-===================================================== */
-
-.chat-bottom-area .typing {
     width:
         min(
             760px,
-            100%
-        );
-
-    display: none;
-
-    align-items: center;
-
-    gap: 5px;
-
-    padding:
-        0 10px 8px;
-
-    color: #888888;
-
-    font-size: 14px;
-
-    flex-shrink: 0;
-
-    pointer-events: none;
-}
-
-.typing-dot {
-    width: 6px;
-    height: 6px;
-
-    background: #888888;
-
-    border-radius: 50%;
-
-    animation:
-        typingPulse 1s infinite;
-}
-
-.typing-dot:nth-child(2) {
-    animation-delay:
-        0.15s;
-}
-
-.typing-dot:nth-child(3) {
-    animation-delay:
-        0.30s;
-}
-
-.typing-text {
-    margin-left: 5px;
-}
-
-
-@keyframes typingPulse {
-
-    0%,
-    100% {
-        opacity: 0.25;
-
-        transform:
-            translateY(0);
-    }
-
-    50% {
-        opacity: 1;
-
-        transform:
-            translateY(-2px);
-    }
-}
-
-
-/* =====================================================
-   EXPANDING CHAT TASKBAR
-===================================================== */
-
-.chat-input-area {
-    position: relative;
-
-    width:
-        min(
-            760px,
-            100%
+            calc(100% - 48px)
         );
 
     min-height: 62px;
 
-    max-height: 180px;
-
-    padding:
-        8px 9px;
+    padding: 8px 9px;
 
     background: #1c1c1c;
 
-    border:
-        1px solid #353535;
+    border: 1px solid #353535;
 
     border-radius: 19px;
 
     display: flex;
-
-    align-items: flex-end;
+    align-items: center;
 
     gap: 8px;
-
-    pointer-events: auto;
-
-    overflow: hidden;
 
     box-shadow:
         0 8px 30px
@@ -697,24 +554,18 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 
 /* =====================================================
-   EXPANDING TEXTAREA
+   MESSAGE INPUT
 ===================================================== */
 
-.chat-input-area textarea {
-    flex: 1;
+#messageInput {
+    flex: 1 1 auto;
 
     width: 100%;
-
     min-width: 0;
 
-    min-height: 44px;
-
-    max-height: 160px;
-
-    resize: none;
+    height: 44px;
 
     border: none;
-
     outline: none;
 
     background: transparent;
@@ -722,7 +573,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
     color: #ffffff;
 
     padding:
-        10px 13px;
+        0 13px;
 
     font-family:
         Arial,
@@ -733,14 +584,12 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     line-height: 1.45;
 
-    overflow-y: auto;
+    overflow: hidden;
 
-    scrollbar-width: thin;
-
-    touch-action: pan-y;
+    text-overflow: ellipsis;
 }
 
-.chat-input-area textarea::placeholder {
+#messageInput::placeholder {
     color: #777777;
 }
 
@@ -752,6 +601,8 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 #sendButton {
     width: 44px;
     height: 44px;
+
+    min-width: 44px;
 
     border: none;
 
@@ -777,21 +628,123 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 }
 
 #sendButton:hover {
-    transform:
-        scale(1.05);
+    transform: scale(1.05);
 }
 
 #sendButton:active {
-    transform:
-        scale(0.92);
+    transform: scale(0.92);
 }
 
 #sendButton:disabled {
     opacity: 0.45;
-
     cursor: not-allowed;
-
     transform: none;
+}
+
+
+/* =====================================================
+   TYPING INDICATOR
+===================================================== */
+
+.typing {
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 88px;
+
+    transform: translateX(-50%);
+
+    width:
+        min(
+            760px,
+            calc(100% - 48px)
+        );
+
+    display: none;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding:
+        0 10px 8px;
+
+    color: #888888;
+
+    font-size: 14px;
+
+    z-index: 90;
+
+    pointer-events: none;
+}
+
+.typing-dot {
+    width: 6px;
+    height: 6px;
+
+    background: #888888;
+
+    border-radius: 50%;
+
+    animation:
+        typingPulse 1s infinite;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.30s;
+}
+
+.typing-text {
+    margin-left: 5px;
+}
+
+
+@keyframes typingPulse {
+    0%,
+    100% {
+        opacity: 0.25;
+        transform: translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+}
+
+
+/* =====================================================
+   SCROLLBARS
+===================================================== */
+
+.messages::-webkit-scrollbar,
+.owner-panel::-webkit-scrollbar,
+.owner-content::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar,
+.sidebar-buttons::-webkit-scrollbar {
+    width: 7px;
+}
+
+.messages::-webkit-scrollbar-track,
+.owner-panel::-webkit-scrollbar-track,
+.owner-content::-webkit-scrollbar-track,
+.sidebar::-webkit-scrollbar-track,
+.sidebar-buttons::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.messages::-webkit-scrollbar-thumb,
+.owner-panel::-webkit-scrollbar-thumb,
+.owner-content::-webkit-scrollbar-thumb,
+.sidebar::-webkit-scrollbar-thumb,
+.sidebar-buttons::-webkit-scrollbar-thumb {
+    background: #383838;
+    border-radius: 10px;
 }
 
 
@@ -822,18 +775,15 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 }
 
 .settings-box {
-    width:
-        min(500px, 100%);
+    width: min(500px, 100%);
 
-    max-height:
-        85dvh;
+    max-height: 85dvh;
 
     overflow-y: auto;
 
     background: #181818;
 
-    border:
-        1px solid #303030;
+    border: 1px solid #303030;
 
     border-radius: 18px;
 
@@ -869,11 +819,9 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 }
 
 .setting-item {
-    padding:
-        16px 0;
+    padding: 16px 0;
 
-    border-bottom:
-        1px solid #292929;
+    border-bottom: 1px solid #292929;
 
     display: flex;
     flex-direction: column;
@@ -887,29 +835,24 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 .setting-item > span {
     color: #888888;
-
     font-size: 13px;
 }
 
 .appearance-options {
     display: flex;
-
     flex-wrap: wrap;
-
     gap: 8px;
 }
 
 .appearance-options button,
 .size-button {
-    border:
-        1px solid #383838;
+    border: 1px solid #383838;
 
     background: #222222;
 
     color: #dddddd;
 
-    padding:
-        9px 14px;
+    padding: 9px 14px;
 
     border-radius: 9px;
 
@@ -918,7 +861,6 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 .size-button.active {
     background: #ffffff;
-
     color: #111111;
 }
 
@@ -955,13 +897,11 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 }
 
 .account-box {
-    width:
-        min(430px, 100%);
+    width: min(430px, 100%);
 
     background: #181818;
 
-    border:
-        1px solid #303030;
+    border: 1px solid #303030;
 
     border-radius: 22px;
 
@@ -1028,7 +968,6 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 .account-tab.active {
     background: #292929;
-
     color: #ffffff;
 }
 
@@ -1057,11 +996,9 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     height: 46px;
 
-    padding:
-        0 13px;
+    padding: 0 13px;
 
-    border:
-        1px solid #333333;
+    border: 1px solid #333333;
 
     border-radius: 10px;
 
@@ -1103,8 +1040,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     margin-top: 10px;
 
-    border:
-        1px solid #333333;
+    border: 1px solid #333333;
 
     border-radius: 10px;
 
@@ -1150,26 +1086,21 @@ Your existing mobile rules can still override the `650px` maximum with their `90
     padding: 20px;
 
     overflow-y: auto;
-
-    -webkit-overflow-scrolling: touch;
 }
 
 .owner-box {
-    width:
-        min(400px, 100%);
+    width: min(400px, 100%);
 
     max-height:
         calc(
-            100dvh -
-            40px
+            100dvh - 40px
         );
 
     overflow-y: auto;
 
     background: #181818;
 
-    border:
-        1px solid #333333;
+    border: 1px solid #333333;
 
     border-radius: 18px;
 
@@ -1180,7 +1111,6 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 .owner-logo {
     font-size: 35px;
-
     margin-bottom: 10px;
 }
 
@@ -1190,7 +1120,6 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 .owner-box p {
     color: #888888;
-
     margin-bottom: 18px;
 }
 
@@ -1199,13 +1128,11 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     height: 46px;
 
-    padding:
-        0 14px;
+    padding: 0 14px;
 
     border-radius: 10px;
 
-    border:
-        1px solid #333333;
+    border: 1px solid #333333;
 
     outline: none;
 
@@ -1235,21 +1162,17 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 .owner-cancel {
     margin-top: 8px;
 
-    background:
-        #292929 !important;
+    background: #292929 !important;
 
-    color:
-        #ffffff !important;
+    color: #ffffff !important;
 }
 
 .owner-error {
-    color:
-        #ff6b6b !important;
+    color: #ff6b6b !important;
 
     min-height: 18px;
 
-    margin:
-        5px 0 !important;
+    margin: 5px 0 !important;
 }
 
 
@@ -1267,7 +1190,6 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 .password-wrapper input {
     width: 100%;
-
     padding-right: 75px;
 }
 
@@ -1325,24 +1247,16 @@ Your existing mobile rules can still override the `650px` maximum with their `90
     overflow-y: auto;
     overflow-x: hidden;
 
-    padding:
-        0 0
+    padding-bottom:
         env(safe-area-inset-bottom);
 
     -webkit-overflow-scrolling: touch;
-
-    overscroll-behavior:
-        contain;
 }
-
-
-/* OWNER HEADER */
 
 .owner-header {
     min-height: 70px;
 
-    padding:
-        15px 25px;
+    padding: 15px 25px;
 
     display: flex;
 
@@ -1351,8 +1265,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     gap: 15px;
 
-    border-bottom:
-        1px solid #292929;
+    border-bottom: 1px solid #292929;
 
     flex-shrink: 0;
 }
@@ -1363,7 +1276,6 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 .owner-header span {
     color: #888888;
-
     font-size: 13px;
 }
 
@@ -1372,32 +1284,22 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     border-radius: 9px;
 
-    padding:
-        10px 16px;
+    padding: 10px 16px;
 
     cursor: pointer;
 
     flex-shrink: 0;
 }
 
-
-/* OWNER CONTENT */
-
 .owner-content {
-    width:
-        min(1100px, 100%);
+    width: min(1100px, 100%);
 
-    margin:
-        0 auto;
+    margin: 0 auto;
 
-    padding:
-        25px;
+    padding: 25px;
 
     min-height: max-content;
 }
-
-
-/* GRID */
 
 .owner-grid {
     display: grid;
@@ -1413,8 +1315,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 .owner-card {
     background: #181818;
 
-    border:
-        1px solid #292929;
+    border: 1px solid #292929;
 
     border-radius: 15px;
 
@@ -1433,12 +1334,8 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 .owner-online {
     color: #7cff9b;
-
     font-size: 17px !important;
 }
-
-
-/* SECTIONS */
 
 .owner-section {
     margin-bottom: 20px;
@@ -1447,8 +1344,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     background: #181818;
 
-    border:
-        1px solid #292929;
+    border: 1px solid #292929;
 
     border-radius: 15px;
 }
@@ -1474,11 +1370,9 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 }
 
 .owner-section button {
-    padding:
-        10px 15px;
+    padding: 10px 15px;
 
-    border:
-        1px solid #333333;
+    border: 1px solid #333333;
 
     border-radius: 9px;
 
@@ -1519,8 +1413,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     background: #151515;
 
-    border:
-        1px solid #303030;
+    border: 1px solid #303030;
 
     border-radius: 15px;
 
@@ -1544,16 +1437,13 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 .trainer-header p {
     color: #888888;
-
     margin-top: 5px;
 }
 
 .trainer-header button {
-    padding:
-        10px 15px;
+    padding: 10px 15px;
 
-    border:
-        1px solid #333333;
+    border: 1px solid #333333;
 
     border-radius: 9px;
 
@@ -1564,9 +1454,6 @@ Your existing mobile rules can still override the `650px` maximum with their `90
     cursor: pointer;
 }
 
-
-/* TRAINER GENERATOR */
-
 .trainer-generator,
 .trainer-form,
 .trainer-knowledge {
@@ -1576,8 +1463,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     background: #181818;
 
-    border:
-        1px solid #292929;
+    border: 1px solid #292929;
 
     border-radius: 12px;
 }
@@ -1602,8 +1488,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     color: #bbbbbb;
 
-    margin:
-        12px 0 6px;
+    margin: 12px 0 6px;
 
     font-size: 13px;
 }
@@ -1614,8 +1499,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 .trainer-form textarea {
     width: 100%;
 
-    border:
-        1px solid #333333;
+    border: 1px solid #333333;
 
     border-radius: 10px;
 
@@ -1631,8 +1515,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 .trainer-form input {
     height: 44px;
 
-    padding:
-        0 12px;
+    padding: 0 12px;
 }
 
 .trainer-form textarea {
@@ -1654,8 +1537,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 .trainer-form > button {
     margin-top: 14px;
 
-    padding:
-        11px 16px;
+    padding: 11px 16px;
 
     border: none;
 
@@ -1678,9 +1560,6 @@ Your existing mobile rules can still override the `650px` maximum with their `90
     color: #888888;
 }
 
-
-/* TRAINING ACTIONS */
-
 .training-actions {
     display: flex;
 
@@ -1691,9 +1570,6 @@ Your existing mobile rules can still override the `650px` maximum with their `90
     margin-top: 10px;
 }
 
-
-/* TRAINING CARDS */
-
 .training-card {
     margin-top: 10px;
 
@@ -1701,8 +1577,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     background: #101010;
 
-    border:
-        1px solid #292929;
+    border: 1px solid #292929;
 
     border-radius: 10px;
 
@@ -1738,8 +1613,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 .delete-training-button {
     margin-top: 10px;
 
-    padding:
-        8px 12px !important;
+    padding: 8px 12px !important;
 
     background: #292929 !important;
 
@@ -1770,8 +1644,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     background: #101010;
 
-    border:
-        1px solid #292929;
+    border: 1px solid #292929;
 
     border-radius: 10px;
 
@@ -1781,8 +1654,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 .owner-chat-bubble {
     max-width: 85%;
 
-    padding:
-        9px 12px;
+    padding: 9px 12px;
 
     border-radius: 12px;
 
@@ -1795,19 +1667,16 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 .owner-chat-bubble.user {
     align-self: flex-end;
-
     background: #292929;
 }
 
 .owner-chat-bubble.ai {
     align-self: flex-start;
-
     background: #222222;
 }
 
 .owner-chat-input {
     display: flex;
-
     gap: 8px;
 }
 
@@ -1818,8 +1687,7 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     height: 44px;
 
-    border:
-        1px solid #333333;
+    border: 1px solid #333333;
 
     border-radius: 10px;
 
@@ -1829,13 +1697,11 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
     outline: none;
 
-    padding:
-        0 12px;
+    padding: 0 12px;
 }
 
 .owner-chat-input button {
     width: 44px;
-
     padding: 0;
 }
 
@@ -1846,13 +1712,11 @@ Your existing mobile rules can still override the `650px` maximum with their `90
 
 body.light-theme {
     background: #f5f5f5;
-
     color: #111111;
 }
 
 body.light-theme .sidebar {
     background: #ffffff;
-
     border-color: #dddddd;
 }
 
@@ -1874,30 +1738,26 @@ body.light-theme .sidebar-button:hover {
 
 body.light-theme .chat-input-area {
     background: #ffffff;
-
     border-color: #dddddd;
 }
 
-body.light-theme .chat-input-area textarea {
+body.light-theme #messageInput {
     color: #111111;
 }
 
 body.light-theme .message-bubble.ai {
     background: #e9e9e9;
-
     color: #111111;
 }
 
 body.light-theme .message-bubble.user {
     background: #dddddd;
-
     color: #111111;
 }
 
 body.light-theme .settings-box,
 body.light-theme .account-box {
     background: #ffffff;
-
     color: #111111;
 }
 
@@ -1916,21 +1776,12 @@ body.text-medium .message-bubble {
 
 body.text-large .message-bubble {
     font-size: 23px;
-}
-
-
-# MoonPlug Responsive CSS — iPad, iPhone & Android
 
 
 /* =====================================================
-   RESPONSIVE CHAT
-   iPAD AIR + OTHER TABLETS + PHONES
-===================================================== */
-
-/* -----------------------------
    TABLETS
-   iPad Air 11", iPad, Android
------------------------------ */
+   iPAD AIR 11" + OTHER TABLETS
+===================================================== */
 
 @media screen and (max-width: 1200px) {
 
@@ -1941,6 +1792,7 @@ body.text-large .message-bubble {
     .sidebar-logo {
         width: 64px;
         min-width: 64px;
+
         height: 64px;
         min-height: 64px;
 
@@ -1968,6 +1820,7 @@ body.text-large .message-bubble {
         padding: 0;
 
         justify-content: center;
+
         gap: 0;
     }
 
@@ -1985,7 +1838,7 @@ body.text-large .message-bubble {
     }
 
 
-    /* EXPANDED SIDEBAR */
+    /* EXPANDED */
 
     .sidebar.expanded {
         width: 250px;
@@ -2044,45 +1897,56 @@ body.text-large .message-bubble {
     }
 
 
-    /* MESSAGE AREA */
+    /* MESSAGE BUBBLES */
 
     .messages {
         padding:
-            20px 20px 150px;
-
-        gap: 14px;
+            20px
+            20px
+            155px;
     }
 
     .message-bubble {
-        max-width: min(78%, 650px);
+        max-width:
+            min(
+                75%,
+                600px
+            );
     }
 
     .message-bubble.user {
-        margin-right: 15px;
+        margin-right: 10px;
     }
 
     .message-bubble.ai {
-        margin-left: 15px;
+        margin-left: 10px;
     }
 
 
-    /* INPUT */
+    /* TASKBAR */
 
     .chat-input-area {
         width:
             min(
                 760px,
-                calc(100% - 40px)
+                calc(100% - 36px)
             );
-
-        max-width:
-            calc(100% - 40px);
 
         bottom:
             calc(
-                18px +
+                16px +
                 env(safe-area-inset-bottom)
             );
+    }
+
+    .typing {
+        width:
+            min(
+                760px,
+                calc(100% - 36px)
+            );
+
+        bottom: 84px;
     }
 }
 
@@ -2107,9 +1971,7 @@ body.text-large .message-bubble {
 
     .sidebar-buttons {
         width: 58px;
-
-        padding:
-            7px 4px;
+        padding: 7px 4px;
     }
 
     .sidebar-button {
@@ -2125,7 +1987,7 @@ body.text-large .message-bubble {
     }
 
 
-    /* EXPANDED SIDEBAR */
+    /* EXPANDED */
 
     .sidebar.expanded {
         width: 250px;
@@ -2155,13 +2017,11 @@ body.text-large .message-bubble {
         left: 58px;
     }
 
-
     .chat-header {
         height: 54px;
         min-height: 54px;
 
-        padding:
-            0 12px;
+        padding: 0 12px;
     }
 
     .chat-header strong {
@@ -2179,18 +2039,16 @@ body.text-large .message-bubble {
         width: 100%;
 
         padding:
-            15px 10px 130px;
+            15px
+            8px
+            125px;
 
         gap: 12px;
-
-        overflow-y: auto;
-        overflow-x: hidden;
-
-        -webkit-overflow-scrolling: touch;
     }
 
     .message-bubble {
-        max-width: 88%;
+        max-width:
+            calc(100% - 20px);
 
         padding:
             12px 15px;
@@ -2204,11 +2062,11 @@ body.text-large .message-bubble {
     }
 
     .message-bubble.user {
-        margin-right: 5px;
+        margin-right: 2px;
     }
 
     .message-bubble.ai {
-        margin-left: 5px;
+        margin-left: 2px;
     }
 
 
@@ -2216,7 +2074,7 @@ body.text-large .message-bubble {
 
     .empty-chat {
         width:
-            calc(100% - 30px);
+            calc(100% - 20px);
     }
 
     .empty-chat h1 {
@@ -2228,20 +2086,20 @@ body.text-large .message-bubble {
     }
 
 
-    /* INPUT */
+    /* TASKBAR */
 
     .chat-input-area {
         width:
-            calc(100% - 20px);
+            calc(100% - 16px);
 
         max-width:
-            calc(100% - 20px);
+            calc(100% - 16px);
 
         min-height: 55px;
 
         bottom:
             calc(
-                10px +
+                8px +
                 env(safe-area-inset-bottom)
             );
 
@@ -2251,10 +2109,7 @@ body.text-large .message-bubble {
         border-radius: 17px;
     }
 
-    .chat-input-area input {
-        width: 0;
-        min-width: 0;
-
+    #messageInput {
         height: 40px;
 
         padding:
@@ -2267,15 +2122,20 @@ body.text-large .message-bubble {
         width: 40px;
         height: 40px;
 
-        flex-shrink: 0;
+        min-width: 40px;
     }
 
 
     /* TYPING */
 
     .typing {
+        width:
+            calc(100% - 16px);
+
+        bottom: 67px;
+
         padding:
-            0 12px 8px;
+            0 10px 7px;
 
         font-size: 13px;
     }
@@ -2336,25 +2196,26 @@ body.text-large .message-bubble {
     }
 
     .message-bubble {
-        max-width: 90%;
+        max-width:
+            calc(100% - 12px);
 
         font-size: 17px;
     }
 
     .message-bubble.user {
-        margin-right: 3px;
+        margin-right: 1px;
     }
 
     .message-bubble.ai {
-        margin-left: 3px;
+        margin-left: 1px;
     }
 
     .chat-input-area {
         width:
-            calc(100% - 12px);
+            calc(100% - 10px);
 
         max-width:
-            calc(100% - 12px);
+            calc(100% - 10px);
     }
 }
 
@@ -2384,86 +2245,33 @@ body.text-large .message-bubble {
 ===================================================== */
 
 @supports (padding: env(safe-area-inset-bottom)) {
-
-    .chat-input-area {
-        margin-bottom:
-            env(safe-area-inset-bottom);
-    }
 
     .messages {
         padding-bottom:
             calc(
-                150px +
+                155px +
                 env(safe-area-inset-bottom)
             );
     }
 }
 
-==============
-   TOUCH DEVICES
-===================================================== */
-
-@media (hover: none) {
-
-    .sidebar-button:hover {
-        background: transparent;
-    }
-
-    #sendButton:hover {
-        transform: none;
-    }
-
-    .owner-section button:hover {
-        background: #242424;
-    }
-}
-
 
 /* =====================================================
-   SAFE AREA
-===================================================== */
-
-@supports (padding: env(safe-area-inset-bottom)) {
-
-    .chat-bottom-area {
-        padding-bottom:
-            calc(
-                18px +
-                env(safe-area-inset-bottom)
-            );
-    }
-
-    .owner-panel {
-        padding-bottom:
-            env(safe-area-inset-bottom);
-    }
-}
-
-
-/* =====================================================
-   KEYBOARD / SMALL VIEWPORT PROTECTION
+   SHORT SCREEN / KEYBOARD
 ===================================================== */
 
 @media screen and (max-height: 500px) {
 
-    .chat-bottom-area {
-        padding-bottom:
-            6px;
+    .chat-input-area {
+        bottom: 6px;
     }
 
     .messages {
-        padding-bottom:
-            125px;
+        padding-bottom: 115px;
     }
 
-    .chat-input-area {
-        max-height:
-            130px;
-    }
-
-    .chat-input-area textarea {
-        max-height:
-            110px;
+    .typing {
+        bottom: 70px;
     }
 }
 
