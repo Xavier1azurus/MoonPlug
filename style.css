@@ -1766,3 +1766,69 @@ body.text-large .message-bubble {
 
 }
 
+/* =====================================================
+              MOONPLUG STAR FIELD
+===================================================== */
+
+.star-field {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.random-star {
+    position: absolute;
+    width: var(--star-size);
+    height: var(--star-size);
+    left: var(--star-x, auto);
+    top: var(--star-y, auto);
+    border-radius: 50%;
+    background: white;
+    opacity: var(--star-opacity);
+    box-shadow:
+        0 0 var(--star-glow) white;
+
+    transform: scale(var(--star-scale));
+
+    animation:
+        moonplugStarMove
+        var(--star-duration)
+        ease-in-out
+        var(--star-delay)
+        infinite alternate;
+}
+
+@keyframes moonplugStarMove {
+
+    0% {
+        transform:
+            translate(0, 0)
+            scale(var(--star-scale));
+
+        opacity:
+            var(--star-opacity);
+    }
+
+    50% {
+        opacity:
+            calc(var(--star-opacity) + 0.2);
+    }
+
+    100% {
+        transform:
+            translate(
+                var(--star-move-x),
+                var(--star-move-y)
+            )
+            scale(var(--star-scale));
+
+        opacity:
+            var(--star-opacity);
+    }
+}
+
+
