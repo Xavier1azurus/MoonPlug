@@ -28,6 +28,250 @@ let isSendingMessage = false;
 
 let sidebarExpanded = false;
 
+/* =====================================================
+              RANDOM STAR GENERATOR
+===================================================== */
+
+function createRandomStars() {
+
+    let starField =
+        document.getElementById("starField");
+
+
+    if (!starField) {
+
+        starField =
+            document.createElement("div");
+
+        starField.id =
+            "starField";
+
+        document.body.prepend(
+            starField
+        );
+
+    }
+
+
+    starField.innerHTML = "";
+
+
+    /*
+       More stars on larger screens,
+       fewer on phones.
+    */
+
+    const width =
+        window.innerWidth;
+
+    const height =
+        window.innerHeight;
+
+
+    const area =
+        width * height;
+
+
+    const starCount =
+        Math.min(
+            180,
+            Math.max(
+                55,
+                Math.floor(
+                    area / 7500
+                )
+            )
+        );
+
+
+    for (
+        let i = 0;
+        i < starCount;
+        i++
+    ) {
+
+        const star =
+            document.createElement("span");
+
+
+        star.className =
+            "random-star";
+
+
+        /*
+           Completely random position.
+        */
+
+        const x =
+            Math.random() * 100;
+
+        const y =
+            Math.random() * 100;
+
+
+        /*
+           Random size.
+        */
+
+        const size =
+            Math.random() * 2.4 + 0.5;
+
+
+        /*
+           Random brightness.
+        */
+
+        const opacity =
+            Math.random() * 0.65 + 0.2;
+
+
+        /*
+           Random glow.
+        */
+
+        const glow =
+            Math.random() * 5 + 1;
+
+
+        /*
+           Random movement.
+        */
+
+        const moveX =
+            (Math.random() - 0.5) * 14;
+
+        const moveY =
+            (Math.random() - 0.5) * 14;
+
+
+        /*
+           Random animation speed.
+        */
+
+        const duration =
+            Math.random() * 8 + 5;
+
+
+        /*
+           Random animation delay.
+
+           Negative values mean stars
+           start at different points in
+           their animation immediately.
+        */
+
+        const delay =
+            Math.random() * -12;
+
+
+        /*
+           Random scale.
+        */
+
+        const scale =
+            Math.random() * 0.8 + 0.8;
+
+
+        star.style.setProperty(
+            "--star-x",
+            `${x}%`
+        );
+
+        star.style.setProperty(
+            "--star-y",
+            `${y}%`
+        );
+
+        star.style.setProperty(
+            "--star-size",
+            `${size}px`
+        );
+
+        star.style.setProperty(
+            "--star-opacity",
+            opacity
+        );
+
+        star.style.setProperty(
+            "--star-glow",
+            glow
+        );
+
+        star.style.setProperty(
+            "--star-move-x",
+            `${moveX}px`
+        );
+
+        star.style.setProperty(
+            "--star-move-y",
+            `${moveY}px`
+        );
+
+        star.style.setProperty(
+            "--star-duration",
+            `${duration}s`
+        );
+
+        star.style.setProperty(
+            "--star-delay",
+            `${delay}s`
+        );
+
+        star.style.setProperty(
+            "--star-scale",
+            scale
+        );
+
+
+        starField.appendChild(
+            star
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+              START RANDOM STARS
+===================================================== */
+
+function setupRandomStars() {
+
+    createRandomStars();
+
+
+    /*
+       Re-randomize after resizing,
+       but don't constantly recreate
+       stars while the user drags the
+       window size.
+    */
+
+    let resizeTimer;
+
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            clearTimeout(
+                resizeTimer
+            );
+
+
+            resizeTimer =
+                setTimeout(
+                    createRandomStars,
+                    300
+                );
+
+        }
+    );
+
+}
+
+
 
 /* =====================================================
 DOM HELPER
@@ -39,6 +283,78 @@ function $(id) {
 
 }
 
+/* =====================================================
+   RANDOM STAR FIELD
+===================================================== */
+
+function createRandomStars() {
+
+    const existing =
+        document.querySelector(".star-field");
+
+    if (existing) {
+        existing.remove();
+    }
+
+    const starField =
+        document.createElement("div");
+
+    starField.className =
+        "star-field";
+
+    starField.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    const starCount =
+        window.innerWidth <= 600
+            ? 90
+            : 150;
+
+    for (let i = 0; i < starCount; i++) {
+
+        const star =
+            document.createElement("span");
+
+        star.className =
+            "random-star";
+
+        star.style.left =
+            `${Math.random() * 100}%`;
+
+        star.style.top =
+            `${Math.random() * 100}%`;
+
+        star.style.setProperty(
+            "--star-size",
+            `${Math.random() * 2.5 + 0.5}px`
+        );
+
+        star.style.setProperty(
+            "--star-opacity",
+            `${Math.random() * 0.65 + 0.25}`
+        );
+
+        star.style.setProperty(
+            "--twinkle-duration",
+            `${Math.random() * 3 + 2}s`
+        );
+
+        star.style.setProperty(
+            "--twinkle-delay",
+            `${Math.random() * 5}s`
+        );
+
+        starField.appendChild(
+            star
+        );
+    }
+
+    document.body.prepend(
+        starField
+    );
+}
 
 /* =====================================================
 API REQUEST
@@ -3723,6 +4039,9 @@ async function initializeMoonPlug() {
         "🌙 MoonPlug AI starting..."
     );
 
+
+
+createRandomStars();
 
     setupButtons();
 
