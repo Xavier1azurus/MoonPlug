@@ -861,88 +861,69 @@ def owner_logout():
 # HEALTH
 # ============================================================
 
+
 @app.route(
     "/api/health",
     methods=["GET"]
 )
 def health():
 
-    proxy_ok, proxy_error = (
-        proxy_health()
-    )
+    try:
 
-    models = []
+        proxy_ok, proxy_error = proxy_health()
 
-    if proxy_ok:
+        models = []
 
-        models = get_ollama_models()
+        if proxy_ok:
+            models = get_ollama_models()
 
-    model_available = any(
-
-        model == OLLAMA_MODEL
-
-        or
-
-        model.startswith(
-            OLLAMA_MODEL + ":"
+        model_available = any(
+            model == OLLAMA_MODEL
+            or model.startswith(
+                OLLAMA_MODEL + ":"
+            )
+            for model in models
         )
 
-        for model in models
-    )
+        return jsonify({
+            "success": True,
+            "app": APP_NAME,
+            "version": APP_VERSION,
+            "status": "online",
+            "database":
+                "configured"
+                if database_available()
+                else "not_configured",
+            "ollamaConfigured":
+                ollama_configured(),
+            "ollamaHostConfigured":
+                bool(OLLAMA_HOST),
+            "proxyKeyConfigured":
+                bool(MOONPLUG_PROXY_KEY),
+            "ollamaProxyOnline":
+                proxy_ok,
+            "ollamaModel":
+                OLLAMA_MODEL,
+            "ollamaModelAvailable":
+                model_available,
+            "ollamaModels":
+                models,
+            "proxyError":
+                proxy_error,
+            "time":
+                datetime.now().isoformat()
+        })
 
-    return jsonify({
+    except Exception as error:
 
-        "success":
-            True,
+        print("HEALTH ROUTE CRASH:")
+        traceback.print_exc()
 
-        "app":
-            APP_NAME,
-
-        "version":
-            APP_VERSION,
-
-        "status":
-            "online",
-
-        "database":
-            "configured"
-            if database_available()
-            else
-            "not_configured",
-
-        "ollamaConfigured":
-            ollama_configured(),
-
-        "ollamaHostConfigured":
-            bool(
-                OLLAMA_HOST
-            ),
-
-        "proxyKeyConfigured":
-            bool(
-                MOONPLUG_PROXY_KEY
-            ),
-
-        "ollamaProxyOnline":
-            proxy_ok,
-
-        "ollamaModel":
-            OLLAMA_MODEL,
-
-        "ollamaModelAvailable":
-            model_available,
-
-        "ollamaModels":
-            models,
-
-        "proxyError":
-            proxy_error,
-
-        "time":
-            datetime.now().isoformat()
-
-    })
-
+        return jsonify({
+            "success": False,
+            "error": "Health route crashed.",
+            "details": repr(error)
+        }), 500
 
 # ============================================================
 # TRAINING HELPERS
