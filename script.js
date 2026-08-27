@@ -1,17 +1,19 @@
 
 /* =====================================================
-                MOONPLUG AI
-          COMPLETE FRONTEND CONTROLLER
+                    MOONPLUG AI
+             COMPLETE FRONTEND CONTROLLER
+===================================================== */
+
 
 /* =====================================================
-API
+                         API
 ===================================================== */
 
 const API_BASE = "https://moonplug.onrender.com";
 
 
 /* =====================================================
-STATE
+                        STATE
 ===================================================== */
 
 let currentChat = [];
@@ -28,7 +30,16 @@ let sidebarExpanded = false;
 
 
 /* =====================================================
-              RANDOM STAR FIELD
+                     DOM HELPER
+===================================================== */
+
+function $(id) {
+    return document.getElementById(id);
+}
+
+
+/* =====================================================
+                  RANDOM STAR FIELD
 ===================================================== */
 
 function createRandomStars() {
@@ -39,7 +50,6 @@ function createRandomStars() {
     if (existing) {
         existing.remove();
     }
-
 
     const starField =
         document.createElement("div");
@@ -52,18 +62,11 @@ function createRandomStars() {
         "true"
     );
 
-
     const width =
         window.innerWidth;
 
     const height =
         window.innerHeight;
-
-
-    /*
-       More stars on larger screens,
-       fewer on phones.
-    */
 
     const area =
         width * height;
@@ -73,12 +76,9 @@ function createRandomStars() {
             180,
             Math.max(
                 55,
-                Math.floor(
-                    area / 7500
-                )
+                Math.floor(area / 7500)
             )
         );
-
 
     for (
         let i = 0;
@@ -92,51 +92,26 @@ function createRandomStars() {
         star.className =
             "random-star";
 
-
-        /*
-           Random position
-        */
-
         star.style.left =
             `${Math.random() * 100}%`;
 
         star.style.top =
             `${Math.random() * 100}%`;
 
-
-        /*
-           Random size
-        */
-
         star.style.setProperty(
             "--star-size",
             `${Math.random() * 2.4 + 0.5}px`
         );
-
-
-        /*
-           Random brightness
-        */
 
         star.style.setProperty(
             "--star-opacity",
             `${Math.random() * 0.65 + 0.2}`
         );
 
-
-        /*
-           Random glow
-        */
-
         star.style.setProperty(
             "--star-glow",
             `${Math.random() * 5 + 1}px`
         );
-
-
-        /*
-           Random movement
-        */
 
         star.style.setProperty(
             "--star-move-x",
@@ -148,142 +123,36 @@ function createRandomStars() {
             `${(Math.random() - 0.5) * 14}px`
         );
 
-
-        /*
-           Random animation speed
-        */
-
         star.style.setProperty(
             "--star-duration",
             `${Math.random() * 8 + 5}s`
         );
-
-
-        /*
-           Random animation starting point
-        */
 
         star.style.setProperty(
             "--star-delay",
             `${Math.random() * -12}s`
         );
 
-
-        /*
-           Random scale
-        */
-
         star.style.setProperty(
             "--star-scale",
             `${Math.random() * 0.8 + 0.8}`
         );
 
-
-        starField.appendChild(
-            star
-        );
-
+        starField.appendChild(star);
     }
 
-
-    document.body.prepend(
-        starField
-    );
-
+    document.body.prepend(starField);
 }
 
-/* =====================================================
-DOM HELPER
-===================================================== */
-
-function $(id) {
-
-    return document.getElementById(id);
-
-}
 
 /* =====================================================
-   RANDOM STAR FIELD
-===================================================== */
-
-function createRandomStars() {
-
-    const existing =
-        document.querySelector(".star-field");
-
-    if (existing) {
-        existing.remove();
-    }
-
-    const starField =
-        document.createElement("div");
-
-    starField.className =
-        "star-field";
-
-    starField.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-    const starCount =
-        window.innerWidth <= 600
-            ? 90
-            : 150;
-
-    for (let i = 0; i < starCount; i++) {
-
-        const star =
-            document.createElement("span");
-
-        star.className =
-            "random-star";
-
-        star.style.left =
-            `${Math.random() * 100}%`;
-
-        star.style.top =
-            `${Math.random() * 100}%`;
-
-        star.style.setProperty(
-            "--star-size",
-            `${Math.random() * 2.5 + 0.5}px`
-        );
-
-        star.style.setProperty(
-            "--star-opacity",
-            `${Math.random() * 0.65 + 0.25}`
-        );
-
-        star.style.setProperty(
-            "--twinkle-duration",
-            `${Math.random() * 3 + 2}s`
-        );
-
-        star.style.setProperty(
-            "--twinkle-delay",
-            `${Math.random() * 5}s`
-        );
-
-        starField.appendChild(
-            star
-        );
-    }
-
-    document.body.prepend(
-        starField
-    );
-}
-
-/* =====================================================
-API REQUEST
+                    API REQUEST
 ===================================================== */
 
 async function apiRequest(endpoint, options = {}) {
 
     const url =
         `${API_BASE}${endpoint}`;
-
 
     const config = {
 
@@ -305,14 +174,10 @@ async function apiRequest(endpoint, options = {}) {
                 : {}),
 
             ...(options.headers || {})
-
         }
-
     };
 
-
     let response;
-
 
     try {
 
@@ -335,18 +200,14 @@ async function apiRequest(endpoint, options = {}) {
             error;
 
         throw networkError;
-
     }
 
-
     let data = null;
-
 
     const contentType =
         response.headers.get(
             "content-type"
         ) || "";
-
 
     if (
         contentType.includes(
@@ -362,7 +223,6 @@ async function apiRequest(endpoint, options = {}) {
         } catch {
 
             data = null;
-
         }
 
     } else {
@@ -379,19 +239,14 @@ async function apiRequest(endpoint, options = {}) {
                     success: false,
 
                     error: text
-
                 };
-
             }
 
         } catch {
 
             data = null;
-
         }
-
     }
-
 
     if (!response.ok) {
 
@@ -401,9 +256,7 @@ async function apiRequest(endpoint, options = {}) {
                 data?.error ||
                 data?.message ||
                 `Request failed with status ${response.status}.`
-
             );
-
 
         error.status =
             response.status;
@@ -411,40 +264,31 @@ async function apiRequest(endpoint, options = {}) {
         error.data =
             data;
 
-
         throw error;
-
     }
 
-
     return data || {};
-
 }
 
 
 /* =====================================================
-HTML SAFETY
+                    HTML SAFETY
 ===================================================== */
 
 function escapeHTML(value) {
 
     const div =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     div.textContent =
         String(value ?? "");
 
-
     return div.innerHTML;
-
 }
 
 
 /* =====================================================
-BACKEND HEALTH
+                  BACKEND HEALTH
 ===================================================== */
 
 async function checkBackendHealth() {
@@ -456,12 +300,10 @@ async function checkBackendHealth() {
                 "/api/health"
             );
 
-
         console.log(
             "MoonPlug backend:",
             data
         );
-
 
         return data.success === true;
 
@@ -472,16 +314,13 @@ async function checkBackendHealth() {
             error
         );
 
-
         return false;
-
     }
-
 }
 
 
 /* =====================================================
-OWNER SESSION
+                   OWNER SESSION
 ===================================================== */
 
 async function checkOwnerSession() {
@@ -493,10 +332,8 @@ async function checkOwnerSession() {
                 "/api/owner/session"
             );
 
-
         isOwnerAuthenticated =
             data.authenticated === true;
-
 
         return isOwnerAuthenticated;
 
@@ -505,16 +342,13 @@ async function checkOwnerSession() {
         isOwnerAuthenticated =
             false;
 
-
         return false;
-
     }
-
 }
 
 
 /* =====================================================
-OWNER LOGIN
+                    OWNER LOGIN
 ===================================================== */
 
 async function loginOwner() {
@@ -522,23 +356,18 @@ async function loginOwner() {
     const codeInput =
         $("ownerCode");
 
-
     const errorElement =
         $("ownerError");
 
-
     const loginButton =
         $("ownerLoginButton");
-
 
     if (!codeInput) {
         return;
     }
 
-
     const password =
         codeInput.value.trim();
-
 
     if (!password) {
 
@@ -546,31 +375,25 @@ async function loginOwner() {
 
             errorElement.textContent =
                 "Please enter the owner password.";
-
         }
 
         return;
-
     }
-
 
     if (loginButton) {
 
-        loginButton.disabled = true;
+        loginButton.disabled =
+            true;
 
         loginButton.textContent =
             "Checking...";
-
     }
-
 
     if (errorElement) {
 
         errorElement.textContent =
             "";
-
     }
-
 
     try {
 
@@ -586,7 +409,6 @@ async function loginOwner() {
                 }
             );
 
-
         if (
             data.success === true &&
             data.authenticated === true
@@ -595,33 +417,25 @@ async function loginOwner() {
             isOwnerAuthenticated =
                 true;
 
-
             codeInput.value =
                 "";
 
-
             hideOwnerLogin();
-
 
             await openOwnerPanel();
 
-
             return;
-
         }
-
 
         throw new Error(
             data.error ||
             "Incorrect owner password."
         );
 
-
     } catch (error) {
 
         isOwnerAuthenticated =
             false;
-
 
         if (errorElement) {
 
@@ -633,7 +447,6 @@ async function loginOwner() {
 
                     : error.message ||
                       "Incorrect owner password.";
-
         }
 
     } finally {
@@ -645,16 +458,13 @@ async function loginOwner() {
 
             loginButton.textContent =
                 "Enter";
-
         }
-
     }
-
 }
 
 
 /* =====================================================
-OWNER LOGOUT
+                   OWNER LOGOUT
 ===================================================== */
 
 async function logoutOwner() {
@@ -680,19 +490,15 @@ async function logoutOwner() {
         isOwnerAuthenticated =
             false;
 
-
         closeTrainer();
 
-
         hideOwnerPanel();
-
     }
-
 }
 
 
 /* =====================================================
-OWNER LOGIN UI
+                 OWNER LOGIN UI
 ===================================================== */
 
 function showOwnerLogin() {
@@ -700,55 +506,42 @@ function showOwnerLogin() {
     const overlay =
         $("ownerLogin");
 
-
     const codeInput =
         $("ownerCode");
 
-
     const errorElement =
         $("ownerError");
-
 
     if (!overlay) {
         return;
     }
 
-
     overlay.style.display =
         "flex";
-
 
     overlay.setAttribute(
         "aria-hidden",
         "false"
     );
 
-
     if (errorElement) {
 
         errorElement.textContent =
             "";
-
     }
-
 
     if (codeInput) {
 
         codeInput.value =
             "";
 
-
         setTimeout(
             () => {
-
                 codeInput.focus();
-
             },
             100
         );
-
     }
-
 }
 
 
@@ -757,26 +550,22 @@ function hideOwnerLogin() {
     const overlay =
         $("ownerLogin");
 
-
     if (!overlay) {
         return;
     }
 
-
     overlay.style.display =
         "none";
-
 
     overlay.setAttribute(
         "aria-hidden",
         "true"
     );
-
 }
 
 
 /* =====================================================
-OWNER PANEL
+                    OWNER PANEL
 ===================================================== */
 
 async function openOwnerPanel() {
@@ -786,13 +575,10 @@ async function openOwnerPanel() {
         showOwnerLogin();
 
         return;
-
     }
-
 
     const panel =
         $("ownerPanel");
-
 
     if (!panel) {
 
@@ -801,66 +587,46 @@ async function openOwnerPanel() {
         );
 
         return;
-
     }
-
 
     panel.style.display =
         "flex";
-
 
     panel.setAttribute(
         "aria-hidden",
         "false"
     );
 
-
-    /*
-       IMPORTANT MOBILE FIX
-
-       Force the owner panel itself
-       to become the scrolling container.
-    */
-
     panel.style.position =
         "fixed";
-
 
     panel.style.inset =
         "0";
 
-
     panel.style.overflowY =
         "auto";
-
 
     panel.style.overflowX =
         "hidden";
 
-
     panel.style.webkitOverflowScrolling =
         "touch";
-
 
     panel.style.height =
         "100dvh";
 
-
     panel.style.maxHeight =
         "100dvh";
-
 
     document.body.style.overflow =
         "hidden";
 
-
     await loadOwnerDashboard();
-
 }
 
 
 /* =====================================================
-HIDE OWNER PANEL
+                  HIDE OWNER PANEL
 ===================================================== */
 
 function hideOwnerPanel() {
@@ -868,33 +634,27 @@ function hideOwnerPanel() {
     const panel =
         $("ownerPanel");
 
-
     if (!panel) {
         return;
     }
 
-
     panel.style.display =
         "none";
-
 
     panel.setAttribute(
         "aria-hidden",
         "true"
     );
 
-
     document.body.style.overflow =
         "";
 
-
     closeTrainer();
-
 }
 
 
 /* =====================================================
-OWNER DASHBOARD
+                  OWNER DASHBOARD
 ===================================================== */
 
 async function loadOwnerDashboard() {
@@ -903,7 +663,6 @@ async function loadOwnerDashboard() {
         return;
     }
 
-
     try {
 
         const data =
@@ -911,26 +670,20 @@ async function loadOwnerDashboard() {
                 "/api/owner/dashboard"
             );
 
-
         const stats =
             data.stats || {};
-
 
         if ($("ownerUsers")) {
 
             $("ownerUsers").textContent =
                 stats.users ?? 0;
-
         }
-
 
         if ($("ownerChats")) {
 
             $("ownerChats").textContent =
                 stats.chats ?? 0;
-
         }
-
 
     } catch (error) {
 
@@ -939,7 +692,6 @@ async function loadOwnerDashboard() {
             error
         );
 
-
         if (
             error.status === 401 ||
             error.status === 403
@@ -948,21 +700,16 @@ async function loadOwnerDashboard() {
             isOwnerAuthenticated =
                 false;
 
-
             hideOwnerPanel();
 
-
             showOwnerLogin();
-
         }
-
     }
-
 }
 
 
 /* =====================================================
-OWNER USERS
+                    OWNER USERS
 ===================================================== */
 
 async function loadOwnerUsers() {
@@ -971,7 +718,6 @@ async function loadOwnerUsers() {
         return [];
     }
 
-
     try {
 
         const data =
@@ -979,13 +725,9 @@ async function loadOwnerUsers() {
                 "/api/owner/users"
             );
 
-
-        return Array.isArray(
-            data.users
-        )
+        return Array.isArray(data.users)
             ? data.users
             : [];
-
 
     } catch (error) {
 
@@ -998,19 +740,15 @@ async function loadOwnerUsers() {
                 false;
 
             hideOwnerPanel();
-
         }
 
-
         return [];
-
     }
-
 }
 
 
 /* =====================================================
-OWNER SETTINGS
+                  OWNER SETTINGS
 ===================================================== */
 
 async function loadOwnerSettings() {
@@ -1019,7 +757,6 @@ async function loadOwnerSettings() {
         return null;
     }
 
-
     try {
 
         const data =
@@ -1027,10 +764,7 @@ async function loadOwnerSettings() {
                 "/api/owner/settings"
             );
 
-
-        return data.settings ||
-            null;
-
+        return data.settings || null;
 
     } catch (error) {
 
@@ -1043,19 +777,15 @@ async function loadOwnerSettings() {
                 false;
 
             hideOwnerPanel();
-
         }
 
-
         return null;
-
     }
-
 }
 
 
 /* =====================================================
-UPDATE OWNER SETTINGS
+              UPDATE OWNER SETTINGS
 ===================================================== */
 
 async function updateOwnerSettings(settings) {
@@ -1068,11 +798,8 @@ async function updateOwnerSettings(settings) {
 
             error:
                 "Owner authentication required."
-
         };
-
     }
-
 
     try {
 
@@ -1088,7 +815,6 @@ async function updateOwnerSettings(settings) {
             }
         );
 
-
     } catch (error) {
 
         return {
@@ -1098,37 +824,28 @@ async function updateOwnerSettings(settings) {
             error:
                 error.message ||
                 "Could not update settings."
-
         };
-
     }
-
 }
 
 
 /* =====================================================
-CHAT UI
+                      CHAT UI
 ===================================================== */
 
 function removeEmptyChat() {
 
     const empty =
-        document.querySelector(
-            ".empty-chat"
-        );
-
+        document.querySelector(".empty-chat");
 
     if (empty) {
-
         empty.remove();
-
     }
-
 }
 
 
 /* =====================================================
-ADD CHAT MESSAGE
+                  ADD CHAT MESSAGE
 ===================================================== */
 
 function addMessage(text, sender) {
@@ -1136,56 +853,37 @@ function addMessage(text, sender) {
     const messages =
         $("messages");
 
-
     if (!messages) {
         return;
     }
 
-
     removeEmptyChat();
 
-
     const bubble =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     bubble.className =
         sender === "user"
-
             ? "message-bubble user"
-
             : "message-bubble ai";
-
 
     bubble.textContent =
         String(text ?? "");
 
-
-    messages.appendChild(
-        bubble
-    );
-
+    messages.appendChild(bubble);
 
     requestAnimationFrame(
         () => {
 
             messages.scrollTop =
                 messages.scrollHeight;
-
         }
     );
-
 }
 
 
 /* =====================================================
-TYPING INDICATOR
-===================================================== */
-
-/* =====================================================
-              MOONPLUG THINKING ANIMATION
+                  TYPING INDICATOR
 ===================================================== */
 
 function showTyping() {
@@ -1197,12 +895,8 @@ function showTyping() {
         return;
     }
 
-    typing.style.display = "flex";
-
-    /*
-       Restart the MoonPlug animation every time
-       MoonPlug starts thinking.
-    */
+    typing.style.display =
+        "flex";
 
     typing.classList.remove(
         "thinking-active"
@@ -1215,15 +909,12 @@ function showTyping() {
     );
 
     const typingText =
-        typing.querySelector(
-            ".typing-text"
-        );
+        typing.querySelector(".typing-text");
 
     if (typingText) {
 
         typingText.textContent =
             "MoonPlug is thinking...";
-
     }
 
     const messages =
@@ -1231,15 +922,14 @@ function showTyping() {
 
     if (messages) {
 
-        requestAnimationFrame(() => {
+        requestAnimationFrame(
+            () => {
 
-            messages.scrollTop =
-                messages.scrollHeight;
-
-        });
-
+                messages.scrollTop =
+                    messages.scrollHeight;
+            }
+        );
     }
-
 }
 
 
@@ -1258,11 +948,11 @@ function hideTyping() {
 
     typing.style.display =
         "none";
-
 }
 
+
 /* =====================================================
-CHAT HISTORY
+                    CHAT HISTORY
 ===================================================== */
 
 function buildChatHistory() {
@@ -1280,22 +970,14 @@ function buildChatHistory() {
                 ).slice(0, 10000)
 
         }));
-
 }
 
 
 /* =====================================================
-SEND MESSAGE
+                    SEND MESSAGE
 ===================================================== */
 
 async function sendMessage() {
-
-    /*
-       HARD LOCK
-
-       Prevents multiple messages from
-       being sent while MoonPlug is thinking.
-    */
 
     if (isSendingMessage) {
 
@@ -1304,84 +986,58 @@ async function sendMessage() {
         );
 
         return;
-
     }
-
 
     const input =
         $("messageInput");
-
 
     if (!input) {
         return;
     }
 
-
     const message =
         input.value.trim();
-
 
     if (!message) {
         return;
     }
 
-
     isSendingMessage =
         true;
-
 
     input.disabled =
         true;
 
-
     const sendButton =
         $("sendButton");
-
 
     if (sendButton) {
 
         sendButton.disabled =
             true;
-
     }
-
-
-    /*
-       Add user message to UI.
-    */
 
     addMessage(
         message,
         "user"
     );
 
-
-    /*
-       Save user message to history.
-    */
-
     currentChat.push({
 
-        role: "user",
+        role:
+            "user",
 
-        content: message
+        content:
+            message
 
     });
-
 
     input.value =
         "";
 
-
     showTyping();
 
-
     try {
-
-        /*
-           Send the REAL conversation history
-           instead of history: [].
-        */
 
         const data =
             await apiRequest(
@@ -1392,17 +1048,14 @@ async function sendMessage() {
                     body: JSON.stringify({
 
                         message:
-
                             message,
 
                         history:
-
                             buildChatHistory()
 
                     })
                 }
             );
-
 
         if (
             data.success !== true
@@ -1412,46 +1065,35 @@ async function sendMessage() {
 
                 data.error ||
                 "MoonPlug could not get a response."
-
             );
-
         }
-
 
         const aiResponse =
             String(
-                data.response ??
-                ""
+                data.response ?? ""
             ).trim();
-
 
         if (!aiResponse) {
 
             throw new Error(
                 "MoonPlug returned an empty response."
             );
-
         }
-
-
-        /*
-           Save AI response.
-        */
 
         currentChat.push({
 
-            role: "assistant",
+            role:
+                "assistant",
 
-            content: aiResponse
+            content:
+                aiResponse
 
         });
-
 
         addMessage(
             aiResponse,
             "assistant"
         );
-
 
     } catch (error) {
 
@@ -1460,73 +1102,54 @@ async function sendMessage() {
             error
         );
 
-
         addMessage(
 
             error.message ||
-
             "MoonPlug could not connect to the AI.",
 
             "assistant"
-
         );
 
     } finally {
 
         hideTyping();
 
-
         isSendingMessage =
             false;
 
-
         input.disabled =
             false;
-
 
         if (sendButton) {
 
             sendButton.disabled =
                 false;
-
         }
 
-
         input.focus();
-
     }
-
 }
 
 
 /* =====================================================
-NEW CHAT
+                     NEW CHAT
 ===================================================== */
 
 function startNewChat() {
-
-    /*
-       Don't allow clearing the chat while
-       MoonPlug is processing a message.
-    */
 
     if (isSendingMessage) {
         return;
     }
 
-
     const messages =
         $("messages");
-
 
     if (!messages) {
         return;
     }
 
-
     currentChat =
         [];
-
 
     messages.innerHTML = `
 
@@ -1544,17 +1167,14 @@ function startNewChat() {
 
     `;
 
-
     hideTyping();
 
-
     $("messageInput")?.focus();
-
 }
 
 
 /* =====================================================
-SETTINGS
+                      SETTINGS
 ===================================================== */
 
 function openSettings() {
@@ -1562,21 +1182,17 @@ function openSettings() {
     const panel =
         $("settingsPanel");
 
-
     if (!panel) {
         return;
     }
 
-
     panel.style.display =
         "flex";
-
 
     panel.setAttribute(
         "aria-hidden",
         "false"
     );
-
 }
 
 
@@ -1585,26 +1201,22 @@ function closeSettings() {
     const panel =
         $("settingsPanel");
 
-
     if (!panel) {
         return;
     }
 
-
     panel.style.display =
         "none";
-
 
     panel.setAttribute(
         "aria-hidden",
         "true"
     );
-
 }
 
 
 /* =====================================================
-TEXT SIZE
+                     TEXT SIZE
 ===================================================== */
 
 function updateTextSize(size) {
@@ -1618,60 +1230,36 @@ function updateTextSize(size) {
     ) {
 
         return;
-
     }
-
 
     currentTextSize =
         size;
 
-
     document.body.classList.remove(
-
         "text-small",
-
         "text-medium",
-
         "text-large"
-
     );
-
 
     document.body.classList.add(
-
         `text-${size}`
-
     );
-
 
     document
-        .querySelectorAll(
-            ".size-button"
-        )
-        .forEach(
-            button => {
+        .querySelectorAll(".size-button")
+        .forEach(button => {
 
-                button.classList.toggle(
+            button.classList.toggle(
+                "active",
+                button.dataset.size === size
+            );
 
-                    "active",
-
-                    button.dataset.size ===
-                        size
-
-                );
-
-            }
-        );
-
+        });
 
     localStorage.setItem(
-
         "moonplug_text_size",
-
         size
-
     );
-
 }
 
 
@@ -1682,7 +1270,6 @@ function loadTextSize() {
             "moonplug_text_size"
         );
 
-
     updateTextSize(
 
         [
@@ -1692,16 +1279,14 @@ function loadTextSize() {
         ].includes(saved)
 
             ? saved
-
             : "medium"
 
     );
-
 }
 
 
 /* =====================================================
-THEME
+                       THEME
 ===================================================== */
 
 function applyTheme(theme) {
@@ -1711,41 +1296,27 @@ function applyTheme(theme) {
             ? "light"
             : "dark";
 
-
     document.body.classList.toggle(
-
         "light-theme",
-
         currentTheme === "light"
-
     );
-
 
     const themeButton =
         $("themeButton");
-
 
     if (themeButton) {
 
         themeButton.textContent =
 
             currentTheme === "light"
-
                 ? "Light"
-
                 : "Dark";
-
     }
 
-
     localStorage.setItem(
-
         "moonplug_theme",
-
         currentTheme
-
     );
-
 }
 
 
@@ -1754,13 +1325,10 @@ function toggleTheme() {
     applyTheme(
 
         currentTheme === "dark"
-
             ? "light"
-
             : "dark"
 
     );
-
 }
 
 
@@ -1771,22 +1339,16 @@ function loadTheme() {
             "moonplug_theme"
         );
 
-
     applyTheme(
-
         saved === "light"
-
             ? "light"
-
             : "dark"
-
     );
-
 }
 
 
 /* =====================================================
-ACCOUNT
+                       ACCOUNT
 ===================================================== */
 
 function openAccount() {
@@ -1794,21 +1356,17 @@ function openAccount() {
     const account =
         $("accountScreen");
 
-
     if (!account) {
         return;
     }
 
-
     account.style.display =
         "flex";
-
 
     account.setAttribute(
         "aria-hidden",
         "false"
     );
-
 }
 
 
@@ -1817,26 +1375,22 @@ function closeAccount() {
     const account =
         $("accountScreen");
 
-
     if (!account) {
         return;
     }
 
-
     account.style.display =
         "none";
-
 
     account.setAttribute(
         "aria-hidden",
         "true"
     );
-
 }
 
 
 /* =====================================================
-ACCOUNT TABS
+                   ACCOUNT TABS
 ===================================================== */
 
 function showLoginTab() {
@@ -1844,10 +1398,8 @@ function showLoginTab() {
     const loginForm =
         $("loginForm");
 
-
     const signupForm =
         $("signupForm");
-
 
     if (loginForm) {
 
@@ -1856,9 +1408,7 @@ function showLoginTab() {
 
         loginForm.style.display =
             "flex";
-
     }
-
 
     if (signupForm) {
 
@@ -1867,21 +1417,13 @@ function showLoginTab() {
 
         signupForm.style.display =
             "none";
-
     }
 
-
     $("loginTab")
-        ?.classList.add(
-            "active"
-        );
-
+        ?.classList.add("active");
 
     $("signupTab")
-        ?.classList.remove(
-            "active"
-        );
-
+        ?.classList.remove("active");
 }
 
 
@@ -1890,10 +1432,8 @@ function showSignupTab() {
     const loginForm =
         $("loginForm");
 
-
     const signupForm =
         $("signupForm");
-
 
     if (loginForm) {
 
@@ -1902,9 +1442,7 @@ function showSignupTab() {
 
         loginForm.style.display =
             "none";
-
     }
-
 
     if (signupForm) {
 
@@ -1913,82 +1451,60 @@ function showSignupTab() {
 
         signupForm.style.display =
             "flex";
-
     }
 
-
     $("loginTab")
-        ?.classList.remove(
-            "active"
-        );
-
+        ?.classList.remove("active");
 
     $("signupTab")
-        ?.classList.add(
-            "active"
-        );
-
+        ?.classList.add("active");
 }
 
 
 /* =====================================================
-ACCOUNT FORMS
+                   ACCOUNT FORMS
 ===================================================== */
 
 function setupAccountForms() {
 
     $("loginForm")
         ?.addEventListener(
-
             "submit",
-
             event => {
 
                 event.preventDefault();
-
 
                 if ($("accountMessage")) {
 
                     $("accountMessage")
                         .textContent =
-
                         "Public accounts are not connected yet.";
-
                 }
 
             }
-
         );
-
 
     $("signupForm")
         ?.addEventListener(
-
             "submit",
-
             event => {
 
                 event.preventDefault();
-
 
                 if ($("accountMessage")) {
 
                     $("accountMessage")
                         .textContent =
-
                         "Public accounts are not connected yet.";
-
                 }
 
             }
-
         );
-
 }
 
 
 /* =====================================================
-PASSWORD TOGGLE
+                 PASSWORD TOGGLE
 ===================================================== */
 
 function setupPasswordToggle() {
@@ -1996,58 +1512,39 @@ function setupPasswordToggle() {
     const passwordInput =
         $("ownerCode");
 
-
     const toggleButton =
         $("showPassword");
-
 
     if (
         !passwordInput ||
         !toggleButton
     ) {
-
         return;
-
     }
 
-
     toggleButton.addEventListener(
-
         "click",
-
         () => {
 
             const showing =
-                passwordInput.type ===
-                "text";
-
+                passwordInput.type === "text";
 
             passwordInput.type =
-
                 showing
-
                     ? "password"
-
                     : "text";
 
-
             toggleButton.textContent =
-
                 showing
-
                     ? "Show"
-
                     : "Hide";
-
         }
-
     );
-
 }
 
 
 /* =====================================================
-SIDEBAR
+                       SIDEBAR
 ===================================================== */
 
 function toggleSidebar() {
@@ -2055,163 +1552,89 @@ function toggleSidebar() {
     const sidebar =
         $("sidebar");
 
-
     if (!sidebar) {
         return;
     }
 
-
-    /*
-       Tablet + phone
-    */
-
-    if (
-        window.innerWidth <= 1200
-    ) {
+    if (window.innerWidth <= 1200) {
 
         sidebarExpanded =
             !sidebarExpanded;
 
-
         sidebar.classList.toggle(
-
             "expanded",
-
             sidebarExpanded
-
         );
 
-
-        /*
-           Close it after selecting
-           a normal navigation button.
-        */
-
         return;
-
     }
-
-
-    /*
-       Desktop
-    */
 
     sidebar.classList.toggle(
         "collapsed"
     );
-
 }
 
-
-/* =====================================================
-CLOSE MOBILE SIDEBAR
-===================================================== */
 
 function closeMobileSidebar() {
 
     const sidebar =
         $("sidebar");
 
-
     if (
         !sidebar ||
         window.innerWidth > 1200
     ) {
-
         return;
-
     }
-
 
     sidebarExpanded =
         false;
 
-
     sidebar.classList.remove(
         "expanded"
     );
-
 }
 
-
-/* =====================================================
-SIDEBAR SETUP
-===================================================== */
 
 function setupSidebar() {
 
     const logo =
         $("sidebarLogo");
 
-
     logo?.addEventListener(
-
         "click",
-
         toggleSidebar
-
     );
 
-
     document
-        .querySelectorAll(
-            ".sidebar-button"
-        )
-        .forEach(
+        .querySelectorAll(".sidebar-button")
+        .forEach(button => {
 
-            button => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                button.addEventListener(
+                    if (
+                        window.innerWidth <= 1200
+                    ) {
 
-                    "click",
-
-                    () => {
-
-                        /*
-                           Keep sidebar open when
-                           clicking the logo behavior.
-
-                           Normal buttons close it
-                           on mobile/tablet.
-                        */
-
-                        if (
-                            window.innerWidth <=
-                            1200
-                        ) {
-
-                            closeMobileSidebar();
-
-                        }
-
+                        closeMobileSidebar();
                     }
+                }
+            );
 
-                );
-
-            }
-
-        );
-
-
-    /*
-       Fix state when changing
-       between desktop and mobile.
-    */
+        });
 
     window.addEventListener(
-
         "resize",
-
         () => {
 
             const sidebar =
                 $("sidebar");
 
-
             if (!sidebar) {
                 return;
             }
-
 
             if (
                 window.innerWidth > 1200
@@ -2221,21 +1644,17 @@ function setupSidebar() {
                     "expanded"
                 );
 
-
                 sidebarExpanded =
                     false;
-
             }
 
         }
-
     );
-
 }
 
 
 /* =====================================================
-TRAINING API
+                    TRAINING API
 ===================================================== */
 
 async function loadTraining() {
@@ -2244,7 +1663,6 @@ async function loadTraining() {
         return [];
     }
 
-
     try {
 
         const data =
@@ -2252,13 +1670,9 @@ async function loadTraining() {
                 "/api/owner/training"
             );
 
-
-        return Array.isArray(
-            data.training
-        )
+        return Array.isArray(data.training)
             ? data.training
             : [];
-
 
     } catch (error) {
 
@@ -2271,19 +1685,15 @@ async function loadTraining() {
                 false;
 
             hideOwnerPanel();
-
         }
 
-
         return [];
-
     }
-
 }
 
 
 /* =====================================================
-ADD TRAINING
+                     ADD TRAINING
 ===================================================== */
 
 async function addTraining(
@@ -2300,36 +1710,25 @@ async function addTraining(
 
             error:
                 "Owner authentication required."
-
         };
-
     }
-
 
     try {
 
         return await apiRequest(
-
             "/api/owner/training",
-
             {
-
                 method: "POST",
 
                 body: JSON.stringify({
 
                     question,
-
                     answer,
-
                     category
 
                 })
-
             }
-
         );
-
 
     } catch (error) {
 
@@ -2340,21 +1739,16 @@ async function addTraining(
             error:
                 error.message ||
                 "Could not add training."
-
         };
-
     }
-
 }
 
 
 /* =====================================================
-DELETE TRAINING
+                  DELETE TRAINING
 ===================================================== */
 
-async function deleteTraining(
-    trainingId
-) {
+async function deleteTraining(trainingId) {
 
     if (!isOwnerAuthenticated) {
 
@@ -2364,11 +1758,8 @@ async function deleteTraining(
 
             error:
                 "Owner authentication required."
-
         };
-
     }
-
 
     if (
         trainingId === undefined ||
@@ -2382,11 +1773,8 @@ async function deleteTraining(
 
             error:
                 "Training ID is missing."
-
         };
-
     }
-
 
     try {
 
@@ -2397,13 +1785,10 @@ async function deleteTraining(
             )}`,
 
             {
-
                 method: "DELETE"
-
             }
 
         );
-
 
     } catch (error) {
 
@@ -2414,16 +1799,13 @@ async function deleteTraining(
             error:
                 error.message ||
                 "Could not delete training."
-
         };
-
     }
-
 }
 
 
 /* =====================================================
-TRAINER PANEL
+                    TRAINER PANEL
 ===================================================== */
 
 function openTrainer() {
@@ -2433,13 +1815,10 @@ function openTrainer() {
         showOwnerLogin();
 
         return;
-
     }
-
 
     const existing =
         $("trainerPanel");
-
 
     if (existing) {
 
@@ -2450,23 +1829,16 @@ function openTrainer() {
             0;
 
         return;
-
     }
 
-
     const panel =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     panel.id =
         "trainerPanel";
 
-
     panel.className =
         "trainer-panel";
-
 
     panel.innerHTML = `
 
@@ -2649,10 +2021,8 @@ function openTrainer() {
 
     `;
 
-
     const ownerPanel =
         $("ownerPanel");
-
 
     if (!ownerPanel) {
 
@@ -2661,14 +2031,11 @@ function openTrainer() {
         );
 
         return;
-
     }
-
 
     ownerPanel.appendChild(
         panel
     );
-
 
     $("closeTrainer")
         ?.addEventListener(
@@ -2676,13 +2043,11 @@ function openTrainer() {
             closeTrainer
         );
 
-
     $("refreshTraining")
         ?.addEventListener(
             "click",
             refreshTraining
         );
-
 
     $("teachMoonPlug")
         ?.addEventListener(
@@ -2690,41 +2055,27 @@ function openTrainer() {
             teachMoonPlug
         );
 
-
     $("generateTraining")
         ?.addEventListener(
             "click",
             generateTraining
         );
 
-
     $("trainingCategory")
         ?.addEventListener(
-
             "keydown",
-
             event => {
 
                 if (
-                    event.key ===
-                    "Enter"
+                    event.key === "Enter"
                 ) {
 
                     event.preventDefault();
 
                     generateTraining();
-
                 }
-
             }
-
         );
-
-
-    /*
-       Make trainer itself scrollable
-       on mobile.
-    */
 
     panel.style.overflowY =
         "auto";
@@ -2732,14 +2083,12 @@ function openTrainer() {
     panel.style.webkitOverflowScrolling =
         "touch";
 
-
     loadAndRenderTraining();
-
 }
 
 
 /* =====================================================
-CLOSE TRAINER
+                    CLOSE TRAINER
 ===================================================== */
 
 function closeTrainer() {
@@ -2747,18 +2096,14 @@ function closeTrainer() {
     const panel =
         $("trainerPanel");
 
-
     if (panel) {
-
         panel.remove();
-
     }
-
 }
 
 
 /* =====================================================
-GENERATE TRAINING
+                  GENERATE TRAINING
 ===================================================== */
 
 async function generateTraining() {
@@ -2768,43 +2113,33 @@ async function generateTraining() {
         showOwnerLogin();
 
         return;
-
     }
-
 
     const categoryInput =
         $("trainingCategory");
 
-
     const amountInput =
         $("trainingAmount");
-
 
     const button =
         $("generateTraining");
 
-
     const status =
         $("trainingGenerateStatus");
-
 
     const resultsSection =
         $("generatedTrainingSection");
 
-
     const results =
         $("generatedTrainingResults");
 
-
     const category =
         categoryInput?.value.trim();
-
 
     const amount =
         Number(
             amountInput?.value
         );
-
 
     if (!category) {
 
@@ -2812,16 +2147,12 @@ async function generateTraining() {
 
             status.textContent =
                 "Please enter a category.";
-
         }
-
 
         categoryInput?.focus();
 
         return;
-
     }
-
 
     if (
         !Number.isInteger(amount) ||
@@ -2832,13 +2163,10 @@ async function generateTraining() {
 
             status.textContent =
                 "Please choose a valid amount.";
-
         }
 
         return;
-
     }
-
 
     if (button) {
 
@@ -2847,57 +2175,42 @@ async function generateTraining() {
 
         button.textContent =
             "Generating...";
-
     }
-
 
     if (status) {
 
         status.textContent =
             "MoonPlug is generating training...";
-
     }
-
 
     if (resultsSection) {
 
         resultsSection.style.display =
             "none";
-
     }
-
 
     if (results) {
 
         results.innerHTML =
             "";
-
     }
-
 
     try {
 
         const data =
             await apiRequest(
-
                 "/api/owner/training/generate",
-
                 {
-
                     method: "POST",
 
                     body: JSON.stringify({
 
                         category,
-
                         amount
 
                     })
-
                 }
-
             );
-
 
         if (
             data.success === false
@@ -2907,62 +2220,41 @@ async function generateTraining() {
 
                 data.error ||
                 "Training generation failed."
-
             );
-
         }
-
 
         const generated =
 
-            Array.isArray(
-                data.training
-            )
-
+            Array.isArray(data.training)
                 ? data.training
 
-                : Array.isArray(
-                    data.results
-                )
-
+                : Array.isArray(data.results)
                     ? data.results
 
-                    : Array.isArray(
-                        data.generated
-                    )
-
+                    : Array.isArray(data.generated)
                         ? data.generated
 
                         : [];
 
-
         if (!generated.length) {
 
             throw new Error(
-
                 "The server generated no training examples."
-
             );
-
         }
-
 
         renderGeneratedTraining(
             generated
         );
 
-
         if (resultsSection) {
 
             resultsSection.style.display =
                 "block";
-
         }
-
 
         let savedCount =
             0;
-
 
         for (
             const item
@@ -2974,60 +2266,42 @@ async function generateTraining() {
                 item?.prompt ??
                 "";
 
-
             const answer =
                 item?.answer ??
                 item?.response ??
                 "";
 
-
             const itemCategory =
                 item?.category ||
                 category;
-
 
             if (
                 !question ||
                 !answer
             ) {
-
                 continue;
-
             }
-
 
             const result =
                 await addTraining(
 
-                    String(
-                        question
-                    ),
+                    String(question),
 
-                    String(
-                        answer
-                    ),
+                    String(answer),
 
-                    String(
-                        itemCategory
-                    )
+                    String(itemCategory)
 
                 );
 
-
             if (
-                result?.success ===
-                true
+                result?.success === true
             ) {
 
                 savedCount++;
-
             }
-
         }
 
-
         await loadAndRenderTraining();
-
 
         if (status) {
 
@@ -3038,27 +2312,20 @@ async function generateTraining() {
                         ? ""
                         : "s"
                 } about ${category}.`;
-
         }
-
 
     } catch (error) {
 
         console.error(
-
             "Training generation error:",
-
             error
-
         );
-
 
         if (status) {
 
             status.textContent =
                 error.message ||
                 "Could not generate training.";
-
         }
 
     } finally {
@@ -3070,37 +2337,28 @@ async function generateTraining() {
 
             button.textContent =
                 "Generate & Teach";
-
         }
-
     }
-
 }
 
 
 /* =====================================================
-GENERATED TRAINING DISPLAY
+              GENERATED TRAINING DISPLAY
 ===================================================== */
 
-function renderGeneratedTraining(
-    training
-) {
+function renderGeneratedTraining(training) {
 
     const container =
         $("generatedTrainingResults");
-
 
     if (!container) {
         return;
     }
 
-
     container.innerHTML =
         "";
 
-
     training.forEach(
-
         (item, index) => {
 
             const question =
@@ -3108,75 +2366,51 @@ function renderGeneratedTraining(
                 item?.prompt ??
                 "";
 
-
             const answer =
                 item?.answer ??
                 item?.response ??
                 "";
 
-
             const category =
                 item?.category ||
                 "general";
 
-
             const card =
-                document.createElement(
-                    "div"
-                );
-
+                document.createElement("div");
 
             card.className =
                 "training-card generated";
 
-
             card.innerHTML = `
 
                 <strong>
-
                     ${escapeHTML(
-
                         question ||
-
                         `Training Example ${index + 1}`
-
                     )}
-
                 </strong>
 
                 <p>
-
-                    ${escapeHTML(
-                        answer
-                    )}
-
+                    ${escapeHTML(answer)}
                 </p>
 
                 <small>
-
                     Category:
-                    ${escapeHTML(
-                        category
-                    )}
-
+                    ${escapeHTML(category)}
                 </small>
 
             `;
 
-
             container.appendChild(
                 card
             );
-
         }
-
     );
-
 }
 
 
 /* =====================================================
-TRAINING LIST
+                  TRAINING LIST
 ===================================================== */
 
 async function loadAndRenderTraining() {
@@ -3184,37 +2418,29 @@ async function loadAndRenderTraining() {
     const training =
         await loadTraining();
 
-
     renderTrainingList(
         training
     );
-
 }
 
 
 async function refreshTraining() {
 
     await loadAndRenderTraining();
-
 }
 
 
-function renderTrainingList(
-    training
-) {
+function renderTrainingList(training) {
 
     const list =
         $("trainingList");
-
 
     if (!list) {
         return;
     }
 
-
     list.innerHTML =
         "";
-
 
     if (!training.length) {
 
@@ -3227,58 +2453,39 @@ function renderTrainingList(
         `;
 
         return;
-
     }
 
-
     training.forEach(
-
         item => {
 
             const card =
-                document.createElement(
-                    "div"
-                );
-
+                document.createElement("div");
 
             card.className =
                 "training-card";
 
-
             card.innerHTML = `
 
                 <strong>
-
                     ${escapeHTML(
-
                         item?.question ||
                         "Untitled training"
-
                     )}
-
                 </strong>
 
                 <p>
-
                     ${escapeHTML(
-
                         item?.answer ||
                         ""
-
                     )}
-
                 </p>
 
                 <small>
-
                     Category:
                     ${escapeHTML(
-
                         item?.category ||
                         "general"
-
                     )}
-
                 </small>
 
                 <br>
@@ -3292,24 +2499,18 @@ function renderTrainingList(
 
             `;
 
-
             const deleteButton =
                 card.querySelector(
                     ".delete-training-button"
                 );
 
-
             deleteButton?.addEventListener(
-
                 "click",
-
                 async () => {
 
                     if (
-                        item?.id ===
-                            undefined ||
-                        item?.id ===
-                            null
+                        item?.id === undefined ||
+                        item?.id === null
                     ) {
 
                         alert(
@@ -3317,9 +2518,7 @@ function renderTrainingList(
                         );
 
                         return;
-
                     }
-
 
                     if (
                         !confirm(
@@ -3328,27 +2527,21 @@ function renderTrainingList(
                     ) {
 
                         return;
-
                     }
-
 
                     deleteButton.disabled =
                         true;
 
-
                     deleteButton.textContent =
                         "Deleting...";
-
 
                     const result =
                         await deleteTraining(
                             item.id
                         );
 
-
                     if (
-                        result?.success ===
-                        true
+                        result?.success === true
                     ) {
 
                         card.remove();
@@ -3358,39 +2551,27 @@ function renderTrainingList(
                         deleteButton.disabled =
                             false;
 
-
                         deleteButton.textContent =
                             "Delete";
 
-
                         alert(
-
                             result?.error ||
-
                             "Could not delete training."
-
                         );
-
                     }
-
                 }
-
             );
-
 
             list.appendChild(
                 card
             );
-
         }
-
     );
-
 }
 
 
 /* =====================================================
-MANUAL TRAINING
+                   MANUAL TRAINING
 ===================================================== */
 
 async function teachMoonPlug() {
@@ -3400,25 +2581,20 @@ async function teachMoonPlug() {
         showOwnerLogin();
 
         return;
-
     }
-
 
     const question =
         $("trainerQuestion")
             ?.value.trim();
 
-
     const answer =
         $("trainerAnswer")
             ?.value.trim();
-
 
     const category =
         $("trainerCategory")
             ?.value.trim() ||
         "general";
-
 
     if (!question) {
 
@@ -3427,9 +2603,7 @@ async function teachMoonPlug() {
         );
 
         return;
-
     }
-
 
     if (!answer) {
 
@@ -3438,13 +2612,10 @@ async function teachMoonPlug() {
         );
 
         return;
-
     }
-
 
     const button =
         $("teachMoonPlug");
-
 
     if (button) {
 
@@ -3453,23 +2624,16 @@ async function teachMoonPlug() {
 
         button.textContent =
             "Teaching...";
-
     }
-
 
     try {
 
         const result =
             await addTraining(
-
                 question,
-
                 answer,
-
                 category
-
             );
-
 
         if (
             !result ||
@@ -3479,51 +2643,35 @@ async function teachMoonPlug() {
             throw new Error(
 
                 result?.error ||
-
                 "Could not teach MoonPlug."
-
             );
-
         }
-
 
         $("trainerQuestion").value =
             "";
 
-
         $("trainerAnswer").value =
             "";
-
 
         $("trainerCategory").value =
             "general";
 
-
         await loadAndRenderTraining();
-
 
         alert(
             "MoonPlug learned something new!"
         );
 
-
     } catch (error) {
 
         console.error(
-
             "Manual training error:",
-
             error
-
         );
 
-
         alert(
-
             error.message ||
-
             "Could not teach MoonPlug."
-
         );
 
     } finally {
@@ -3535,16 +2683,13 @@ async function teachMoonPlug() {
 
             button.textContent =
                 "Teach MoonPlug";
-
         }
-
     }
-
 }
 
 
 /* =====================================================
-BUTTON EVENTS
+                   BUTTON EVENTS
 ===================================================== */
 
 function setupButtons() {
@@ -3555,36 +2700,22 @@ function setupButtons() {
             sendMessage
         );
 
-
     $("messageInput")
         ?.addEventListener(
-
             "keydown",
-
             event => {
 
                 if (
-                    event.key ===
-                    "Enter" &&
+                    event.key === "Enter" &&
                     !event.shiftKey
                 ) {
 
                     event.preventDefault();
 
-
-                    /*
-                       sendMessage() itself
-                       prevents duplicates.
-                    */
-
                     sendMessage();
-
                 }
-
             }
-
         );
-
 
     $("newChatButton")
         ?.addEventListener(
@@ -3592,13 +2723,11 @@ function setupButtons() {
             startNewChat
         );
 
-
     $("settingsButton")
         ?.addEventListener(
             "click",
             openSettings
         );
-
 
     $("closeSettings")
         ?.addEventListener(
@@ -3606,18 +2735,11 @@ function setupButtons() {
             closeSettings
         );
 
-
     $("themeButton")
         ?.addEventListener(
             "click",
             toggleTheme
         );
-
-
-    /*
-       This remains the account button.
-       Owner access stays hidden.
-    */
 
     $("ownerButton")
         ?.addEventListener(
@@ -3625,13 +2747,11 @@ function setupButtons() {
             openAccount
         );
 
-
     $("closeAccount")
         ?.addEventListener(
             "click",
             closeAccount
         );
-
 
     $("loginTab")
         ?.addEventListener(
@@ -3639,13 +2759,11 @@ function setupButtons() {
             showLoginTab
         );
 
-
     $("signupTab")
         ?.addEventListener(
             "click",
             showSignupTab
         );
-
 
     $("ownerLoginButton")
         ?.addEventListener(
@@ -3653,29 +2771,21 @@ function setupButtons() {
             loginOwner
         );
 
-
     $("ownerCode")
         ?.addEventListener(
-
             "keydown",
-
             event => {
 
                 if (
-                    event.key ===
-                    "Enter"
+                    event.key === "Enter"
                 ) {
 
                     event.preventDefault();
 
                     loginOwner();
-
                 }
-
             }
-
         );
-
 
     $("ownerCancel")
         ?.addEventListener(
@@ -3683,78 +2793,52 @@ function setupButtons() {
             hideOwnerLogin
         );
 
-
     $("ownerLogout")
         ?.addEventListener(
             "click",
             logoutOwner
         );
 
-
     document
-        .querySelectorAll(
-            ".size-button"
-        )
-        .forEach(
+        .querySelectorAll(".size-button")
+        .forEach(button => {
 
-            button => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                button.addEventListener(
-
-                    "click",
-
-                    () => {
-
-                        updateTextSize(
-
-                            button.dataset.size
-
-                        );
-
-                    }
-
-                );
-
-            }
-
-        );
-
+                    updateTextSize(
+                        button.dataset.size
+                    );
+                }
+            );
+        });
 }
 
 
 /* =====================================================
-OWNER PANEL BUTTONS
+                OWNER PANEL BUTTONS
 ===================================================== */
 
 function setupOwnerPanelButtons() {
 
     $("manageUsersButton")
         ?.addEventListener(
-
             "click",
-
             async () => {
 
                 const users =
                     await loadOwnerUsers();
 
-
                 alert(
-
                     `MoonPlug currently has ${users.length} user(s).`
-
                 );
-
             }
-
         );
-
 
     $("manageChatsButton")
         ?.addEventListener(
-
             "click",
-
             async () => {
 
                 try {
@@ -3764,62 +2848,43 @@ function setupOwnerPanelButtons() {
                             "/api/owner/dashboard"
                         );
 
-
                     alert(
-
                         `MoonPlug has ${
-                            dashboard.stats?.chats ??
-                            0
+                            dashboard.stats?.chats ?? 0
                         } saved chat(s).`
-
                     );
-
 
                 } catch (error) {
 
                     if (
-                        error.status ===
-                            401 ||
-                        error.status ===
-                            403
+                        error.status === 401 ||
+                        error.status === 403
                     ) {
 
                         isOwnerAuthenticated =
                             false;
 
-
                         hideOwnerPanel();
-
 
                         showOwnerLogin();
 
-
                         return;
-
                     }
-
 
                     alert(
                         "Could not load chat information."
                     );
-
                 }
-
             }
-
         );
-
 
     $("appSettingsButton")
         ?.addEventListener(
-
             "click",
-
             async () => {
 
                 const settings =
                     await loadOwnerSettings();
-
 
                 if (!settings) {
 
@@ -3828,9 +2893,7 @@ function setupOwnerPanelButtons() {
                     );
 
                     return;
-
                 }
-
 
                 alert(
 
@@ -3843,51 +2906,32 @@ function setupOwnerPanelButtons() {
                     }`
 
                 );
-
             }
-
         );
-
 
     $("trainerButton")
         ?.addEventListener(
             "click",
             openTrainer
         );
-
-
-    /*
-       DO NOT close the owner panel
-       when clicking inside it.
-
-       The old version could accidentally
-       close the panel on mobile.
-    */
-
 }
 
 
 /* =====================================================
-KEYBOARD SHORTCUTS
+                 KEYBOARD SHORTCUTS
 ===================================================== */
 
 function setupKeyboardShortcuts() {
 
     document.addEventListener(
-
         "keydown",
-
         event => {
 
             if (
-                event.key !==
-                "Escape"
+                event.key !== "Escape"
             ) {
-
                 return;
-
             }
-
 
             hideOwnerLogin();
 
@@ -3897,18 +2941,14 @@ function setupKeyboardShortcuts() {
 
             closeTrainer();
 
-
             closeMobileSidebar();
-
         }
-
     );
-
 }
 
 
 /* =====================================================
-MOBILE INPUT SAFETY
+                MOBILE INPUT SAFETY
 ===================================================== */
 
 function setupMobileInput() {
@@ -3916,46 +2956,31 @@ function setupMobileInput() {
     const input =
         $("messageInput");
 
-
     if (!input) {
         return;
     }
 
-
-    /*
-       Prevent accidental form submission
-       or duplicate sends.
-    */
-
     input.addEventListener(
-
         "input",
-
         () => {
 
             const sendButton =
                 $("sendButton");
 
-
             if (!sendButton) {
                 return;
             }
 
-
             sendButton.disabled =
-
                 isSendingMessage ||
                 input.value.trim() === "";
-
         }
-
     );
-
 }
 
 
 /* =====================================================
-INITIALIZATION
+                   INITIALIZATION
 ===================================================== */
 
 async function initializeMoonPlug() {
@@ -3964,9 +2989,7 @@ async function initializeMoonPlug() {
         "🌙 MoonPlug AI starting..."
     );
 
-
-
-createRandomStars();
+    createRandomStars();
 
     setupButtons();
 
@@ -3982,30 +3005,17 @@ createRandomStars();
 
     setupMobileInput();
 
-
     loadTextSize();
 
     loadTheme();
 
-
-    /*
-       Start with typing hidden.
-    */
-
     hideTyping();
-
-
-    /*
-       Start with sending unlocked.
-    */
 
     isSendingMessage =
         false;
 
-
     const backendOnline =
         await checkBackendHealth();
-
 
     if (backendOnline) {
 
@@ -4018,147 +3028,61 @@ createRandomStars();
         console.warn(
             "⚠ MoonPlug backend unavailable."
         );
-
     }
-
 
     await checkOwnerSession();
 
-
-    /*
-       Owner login is NEVER automatically
-       displayed.
-    */
-
     hideOwnerLogin();
-
 
     if (!isOwnerAuthenticated) {
 
         hideOwnerPanel();
-
     }
-
 
     console.log(
         "✓ MoonPlug ready."
     );
-
 }
 
 
 /* =====================================================
-START APP
+                     START APP
 ===================================================== */
-
-/* =====================================================
-   MOONPLUG STAR FIELD
-===================================================== */
-
-function createMoonPlugStars() {
-
-    const starField =
-        document.getElementById("starField");
-
-    if (!starField) {
-        return;
-    }
-
-    starField.innerHTML = "";
-
-    const starCount =
-        window.innerWidth < 600
-            ? 70
-            : 120;
-
-    for (let i = 0; i < starCount; i++) {
-
-        const star =
-            document.createElement("div");
-
-        star.className =
-            "random-star";
-
-        star.style.setProperty(
-            "--star-size",
-            `${Math.random() * 2 + 1}px`
-        );
-
-        star.style.setProperty(
-            "--star-x",
-            `${Math.random() * 100}%`
-        );
-
-        star.style.setProperty(
-            "--star-y",
-            `${Math.random() * 100}%`
-        );
-
-        star.style.setProperty(
-            "--star-opacity",
-            `${Math.random() * 0.55 + 0.35}`
-        );
-
-        star.style.setProperty(
-            "--star-glow",
-            `${Math.random() * 4 + 2}px`
-        );
-
-        star.style.setProperty(
-            "--star-scale",
-            `${Math.random() * 0.7 + 0.6}`
-        );
-
-        star.style.setProperty(
-            "--star-duration",
-            `${Math.random() * 4 + 3}s`
-        );
-
-        star.style.setProperty(
-            "--star-delay",
-            `${Math.random() * 4}s`
-        );
-
-        star.style.setProperty(
-            "--star-move-x",
-            `${Math.random() * 12 - 6}px`
-        );
-
-        star.style.setProperty(
-            "--star-move-y",
-            `${Math.random() * 12 - 6}px`
-        );
-
-        starField.appendChild(star);
-    }
-}
-
-
-createMoonPlugStars();
-
-
-window.addEventListener(
-    "resize",
-    createMoonPlugStars
-);
-
 
 if (
-    document.readyState ===
-    "loading"
+    document.readyState === "loading"
 ) {
 
     document.addEventListener(
-
         "DOMContentLoaded",
-
         initializeMoonPlug
-
     );
 
 } else {
 
     initializeMoonPlug();
-
 }
+
+
+/* =====================================================
+              REFRESH STAR FIELD ON RESIZE
+===================================================== */
+
+let starResizeTimer = null;
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        clearTimeout(
+            starResizeTimer
+        );
+
+        starResizeTimer =
+            setTimeout(
+                createRandomStars,
+                250
+            );
+    }
+);
 
