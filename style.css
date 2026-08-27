@@ -1859,4 +1859,286 @@ body.light-theme #sendButton {
         scroll-behavior: auto !important;
     }
 }
+/* =====================================================
+   MOONPLUG SPACE BACKGROUND
+===================================================== */
 
+#spaceBackground {
+    position: fixed;
+    inset: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+
+    z-index: 0;
+
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(65, 45, 120, 0.20),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(30, 70, 130, 0.14),
+            transparent 35%
+        ),
+        #070711;
+}
+
+/* Keep the actual app above the stars */
+
+.sidebar,
+.chat-section,
+.settings-panel,
+.account-screen,
+.owner-overlay,
+.owner-panel {
+    position: fixed;
+}
+
+.sidebar,
+.chat-section {
+    z-index: 10;
+}
+
+/* =====================================================
+   RANDOM STARS
+===================================================== */
+
+#spaceStars {
+    position: absolute;
+    inset: 0;
+}
+
+.space-star {
+    position: absolute;
+
+    border-radius: 50%;
+
+    background: white;
+
+    pointer-events: none;
+
+    animation:
+        starTwinkle
+        var(--twinkle-speed)
+        ease-in-out
+        infinite;
+
+    opacity: var(--star-opacity);
+}
+
+@keyframes starTwinkle {
+
+    0%,
+    100% {
+        opacity: var(--star-opacity);
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: calc(var(--star-opacity) * 0.35);
+        transform: scale(0.7);
+    }
+}
+
+/* =====================================================
+   MOONPLUG LOADER
+===================================================== */
+
+.moonplug-loader {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 220px;
+    height: 430px;
+
+    display: none;
+
+    flex-direction: column;
+    align-items: center;
+
+    z-index: 5;
+}
+
+/* MOON */
+
+.moonplug-moon {
+    font-size: 76px;
+
+    filter:
+        drop-shadow(
+            0 0 18px
+            rgba(255, 255, 255, 0.45)
+        );
+
+    animation:
+        moonFloat
+        3s
+        ease-in-out
+        infinite;
+}
+
+@keyframes moonFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+/* PATH */
+
+.moonplug-path {
+    position: relative;
+
+    width: 80px;
+    height: 270px;
+
+    margin-top: 5px;
+}
+
+/* CABLE */
+
+.moonplug-cable {
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 25px;
+
+    width: 6px;
+
+    height: 0;
+
+    transform: translateX(-50%);
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(255,255,255,0.05),
+            rgba(255,255,255,0.9)
+        );
+
+    box-shadow:
+        0 0 8px rgba(255,255,255,0.5),
+        0 0 18px rgba(130,170,255,0.35);
+
+    transition:
+        height 0.35s ease;
+}
+
+/* PLUG */
+
+.moonplug-plug {
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 12px;
+
+    transform:
+        translateX(-50%)
+        rotate(-8deg);
+
+    font-size: 42px;
+
+    filter:
+        drop-shadow(
+            0 0 8px
+            rgba(255,255,255,0.55)
+        );
+
+    transition:
+        bottom 0.35s ease,
+        transform 0.35s ease;
+}
+
+/* SMALL ELECTRIC EFFECT */
+
+.moonplug-plug::after {
+    content: "";
+
+    position: absolute;
+
+    inset: -8px;
+
+    border-radius: 50%;
+
+    border: 1px solid
+        rgba(150,190,255,0.35);
+
+    animation:
+        plugPulse
+        1s
+        ease-in-out
+        infinite;
+}
+
+@keyframes plugPulse {
+
+    0% {
+        opacity: 0.15;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.15);
+    }
+
+    100% {
+        opacity: 0.15;
+        transform: scale(0.8);
+    }
+}
+
+/* LOADING TEXT */
+
+.moonplug-loading-text {
+    margin-top: 12px;
+
+    color: #aaa;
+
+    font-size: 14px;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
+/* =====================================================
+   MOBILE LOADER
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .moonplug-loader {
+        transform:
+            translate(-50%, -50%)
+            scale(0.85);
+    }
+
+}
+
+@media (max-width: 420px) {
+
+    .moonplug-loader {
+        transform:
+            translate(-50%, -50%)
+            scale(0.72);
+    }
+
+}
