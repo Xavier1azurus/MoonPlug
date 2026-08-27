@@ -376,39 +376,6 @@ body {
    MOONPLUG ANIMATION
 ===================================================== */
 
-.moonplug-animation {
-    position: absolute;
-
-    top: 80px;
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-
-    display: flex;
-    align-items: center;
-
-    opacity: 0.08;
-
-    pointer-events: none;
-
-    z-index: 0;
-}
-
-.plug {
-    font-size: 25px;
-}
-
-.cable {
-    width: 35px;
-    height: 2px;
-
-    background: #ffffff;
-}
-
-.moon {
-    font-size: 25px;
-}
 
 
 /* =====================================================
@@ -513,17 +480,17 @@ body {
 /* =====================================================
    CHAT BUBBLES
 ===================================================== */
+# MoonPlug Desktop Message Bubble Fix
+
 
 .message-bubble {
     display: block;
 
     width: fit-content;
 
-    max-width:
-        min(78%, 760px);
+    max-width: 650px;
 
-    padding:
-        15px 19px;
+    padding: 15px 19px;
 
     border-radius: 18px;
 
@@ -532,7 +499,6 @@ body {
     font-size: 20px;
 
     word-wrap: break-word;
-
     overflow-wrap: anywhere;
 
     white-space: pre-wrap;
@@ -540,20 +506,19 @@ body {
     color: #ffffff;
 
     visibility: visible;
-
     opacity: 1;
 
-    animation:
-        bubbleAppear 0.18s ease;
+    animation: bubbleAppear 0.18s ease;
 }
 
 
-/* USER */
+/* USER MESSAGE */
 
 .message-bubble.user {
     align-self: flex-end;
 
     margin-left: auto;
+    margin-right: 20px;
 
     background: #292929;
 
@@ -563,12 +528,13 @@ body {
 }
 
 
-/* AI */
+/* AI MESSAGE */
 
 .message-bubble.ai {
     align-self: flex-start;
 
     margin-right: auto;
+    margin-left: 20px;
 
     background: #1c1c1c;
 
@@ -578,25 +544,11 @@ body {
 }
 
 
-@keyframes bubbleAppear {
+This makes the message **stop before reaching the edge** and gives both the user and MoonPlug messages some breathing room.
 
-    from {
-        opacity: 0;
+Your existing mobile rules can still override the `650px` maximum with their `90%` / `93%` settings.
 
-        transform:
-            translateY(6px);
-    }
-
-    to {
-        opacity: 1;
-
-        transform:
-            translateY(0);
-    }
-}
-
-
-/* =====================================================
+====================================================================
    BOTTOM CHAT AREA
 ===================================================== */
 
