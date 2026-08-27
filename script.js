@@ -28,45 +28,169 @@ let sidebarExpanded = false;
 
 
 /* =====================================================
-              START RANDOM STARS
+              RANDOM STAR FIELD
 ===================================================== */
 
-function setupRandomStars() {
+function createRandomStars() {
 
-    createRandomStars();
+    const existing =
+        document.querySelector(".star-field");
+
+    if (existing) {
+        existing.remove();
+    }
+
+
+    const starField =
+        document.createElement("div");
+
+    starField.className =
+        "star-field";
+
+    starField.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    const width =
+        window.innerWidth;
+
+    const height =
+        window.innerHeight;
 
 
     /*
-       Re-randomize after resizing,
-       but don't constantly recreate
-       stars while the user drags the
-       window size.
+       More stars on larger screens,
+       fewer on phones.
     */
 
-    let resizeTimer;
+    const area =
+        width * height;
+
+    const starCount =
+        Math.min(
+            180,
+            Math.max(
+                55,
+                Math.floor(
+                    area / 7500
+                )
+            )
+        );
 
 
-    window.addEventListener(
-        "resize",
-        () => {
+    for (
+        let i = 0;
+        i < starCount;
+        i++
+    ) {
 
-            clearTimeout(
-                resizeTimer
-            );
+        const star =
+            document.createElement("span");
+
+        star.className =
+            "random-star";
 
 
-            resizeTimer =
-                setTimeout(
-                    createRandomStars,
-                    300
-                );
+        /*
+           Random position
+        */
 
-        }
+        star.style.left =
+            `${Math.random() * 100}%`;
+
+        star.style.top =
+            `${Math.random() * 100}%`;
+
+
+        /*
+           Random size
+        */
+
+        star.style.setProperty(
+            "--star-size",
+            `${Math.random() * 2.4 + 0.5}px`
+        );
+
+
+        /*
+           Random brightness
+        */
+
+        star.style.setProperty(
+            "--star-opacity",
+            `${Math.random() * 0.65 + 0.2}`
+        );
+
+
+        /*
+           Random glow
+        */
+
+        star.style.setProperty(
+            "--star-glow",
+            `${Math.random() * 5 + 1}px`
+        );
+
+
+        /*
+           Random movement
+        */
+
+        star.style.setProperty(
+            "--star-move-x",
+            `${(Math.random() - 0.5) * 14}px`
+        );
+
+        star.style.setProperty(
+            "--star-move-y",
+            `${(Math.random() - 0.5) * 14}px`
+        );
+
+
+        /*
+           Random animation speed
+        */
+
+        star.style.setProperty(
+            "--star-duration",
+            `${Math.random() * 8 + 5}s`
+        );
+
+
+        /*
+           Random animation starting point
+        */
+
+        star.style.setProperty(
+            "--star-delay",
+            `${Math.random() * -12}s`
+        );
+
+
+        /*
+           Random scale
+        */
+
+        star.style.setProperty(
+            "--star-scale",
+            `${Math.random() * 0.8 + 0.8}`
+        );
+
+
+        starField.appendChild(
+            star
+        );
+
+    }
+
+
+    document.body.prepend(
+        starField
     );
 
 }
-
-
 
 /* =====================================================
 DOM HELPER
