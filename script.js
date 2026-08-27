@@ -714,167 +714,74 @@ function hideTyping() {
 SEND MESSAGE
 ===================================================== */
 
+
 async function sendMessage() {
 
-    const input = $("messageInput");
+    const input = document.getElementById("messageInput");
 
+    if (!input) return;
 
-    if (!input) {
-        return;
-    }
+    const message = input.value.trim();
 
+    if (!message) return;
 
-    const message =
-        input.value.trim();
-
-
-    if (!message) {
-        return;
-    }
-
-
-    /*
-       PRIVATE OWNER TRIGGER
-
-       This is intentionally NOT
-       displayed as a public button.
-    */
-
-    if (message === "15912014") {
-
-        input.value = "";
-
-        showOwnerLogin();
-
-        return;
-    }
-
-
-    const previousHistory =
-        currentChat.map(item => ({
-
-            role: item.role,
-
-            content: item.content
-
-        }));
-
+    addMessage("user", message);
 
     input.value = "";
 
-
-    addMessage(
-        message,
-        "user"
-    );
-
-
     showTyping();
-
 
     try {
 
-        const data = await apiRequest(
-            "/api/chat",
+        const response = await fetch(
+            "https://moonplug.onrender.com/api/chat",
             {
                 method: "POST",
 
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
                 body: JSON.stringify({
-
-                    message,
-
-                    history: previousHistory
-
+                    message: message,
+                    history: []
                 })
             }
         );
 
+        const data = await response.json();
 
-        if (data.success === false) {
+        hideTyping();
 
-            throw new Error(
+        if (!response.ok || !data.success) {
+
+            addMessage(
+                "assistant",
                 data.error ||
-                "MoonPlug returned an error."
+                "MoonPlug could not get a response."
             );
+
+            return;
         }
-
-
-        const response =
-            data.response ??
-            data.message ??
-            data.reply ??
-            data.answer;
-
-
-        if (
-            response === undefined ||
-            response === null ||
-            String(response).trim() === ""
-        ) {
-
-            throw new Error(
-                "MoonPlug returned no response."
-            );
-        }
-
-
-        const responseText =
-            String(response);
-
 
         addMessage(
-            responseText,
-            "ai"
+            "assistant",
+            data.response
         );
 
-
-        currentChat.push({
-
-            role: "user",
-
-            content: message
-
-        });
-
-
-        currentChat.push({
-
-            role: "assistant",
-
-            content: responseText
-
-        });
-
-
     } catch (error) {
+
+        hideTyping();
 
         console.error(
             "MoonPlug chat error:",
             error
         );
 
-
-        let errorMessage =
-            error.message ||
-            "MoonPlug couldn't connect to the AI backend.";
-
-
-        if (error.network) {
-
-            errorMessage =
-                "MoonPlug couldn't connect to the backend. Check that your backend is running.";
-        }
-
-
         addMessage(
-            errorMessage,
-            "ai"
+            "assistant",
+            "MoonPlug could not connect to the AI."
         );
-
-
-    } finally {
-
-        hideTyping();
     }
 }
 
