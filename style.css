@@ -1,8 +1,9 @@
 
-/* =====================================================
+/* =========================================================
    MOONPLUG AI
    COMPLETE FRONTEND STYLE
-===================================================== */
+   STARS + AI THINKING ANIMATION
+========================================================= */
 
 * {
     box-sizing: border-box;
@@ -18,6 +19,7 @@ body {
 body {
     background: #0f0f0f;
     color: #f5f5f5;
+
     font-family:
         Inter,
         -apple-system,
@@ -29,25 +31,29 @@ body {
 }
 
 
-/* =====================================================
+/* =========================================================
    STAR FIELD
-===================================================== */
+========================================================= */
 
 .star-field {
     position: fixed;
+
     inset: 0;
 
     width: 100vw;
     height: 100vh;
 
     pointer-events: none;
+
     overflow: hidden;
 
-    z-index: 1;
+    z-index: 0;
 }
 
 .random-star {
     position: absolute;
+
+    display: block;
 
     width: var(--star-size, 2px);
     height: var(--star-size, 2px);
@@ -57,12 +63,12 @@ body {
 
     border-radius: 50%;
 
-    background: #fff;
+    background: #ffffff;
 
     opacity: var(--star-opacity, 0.8);
 
     box-shadow:
-        0 0 var(--star-glow, 4px) #fff;
+        0 0 var(--star-glow, 4px) #ffffff;
 
     transform:
         scale(var(--star-scale, 1));
@@ -78,7 +84,8 @@ body {
 @keyframes moonplugStarMove {
 
     0% {
-        opacity: var(--star-opacity, 0.8);
+        opacity:
+            var(--star-opacity, 0.8);
 
         transform:
             translate(0, 0)
@@ -90,43 +97,40 @@ body {
     }
 
     100% {
-        opacity: var(--star-opacity, 0.8);
+        opacity:
+            var(--star-opacity, 0.8);
 
         transform:
             translate(
                 var(--star-move-x, 0px),
                 var(--star-move-y, 0px)
             )
-            scale(var(--star-scale, 1));
+            scale(var(--star-scale, 1.25));
     }
 }
 
 
-/* =====================================================
-   MAIN LAYERS
-===================================================== */
+/* =========================================================
+   MAIN UI
+========================================================= */
 
 .sidebar,
 .chat-section {
     position: fixed;
 }
 
-.sidebar,
+.sidebar {
+    z-index: 100;
+}
+
 .chat-section {
     z-index: 2;
 }
 
-.chat-header,
-.messages,
-.chat-bottom-area {
-    position: relative;
-    z-index: 3;
-}
 
-
-/* =====================================================
+/* =========================================================
    SIDEBAR
-===================================================== */
+========================================================= */
 
 .sidebar {
     left: 0;
@@ -137,14 +141,17 @@ body {
 
     padding: 18px 12px;
 
-    background: rgba(23, 23, 23, 0.96);
+    background:
+        rgba(23, 23, 23, 0.88);
 
-    border-right: 1px solid #292929;
+    backdrop-filter:
+        blur(8px);
+
+    border-right:
+        1px solid #292929;
 
     display: flex;
     flex-direction: column;
-
-    z-index: 100;
 
     transition:
         width 0.25s ease,
@@ -152,9 +159,9 @@ body {
 }
 
 
-/* =====================================================
+/* =========================================================
    SIDEBAR LOGO
-===================================================== */
+========================================================= */
 
 .sidebar-logo {
     height: 48px;
@@ -184,24 +191,27 @@ body {
 
     filter:
         drop-shadow(
-            0 0 8px rgba(255, 255, 255, 0.15)
+            0 0 10px
+            rgba(255,255,255,0.25)
         );
 }
 
 .sidebar-logo strong {
     font-size: 15px;
+
     letter-spacing: 1px;
 }
 
 .logo-ai {
     font-size: 11px;
+
     opacity: 0.55;
 }
 
 
-/* =====================================================
+/* =========================================================
    SIDEBAR BUTTONS
-===================================================== */
+========================================================= */
 
 .sidebar-buttons {
     display: flex;
@@ -253,13 +263,11 @@ body {
 
 .sidebar-button:hover {
     background: #242424;
+
     color: white;
 
-    transform: translateX(2px);
-}
-
-.sidebar-button:active {
-    transform: scale(0.98);
+    transform:
+        translateX(2px);
 }
 
 .sidebar-icon {
@@ -282,13 +290,14 @@ body {
 
     background: #2a2a2a;
 
-    margin: 10px 8px;
+    margin:
+        10px 8px;
 }
 
 
-/* =====================================================
+/* =========================================================
    CHAT AREA
-===================================================== */
+========================================================= */
 
 .chat-section {
     left: 250px;
@@ -297,11 +306,14 @@ body {
     top: 0;
     bottom: 0;
 
-    background: rgba(15, 15, 15, 0.94);
+    background:
+        rgba(15, 15, 15, 0.76);
 
-    transition: left 0.25s ease;
+    backdrop-filter:
+        blur(2px);
 
-    z-index: 2;
+    transition:
+        left 0.25s ease;
 }
 
 .chat-container {
@@ -313,9 +325,9 @@ body {
 }
 
 
-/* =====================================================
+/* =========================================================
    HEADER
-===================================================== */
+========================================================= */
 
 .chat-header {
     height: 62px;
@@ -328,9 +340,17 @@ body {
 
     padding: 0 28px;
 
-    border-bottom: 1px solid #252525;
+    border-bottom:
+        1px solid #252525;
 
-    background: rgba(15, 15, 15, 0.92);
+    background:
+        rgba(15, 15, 15, 0.72);
+
+    backdrop-filter:
+        blur(10px);
+
+    position: relative;
+    z-index: 5;
 }
 
 .header-title {
@@ -357,13 +377,14 @@ body {
     background: #6ee7a0;
 
     box-shadow:
-        0 0 8px rgba(110, 231, 160, 0.7);
+        0 0 8px
+        rgba(110,231,160,0.7);
 }
 
 
-/* =====================================================
+/* =========================================================
    MESSAGES
-===================================================== */
+========================================================= */
 
 .messages {
     flex: 1;
@@ -378,8 +399,9 @@ body {
 
     scroll-behavior: smooth;
 
-    scrollbar-width: thin;
-    scrollbar-color: #333 transparent;
+    position: relative;
+
+    z-index: 3;
 }
 
 .messages::-webkit-scrollbar {
@@ -392,21 +414,23 @@ body {
 
 .messages::-webkit-scrollbar-thumb {
     background: #333;
-    border-radius: 10px;
+    border-radius: 20px;
 }
 
 
-/* =====================================================
+/* =========================================================
    EMPTY CHAT
-===================================================== */
+========================================================= */
 
 .empty-chat {
     min-height: 100%;
 
     display: flex;
+
     flex-direction: column;
 
     justify-content: center;
+
     align-items: center;
 
     text-align: center;
@@ -414,6 +438,7 @@ body {
     padding-bottom: 80px;
 
     position: relative;
+
     z-index: 3;
 }
 
@@ -424,8 +449,31 @@ body {
 
     filter:
         drop-shadow(
-            0 0 18px rgba(255, 255, 255, 0.18)
+            0 0 18px
+            rgba(255,255,255,0.25)
         );
+
+    animation:
+        moonFloat
+        3s
+        ease-in-out
+        infinite;
+}
+
+@keyframes moonFloat {
+
+    0%,
+    100% {
+        transform:
+            translateY(0)
+            rotate(0deg);
+    }
+
+    50% {
+        transform:
+            translateY(-7px)
+            rotate(4deg);
+    }
 }
 
 .empty-chat h1 {
@@ -447,16 +495,18 @@ body {
 }
 
 
-/* =====================================================
+/* =========================================================
    CHAT BUBBLES
-===================================================== */
+========================================================= */
 
 .message-bubble {
     width: fit-content;
 
-    max-width: min(680px, 80%);
+    max-width:
+        min(680px, 80%);
 
-    padding: 10px 14px;
+    padding:
+        10px 14px;
 
     margin-bottom: 18px;
 
@@ -470,12 +520,9 @@ body {
 
     animation:
         messageAppear
-        0.2s
+        0.25s
         ease;
 }
-
-
-/* USER */
 
 .message-bubble.user {
     margin-left: auto;
@@ -490,13 +537,12 @@ body {
         5px
         18px;
 
-    max-width: min(560px, 72%);
+    max-width:
+        min(560px, 72%);
 
-    padding: 9px 14px;
+    padding:
+        9px 14px;
 }
-
-
-/* AI */
 
 .message-bubble.ai {
     margin-right: auto;
@@ -507,15 +553,17 @@ body {
 
     border-radius: 0;
 
-    max-width: min(760px, 88%);
+    max-width:
+        min(760px, 88%);
 
-    padding: 3px 0;
+    padding:
+        3px 0;
 }
 
 
-/* =====================================================
-   THINKING AREA
-===================================================== */
+/* =========================================================
+   AI THINKING AREA
+========================================================= */
 
 .typing {
     flex-shrink: 0;
@@ -524,40 +572,50 @@ body {
 
     align-items: center;
 
-    gap: 11px;
+    gap: 13px;
 
-    width: min(760px, 88%);
+    width:
+        min(760px, 88%);
 
-    margin: 0 auto 8px;
+    margin:
+        0 auto 10px;
 
-    padding: 0 4px;
+    padding:
+        0 4px;
 
     color: #999;
 
     font-size: 13px;
+
+    position: relative;
+
+    z-index: 10;
 }
 
 
-/* =====================================================
-   MOON + PLUG
-===================================================== */
+/* =========================================================
+   MOONPLUG AI ANIMATION
+========================================================= */
 
 .moonplug-animation {
     position: relative;
 
-    width: 44px;
-    height: 74px;
+    width: 48px;
+    height: 68px;
 
     flex-shrink: 0;
 }
+
+
+/* =========================================================
+   ANIMATION MOON
+========================================================= */
 
 .animation-moon {
     position: absolute;
 
     top: 0;
     left: 50%;
-
-    transform: translateX(-50%);
 
     width: 38px;
     height: 38px;
@@ -569,43 +627,186 @@ body {
 
     font-size: 30px;
 
+    transform:
+        translateX(-50%);
+
     filter:
         drop-shadow(
-            0 0 7px rgba(255, 255, 255, 0.25)
+            0 0 8px
+            rgba(255,255,255,0.35)
         );
 
-    z-index: 3;
+    z-index: 5;
+
+    animation:
+        thinkingMoon
+        2.4s
+        ease-in-out
+        infinite;
 }
+
+@keyframes thinkingMoon {
+
+    0% {
+        transform:
+            translateX(-50%)
+            translateY(0)
+            rotate(-5deg);
+
+        filter:
+            drop-shadow(
+                0 0 7px
+                rgba(255,255,255,0.25)
+            );
+    }
+
+    50% {
+        transform:
+            translateX(-50%)
+            translateY(-5px)
+            rotate(5deg);
+
+        filter:
+            drop-shadow(
+                0 0 16px
+                rgba(255,255,255,0.55)
+            );
+    }
+
+    100% {
+        transform:
+            translateX(-50%)
+            translateY(0)
+            rotate(-5deg);
+
+        filter:
+            drop-shadow(
+                0 0 7px
+                rgba(255,255,255,0.25)
+            );
+    }
+}
+
+
+/* =========================================================
+   PLUG
+========================================================= */
 
 .animation-plug {
     position: absolute;
 
     left: 50%;
-    top: 53px;
 
-    transform: translateX(-50%);
+    top: 49px;
 
-    font-size: 24px;
+    transform:
+        translateX(-50%);
+
+    font-size: 23px;
 
     line-height: 1;
 
-    z-index: 2;
+    z-index: 4;
 
     animation:
-        plugRise
-        2.7s
-        cubic-bezier(.45, 0, .25, 1)
+        plugConnection
+        2.4s
+        cubic-bezier(.55,0,.25,1)
         infinite;
 }
+
+@keyframes plugConnection {
+
+    0% {
+        top: 51px;
+
+        opacity: 0;
+
+        transform:
+            translateX(-50%)
+            scale(0.65)
+            rotate(-8deg);
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    42% {
+        top: 37px;
+
+        opacity: 1;
+
+        transform:
+            translateX(-50%)
+            scale(0.9)
+            rotate(0deg);
+    }
+
+    58% {
+        top: 25px;
+
+        opacity: 1;
+
+        transform:
+            translateX(-50%)
+            scale(1)
+            rotate(0deg);
+    }
+
+    67% {
+        top: 18px;
+
+        opacity: 1;
+
+        transform:
+            translateX(-50%)
+            scale(0.9)
+            rotate(0deg);
+    }
+
+    75% {
+        top: 18px;
+
+        opacity: 0.2;
+
+        transform:
+            translateX(-50%)
+            scale(0.7)
+            rotate(0deg);
+    }
+
+    82% {
+        top: 24px;
+
+        opacity: 0;
+    }
+
+    100% {
+        top: 51px;
+
+        opacity: 0;
+
+        transform:
+            translateX(-50%)
+            scale(0.65);
+    }
+}
+
+
+/* =========================================================
+   PLUG GLOW
+========================================================= */
 
 .plug-glow {
     position: absolute;
 
     left: 50%;
-    top: 27px;
 
-    width: 18px;
-    height: 18px;
+    top: 25px;
+
+    width: 20px;
+    height: 20px;
 
     transform:
         translateX(-50%)
@@ -617,116 +818,126 @@ body {
 
     opacity: 0;
 
-    filter: blur(8px);
+    filter:
+        blur(9px);
+
+    z-index: 2;
 
     animation:
-        plugConnectionGlow
-        2.7s
+        connectionGlow
+        2.4s
         ease-in-out
         infinite;
 }
 
+@keyframes connectionGlow {
 
-/* =====================================================
-   PLUG ANIMATION
-===================================================== */
-
-@keyframes plugRise {
-
-    0% {
-        top: 55px;
-        opacity: 0;
-    }
-
-    8% {
-        opacity: 1;
-    }
-
-    62% {
-        top: 25px;
-        opacity: 1;
-    }
-
-    72% {
-        top: 17px;
-        opacity: 1;
-
-        transform:
-            translateX(-50%)
-            scale(1);
-    }
-
-    78% {
-        top: 14px;
-
-        opacity: 1;
-
-        transform:
-            translateX(-50%)
-            scale(0.92);
-    }
-
-    84% {
-        top: 14px;
-
+    0%,
+    45% {
         opacity: 0;
 
         transform:
             translateX(-50%)
-            scale(0.65);
+            scale(0);
     }
 
+    55% {
+        opacity: 0.15;
+
+        transform:
+            translateX(-50%)
+            scale(0.7);
+    }
+
+    65% {
+        opacity: 0.9;
+
+        transform:
+            translateX(-50%)
+            scale(1.4);
+    }
+
+    74% {
+        opacity: 0.2;
+
+        transform:
+            translateX(-50%)
+            scale(2.2);
+    }
+
+    82%,
     100% {
-        top: 55px;
-
         opacity: 0;
 
         transform:
             translateX(-50%)
-            scale(1);
+            scale(2.8);
     }
 }
 
-@keyframes plugConnectionGlow {
+
+/* =========================================================
+   EXTRA AI ENERGY RING
+========================================================= */
+
+.moonplug-animation::before {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: 18px;
+
+    width: 30px;
+    height: 30px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.25);
+
+    border-radius: 50%;
+
+    transform:
+        translateX(-50%)
+        scale(0.5);
+
+    opacity: 0;
+
+    animation:
+        energyRing
+        2.4s
+        ease-out
+        infinite;
+}
+
+@keyframes energyRing {
 
     0% {
         opacity: 0;
 
         transform:
             translateX(-50%)
-            scale(0);
+            scale(0.5);
     }
 
-    62% {
+    55% {
         opacity: 0;
-
-        transform:
-            translateX(-50%)
-            scale(0);
     }
 
-    72% {
-        opacity: 0.15;
+    65% {
+        opacity: 0.8;
 
         transform:
             translateX(-50%)
             scale(0.8);
     }
 
-    77% {
-        opacity: 0.85;
-
-        transform:
-            translateX(-50%)
-            scale(1.5);
-    }
-
-    84% {
+    85% {
         opacity: 0;
 
         transform:
             translateX(-50%)
-            scale(2.4);
+            scale(1.8);
     }
 
     100% {
@@ -735,23 +946,41 @@ body {
 }
 
 
-/* =====================================================
+/* =========================================================
    THINKING TEXT
-===================================================== */
+========================================================= */
 
 .typing-text {
+    position: relative;
+
     animation:
-        thinkingFade
-        1.6s
+        thinkingText
+        1.5s
         ease-in-out
         infinite;
 }
 
-@keyframes thinkingFade {
+.typing-text::after {
+    content: "...";
+
+    display: inline-block;
+
+    width: 18px;
+
+    text-align: left;
+
+    animation:
+        thinkingDots
+        1.2s
+        steps(4, end)
+        infinite;
+}
+
+@keyframes thinkingText {
 
     0%,
     100% {
-        opacity: 0.55;
+        opacity: 0.45;
     }
 
     50% {
@@ -759,10 +988,33 @@ body {
     }
 }
 
+@keyframes thinkingDots {
 
-/* =====================================================
+    0% {
+        width: 0;
+    }
+
+    25% {
+        width: 5px;
+    }
+
+    50% {
+        width: 10px;
+    }
+
+    75% {
+        width: 15px;
+    }
+
+    100% {
+        width: 18px;
+    }
+}
+
+
+/* =========================================================
    INPUT AREA
-===================================================== */
+========================================================= */
 
 .chat-bottom-area {
     flex-shrink: 0;
@@ -770,9 +1022,15 @@ body {
     width:
         min(850px, calc(100% - 36px));
 
-    margin: 0 auto;
+    margin:
+        0 auto;
 
-    padding: 8px 0 14px;
+    padding:
+        8px 0 14px;
+
+    position: relative;
+
+    z-index: 10;
 }
 
 .chat-input-area {
@@ -789,14 +1047,20 @@ body {
     padding:
         8px 9px 8px 17px;
 
-    background: #202020;
+    background:
+        rgba(32,32,32,0.94);
 
-    border: 1px solid #343434;
+    border:
+        1px solid #343434;
 
     border-radius: 20px;
 
     box-shadow:
-        0 5px 25px rgba(0, 0, 0, 0.18);
+        0 5px 25px
+        rgba(0,0,0,0.35);
+
+    backdrop-filter:
+        blur(12px);
 
     transition:
         border-color 0.2s ease,
@@ -807,13 +1071,9 @@ body {
     border-color: #4a4a4a;
 
     box-shadow:
-        0 5px 28px rgba(0, 0, 0, 0.25);
+        0 5px 30px
+        rgba(0,0,0,0.45);
 }
-
-
-/* =====================================================
-   MESSAGE INPUT
-===================================================== */
 
 #messageInput {
     flex: 1;
@@ -838,7 +1098,8 @@ body {
 
     line-height: 1.5;
 
-    padding: 9px 0;
+    padding:
+        9px 0;
 
     overflow-y: auto;
 }
@@ -848,9 +1109,9 @@ body {
 }
 
 
-/* =====================================================
+/* =========================================================
    SEND BUTTON
-===================================================== */
+========================================================= */
 
 #sendButton {
     width: 40px;
@@ -877,27 +1138,29 @@ body {
 
     transition:
         transform 0.18s ease,
-        opacity 0.18s ease,
-        background 0.18s ease;
+        opacity 0.18s ease;
 }
 
 #sendButton:hover:not(:disabled) {
-    transform: scale(1.06);
+    transform:
+        scale(1.08);
 }
 
 #sendButton:active:not(:disabled) {
-    transform: scale(0.94);
+    transform:
+        scale(0.93);
 }
 
 #sendButton:disabled {
     opacity: 0.35;
+
     cursor: default;
 }
 
 
-/* =====================================================
+/* =========================================================
    INPUT HINT
-===================================================== */
+========================================================= */
 
 .input-hint {
     text-align: center;
@@ -910,9 +1173,9 @@ body {
 }
 
 
-/* =====================================================
-   MESSAGE ANIMATION
-===================================================== */
+/* =========================================================
+   MESSAGE APPEAR
+========================================================= */
 
 @keyframes messageAppear {
 
@@ -920,7 +1183,7 @@ body {
         opacity: 0;
 
         transform:
-            translateY(5px);
+            translateY(7px);
     }
 
     to {
@@ -932,9 +1195,9 @@ body {
 }
 
 
-/* =====================================================
-   OVERLAYS
-===================================================== */
+/* =========================================================
+   MODALS
+========================================================= */
 
 .settings-panel,
 .account-screen,
@@ -949,45 +1212,40 @@ body {
     justify-content: center;
 
     background:
-        rgba(0, 0, 0, 0.72);
+        rgba(0,0,0,0.72);
 
-    backdrop-filter: blur(10px);
+    backdrop-filter:
+        blur(10px);
 
     z-index: 500;
 
     padding: 20px;
 }
 
-
-/* =====================================================
-   MODAL BOXES
-===================================================== */
-
 .settings-box,
 .account-box,
 .owner-box {
-    width: min(480px, 100%);
-
-    max-height: calc(100vh - 40px);
-
-    overflow-y: auto;
+    width:
+        min(480px, 100%);
 
     background: #1b1b1b;
 
-    border: 1px solid #303030;
+    border:
+        1px solid #303030;
 
     border-radius: 20px;
 
     box-shadow:
-        0 25px 80px rgba(0, 0, 0, 0.5);
+        0 25px 80px
+        rgba(0,0,0,0.5);
 
     padding: 25px;
 }
 
 
-/* =====================================================
+/* =========================================================
    SETTINGS
-===================================================== */
+========================================================= */
 
 .settings-header {
     display: flex;
@@ -1042,7 +1300,8 @@ body {
 }
 
 .appearance-options button {
-    border: 1px solid #383838;
+    border:
+        1px solid #383838;
 
     border-radius: 9px;
 
@@ -1050,7 +1309,8 @@ body {
 
     color: #ddd;
 
-    padding: 9px 14px;
+    padding:
+        9px 14px;
 
     cursor: pointer;
 }
@@ -1063,9 +1323,9 @@ body {
 }
 
 
-/* =====================================================
+/* =========================================================
    ACCOUNT
-===================================================== */
+========================================================= */
 
 .account-logo,
 .owner-logo {
@@ -1096,7 +1356,8 @@ body {
 .account-tabs {
     display: flex;
 
-    margin: 22px 0;
+    margin:
+        22px 0;
 }
 
 .account-tab {
@@ -1112,13 +1373,15 @@ body {
 
     cursor: pointer;
 
-    border-bottom: 1px solid #333;
+    border-bottom:
+        1px solid #333;
 }
 
 .account-tab.active {
     color: white;
 
-    border-bottom-color: white;
+    border-bottom-color:
+        white;
 }
 
 .account-form {
@@ -1144,7 +1407,8 @@ body {
 .trainer-panel select {
     width: 100%;
 
-    border: 1px solid #363636;
+    border:
+        1px solid #363636;
 
     border-radius: 10px;
 
@@ -1157,14 +1421,6 @@ body {
     outline: none;
 
     font: inherit;
-}
-
-.account-form input:focus,
-.password-wrapper input:focus,
-.trainer-panel input:focus,
-.trainer-panel textarea:focus,
-.trainer-panel select:focus {
-    border-color: #555;
 }
 
 .account-submit,
@@ -1186,11 +1442,6 @@ body {
     cursor: pointer;
 }
 
-.account-submit:hover,
-#ownerLoginButton:hover {
-    background: #fff;
-}
-
 .account-close,
 .owner-cancel {
     width: 100%;
@@ -1208,25 +1459,18 @@ body {
     cursor: pointer;
 }
 
-.account-close:hover,
-.owner-cancel:hover {
-    color: white;
-}
-
 .account-message {
     text-align: center;
 
     color: #999;
 
     font-size: 13px;
-
-    min-height: 18px;
 }
 
 
-/* =====================================================
+/* =========================================================
    OWNER LOGIN
-===================================================== */
+========================================================= */
 
 .password-wrapper {
     display: flex;
@@ -1241,7 +1485,8 @@ body {
 }
 
 .password-toggle {
-    border: 1px solid #363636;
+    border:
+        1px solid #363636;
 
     border-radius: 10px;
 
@@ -1249,7 +1494,8 @@ body {
 
     color: #ccc;
 
-    padding: 0 13px;
+    padding:
+        0 13px;
 
     cursor: pointer;
 }
@@ -1265,9 +1511,9 @@ body {
 }
 
 
-/* =====================================================
+/* =========================================================
    OWNER PANEL
-===================================================== */
+========================================================= */
 
 .owner-panel {
     position: fixed;
@@ -1295,11 +1541,11 @@ body {
     align-items: center;
     justify-content: space-between;
 
-    gap: 20px;
+    padding:
+        22px 28px;
 
-    padding: 22px 28px;
-
-    border-bottom: 1px solid #292929;
+    border-bottom:
+        1px solid #292929;
 }
 
 .owner-header h1 {
@@ -1312,7 +1558,8 @@ body {
 }
 
 .owner-header button {
-    border: 1px solid #333;
+    border:
+        1px solid #333;
 
     border-radius: 9px;
 
@@ -1320,13 +1567,10 @@ body {
 
     color: white;
 
-    padding: 10px 15px;
+    padding:
+        10px 15px;
 
     cursor: pointer;
-}
-
-.owner-header button:hover {
-    background: #2a2a2a;
 }
 
 .owner-content {
@@ -1359,7 +1603,8 @@ body {
 
     background: #191919;
 
-    border: 1px solid #2b2b2b;
+    border:
+        1px solid #2b2b2b;
 
     border-radius: 15px;
 }
@@ -1379,7 +1624,8 @@ body {
 
     background: #191919;
 
-    border: 1px solid #2b2b2b;
+    border:
+        1px solid #2b2b2b;
 
     border-radius: 15px;
 }
@@ -1390,8 +1636,6 @@ body {
 
 .owner-description {
     color: #888;
-
-    line-height: 1.5;
 }
 
 .owner-actions {
@@ -1404,7 +1648,8 @@ body {
 
 .owner-actions button,
 .owner-section > button {
-    border: 1px solid #383838;
+    border:
+        1px solid #383838;
 
     border-radius: 10px;
 
@@ -1412,7 +1657,8 @@ body {
 
     color: white;
 
-    padding: 11px 15px;
+    padding:
+        11px 15px;
 
     cursor: pointer;
 }
@@ -1423,9 +1669,9 @@ body {
 }
 
 
-/* =====================================================
+/* =========================================================
    TRAINER
-===================================================== */
+========================================================= */
 
 .trainer-panel {
     position: relative;
@@ -1436,7 +1682,8 @@ body {
 
     background: #171717;
 
-    border: 1px solid #303030;
+    border:
+        1px solid #303030;
 
     border-radius: 18px;
 }
@@ -1461,7 +1708,8 @@ body {
 }
 
 .trainer-header button {
-    border: 1px solid #333;
+    border:
+        1px solid #333;
 
     border-radius: 9px;
 
@@ -1469,7 +1717,8 @@ body {
 
     color: white;
 
-    padding: 9px 13px;
+    padding:
+        9px 13px;
 
     cursor: pointer;
 }
@@ -1483,7 +1732,8 @@ body {
 
     background: #1d1d1d;
 
-    border: 1px solid #303030;
+    border:
+        1px solid #303030;
 
     border-radius: 14px;
 }
@@ -1525,12 +1775,11 @@ body {
 
     align-items: center;
     justify-content: space-between;
-
-    gap: 15px;
 }
 
 .trainer-knowledge-header button {
-    border: 1px solid #383838;
+    border:
+        1px solid #383838;
 
     border-radius: 9px;
 
@@ -1538,7 +1787,8 @@ body {
 
     color: white;
 
-    padding: 8px 12px;
+    padding:
+        8px 12px;
 
     cursor: pointer;
 }
@@ -1552,13 +1802,12 @@ body {
 
     border-radius: 11px;
 
-    border: 1px solid #333;
+    border:
+        1px solid #333;
 }
 
 .training-card p {
     color: #bbb;
-
-    line-height: 1.5;
 }
 
 .training-card small {
@@ -1568,7 +1817,8 @@ body {
 .delete-training-button {
     margin-top: 10px;
 
-    border: 1px solid #493030;
+    border:
+        1px solid #493030;
 
     border-radius: 8px;
 
@@ -1576,18 +1826,20 @@ body {
 
     color: #ff9999;
 
-    padding: 7px 10px;
+    padding:
+        7px 10px;
 
     cursor: pointer;
 }
 
 
-/* =====================================================
+/* =========================================================
    LIGHT THEME
-===================================================== */
+========================================================= */
 
 body.light-theme {
     background: #f7f7f7;
+
     color: #171717;
 }
 
@@ -1597,19 +1849,19 @@ body.light-theme .star-field {
 
 body.light-theme .sidebar {
     background:
-        rgba(238, 238, 238, 0.96);
+        rgba(238,238,238,0.88);
 
     border-color: #ddd;
 }
 
 body.light-theme .chat-section {
     background:
-        rgba(247, 247, 247, 0.94);
+        rgba(247,247,247,0.76);
 }
 
 body.light-theme .chat-header {
     background:
-        rgba(247, 247, 247, 0.92);
+        rgba(247,247,247,0.72);
 
     border-color: #ddd;
 }
@@ -1620,11 +1872,13 @@ body.light-theme .sidebar-button {
 
 body.light-theme .sidebar-button:hover {
     background: #ddd;
+
     color: #111;
 }
 
 body.light-theme .message-bubble.user {
     background: #e2e2e2;
+
     color: #111;
 }
 
@@ -1633,7 +1887,9 @@ body.light-theme .message-bubble.ai {
 }
 
 body.light-theme .chat-input-area {
-    background: #fff;
+    background:
+        rgba(255,255,255,0.94);
+
     border-color: #d4d4d4;
 }
 
@@ -1641,36 +1897,18 @@ body.light-theme #messageInput {
     color: #111;
 }
 
-body.light-theme #messageInput::placeholder {
-    color: #999;
-}
-
 body.light-theme .settings-box,
 body.light-theme .account-box,
 body.light-theme .owner-box {
     background: #fff;
+
     color: #111;
 }
 
-body.light-theme .close-settings {
-    background: #eee;
-    color: #111;
-}
 
-body.light-theme .account-tab {
-    color: #777;
-    border-color: #ddd;
-}
-
-body.light-theme .account-tab.active {
-    color: #111;
-    border-color: #111;
-}
-
-
-/* =====================================================
+/* =========================================================
    TEXT SIZES
-===================================================== */
+========================================================= */
 
 body.text-small .message-bubble {
     font-size: 14px;
@@ -1685,9 +1923,9 @@ body.text-large .message-bubble {
 }
 
 
-/* =====================================================
+/* =========================================================
    DESKTOP COLLAPSED SIDEBAR
-===================================================== */
+========================================================= */
 
 @media (min-width: 1201px) {
 
@@ -1703,11 +1941,13 @@ body.text-large .message-bubble {
 
     .sidebar.collapsed .sidebar-logo {
         justify-content: center;
+
         padding: 0;
     }
 
     .sidebar.collapsed .sidebar-button {
         justify-content: center;
+
         padding: 0;
     }
 
@@ -1721,9 +1961,9 @@ body.text-large .message-bubble {
 }
 
 
-/* =====================================================
+/* =========================================================
    TABLET / IPAD
-===================================================== */
+========================================================= */
 
 @media (max-width: 1200px) {
 
@@ -1739,11 +1979,13 @@ body.text-large .message-bubble {
 
     .sidebar-logo {
         justify-content: center;
+
         padding: 0;
     }
 
     .sidebar-button {
         justify-content: center;
+
         padding: 0;
     }
 
@@ -1763,12 +2005,16 @@ body.text-large .message-bubble {
 
     .sidebar.expanded .sidebar-logo {
         justify-content: flex-start;
-        padding: 0 10px;
+
+        padding:
+            0 10px;
     }
 
     .sidebar.expanded .sidebar-button {
         justify-content: flex-start;
-        padding: 0 12px;
+
+        padding:
+            0 12px;
     }
 
     .owner-grid {
@@ -1794,35 +2040,9 @@ body.text-large .message-bubble {
 }
 
 
-/* =====================================================
-   IPAD PORTRAIT / SMALL TABLET
-===================================================== */
-
-@media (max-width: 900px) {
-
-    .chat-bottom-area {
-        width:
-            calc(100% - 40px);
-    }
-
-    .messages {
-        padding-left: 25px;
-        padding-right: 25px;
-    }
-
-    .message-bubble.user {
-        max-width: 75%;
-    }
-
-    .message-bubble.ai {
-        max-width: 90%;
-    }
-}
-
-
-/* =====================================================
+/* =========================================================
    PHONE
-===================================================== */
+========================================================= */
 
 @media (max-width: 600px) {
 
@@ -1852,21 +2072,15 @@ body.text-large .message-bubble {
         font-size: 14px;
     }
 
-    .online {
-        font-size: 12px;
-    }
-
     .messages {
         padding:
-            20px 14px 10px;
+            20px 14px;
+
+        padding-bottom: 10px;
     }
 
     .empty-chat {
         padding-bottom: 50px;
-    }
-
-    .empty-moon {
-        font-size: 36px;
     }
 
     .empty-chat h1 {
@@ -1898,6 +2112,10 @@ body.text-large .message-bubble {
 
         margin:
             0 auto 6px;
+    }
+
+    .moonplug-animation {
+        width: 43px;
     }
 
     .chat-bottom-area {
@@ -1955,91 +2173,24 @@ body.text-large .message-bubble {
         padding: 16px;
     }
 
-    .settings-panel,
-    .account-screen,
-    .owner-overlay {
-        padding: 12px;
-    }
-
     .settings-box,
     .account-box,
     .owner-box {
         padding: 20px;
 
         border-radius: 17px;
-
-        max-height:
-            calc(100vh - 24px);
-    }
-
-    .trainer-header {
-        flex-direction: column;
-    }
-
-    .trainer-knowledge-header {
-        align-items: flex-start;
-
-        flex-direction: column;
     }
 
     .random-star {
         box-shadow:
-            0 0 3px #fff;
+            0 0 4px #ffffff;
     }
 }
 
 
-/* =====================================================
-   VERY SMALL PHONES
-===================================================== */
-
-@media (max-width: 380px) {
-
-    .sidebar {
-        width: 54px;
-    }
-
-    .chat-section {
-        left: 54px;
-    }
-
-    .sidebar.expanded {
-        width: 220px;
-    }
-
-    .chat-header {
-        padding:
-            0 10px;
-    }
-
-    .online {
-        display: none;
-    }
-
-    .messages {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .chat-bottom-area {
-        width:
-            calc(100% - 12px);
-    }
-
-    .chat-input-area {
-        padding-left: 10px;
-    }
-
-    #sendButton {
-        width: 36px;
-        height: 36px;
-    }
-}
-
-
-/* =====================================================
+/* =========================================================
    REDUCED MOTION
-===================================================== */
+========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
 
