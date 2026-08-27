@@ -20,12 +20,22 @@ PROXY_KEY = os.environ.get(
 def authorized():
 
     supplied_key = request.headers.get(
-    "X-MoonPlug-Key",
-    ""
-).strip()
+        "X-Proxy-Key",
+        ""
+    ).strip()
 
-    return bool(PROXY_KEY) and supplied_key == PROXY_KEY
+    print(
+        "PROXY AUTH DEBUG:",
+        "received=",
+        bool(supplied_key),
+        "length=",
+        len(supplied_key)
+    )
 
+    return (
+        bool(PROXY_KEY)
+        and supplied_key == PROXY_KEY
+    )
 
 @app.route("/health", methods=["GET"])
 def health():
