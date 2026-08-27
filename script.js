@@ -2,8 +2,6 @@
 /* =====================================================
                 MOONPLUG AI
           COMPLETE FRONTEND CONTROLLER
-===================================================== */
-
 
 /* =====================================================
 API
@@ -1265,31 +1263,40 @@ function addMessage(text, sender) {
 TYPING INDICATOR
 ===================================================== */
 
+/* =====================================================
+              MOONPLUG THINKING ANIMATION
+===================================================== */
+
 function showTyping() {
 
     const typing =
         $("typing");
 
-
     if (!typing) {
         return;
     }
 
-
-    typing.style.display =
-        "flex";
-
+    typing.style.display = "flex";
 
     /*
-       Make the indicator actually say
-       what MoonPlug is doing.
+       Restart the MoonPlug animation every time
+       MoonPlug starts thinking.
     */
+
+    typing.classList.remove(
+        "thinking-active"
+    );
+
+    void typing.offsetWidth;
+
+    typing.classList.add(
+        "thinking-active"
+    );
 
     const typingText =
         typing.querySelector(
             ".typing-text"
         );
-
 
     if (typingText) {
 
@@ -1298,21 +1305,17 @@ function showTyping() {
 
     }
 
-
     const messages =
         $("messages");
 
-
     if (messages) {
 
-        requestAnimationFrame(
-            () => {
+        requestAnimationFrame(() => {
 
-                messages.scrollTop =
-                    messages.scrollHeight;
+            messages.scrollTop =
+                messages.scrollHeight;
 
-            }
-        );
+        });
 
     }
 
@@ -1324,17 +1327,18 @@ function hideTyping() {
     const typing =
         $("typing");
 
-
     if (!typing) {
         return;
     }
 
+    typing.classList.remove(
+        "thinking-active"
+    );
 
     typing.style.display =
         "none";
 
 }
-
 
 /* =====================================================
 CHAT HISTORY
