@@ -2,7 +2,7 @@
 /* =========================================================
    MOONPLUG AI
    COMPLETE FRONTEND SCRIPT
-   STARS + AI THINKING ANIMATION
+   GALAXY + MOON/PLUG RESPONSE ANIMATION
 ========================================================= */
 
 "use strict";
@@ -12,7 +12,8 @@
    CONFIGURATION
 ========================================================= */
 
-const API_BASE = "https://moonplug.onrender.com";
+const API_BASE =
+    "https://moonplug.onrender.com";
 
 const STORAGE_KEYS = {
     theme: "moonplug_theme",
@@ -26,8 +27,12 @@ const STORAGE_KEYS = {
 ========================================================= */
 
 let ownerAuthenticated = false;
+
 let currentChat = [];
+
 let isSending = false;
+
+let animationRunning = false;
 
 
 /* =========================================================
@@ -45,140 +50,116 @@ function $(id) {
 
 function createStarField() {
 
-    const starField = $("starField");
+    const starField =
+        $("starField");
 
     if (!starField) {
-        console.error("MoonPlug: starField was not found.");
+
+        console.error(
+            "MoonPlug: starField element not found."
+        );
+
         return;
     }
 
-    /*
-       Completely rebuild the stars.
-       This guarantees that old/failed stars are removed.
-    */
+    starField.innerHTML = "";
 
-    starField.replaceChildren();
-
-    const width = window.innerWidth;
+    const width =
+        window.innerWidth;
 
     let starCount;
 
     if (width <= 600) {
-        starCount = 90;
+
+        starCount = 170;
+
     } else if (width <= 1200) {
-        starCount = 130;
+
+        starCount = 240;
+
     } else {
-        starCount = 180;
+
+        starCount = 320;
     }
 
-    const fragment = document.createDocumentFragment();
 
-    for (let i = 0; i < starCount; i++) {
+    for (
+        let i = 0;
+        i < starCount;
+        i++
+    ) {
 
-        const star = document.createElement("span");
+        const star =
+            document.createElement("span");
 
-        star.className = "random-star";
+        star.className =
+            "random-star";
 
-        /*
-           Random position
-        */
-
-        star.style.left =
-            `${Math.random() * 100}%`;
-
-        star.style.top =
-            `${Math.random() * 100}%`;
-
-        /*
-           Random size
-        */
-
-        const size =
-            Math.random() * 2.2 + 0.8;
-
-        star.style.width =
-            `${size}px`;
-
-        star.style.height =
-            `${size}px`;
 
         star.style.setProperty(
             "--star-size",
-            `${size}px`
+            `${Math.random() * 2.3 + 0.7}px`
         );
 
-        /*
-           Random brightness
-        */
 
-        const opacity =
-            Math.random() * 0.65 + 0.30;
+        star.style.setProperty(
+            "--star-x",
+            `${Math.random() * 100}%`
+        );
 
-        star.style.opacity =
-            opacity;
+
+        star.style.setProperty(
+            "--star-y",
+            `${Math.random() * 100}%`
+        );
+
 
         star.style.setProperty(
             "--star-opacity",
-            opacity
+            `${Math.random() * 0.65 + 0.30}`
         );
 
-        /*
-           Random glow
-        */
-
-        const glow =
-            Math.random() * 5 + 2;
 
         star.style.setProperty(
             "--star-glow",
-            `${glow}px`
+            `${Math.random() * 5 + 2}px`
         );
 
-        /*
-           Random movement
-        */
+
+        star.style.setProperty(
+            "--star-scale",
+            `${Math.random() * 0.65 + 0.75}`
+        );
+
 
         star.style.setProperty(
             "--star-move-x",
-            `${Math.random() * 10 - 5}px`
+            `${Math.random() * 8 - 4}px`
         );
+
 
         star.style.setProperty(
             "--star-move-y",
-            `${Math.random() * 10 - 5}px`
+            `${Math.random() * 8 - 4}px`
         );
 
-        /*
-           Random animation speed
-        */
 
         star.style.setProperty(
             "--star-duration",
             `${Math.random() * 4 + 3}s`
         );
 
+
         star.style.setProperty(
             "--star-delay",
             `${Math.random() * 5}s`
         );
 
-        /*
-           Random starting scale
-        */
 
-        star.style.setProperty(
-            "--star-scale",
-            `${Math.random() * 0.6 + 0.7}`
+        starField.appendChild(
+            star
         );
-
-        fragment.appendChild(star);
     }
-
-    starField.appendChild(fragment);
-
-    console.log(
-        `MoonPlug: created ${starCount} stars.`
-    );
 }
 
 
@@ -188,8 +169,11 @@ function createStarField() {
 
 function setupSidebar() {
 
-    const sidebar = $("sidebar");
-    const logo = $("sidebarLogo");
+    const sidebar =
+        $("sidebar");
+
+    const logo =
+        $("sidebarLogo");
 
     if (!sidebar || !logo) {
         return;
@@ -199,7 +183,9 @@ function setupSidebar() {
         "click",
         () => {
 
-            if (window.innerWidth <= 1200) {
+            if (
+                window.innerWidth <= 1200
+            ) {
 
                 sidebar.classList.toggle(
                     "expanded"
@@ -223,7 +209,9 @@ function setupSidebar() {
 function removeEmptyChat() {
 
     const empty =
-        document.querySelector(".empty-chat");
+        document.querySelector(
+            ".empty-chat"
+        );
 
     if (empty) {
         empty.remove();
@@ -240,185 +228,233 @@ function addMessage(
     type
 ) {
 
-    const messages = $("messages");
+    const messages =
+        $("messages");
 
     if (!messages) {
-        return null;
+        return;
     }
 
     removeEmptyChat();
 
+
     const bubble =
         document.createElement("div");
+
 
     bubble.className =
         `message-bubble ${type}`;
 
-    bubble.textContent =
-        String(text);
 
-    messages.appendChild(bubble);
+    bubble.textContent =
+        text;
+
+
+    messages.appendChild(
+        bubble
+    );
+
 
     messages.scrollTop =
         messages.scrollHeight;
+
 
     return bubble;
 }
 
 
 /* =========================================================
-   AI THINKING ANIMATION
+   CREATE AI THINKING ANIMATION
 ========================================================= */
 
-function resetThinkingAnimation() {
+function createThinkingAnimation() {
 
-    const typing = $("typing");
+    const typing =
+        $("typing");
 
     if (!typing) {
-        return;
+        return null;
     }
 
-    /*
-       Restart CSS animations.
 
-       Removing the animation classes for one frame
-       forces the browser to start them again.
-    */
+    typing.innerHTML = `
+        <div class="moonplug-animation">
 
-    const animation =
-        typing.querySelector(
-            ".moonplug-animation"
-        );
+            <div class="animation-moon">
+                🌙
+            </div>
 
-    const plug =
-        typing.querySelector(
-            ".animation-plug"
-        );
+            <div class="animation-plug">
+                🔌
+            </div>
 
-    const glow =
-        typing.querySelector(
-            ".plug-glow"
-        );
+            <div class="plug-glow"></div>
 
-    const moon =
-        typing.querySelector(
-            ".animation-moon"
-        );
+            <div class="typing-text">
+                MoonPlug is thinking
+            </div>
 
-    const thinkingText =
-        typing.querySelector(
-            ".typing-text"
-        );
+        </div>
+    `;
 
-    const animatedElements = [
-        animation,
-        plug,
-        glow,
-        moon,
-        thinkingText
-    ];
 
-    animatedElements.forEach(
-        element => {
-
-            if (!element) {
-                return;
-            }
-
-            element.style.animation = "none";
-        }
+    typing.classList.remove(
+        "animating-out"
     );
 
-    /*
-       Force browser reflow.
-    */
 
-    void typing.offsetWidth;
-
-    /*
-       Restore CSS animations.
-       These names match the updated CSS.
-    */
-
-    if (plug) {
-
-        plug.style.animation =
-            "plugRise 2.7s cubic-bezier(.45,0,.25,1) infinite";
-    }
-
-    if (glow) {
-
-        glow.style.animation =
-            "plugConnectionGlow 2.7s ease-in-out infinite";
-    }
-
-    if (thinkingText) {
-
-        thinkingText.style.animation =
-            "thinkingFade 1.6s ease-in-out infinite";
-    }
-
-    /*
-       Add animated dots to the thinking text.
-    */
-
-    if (thinkingText) {
-
-        thinkingText.innerHTML =
-            'MoonPlug is thinking<span class="thinking-dots"></span>';
-    }
-
-    /*
-       Restart the animation again.
-    */
-
-    requestAnimationFrame(() => {
-
-        if (plug) {
-            plug.style.animation =
-                "plugRise 2.7s cubic-bezier(.45,0,.25,1) infinite";
-        }
-
-        if (glow) {
-            glow.style.animation =
-                "plugConnectionGlow 2.7s ease-in-out infinite";
-        }
-
-        if (thinkingText) {
-            thinkingText.style.animation =
-                "thinkingFade 1.6s ease-in-out infinite";
-        }
-
-    });
+    return typing;
 }
 
 
-function showTyping() {
+/* =========================================================
+   WAIT
+========================================================= */
 
-    const typing = $("typing");
+function wait(ms) {
 
-    if (!typing) {
+    return new Promise(
+        resolve => {
+            setTimeout(
+                resolve,
+                ms
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   MOON + PLUG ANIMATION
+========================================================= */
+
+async function playMoonPlugAnimation() {
+
+    if (animationRunning) {
         return;
     }
 
-    /*
-       Make it visible BEFORE restarting animation.
-    */
+    animationRunning = true;
 
-    typing.style.display = "flex";
+
+    const typing =
+        createThinkingAnimation();
+
+
+    if (!typing) {
+
+        animationRunning = false;
+
+        return;
+    }
+
+
+    typing.style.display =
+        "block";
 
     typing.setAttribute(
         "aria-hidden",
         "false"
     );
 
+
+    const messages =
+        $("messages");
+
+
+    if (messages) {
+
+        messages.scrollTop =
+            messages.scrollHeight;
+    }
+
+
     /*
-       Restart animation every time MoonPlug thinks.
+       STEP 1
+       Let the moon appear first.
     */
 
-    resetThinkingAnimation();
+    await wait(450);
 
-    const messages = $("messages");
+
+    /*
+       STEP 2
+       Plug slowly rises.
+       CSS animation handles the movement.
+    */
+
+    await wait(2350);
+
+
+    /*
+       STEP 3
+       Plug has reached the moon.
+       Give the connection a moment.
+    */
+
+    await wait(250);
+
+
+    /*
+       STEP 4
+       Fade the entire animation away.
+    */
+
+    typing.classList.add(
+        "animating-out"
+    );
+
+
+    await wait(280);
+
+
+    /*
+       STEP 5
+       Remove animation completely.
+    */
+
+    typing.style.display =
+        "none";
+
+    typing.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    typing.innerHTML =
+        "";
+
+
+    animationRunning = false;
+}
+
+
+/* =========================================================
+   SHOW TYPING
+========================================================= */
+
+function showTyping() {
+
+    createThinkingAnimation();
+
+    const typing =
+        $("typing");
+
+    if (!typing) {
+        return;
+    }
+
+    typing.style.display =
+        "block";
+
+    typing.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    const messages =
+        $("messages");
 
     if (messages) {
 
@@ -428,20 +464,31 @@ function showTyping() {
 }
 
 
+/* =========================================================
+   HIDE TYPING
+========================================================= */
+
 function hideTyping() {
 
-    const typing = $("typing");
+    const typing =
+        $("typing");
 
     if (!typing) {
         return;
     }
 
-    typing.style.display = "none";
+    typing.style.display =
+        "none";
 
     typing.setAttribute(
         "aria-hidden",
         "true"
     );
+
+    typing.innerHTML =
+        "";
+
+    animationRunning = false;
 }
 
 
@@ -457,9 +504,11 @@ function setupInput() {
     const sendButton =
         $("sendButton");
 
+
     if (!input || !sendButton) {
         return;
     }
+
 
     input.addEventListener(
         "input",
@@ -471,6 +520,7 @@ function setupInput() {
                 !input.value.trim();
         }
     );
+
 
     input.addEventListener(
         "keydown",
@@ -488,14 +538,21 @@ function setupInput() {
         }
     );
 
+
     sendButton.addEventListener(
         "click",
         sendMessage
     );
 
-    sendButton.disabled = true;
+
+    sendButton.disabled =
+        true;
 }
 
+
+/* =========================================================
+   AUTO RESIZE INPUT
+========================================================= */
 
 function autoResizeInput() {
 
@@ -506,13 +563,16 @@ function autoResizeInput() {
         return;
     }
 
-    input.style.height = "auto";
+    input.style.height =
+        "auto";
+
 
     const height =
         Math.min(
             input.scrollHeight,
             180
         );
+
 
     input.style.height =
         `${height}px`;
@@ -529,50 +589,78 @@ async function sendMessage() {
         return;
     }
 
+
     const input =
         $("messageInput");
 
     const sendButton =
         $("sendButton");
 
+
     if (!input) {
         return;
     }
 
+
     const message =
         input.value.trim();
+
 
     if (!message) {
         return;
     }
 
+
     isSending = true;
 
+
     if (sendButton) {
-        sendButton.disabled = true;
+
+        sendButton.disabled =
+            true;
     }
+
 
     addMessage(
         message,
         "user"
     );
 
+
     currentChat.push({
+
         role: "user",
+
         content: message
     });
 
+
     saveHistory();
 
-    input.value = "";
+
+    input.value =
+        "";
 
     autoResizeInput();
 
+
     /*
-       START NEW THINKING ANIMATION
+       START THE ANIMATION
     */
 
     showTyping();
+
+
+    /*
+       Start animation immediately.
+       We don't await it yet because
+       the backend request should happen
+       at the same time.
+    */
+
+    const animationPromise =
+        playMoonPlugAnimation();
+
 
     try {
 
@@ -588,13 +676,19 @@ async function sendMessage() {
                     },
 
                     body: JSON.stringify({
-                        message: message,
-                        history: currentChat
+
+                        message:
+                            message,
+
+                        history:
+                            currentChat
                     })
                 }
             );
 
+
         let data;
+
 
         try {
 
@@ -604,13 +698,14 @@ async function sendMessage() {
         } catch {
 
             data = {
+
                 success: false,
+
                 error:
                     "Server returned an invalid response."
             };
         }
 
-        hideTyping();
 
         if (!response.ok) {
 
@@ -620,8 +715,10 @@ async function sendMessage() {
             );
         }
 
+
         let aiResponse =
             data.response;
+
 
         if (
             typeof aiResponse !==
@@ -632,8 +729,10 @@ async function sendMessage() {
                 "MoonPlug received an invalid response.";
         }
 
+
         aiResponse =
             aiResponse.trim();
+
 
         if (!aiResponse) {
 
@@ -641,17 +740,36 @@ async function sendMessage() {
                 "MoonPlug didn't return a response.";
         }
 
+
+        /*
+           WAIT UNTIL THE MOON/PLUG
+           ANIMATION HAS COMPLETELY FINISHED.
+        */
+
+        await animationPromise;
+
+
+        /*
+           NOW THE AI TEXT APPEARS.
+        */
+
         addMessage(
             aiResponse,
             "ai"
         );
 
+
         currentChat.push({
+
             role: "assistant",
-            content: aiResponse
+
+            content:
+                aiResponse
         });
 
+
         saveHistory();
+
 
     } catch (error) {
 
@@ -660,22 +778,27 @@ async function sendMessage() {
             error
         );
 
+
         hideTyping();
+
 
         addMessage(
             "I couldn't connect to the MoonPlug AI backend. Please check the backend URL and make sure the server is online.",
             "ai"
         );
 
+
     } finally {
 
         isSending = false;
+
 
         if (sendButton) {
 
             sendButton.disabled =
                 !input.value.trim();
         }
+
 
         input.focus();
     }
@@ -690,14 +813,18 @@ function startNewChat() {
 
     currentChat = [];
 
+
     const messages =
         $("messages");
+
 
     if (!messages) {
         return;
     }
 
+
     messages.innerHTML = `
+
         <div class="empty-chat">
 
             <div class="empty-moon">
@@ -713,21 +840,24 @@ function startNewChat() {
             </p>
 
         </div>
+
     `;
+
 
     const input =
         $("messageInput");
 
+
     if (input) {
 
-        input.value = "";
+        input.value =
+            "";
 
         autoResizeInput();
 
         input.focus();
     }
 
-    hideTyping();
 
     saveHistory();
 }
@@ -743,7 +873,9 @@ function saveHistory() {
 
         localStorage.setItem(
             STORAGE_KEYS.history,
-            JSON.stringify(currentChat)
+            JSON.stringify(
+                currentChat
+            )
         );
 
     } catch (error) {
@@ -765,62 +897,85 @@ function loadHistory() {
                 STORAGE_KEYS.history
             );
 
+
         if (!saved) {
             return;
         }
 
+
         const history =
             JSON.parse(saved);
+
 
         if (!Array.isArray(history)) {
             return;
         }
 
-        currentChat = history;
 
-        if (history.length === 0) {
+        currentChat =
+            history;
+
+
+        if (
+            history.length === 0
+        ) {
             return;
         }
 
+
         const messages =
             $("messages");
+
 
         if (!messages) {
             return;
         }
 
-        messages.innerHTML = "";
 
-        history.forEach(item => {
+        messages.innerHTML =
+            "";
 
-            if (
-                !item ||
-                typeof item !== "object"
-            ) {
-                return;
+
+        history.forEach(
+            item => {
+
+                if (
+                    !item ||
+                    typeof item !==
+                    "object"
+                ) {
+                    return;
+                }
+
+
+                if (
+                    item.role !==
+                    "user" &&
+                    item.role !==
+                    "assistant"
+                ) {
+                    return;
+                }
+
+
+                if (
+                    typeof item.content !==
+                    "string"
+                ) {
+                    return;
+                }
+
+
+                addMessage(
+                    item.content,
+
+                    item.role === "user"
+                        ? "user"
+                        : "ai"
+                );
             }
+        );
 
-            if (
-                item.role !== "user" &&
-                item.role !== "assistant"
-            ) {
-                return;
-            }
-
-            if (
-                typeof item.content !==
-                "string"
-            ) {
-                return;
-            }
-
-            addMessage(
-                item.content,
-                item.role === "user"
-                    ? "user"
-                    : "ai"
-            );
-        });
 
     } catch (error) {
 
@@ -845,7 +1000,8 @@ function openSettings() {
         return;
     }
 
-    panel.style.display = "flex";
+    panel.style.display =
+        "flex";
 
     panel.setAttribute(
         "aria-hidden",
@@ -863,7 +1019,8 @@ function closeSettings() {
         return;
     }
 
-    panel.style.display = "none";
+    panel.style.display =
+        "none";
 
     panel.setAttribute(
         "aria-hidden",
@@ -883,6 +1040,7 @@ function setupSettings() {
     const themeButton =
         $("themeButton");
 
+
     if (settingsButton) {
 
         settingsButton.addEventListener(
@@ -890,6 +1048,7 @@ function setupSettings() {
             openSettings
         );
     }
+
 
     if (closeButton) {
 
@@ -899,6 +1058,7 @@ function setupSettings() {
         );
     }
 
+
     if (themeButton) {
 
         themeButton.addEventListener(
@@ -907,20 +1067,25 @@ function setupSettings() {
         );
     }
 
+
     document
-        .querySelectorAll(".size-button")
-        .forEach(button => {
+        .querySelectorAll(
+            ".size-button"
+        )
+        .forEach(
+            button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+                button.addEventListener(
+                    "click",
+                    () => {
 
-                    updateTextSize(
-                        button.dataset.size
-                    );
-                }
-            );
-        });
+                        updateTextSize(
+                            button.dataset.size
+                        );
+                    }
+                );
+            }
+        );
 }
 
 
@@ -935,6 +1100,7 @@ function loadTheme() {
             STORAGE_KEYS.theme
         ) || "dark";
 
+
     if (theme === "light") {
 
         document.body.classList.add(
@@ -948,6 +1114,7 @@ function loadTheme() {
         );
     }
 
+
     updateThemeButton();
 }
 
@@ -958,6 +1125,7 @@ function toggleTheme() {
         document.body.classList.contains(
             "light-theme"
         );
+
 
     if (isLight) {
 
@@ -982,6 +1150,7 @@ function toggleTheme() {
         );
     }
 
+
     updateThemeButton();
 }
 
@@ -991,14 +1160,17 @@ function updateThemeButton() {
     const button =
         $("themeButton");
 
+
     if (!button) {
         return;
     }
+
 
     const isLight =
         document.body.classList.contains(
             "light-theme"
         );
+
 
     button.textContent =
         isLight
@@ -1022,30 +1194,40 @@ function updateTextSize(size) {
         size = "medium";
     }
 
+
     document.body.classList.remove(
         "text-small",
         "text-medium",
         "text-large"
     );
 
+
     document.body.classList.add(
         `text-${size}`
     );
+
 
     localStorage.setItem(
         STORAGE_KEYS.textSize,
         size
     );
 
-    document
-        .querySelectorAll(".size-button")
-        .forEach(button => {
 
-            button.classList.toggle(
-                "active",
-                button.dataset.size === size
-            );
-        });
+    document
+        .querySelectorAll(
+            ".size-button"
+        )
+        .forEach(
+            button => {
+
+                button.classList.toggle(
+                    "active",
+
+                    button.dataset.size ===
+                    size
+                );
+            }
+        );
 }
 
 
@@ -1056,7 +1238,10 @@ function loadTextSize() {
             STORAGE_KEYS.textSize
         ) || "medium";
 
-    updateTextSize(saved);
+
+    updateTextSize(
+        saved
+    );
 }
 
 
@@ -1073,7 +1258,8 @@ function openAccount() {
         return;
     }
 
-    screen.style.display = "flex";
+    screen.style.display =
+        "flex";
 
     screen.setAttribute(
         "aria-hidden",
@@ -1091,7 +1277,8 @@ function closeAccount() {
         return;
     }
 
-    screen.style.display = "none";
+    screen.style.display =
+        "none";
 
     screen.setAttribute(
         "aria-hidden",
@@ -1114,20 +1301,27 @@ function showLoginTab() {
     const signupTab =
         $("signupTab");
 
+
     if (loginForm) {
-        loginForm.hidden = false;
+        loginForm.hidden =
+            false;
     }
 
     if (signupForm) {
-        signupForm.hidden = true;
+        signupForm.hidden =
+            true;
     }
 
     if (loginTab) {
-        loginTab.classList.add("active");
+        loginTab.classList.add(
+            "active"
+        );
     }
 
     if (signupTab) {
-        signupTab.classList.remove("active");
+        signupTab.classList.remove(
+            "active"
+        );
     }
 }
 
@@ -1146,23 +1340,34 @@ function showSignupTab() {
     const signupTab =
         $("signupTab");
 
+
     if (loginForm) {
-        loginForm.hidden = true;
+        loginForm.hidden =
+            true;
     }
 
     if (signupForm) {
-        signupForm.hidden = false;
+        signupForm.hidden =
+            false;
     }
 
     if (loginTab) {
-        loginTab.classList.remove("active");
+        loginTab.classList.remove(
+            "active"
+        );
     }
 
     if (signupTab) {
-        signupTab.classList.add("active");
+        signupTab.classList.add(
+            "active"
+        );
     }
 }
 
+
+/* =========================================================
+   ACCOUNT FORMS
+========================================================= */
 
 function setupAccountForms() {
 
@@ -1184,6 +1389,7 @@ function setupAccountForms() {
     const signupForm =
         $("signupForm");
 
+
     if (accountButton) {
 
         accountButton.addEventListener(
@@ -1191,6 +1397,7 @@ function setupAccountForms() {
             openAccount
         );
     }
+
 
     if (closeButton) {
 
@@ -1200,6 +1407,7 @@ function setupAccountForms() {
         );
     }
 
+
     if (loginTab) {
 
         loginTab.addEventListener(
@@ -1208,6 +1416,7 @@ function setupAccountForms() {
         );
     }
 
+
     if (signupTab) {
 
         signupTab.addEventListener(
@@ -1215,6 +1424,7 @@ function setupAccountForms() {
             showSignupTab
         );
     }
+
 
     if (loginForm) {
 
@@ -1227,6 +1437,7 @@ function setupAccountForms() {
                 const message =
                     $("accountMessage");
 
+
                 if (message) {
 
                     message.textContent =
@@ -1236,6 +1447,7 @@ function setupAccountForms() {
         );
     }
 
+
     if (signupForm) {
 
         signupForm.addEventListener(
@@ -1243,6 +1455,7 @@ function setupAccountForms() {
             event => {
 
                 event.preventDefault();
+
 
                 const password =
                     $("signupPassword");
@@ -1252,6 +1465,7 @@ function setupAccountForms() {
 
                 const message =
                     $("accountMessage");
+
 
                 if (
                     password &&
@@ -1268,6 +1482,7 @@ function setupAccountForms() {
 
                     return;
                 }
+
 
                 if (message) {
 
@@ -1289,32 +1504,43 @@ function showOwnerLogin() {
     const overlay =
         $("ownerLogin");
 
+
     if (!overlay) {
         return;
     }
 
-    overlay.style.display = "flex";
+
+    overlay.style.display =
+        "flex";
+
 
     overlay.setAttribute(
         "aria-hidden",
         "false"
     );
 
+
     const code =
         $("ownerCode");
 
+
     if (code) {
 
-        code.value = "";
+        code.value =
+            "";
 
         code.focus();
     }
 
+
     const error =
         $("ownerError");
 
+
     if (error) {
-        error.textContent = "";
+
+        error.textContent =
+            "";
     }
 }
 
@@ -1324,11 +1550,15 @@ function hideOwnerLogin() {
     const overlay =
         $("ownerLogin");
 
+
     if (!overlay) {
         return;
     }
 
-    overlay.style.display = "none";
+
+    overlay.style.display =
+        "none";
+
 
     overlay.setAttribute(
         "aria-hidden",
@@ -1349,12 +1579,15 @@ async function loginOwner() {
     const error =
         $("ownerError");
 
+
     if (!code) {
         return;
     }
 
+
     const ownerCode =
         code.value.trim();
+
 
     if (!ownerCode) {
 
@@ -1367,11 +1600,13 @@ async function loginOwner() {
         return;
     }
 
+
     if (error) {
 
         error.textContent =
             "Checking owner access...";
     }
+
 
     try {
 
@@ -1386,17 +1621,24 @@ async function loginOwner() {
                             "application/json"
                     },
 
-                    credentials: "include",
+                    credentials:
+                        "include",
 
                     body: JSON.stringify({
-                        code: ownerCode
+                        code:
+                            ownerCode
                     })
                 }
             );
 
+
         const data =
-            await response.json()
-                .catch(() => ({}));
+            await response
+                .json()
+                .catch(
+                    () => ({})
+                );
+
 
         if (!response.ok) {
 
@@ -1406,7 +1648,10 @@ async function loginOwner() {
             );
         }
 
-        ownerAuthenticated = true;
+
+        ownerAuthenticated =
+            true;
+
 
         hideOwnerLogin();
 
@@ -1414,12 +1659,14 @@ async function loginOwner() {
 
         loadOwnerDashboard();
 
+
     } catch (err) {
 
         console.error(
             "Owner login error:",
             err
         );
+
 
         if (error) {
 
@@ -1440,11 +1687,15 @@ function openOwnerPanel() {
     const panel =
         $("ownerPanel");
 
+
     if (!panel) {
         return;
     }
 
-    panel.style.display = "flex";
+
+    panel.style.display =
+        "flex";
+
 
     panel.setAttribute(
         "aria-hidden",
@@ -1458,11 +1709,15 @@ function closeOwnerPanel() {
     const panel =
         $("ownerPanel");
 
+
     if (!panel) {
         return;
     }
 
-    panel.style.display = "none";
+
+    panel.style.display =
+        "none";
+
 
     panel.setAttribute(
         "aria-hidden",
@@ -1470,6 +1725,10 @@ function closeOwnerPanel() {
     );
 }
 
+
+/* =========================================================
+   OWNER LOGOUT
+========================================================= */
 
 async function logoutOwner() {
 
@@ -1479,7 +1738,9 @@ async function logoutOwner() {
             `${API_BASE}/api/owner/logout`,
             {
                 method: "POST",
-                credentials: "include"
+
+                credentials:
+                    "include"
             }
         );
 
@@ -1491,7 +1752,10 @@ async function logoutOwner() {
         );
     }
 
-    ownerAuthenticated = false;
+
+    ownerAuthenticated =
+        false;
+
 
     closeOwnerPanel();
 }
@@ -1509,13 +1773,19 @@ async function loadOwnerDashboard() {
             await fetch(
                 `${API_BASE}/api/owner/dashboard`,
                 {
-                    credentials: "include"
+                    credentials:
+                        "include"
                 }
             );
 
+
         const data =
-            await response.json()
-                .catch(() => ({}));
+            await response
+                .json()
+                .catch(
+                    () => ({})
+                );
+
 
         if (!response.ok) {
 
@@ -1524,6 +1794,7 @@ async function loadOwnerDashboard() {
                 "Could not load dashboard."
             );
         }
+
 
         if (
             typeof data.users ===
@@ -1534,10 +1805,12 @@ async function loadOwnerDashboard() {
                 $("ownerUsers");
 
             if (users) {
+
                 users.textContent =
                     data.users;
             }
         }
+
 
         if (
             typeof data.chats ===
@@ -1548,10 +1821,12 @@ async function loadOwnerDashboard() {
                 $("ownerChats");
 
             if (chats) {
+
                 chats.textContent =
                     data.chats;
             }
         }
+
 
     } catch (error) {
 
@@ -1579,11 +1854,18 @@ async function checkBackendHealth() {
                 }
             );
 
+
+        const online =
+            response.ok;
+
+
         updateOnlineStatus(
-            response.ok
+            online
         );
 
-        return response.ok;
+
+        return online;
+
 
     } catch (error) {
 
@@ -1592,70 +1874,48 @@ async function checkBackendHealth() {
             error
         );
 
-        updateOnlineStatus(false);
+
+        updateOnlineStatus(
+            false
+        );
+
 
         return false;
     }
 }
 
 
-function updateOnlineStatus(online) {
+function updateOnlineStatus(
+    online
+) {
 
     const onlineBox =
-        document.querySelector(".online");
+        document.querySelector(
+            ".online"
+        );
 
-    if (!onlineBox) {
-        return;
-    }
-
-    /*
-       Keep the green dot.
-    */
 
     const dot =
-        onlineBox.querySelector(
+        document.querySelector(
             ".online-dot"
         );
 
-    if (dot) {
 
-        dot.style.background =
-            online
-                ? "#6ee7a0"
-                : "#ff7777";
-
-        dot.style.boxShadow =
-            online
-                ? "0 0 8px rgba(110,231,160,0.7)"
-                : "0 0 8px rgba(255,119,119,0.7)";
+    if (!onlineBox || !dot) {
+        return;
     }
 
-    /*
-       Find/create status text safely.
-    */
 
-    let statusText =
-        onlineBox.querySelector(
-            ".online-status-text"
-        );
+    if (online) {
 
-    if (!statusText) {
+        onlineBox.lastChild.textContent =
+            " Online";
 
-        statusText =
-            document.createElement("span");
+    } else {
 
-        statusText.className =
-            "online-status-text";
-
-        onlineBox.appendChild(
-            statusText
-        );
+        onlineBox.lastChild.textContent =
+            " Offline";
     }
-
-    statusText.textContent =
-        online
-            ? "Online"
-            : "Offline";
 }
 
 
@@ -1671,9 +1931,11 @@ function setupPasswordToggle() {
     const button =
         $("showPassword");
 
+
     if (!input || !button) {
         return;
     }
+
 
     button.addEventListener(
         "click",
@@ -1712,9 +1974,11 @@ function setupHiddenOwnerTrigger() {
     const input =
         $("messageInput");
 
+
     if (!input) {
         return;
     }
+
 
     input.addEventListener(
         "input",
@@ -1725,18 +1989,14 @@ function setupHiddenOwnerTrigger() {
                     .trim()
                     .toLowerCase();
 
+
             if (
                 value ===
                 "moonplug-owner"
             ) {
 
-                input.value = "";
-
-                autoResizeInput();
-
-                if (typeof hideTyping === "function") {
-                    hideTyping();
-                }
+                input.value =
+                    "";
 
                 showOwnerLogin();
             }
@@ -1763,6 +2023,7 @@ function setupOwnerControls() {
     const ownerCode =
         $("ownerCode");
 
+
     if (loginButton) {
 
         loginButton.addEventListener(
@@ -1770,6 +2031,7 @@ function setupOwnerControls() {
             loginOwner
         );
     }
+
 
     if (cancelButton) {
 
@@ -1779,6 +2041,7 @@ function setupOwnerControls() {
         );
     }
 
+
     if (logoutButton) {
 
         logoutButton.addEventListener(
@@ -1786,6 +2049,7 @@ function setupOwnerControls() {
             logoutOwner
         );
     }
+
 
     if (ownerCode) {
 
@@ -1817,6 +2081,7 @@ function openTrainer() {
     const message =
         $("ownerActionMessage");
 
+
     if (message) {
 
         message.textContent =
@@ -1825,15 +2090,14 @@ function openTrainer() {
 }
 
 
-function closeTrainer() {
-    // Reserved for trainer UI expansion.
-}
+function closeTrainer() {}
 
 
 function generateTraining() {
 
     const message =
         $("ownerActionMessage");
+
 
     if (message) {
 
@@ -1843,14 +2107,10 @@ function generateTraining() {
 }
 
 
-function loadAndRenderTraining() {
-    // Reserved for trainer list loading.
-}
+function loadAndRenderTraining() {}
 
 
-function teachMoonPlug() {
-    // Reserved for manual trainer submission.
-}
+function teachMoonPlug() {}
 
 
 function refreshTraining() {
@@ -1863,6 +2123,7 @@ function setupTrainer() {
 
     const trainerButton =
         $("trainerButton");
+
 
     if (trainerButton) {
 
@@ -1904,6 +2165,7 @@ function setupSidebarButtons() {
     const history =
         $("historyButton");
 
+
     if (newChat) {
 
         newChat.addEventListener(
@@ -1911,6 +2173,7 @@ function setupSidebarButtons() {
             startNewChat
         );
     }
+
 
     if (learn) {
 
@@ -1926,6 +2189,7 @@ function setupSidebarButtons() {
         );
     }
 
+
     if (study) {
 
         study.addEventListener(
@@ -1939,6 +2203,7 @@ function setupSidebarButtons() {
             }
         );
     }
+
 
     if (cook) {
 
@@ -1954,6 +2219,7 @@ function setupSidebarButtons() {
         );
     }
 
+
     if (images) {
 
         images.addEventListener(
@@ -1967,6 +2233,7 @@ function setupSidebarButtons() {
             }
         );
     }
+
 
     if (code) {
 
@@ -1982,6 +2249,7 @@ function setupSidebarButtons() {
         );
     }
 
+
     if (switchButton) {
 
         switchButton.addEventListener(
@@ -1995,6 +2263,7 @@ function setupSidebarButtons() {
             }
         );
     }
+
 
     if (history) {
 
@@ -2013,7 +2282,7 @@ function setupSidebarButtons() {
 
 
 /* =========================================================
-   ESCAPE KEY
+   ESCAPE
 ========================================================= */
 
 function setupEscapeKey() {
@@ -2029,6 +2298,7 @@ function setupEscapeKey() {
                 return;
             }
 
+
             closeSettings();
 
             closeAccount();
@@ -2042,12 +2312,13 @@ function setupEscapeKey() {
 
 
 /* =========================================================
-   WINDOW RESIZE
+   RESIZE
 ========================================================= */
 
 function setupResize() {
 
-    let resizeTimer = null;
+    let resizeTimer;
+
 
     window.addEventListener(
         "resize",
@@ -2057,13 +2328,10 @@ function setupResize() {
                 resizeTimer
             );
 
+
             resizeTimer =
                 setTimeout(
-                    () => {
-
-                        createStarField();
-
-                    },
+                    createStarField,
                     200
                 );
         }
@@ -2081,15 +2349,8 @@ function initializeMoonPlug() {
         "MoonPlug AI starting..."
     );
 
-    /*
-       Stars first.
-    */
 
     createStarField();
-
-    /*
-       UI setup.
-    */
 
     setupSidebar();
 
@@ -2113,19 +2374,11 @@ function initializeMoonPlug() {
 
     setupResize();
 
-    /*
-       Preferences.
-    */
-
     loadTheme();
 
     loadTextSize();
 
     loadHistory();
-
-    /*
-       Initial UI state.
-    */
 
     hideTyping();
 
@@ -2137,11 +2390,8 @@ function initializeMoonPlug() {
 
     closeOwnerPanel();
 
-    /*
-       Backend.
-    */
-
     checkBackendHealth();
+
 
     console.log(
         "MoonPlug AI initialized."
