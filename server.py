@@ -401,11 +401,14 @@ def ollama_configured():
 # ============================================================
 # OLLAMA HEALTH
 # ============================================================
+
 def proxy_headers():
     return {
-        "Authorization": f"Bearer {MOONPLUG_PROXY_KEY}",
+        "X-Proxy-Key": MOONPLUG_PROXY_KEY,
         "Content-Type": "application/json"
     }
+
+
 def proxy_health():
 
     if not OLLAMA_HOST:
