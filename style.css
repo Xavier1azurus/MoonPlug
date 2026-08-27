@@ -1,8 +1,7 @@
 
 /* =========================================================
-   MOONPLUG AI
-   COMPLETE FRONTEND STYLE
-   STARS + AI THINKING ANIMATION FIXED
+   MOONPLUG AI — COMPLETE STYLE
+   GALAXY BACKGROUND + MOON/PLUG AI ANIMATION
 ========================================================= */
 
 * {
@@ -17,11 +16,29 @@ body {
 }
 
 html {
-    background: #050505;
+    background: #020308;
 }
 
 body {
-    background: #050505;
+    background:
+        radial-gradient(
+            ellipse at 70% 35%,
+            rgba(70, 82, 145, 0.20) 0%,
+            rgba(35, 42, 90, 0.11) 20%,
+            transparent 48%
+        ),
+        radial-gradient(
+            ellipse at 25% 75%,
+            rgba(82, 65, 135, 0.15) 0%,
+            transparent 42%
+        ),
+        radial-gradient(
+            ellipse at 50% 50%,
+            rgba(35, 45, 95, 0.10) 0%,
+            transparent 60%
+        ),
+        #020308;
+
     color: #f5f5f5;
 
     font-family:
@@ -32,6 +49,58 @@ body {
         sans-serif;
 
     overflow: hidden;
+}
+
+
+/* =========================================================
+   GALAXY
+========================================================= */
+
+body::before {
+    content: "";
+
+    position: fixed;
+
+    inset: -20%;
+
+    pointer-events: none;
+
+    z-index: 0;
+
+    background:
+        radial-gradient(
+            ellipse at 50% 40%,
+            rgba(105, 115, 190, 0.10),
+            transparent 42%
+        ),
+        radial-gradient(
+            ellipse at 75% 70%,
+            rgba(130, 100, 180, 0.07),
+            transparent 35%
+        );
+
+    filter: blur(25px);
+
+    animation:
+        galaxyDrift
+        18s
+        ease-in-out
+        infinite alternate;
+}
+
+@keyframes galaxyDrift {
+
+    from {
+        transform:
+            scale(1)
+            rotate(0deg);
+    }
+
+    to {
+        transform:
+            scale(1.08)
+            rotate(2deg);
+    }
 }
 
 
@@ -51,12 +120,12 @@ body {
 
     overflow: hidden;
 
-    z-index: 0;
+    z-index: 1;
 }
 
 
 /* =========================================================
-   INDIVIDUAL STARS
+   STARS
 ========================================================= */
 
 .random-star {
@@ -74,10 +143,11 @@ body {
 
     background: #ffffff;
 
-    opacity: var(--star-opacity, 0.9);
+    opacity: var(--star-opacity, 0.8);
 
     box-shadow:
-        0 0 var(--star-glow, 5px) #ffffff;
+        0 0 var(--star-glow, 5px)
+        rgba(255,255,255,0.95);
 
     transform:
         scale(var(--star-scale, 1));
@@ -90,12 +160,11 @@ body {
         infinite alternate;
 }
 
-
 @keyframes moonplugStarMove {
 
     0% {
         opacity:
-            var(--star-opacity, 0.9);
+            var(--star-opacity, 0.8);
 
         transform:
             translate(0, 0)
@@ -108,25 +177,30 @@ body {
 
     100% {
         opacity:
-            var(--star-opacity, 0.9);
+            var(--star-opacity, 0.8);
 
         transform:
             translate(
                 var(--star-move-x, 0px),
                 var(--star-move-y, 0px)
             )
-            scale(var(--star-scale, 1.15));
+            scale(
+                calc(
+                    var(--star-scale, 1) + 0.25
+                )
+            );
     }
 }
 
 
 /* =========================================================
-   MAIN UI
+   UI LAYERS
 ========================================================= */
 
 .sidebar,
 .chat-section {
     position: relative;
+
     z-index: 2;
 }
 
@@ -146,24 +220,20 @@ body {
 
     padding: 18px 12px;
 
-    /*
-       IMPORTANT:
-       Transparent enough for stars to remain visible.
-    */
-
     background:
-        rgba(12, 12, 12, 0.78);
+        rgba(4, 5, 10, 0.70);
 
     border-right:
-        1px solid rgba(255,255,255,0.12);
+        1px solid rgba(255,255,255,0.10);
 
     backdrop-filter:
-        blur(12px);
+        blur(10px);
 
     -webkit-backdrop-filter:
-        blur(12px);
+        blur(10px);
 
     display: flex;
+
     flex-direction: column;
 
     z-index: 100;
@@ -182,6 +252,7 @@ body {
     height: 48px;
 
     display: flex;
+
     align-items: center;
 
     gap: 7px;
@@ -200,7 +271,7 @@ body {
 
 .sidebar-logo:hover {
     background:
-        rgba(255,255,255,0.08);
+        rgba(255,255,255,0.07);
 }
 
 .logo-moon {
@@ -208,8 +279,8 @@ body {
 
     filter:
         drop-shadow(
-            0 0 10px
-            rgba(255,255,255,0.3)
+            0 0 12px
+            rgba(255,255,255,0.5)
         );
 }
 
@@ -252,6 +323,7 @@ body {
 
 .sidebar-button {
     width: 100%;
+
     height: 45px;
 
     border: 0;
@@ -284,7 +356,7 @@ body {
 
 .sidebar-button:hover {
     background:
-        rgba(255,255,255,0.08);
+        rgba(255,255,255,0.07);
 
     color: white;
 
@@ -312,7 +384,7 @@ body {
     height: 1px;
 
     background:
-        rgba(255,255,255,0.1);
+        rgba(255,255,255,0.09);
 
     margin:
         10px 8px;
@@ -320,7 +392,7 @@ body {
 
 
 /* =========================================================
-   CHAT AREA
+   CHAT SECTION
 ========================================================= */
 
 .chat-section {
@@ -332,21 +404,19 @@ body {
     top: 0;
     bottom: 0;
 
-    /*
-       THIS WAS ONE OF THE IMPORTANT PROBLEMS.
-
-       The old 0.94 background was too opaque.
-       This lets the stars show through.
-    */
-
     background:
-        rgba(5,5,5,0.66);
+        radial-gradient(
+            ellipse at 60% 25%,
+            rgba(75, 88, 155, 0.07),
+            transparent 38%
+        ),
+        rgba(2, 3, 8, 0.45);
 
     backdrop-filter:
-        blur(1px);
+        blur(0.5px);
 
     -webkit-backdrop-filter:
-        blur(1px);
+        blur(0.5px);
 
     transition:
         left 0.25s ease;
@@ -380,10 +450,10 @@ body {
     padding: 0 28px;
 
     border-bottom:
-        1px solid rgba(255,255,255,0.1);
+        1px solid rgba(255,255,255,0.08);
 
     background:
-        rgba(5,5,5,0.58);
+        rgba(2,3,8,0.42);
 
     backdrop-filter:
         blur(8px);
@@ -448,11 +518,6 @@ body {
     z-index: 3;
 }
 
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
 .messages::-webkit-scrollbar {
     width: 7px;
 }
@@ -462,13 +527,9 @@ body {
 }
 
 .messages::-webkit-scrollbar-thumb {
-    background: #333;
+    background: #292929;
 
     border-radius: 10px;
-}
-
-.messages::-webkit-scrollbar-thumb:hover {
-    background: #444;
 }
 
 
@@ -503,8 +564,8 @@ body {
 
     filter:
         drop-shadow(
-            0 0 20px
-            rgba(255,255,255,0.35)
+            0 0 22px
+            rgba(255,255,255,0.45)
         );
 }
 
@@ -528,7 +589,7 @@ body {
 
 
 /* =========================================================
-   CHAT BUBBLES
+   MESSAGE BUBBLES
 ========================================================= */
 
 .message-bubble {
@@ -556,14 +617,11 @@ body {
         ease;
 }
 
-
-/* USER */
-
 .message-bubble.user {
     margin-left: auto;
 
     background:
-        rgba(47,47,47,0.92);
+        rgba(47,47,47,0.88);
 
     color: #f5f5f5;
 
@@ -579,9 +637,6 @@ body {
     padding:
         9px 14px;
 }
-
-
-/* AI */
 
 .message-bubble.ai {
     margin-right: auto;
@@ -601,7 +656,7 @@ body {
 
 
 /* =========================================================
-   NEW AI RESPONSE ANIMATION
+   AI ANIMATION CONTAINER
 ========================================================= */
 
 .typing {
@@ -609,242 +664,284 @@ body {
 
     display: none;
 
-    align-items: center;
-
-    gap: 12px;
-
     width:
         min(760px,88%);
 
+    min-height: 110px;
+
     margin:
-        0 auto 8px;
-
-    padding:
-        0 4px;
-
-    color: #aaa;
-
-    font-size: 13px;
+        0 auto 12px;
 
     position: relative;
 
-    z-index: 5;
+    z-index: 6;
+
+    pointer-events: none;
 }
-
-
-/* =========================================================
-   MOONPLUG AI THINKING ANIMATION
-========================================================= */
 
 .moonplug-animation {
     position: relative;
 
-    width: 48px;
-    height: 48px;
+    width: 90px;
+    height: 105px;
 
-    flex-shrink: 0;
+    margin: 0 auto;
 
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
+    display: block;
 }
 
 
-/* MOON */
+/* =========================================================
+   ANIMATION MOON
+========================================================= */
 
 .animation-moon {
     position: absolute;
 
     left: 50%;
-    top: 2px;
+    top: 4px;
+
+    width: 48px;
+    height: 48px;
 
     transform:
         translateX(-50%);
-
-    width: 32px;
-    height: 32px;
 
     display: flex;
 
     align-items: center;
     justify-content: center;
 
-    font-size: 25px;
+    font-size: 38px;
 
     filter:
         drop-shadow(
             0 0 12px
-            rgba(255,255,255,0.5)
+            rgba(255,255,255,0.55)
+        )
+        drop-shadow(
+            0 0 28px
+            rgba(155,170,255,0.28)
         );
 
+    z-index: 4;
+
     animation:
-        moonFloat
-        1.4s
+        moonBreath
+        2.2s
         ease-in-out
         infinite;
 }
 
+@keyframes moonBreath {
 
-/* PLUG */
+    0%,
+    100% {
+        transform:
+            translateX(-50%)
+            scale(1);
+    }
+
+    50% {
+        transform:
+            translateX(-50%)
+            scale(1.07);
+    }
+}
+
+
+/* =========================================================
+   PLUG
+========================================================= */
 
 .animation-plug {
     position: absolute;
 
     left: 50%;
 
-    top: 27px;
+    top: 78px;
 
     transform:
         translateX(-50%);
 
-    font-size: 17px;
+    font-size: 25px;
 
     line-height: 1;
 
-    z-index: 2;
+    z-index: 5;
+
+    opacity: 0;
 
     animation:
-        plugPulse
-        1.4s
-        ease-in-out
-        infinite;
+        plugRise
+        2.8s
+        cubic-bezier(
+            0.45,
+            0,
+            0.15,
+            1
+        )
+        forwards;
 }
 
 
-/* GLOW */
+/*
+   PLUG TRAVELS ALL THE WAY TO THE MOON
+*/
+
+@keyframes plugRise {
+
+    0% {
+        top: 82px;
+
+        opacity: 0;
+
+        transform:
+            translateX(-50%)
+            scale(0.75)
+            rotate(0deg);
+    }
+
+    12% {
+        opacity: 1;
+    }
+
+    70% {
+        top: 48px;
+
+        opacity: 1;
+
+        transform:
+            translateX(-50%)
+            scale(0.95)
+            rotate(0deg);
+    }
+
+    88% {
+        top: 30px;
+
+        opacity: 1;
+
+        transform:
+            translateX(-50%)
+            scale(1)
+            rotate(0deg);
+    }
+
+    94% {
+        top: 25px;
+
+        opacity: 1;
+
+        transform:
+            translateX(-50%)
+            scale(0.92)
+            rotate(0deg);
+    }
+
+    100% {
+        top: 23px;
+
+        opacity: 0;
+
+        transform:
+            translateX(-50%)
+            scale(0.55)
+            rotate(0deg);
+    }
+}
+
+
+/* =========================================================
+   PLUG TRAIL
+========================================================= */
+
+.animation-plug::after {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 24px;
+
+    width: 3px;
+
+    height: 28px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(255,255,255,0),
+            rgba(255,255,255,0.45),
+            rgba(255,255,255,0)
+        );
+
+    filter:
+        blur(1px);
+
+    opacity: 0.6;
+}
+
+
+/* =========================================================
+   CONNECTION FLASH
+========================================================= */
 
 .plug-glow {
     position: absolute;
 
     left: 50%;
-    top: 22px;
+    top: 25px;
 
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
 
     transform:
-        translateX(-50%)
-        scale(0.5);
+        translate(-50%,-50%)
+        scale(0);
 
     border-radius: 50%;
 
     background: white;
 
+    box-shadow:
+        0 0 10px white,
+        0 0 25px rgba(150,170,255,0.9),
+        0 0 45px rgba(150,170,255,0.55);
+
     opacity: 0;
 
-    filter:
-        blur(7px);
+    z-index: 6;
 
     animation:
-        plugGlow
-        1.4s
-        ease-in-out
-        infinite;
+        connectionFlash
+        0.45s
+        ease-out
+        2.35s
+        forwards;
 }
 
-
-/* =========================================================
-   MOON FLOAT
-========================================================= */
-
-@keyframes moonFloat {
-
-    0% {
-        transform:
-            translateX(-50%)
-            translateY(0)
-            rotate(0deg);
-    }
-
-    50% {
-        transform:
-            translateX(-50%)
-            translateY(-4px)
-            rotate(-5deg);
-    }
-
-    100% {
-        transform:
-            translateX(-50%)
-            translateY(0)
-            rotate(0deg);
-    }
-}
-
-
-/* =========================================================
-   PLUG PULSE
-========================================================= */
-
-@keyframes plugPulse {
-
-    0% {
-        transform:
-            translateX(-50%)
-            translateY(3px)
-            scale(0.8);
-
-        opacity: 0.35;
-    }
-
-    45% {
-        transform:
-            translateX(-50%)
-            translateY(-2px)
-            scale(1);
-
-        opacity: 1;
-    }
-
-    70% {
-        transform:
-            translateX(-50%)
-            translateY(-4px)
-            scale(0.9);
-
-        opacity: 0.7;
-    }
-
-    100% {
-        transform:
-            translateX(-50%)
-            translateY(3px)
-            scale(0.8);
-
-        opacity: 0.35;
-    }
-}
-
-
-/* =========================================================
-   PLUG GLOW
-========================================================= */
-
-@keyframes plugGlow {
+@keyframes connectionFlash {
 
     0% {
         opacity: 0;
 
         transform:
-            translateX(-50%)
-            scale(0.4);
-    }
-
-    45% {
-        opacity: 0.9;
-
-        transform:
-            translateX(-50%)
-            scale(1.5);
+            translate(-50%,-50%)
+            scale(0);
     }
 
     70% {
-        opacity: 0.2;
+        opacity: 1;
 
         transform:
-            translateX(-50%)
+            translate(-50%,-50%)
             scale(2.2);
     }
 
@@ -852,8 +949,34 @@ body {
         opacity: 0;
 
         transform:
-            translateX(-50%)
-            scale(0.4);
+            translate(-50%,-50%)
+            scale(5);
+    }
+}
+
+
+/* =========================================================
+   ANIMATION FADE OUT
+========================================================= */
+
+.typing.animating-out {
+    animation:
+        thinkingDisappear
+        0.28s
+        ease
+        forwards;
+}
+
+@keyframes thinkingDisappear {
+
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.92);
     }
 }
 
@@ -863,21 +986,29 @@ body {
 ========================================================= */
 
 .typing-text {
-    position: relative;
+    position: absolute;
 
-    display: inline-flex;
+    left: 50%;
+    top: 92px;
 
-    align-items: center;
+    transform:
+        translateX(-50%);
 
-    min-width: 170px;
+    color: #777;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+
+    opacity: 0.8;
 }
 
 .typing-text::after {
     content: "";
 
-    width: 18px;
-
     display: inline-block;
+
+    width: 18px;
 
     text-align: left;
 
@@ -913,7 +1044,7 @@ body {
 
 
 /* =========================================================
-   INPUT AREA
+   INPUT
 ========================================================= */
 
 .chat-bottom-area {
@@ -948,35 +1079,26 @@ body {
         8px 9px 8px 17px;
 
     background:
-        rgba(32,32,32,0.92);
+        rgba(25,27,35,0.88);
 
     border:
-        1px solid rgba(255,255,255,0.14);
+        1px solid rgba(255,255,255,0.13);
 
     border-radius: 20px;
 
     box-shadow:
         0 5px 30px
         rgba(0,0,0,0.35);
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
 }
 
 .chat-input-area:focus-within {
     border-color:
-        rgba(255,255,255,0.28);
+        rgba(255,255,255,0.25);
 
     box-shadow:
         0 5px 35px
         rgba(0,0,0,0.45);
 }
-
-
-/* =========================================================
-   MESSAGE INPUT
-========================================================= */
 
 #messageInput {
     flex: 1;
@@ -1144,7 +1266,7 @@ body {
         min(480px,100%);
 
     background:
-        rgba(27,27,27,0.97);
+        rgba(20,21,27,0.97);
 
     border:
         1px solid #303030;
@@ -1758,30 +1880,36 @@ body {
 ========================================================= */
 
 body.light-theme {
-    background: #f7f7f7;
+    background:
+        radial-gradient(
+            ellipse at 60% 30%,
+            rgba(170,180,220,0.35),
+            transparent 45%
+        ),
+        #f5f5f7;
 
     color: #171717;
 }
 
 body.light-theme .star-field {
-    opacity: 0.35;
+    opacity: 0.28;
 }
 
 body.light-theme .sidebar {
     background:
-        rgba(238,238,238,0.82);
+        rgba(238,238,242,0.76);
 
     border-color: #ddd;
 }
 
 body.light-theme .chat-section {
     background:
-        rgba(247,247,247,0.70);
+        rgba(247,247,250,0.50);
 }
 
 body.light-theme .chat-header {
     background:
-        rgba(247,247,247,0.70);
+        rgba(247,247,250,0.50);
 
     border-color: #ddd;
 }
@@ -1807,7 +1935,8 @@ body.light-theme .message-bubble.ai {
 }
 
 body.light-theme .chat-input-area {
-    background: rgba(255,255,255,0.92);
+    background:
+        rgba(255,255,255,0.88);
 
     border-color: #d4d4d4;
 }
@@ -2026,11 +2155,11 @@ body.text-large .message-bubble {
     }
 
     .typing {
-        width:
-            calc(100% - 28px);
+        width: 100%;
 
-        margin:
-            0 auto 6px;
+        min-height: 105px;
+
+        margin-bottom: 5px;
     }
 
     .chat-bottom-area {
@@ -2101,8 +2230,8 @@ body.text-large .message-bubble {
         height: 2px;
 
         box-shadow:
-            0 0 6px
-            #ffffff;
+            0 0 7px
+            rgba(255,255,255,0.95);
     }
 }
 
@@ -2117,17 +2246,15 @@ body.text-large .message-bubble {
     .animation-moon,
     .animation-plug,
     .plug-glow,
-    .typing-text::after {
+    .typing-text::after,
+    body::before {
         animation: none !important;
     }
 
-    *,
-    *::before,
-    *::after {
+    * {
         scroll-behavior: auto !important;
 
         transition-duration:
             0.01ms !important;
     }
 }
-
