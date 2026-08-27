@@ -383,7 +383,7 @@ async function playMoonPlugAnimation() {
        CSS animation handles the movement.
     */
 
-    await wait(2350);
+    await wait(2000);
 
 
     /*
