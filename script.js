@@ -20,7 +20,7 @@ let currentChat = [];
 
 let isOwnerAuthenticated = false;
 
-let currentTextSize = "large";
+let currentTextSize = "medium";
 
 let currentTheme = "dark";
 
@@ -1452,7 +1452,7 @@ function loadTextSize() {
 
             ? saved
 
-            : "large"
+            : "medium"
 
     );
 
