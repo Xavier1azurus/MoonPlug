@@ -2973,15 +2973,9 @@ def internal_error(error):
 
     print()
     print("=" * 60)
-    print(
-        "MOONPLUG INTERNAL SERVER ERROR"
-    )
+    print("MOONPLUG INTERNAL SERVER ERROR")
     print("=" * 60)
-
-    print(
-        "ERROR:",
-        repr(error)
-    )
+    print("ERROR:", repr(error))
 
     traceback.print_exc()
 
@@ -2989,17 +2983,11 @@ def internal_error(error):
     print()
 
     return jsonify({
-
-        "success":
-            False,
-
-        "error":
-            "Internal server error.",
-
-        "details":
-            str(error)
-
+        "success": False,
+        "error": "Internal server error.",
+        "details": repr(error)
     }), 500
+
 
 
 # ============================================================
