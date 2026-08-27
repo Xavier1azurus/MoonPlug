@@ -2,6 +2,7 @@
 /* =========================================================
    MOONPLUG AI
    COMPLETE FRONTEND SCRIPT
+   STARS + AI THINKING ANIMATION
 ========================================================= */
 
 "use strict";
@@ -30,7 +31,7 @@ let isSending = false;
 
 
 /* =========================================================
-   DOM HELPERS
+   DOM HELPER
 ========================================================= */
 
 function $(id) {
@@ -47,86 +48,137 @@ function createStarField() {
     const starField = $("starField");
 
     if (!starField) {
-        console.error(
-            "MoonPlug: starField element not found."
-        );
-
+        console.error("MoonPlug: starField was not found.");
         return;
     }
 
-    starField.innerHTML = "";
+    /*
+       Completely rebuild the stars.
+       This guarantees that old/failed stars are removed.
+    */
+
+    starField.replaceChildren();
 
     const width = window.innerWidth;
 
     let starCount;
 
     if (width <= 600) {
-        starCount = 80;
+        starCount = 90;
     } else if (width <= 1200) {
-        starCount = 110;
+        starCount = 130;
     } else {
-        starCount = 150;
+        starCount = 180;
     }
+
+    const fragment = document.createDocumentFragment();
 
     for (let i = 0; i < starCount; i++) {
 
-        const star =
-            document.createElement("span");
+        const star = document.createElement("span");
 
         star.className = "random-star";
 
+        /*
+           Random position
+        */
+
+        star.style.left =
+            `${Math.random() * 100}%`;
+
+        star.style.top =
+            `${Math.random() * 100}%`;
+
+        /*
+           Random size
+        */
+
+        const size =
+            Math.random() * 2.2 + 0.8;
+
+        star.style.width =
+            `${size}px`;
+
+        star.style.height =
+            `${size}px`;
+
         star.style.setProperty(
             "--star-size",
-            `${Math.random() * 2 + 1}px`
+            `${size}px`
         );
 
-        star.style.setProperty(
-            "--star-x",
-            `${Math.random() * 100}%`
-        );
+        /*
+           Random brightness
+        */
 
-        star.style.setProperty(
-            "--star-y",
-            `${Math.random() * 100}%`
-        );
+        const opacity =
+            Math.random() * 0.65 + 0.30;
+
+        star.style.opacity =
+            opacity;
 
         star.style.setProperty(
             "--star-opacity",
-            `${Math.random() * 0.55 + 0.35}`
+            opacity
         );
+
+        /*
+           Random glow
+        */
+
+        const glow =
+            Math.random() * 5 + 2;
 
         star.style.setProperty(
             "--star-glow",
-            `${Math.random() * 4 + 2}px`
+            `${glow}px`
         );
+
+        /*
+           Random movement
+        */
+
+        star.style.setProperty(
+            "--star-move-x",
+            `${Math.random() * 10 - 5}px`
+        );
+
+        star.style.setProperty(
+            "--star-move-y",
+            `${Math.random() * 10 - 5}px`
+        );
+
+        /*
+           Random animation speed
+        */
+
+        star.style.setProperty(
+            "--star-duration",
+            `${Math.random() * 4 + 3}s`
+        );
+
+        star.style.setProperty(
+            "--star-delay",
+            `${Math.random() * 5}s`
+        );
+
+        /*
+           Random starting scale
+        */
 
         star.style.setProperty(
             "--star-scale",
             `${Math.random() * 0.6 + 0.7}`
         );
 
-        star.style.setProperty(
-            "--star-move-x",
-            `${Math.random() * 8 - 4}px`
-        );
-
-        star.style.setProperty(
-            "--star-move-y",
-            `${Math.random() * 8 - 4}px`
-        );
-
-        star.style.setProperty(
-            "--star-duration",
-            `${Math.random() * 3 + 3}s`
-        );
-
-        star.style.setProperty(
-            "--star-delay",
-            `${Math.random() * 4}s`
-        );
-
-        starField.appendChild(star);
+        fragment.appendChild(star);
     }
+
+    starField.appendChild(fragment);
+
+    console.log(
+        `MoonPlug: created ${starCount} stars.`
+    );
 }
 
 
@@ -165,7 +217,7 @@ function setupSidebar() {
 
 
 /* =========================================================
-   CHAT EMPTY STATE
+   EMPTY CHAT
 ========================================================= */
 
 function removeEmptyChat() {
@@ -180,7 +232,7 @@ function removeEmptyChat() {
 
 
 /* =========================================================
-   ADD CHAT MESSAGE
+   ADD MESSAGE
 ========================================================= */
 
 function addMessage(
@@ -191,7 +243,7 @@ function addMessage(
     const messages = $("messages");
 
     if (!messages) {
-        return;
+        return null;
     }
 
     removeEmptyChat();
@@ -202,7 +254,8 @@ function addMessage(
     bubble.className =
         `message-bubble ${type}`;
 
-    bubble.textContent = text;
+    bubble.textContent =
+        String(text);
 
     messages.appendChild(bubble);
 
@@ -214,8 +267,131 @@ function addMessage(
 
 
 /* =========================================================
-   TYPING / THINKING ANIMATION
+   AI THINKING ANIMATION
 ========================================================= */
+
+function resetThinkingAnimation() {
+
+    const typing = $("typing");
+
+    if (!typing) {
+        return;
+    }
+
+    /*
+       Restart CSS animations.
+
+       Removing the animation classes for one frame
+       forces the browser to start them again.
+    */
+
+    const animation =
+        typing.querySelector(
+            ".moonplug-animation"
+        );
+
+    const plug =
+        typing.querySelector(
+            ".animation-plug"
+        );
+
+    const glow =
+        typing.querySelector(
+            ".plug-glow"
+        );
+
+    const moon =
+        typing.querySelector(
+            ".animation-moon"
+        );
+
+    const thinkingText =
+        typing.querySelector(
+            ".typing-text"
+        );
+
+    const animatedElements = [
+        animation,
+        plug,
+        glow,
+        moon,
+        thinkingText
+    ];
+
+    animatedElements.forEach(
+        element => {
+
+            if (!element) {
+                return;
+            }
+
+            element.style.animation = "none";
+        }
+    );
+
+    /*
+       Force browser reflow.
+    */
+
+    void typing.offsetWidth;
+
+    /*
+       Restore CSS animations.
+       These names match the updated CSS.
+    */
+
+    if (plug) {
+
+        plug.style.animation =
+            "plugRise 2.7s cubic-bezier(.45,0,.25,1) infinite";
+    }
+
+    if (glow) {
+
+        glow.style.animation =
+            "plugConnectionGlow 2.7s ease-in-out infinite";
+    }
+
+    if (thinkingText) {
+
+        thinkingText.style.animation =
+            "thinkingFade 1.6s ease-in-out infinite";
+    }
+
+    /*
+       Add animated dots to the thinking text.
+    */
+
+    if (thinkingText) {
+
+        thinkingText.innerHTML =
+            'MoonPlug is thinking<span class="thinking-dots"></span>';
+    }
+
+    /*
+       Restart the animation again.
+    */
+
+    requestAnimationFrame(() => {
+
+        if (plug) {
+            plug.style.animation =
+                "plugRise 2.7s cubic-bezier(.45,0,.25,1) infinite";
+        }
+
+        if (glow) {
+            glow.style.animation =
+                "plugConnectionGlow 2.7s ease-in-out infinite";
+        }
+
+        if (thinkingText) {
+            thinkingText.style.animation =
+                "thinkingFade 1.6s ease-in-out infinite";
+        }
+
+    });
+}
+
 
 function showTyping() {
 
@@ -225,6 +401,10 @@ function showTyping() {
         return;
     }
 
+    /*
+       Make it visible BEFORE restarting animation.
+    */
+
     typing.style.display = "flex";
 
     typing.setAttribute(
@@ -232,9 +412,16 @@ function showTyping() {
         "false"
     );
 
+    /*
+       Restart animation every time MoonPlug thinks.
+    */
+
+    resetThinkingAnimation();
+
     const messages = $("messages");
 
     if (messages) {
+
         messages.scrollTop =
             messages.scrollHeight;
     }
@@ -264,8 +451,11 @@ function hideTyping() {
 
 function setupInput() {
 
-    const input = $("messageInput");
-    const sendButton = $("sendButton");
+    const input =
+        $("messageInput");
+
+    const sendButton =
+        $("sendButton");
 
     if (!input || !sendButton) {
         return;
@@ -309,7 +499,8 @@ function setupInput() {
 
 function autoResizeInput() {
 
-    const input = $("messageInput");
+    const input =
+        $("messageInput");
 
     if (!input) {
         return;
@@ -338,8 +529,11 @@ async function sendMessage() {
         return;
     }
 
-    const input = $("messageInput");
-    const sendButton = $("sendButton");
+    const input =
+        $("messageInput");
+
+    const sendButton =
+        $("sendButton");
 
     if (!input) {
         return;
@@ -373,6 +567,10 @@ async function sendMessage() {
     input.value = "";
 
     autoResizeInput();
+
+    /*
+       START NEW THINKING ANIMATION
+    */
 
     showTyping();
 
@@ -474,6 +672,7 @@ async function sendMessage() {
         isSending = false;
 
         if (sendButton) {
+
             sendButton.disabled =
                 !input.value.trim();
         }
@@ -527,6 +726,8 @@ function startNewChat() {
 
         input.focus();
     }
+
+    hideTyping();
 
     saveHistory();
 }
@@ -714,10 +915,9 @@ function setupSettings() {
                 "click",
                 () => {
 
-                    const size =
-                        button.dataset.size;
-
-                    updateTextSize(size);
+                    updateTextSize(
+                        button.dataset.size
+                    );
                 }
             );
         });
@@ -818,6 +1018,7 @@ function updateTextSize(size) {
         size !== "medium" &&
         size !== "large"
     ) {
+
         size = "medium";
     }
 
@@ -860,7 +1061,7 @@ function loadTextSize() {
 
 
 /* =========================================================
-   ACCOUNT SCREEN
+   ACCOUNT
 ========================================================= */
 
 function openAccount() {
@@ -1103,7 +1304,9 @@ function showOwnerLogin() {
         $("ownerCode");
 
     if (code) {
+
         code.value = "";
+
         code.focus();
     }
 
@@ -1156,6 +1359,7 @@ async function loginOwner() {
     if (!ownerCode) {
 
         if (error) {
+
             error.textContent =
                 "Enter the owner code.";
         }
@@ -1164,6 +1368,7 @@ async function loginOwner() {
     }
 
     if (error) {
+
         error.textContent =
             "Checking owner access...";
     }
@@ -1313,6 +1518,7 @@ async function loadOwnerDashboard() {
                 .catch(() => ({}));
 
         if (!response.ok) {
+
             throw new Error(
                 data.error ||
                 "Could not load dashboard."
@@ -1358,7 +1564,7 @@ async function loadOwnerDashboard() {
 
 
 /* =========================================================
-   OWNER STATUS
+   BACKEND HEALTH
 ========================================================= */
 
 async function checkBackendHealth() {
@@ -1373,14 +1579,11 @@ async function checkBackendHealth() {
                 }
             );
 
-        const online =
-            response.ok;
-
         updateOnlineStatus(
-            online
+            response.ok
         );
 
-        return online;
+        return response.ok;
 
     } catch (error) {
 
@@ -1389,9 +1592,7 @@ async function checkBackendHealth() {
             error
         );
 
-        updateOnlineStatus(
-            false
-        );
+        updateOnlineStatus(false);
 
         return false;
     }
@@ -1403,23 +1604,58 @@ function updateOnlineStatus(online) {
     const onlineBox =
         document.querySelector(".online");
 
-    const dot =
-        document.querySelector(".online-dot");
-
-    if (!onlineBox || !dot) {
+    if (!onlineBox) {
         return;
     }
 
-    if (online) {
+    /*
+       Keep the green dot.
+    */
 
-        onlineBox.lastChild.textContent =
-            " Online";
+    const dot =
+        onlineBox.querySelector(
+            ".online-dot"
+        );
 
-    } else {
+    if (dot) {
 
-        onlineBox.lastChild.textContent =
-            " Offline";
+        dot.style.background =
+            online
+                ? "#6ee7a0"
+                : "#ff7777";
+
+        dot.style.boxShadow =
+            online
+                ? "0 0 8px rgba(110,231,160,0.7)"
+                : "0 0 8px rgba(255,119,119,0.7)";
     }
+
+    /*
+       Find/create status text safely.
+    */
+
+    let statusText =
+        onlineBox.querySelector(
+            ".online-status-text"
+        );
+
+    if (!statusText) {
+
+        statusText =
+            document.createElement("span");
+
+        statusText.className =
+            "online-status-text";
+
+        onlineBox.appendChild(
+            statusText
+        );
+    }
+
+    statusText.textContent =
+        online
+            ? "Online"
+            : "Offline";
 }
 
 
@@ -1468,10 +1704,7 @@ function setupPasswordToggle() {
 
 
 /* =========================================================
-   OWNER LOGIN TRIGGER
-   Hidden trigger:
-   typing "moonplug-owner" in the
-   chat input opens owner login.
+   HIDDEN OWNER TRIGGER
 ========================================================= */
 
 function setupHiddenOwnerTrigger() {
@@ -1499,6 +1732,12 @@ function setupHiddenOwnerTrigger() {
 
                 input.value = "";
 
+                autoResizeInput();
+
+                if (typeof hideTyping === "function") {
+                    hideTyping();
+                }
+
                 showOwnerLogin();
             }
         }
@@ -1507,7 +1746,7 @@ function setupHiddenOwnerTrigger() {
 
 
 /* =========================================================
-   OWNER LOGIN BUTTON
+   OWNER CONTROLS
 ========================================================= */
 
 function setupOwnerControls() {
@@ -1605,13 +1844,11 @@ function generateTraining() {
 
 
 function loadAndRenderTraining() {
-
     // Reserved for trainer list loading.
 }
 
 
 function teachMoonPlug() {
-
     // Reserved for manual trainer submission.
 }
 
@@ -1776,7 +2013,7 @@ function setupSidebarButtons() {
 
 
 /* =========================================================
-   CLOSE OVERLAYS WITH ESCAPE
+   ESCAPE KEY
 ========================================================= */
 
 function setupEscapeKey() {
@@ -1810,7 +2047,7 @@ function setupEscapeKey() {
 
 function setupResize() {
 
-    let resizeTimer;
+    let resizeTimer = null;
 
     window.addEventListener(
         "resize",
@@ -1822,8 +2059,12 @@ function setupResize() {
 
             resizeTimer =
                 setTimeout(
-                    createStarField,
-                    150
+                    () => {
+
+                        createStarField();
+
+                    },
+                    200
                 );
         }
     );
@@ -1840,7 +2081,15 @@ function initializeMoonPlug() {
         "MoonPlug AI starting..."
     );
 
+    /*
+       Stars first.
+    */
+
     createStarField();
+
+    /*
+       UI setup.
+    */
 
     setupSidebar();
 
@@ -1864,11 +2113,19 @@ function initializeMoonPlug() {
 
     setupResize();
 
+    /*
+       Preferences.
+    */
+
     loadTheme();
 
     loadTextSize();
 
     loadHistory();
+
+    /*
+       Initial UI state.
+    */
 
     hideTyping();
 
@@ -1879,6 +2136,10 @@ function initializeMoonPlug() {
     closeAccount();
 
     closeOwnerPanel();
+
+    /*
+       Backend.
+    */
 
     checkBackendHealth();
 
