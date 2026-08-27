@@ -4051,6 +4051,98 @@ createRandomStars();
 START APP
 ===================================================== */
 
+/* =====================================================
+   MOONPLUG STAR FIELD
+===================================================== */
+
+function createMoonPlugStars() {
+
+    const starField =
+        document.getElementById("starField");
+
+    if (!starField) {
+        return;
+    }
+
+    starField.innerHTML = "";
+
+    const starCount =
+        window.innerWidth < 600
+            ? 70
+            : 120;
+
+    for (let i = 0; i < starCount; i++) {
+
+        const star =
+            document.createElement("div");
+
+        star.className =
+            "random-star";
+
+        star.style.setProperty(
+            "--star-size",
+            `${Math.random() * 2 + 1}px`
+        );
+
+        star.style.setProperty(
+            "--star-x",
+            `${Math.random() * 100}%`
+        );
+
+        star.style.setProperty(
+            "--star-y",
+            `${Math.random() * 100}%`
+        );
+
+        star.style.setProperty(
+            "--star-opacity",
+            `${Math.random() * 0.55 + 0.35}`
+        );
+
+        star.style.setProperty(
+            "--star-glow",
+            `${Math.random() * 4 + 2}px`
+        );
+
+        star.style.setProperty(
+            "--star-scale",
+            `${Math.random() * 0.7 + 0.6}`
+        );
+
+        star.style.setProperty(
+            "--star-duration",
+            `${Math.random() * 4 + 3}s`
+        );
+
+        star.style.setProperty(
+            "--star-delay",
+            `${Math.random() * 4}s`
+        );
+
+        star.style.setProperty(
+            "--star-move-x",
+            `${Math.random() * 12 - 6}px`
+        );
+
+        star.style.setProperty(
+            "--star-move-y",
+            `${Math.random() * 12 - 6}px`
+        );
+
+        starField.appendChild(star);
+    }
+}
+
+
+createMoonPlugStars();
+
+
+window.addEventListener(
+    "resize",
+    createMoonPlugStars
+);
+
+
 if (
     document.readyState ===
     "loading"
