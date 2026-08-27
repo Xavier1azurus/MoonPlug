@@ -251,6 +251,10 @@ body {
    MESSAGES
 ===================================================== */
 
+/* =====================================================
+   MESSAGES + DARK SCROLLBAR
+===================================================== */
+
 .messages {
     flex: 1;
 
@@ -265,9 +269,29 @@ body {
 
     gap: 16px;
 
+    /* Firefox */
     scrollbar-width: thin;
+    scrollbar-color: #303030 transparent;
 }
 
+/* Chrome / Edge / Safari */
+
+.messages::-webkit-scrollbar {
+    width: 7px;
+}
+
+.messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.messages::-webkit-scrollbar-thumb {
+    background: #303030;
+    border-radius: 10px;
+}
+
+.messages::-webkit-scrollbar-thumb:hover {
+    background: #444444;
+}
 /* EMPTY CHAT */
 
 .empty-chat {
