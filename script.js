@@ -2418,3 +2418,89 @@ if (
     initializeMoonPlug();
 }
 
+/* =========================================================
+   MOONPLUG CONVERSATION MODE
+========================================================= */
+
+const conversationMode =
+    document.getElementById("conversationMode");
+
+const moonOrb =
+    document.getElementById("moonOrb");
+
+const conversationStatus =
+    document.getElementById("conversationStatus");
+
+const conversationText =
+    document.getElementById("conversationText");
+
+let conversationListening = false;
+
+function openConversationMode() {
+
+    if (!conversationMode) return;
+
+    conversationMode.classList.add("active");
+
+    startConversationListening();
+}
+
+function closeConversationMode() {
+
+    if (!conversationMode) return;
+
+    conversationMode.classList.remove("active");
+
+    conversationListening = false;
+
+    moonOrb.classList.remove("listening");
+    moonOrb.classList.remove("thinking");
+
+    conversationStatus.textContent = "Listening...";
+    conversationText.textContent = "Talk to MoonPlug";
+}
+
+function startConversationListening() {
+
+    conversationListening = true;
+
+    moonOrb.classList.remove("thinking");
+    moonOrb.classList.add("listening");
+
+    conversationStatus.textContent = "Listening...";
+    conversationText.textContent = "Talk to MoonPlug";
+}
+
+function toggleConversationListening() {
+
+    if (conversationListening) {
+
+        conversationListening = false;
+
+        moonOrb.classList.remove("listening");
+        moonOrb.classList.add("thinking");
+
+        conversationStatus.textContent = "Thinking...";
+        conversationText.textContent = "MoonPlug is thinking";
+
+        /*
+         * Connect your actual AI response here.
+         */
+
+        setTimeout(() => {
+
+            moonOrb.classList.remove("thinking");
+            moonOrb.classList.add("listening");
+
+            conversationListening = true;
+
+            conversationStatus.textContent = "Listening...";
+            conversationText.textContent = "Talk to MoonPlug";
+
+        }, 1800);
+
+    } else {
+
+        startConversationListening();
+    }
+}
