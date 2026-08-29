@@ -1782,4 +1782,201 @@ body.text-large .message-bubble {
         scroll-behavior: auto !important;
     }
 }
+/* =========================================================
+   SETTINGS VOICE
+========================================================= */
 
+.settings-subtitle {
+    margin: 4px 0 0;
+    color: #777782;
+    font-size: 12px;
+}
+
+.voice-setting {
+    padding-top: 22px;
+    border-top: 1px solid rgba(255,255,255,.07);
+}
+
+.voice-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.voice-selector-wrap {
+    margin-top: 14px;
+}
+
+.voice-select {
+    width: 100%;
+    height: 46px;
+
+    padding: 0 13px;
+
+    color: white;
+    background: #1b1b22;
+
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+
+    outline: none;
+
+    font: inherit;
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+.voice-select:focus {
+    border-color: rgba(255,255,255,.25);
+}
+
+.voice-select option {
+    color: white;
+    background: #17171d;
+}
+
+.test-voice-button {
+    width: 100%;
+
+    margin-top: 10px;
+
+    height: 42px;
+
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 11px;
+
+    color: white;
+    background: #24242c;
+
+    cursor: pointer;
+
+    transition:
+        background .18s ease,
+        transform .15s ease;
+}
+
+.test-voice-button:hover {
+    background: #303039;
+}
+
+.test-voice-button:active {
+    transform: scale(.98);
+}
+
+.voice-status {
+    margin: 9px 0 0;
+
+    color: #696974;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   BETTER MICROPHONE
+========================================================= */
+
+.mic-icon {
+    position: relative;
+
+    width: 31px;
+    height: 39px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 5;
+}
+
+.mic-icon svg {
+    width: 27px;
+    height: 36px;
+
+    overflow: visible;
+}
+
+.mic-icon rect,
+.mic-icon path {
+    fill: none;
+
+    stroke: white;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.mic-icon rect {
+    fill: white;
+    stroke: white;
+}
+
+.conversation-main-button {
+    overflow: visible;
+}
+
+.conversation-main-button::before {
+    content: "";
+
+    position: absolute;
+    inset: 7px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.08),
+            transparent 70%
+        );
+
+    opacity: .7;
+}
+
+.conversation-mode.listening
+.conversation-main-button::before {
+
+    animation: micGlow 1.2s infinite alternate;
+}
+
+@keyframes micGlow {
+
+    from {
+        transform: scale(.92);
+        opacity: .35;
+    }
+
+    to {
+        transform: scale(1.08);
+        opacity: .85;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE SETTINGS
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .settings-box {
+        width: calc(100vw - 28px);
+        max-height: 85dvh;
+
+        overflow-y: auto;
+
+        padding: 21px;
+    }
+
+    .voice-select {
+        height: 48px;
+    }
+
+    .test-voice-button {
+        height: 45px;
+    }
+
+}
