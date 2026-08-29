@@ -929,3 +929,32 @@
 
 </body>
 </html>
+<!-- MOONPLUG CONVERSATION MODE -->
+<div id="conversationMode" class="conversation-mode">
+
+    <button class="conversation-close" onclick="closeConversationMode()">
+        ×
+    </button>
+
+    <div class="conversation-status" id="conversationStatus">
+        Listening...
+    </div>
+
+    <div class="moon-orb" id="moonOrb">
+        <div class="orb-ring ring-1"></div>
+        <div class="orb-ring ring-2"></div>
+        <div class="orb-ring ring-3"></div>
+        <div class="orb-ring ring-4"></div>
+        <div class="orb-core"></div>
+    </div>
+
+    <div class="conversation-text" id="conversationText">
+        Talk to MoonPlug
+    </div>
+
+    <button class="conversation-mic" id="conversationMic"
+        onclick="toggleConversationListening()">
+        🎙
+    </button>
+
+</div>
