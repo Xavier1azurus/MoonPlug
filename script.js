@@ -1,6 +1,8 @@
+
 /* =========================================================
    MOONPLUG AI
    COMPLETE JAVASCRIPT
+   CHAT + CONVERSATION MODE + VOICE WAVE
 ========================================================= */
 
 "use strict";
@@ -10,17 +12,25 @@
    CONFIG
 ========================================================= */
 
-const API_BASE = "https://moonplug.onrender.com";
+const API_BASE =
+    "https://moonplug.onrender.com";
 
-const OWNER_TRIGGER = "15912014";
+const OWNER_TRIGGER =
+    "15912014";
 
-let sidebar;
-let conversationMode;
-let conversationMic;
-let conversationSpeaker;
-let conversationText;
-let conversationStatus;
-let voiceWave;
+
+/* =========================================================
+   GLOBALS
+========================================================= */
+
+let sidebar = null;
+
+let conversationMode = null;
+let conversationMic = null;
+let conversationSpeaker = null;
+let conversationText = null;
+let conversationStatus = null;
+let voiceWave = null;
 
 let recognition = null;
 let recognitionAvailable = false;
@@ -40,78 +50,100 @@ let ownerAuthenticated = false;
    DOM READY
 ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    cacheElements();
+        cacheElements();
 
-    createStars();
+        createStars();
 
-    setupSidebar();
+        setupSidebar();
 
-    setupChat();
+        setupChat();
 
-    setupConversation();
+        setupConversation();
 
-    setupConversationHistory();
+        setupConversationHistory();
 
-    setupSettings();
+        setupSettings();
 
-    setupAccount();
+        setupAccount();
 
-    setupOwner();
+        setupAccountForms();
 
-    loadTextSize();
+        setupOwner();
 
-    loadConversation();
+        setupPasswordToggle();
 
-    loadSpeechVoices();
+        loadTextSize();
 
-    setupSpeechVoiceEvents();
+        loadConversation();
 
-    setupSpeechRecognition();
+        loadSpeechVoices();
 
-    checkBackendHealth();
+        setupSpeechVoiceEvents();
 
-});
+        setupSpeechRecognition();
+
+        checkBackendHealth();
+    }
+);
 
 
 /* =========================================================
-   CACHE ELEMENTS
+   CACHE
 ========================================================= */
 
 function cacheElements() {
 
     sidebar =
-        document.getElementById("sidebar");
+        document.getElementById(
+            "sidebar"
+        );
 
     conversationMode =
-        document.getElementById("conversationMode");
+        document.getElementById(
+            "conversationMode"
+        );
 
     conversationMic =
-        document.getElementById("conversationMic");
+        document.getElementById(
+            "conversationMic"
+        );
 
     conversationSpeaker =
-        document.getElementById("conversationSpeaker");
+        document.getElementById(
+            "conversationSpeaker"
+        );
 
     conversationText =
-        document.getElementById("conversationText");
+        document.getElementById(
+            "conversationText"
+        );
 
     conversationStatus =
-        document.getElementById("conversationStatus");
+        document.getElementById(
+            "conversationStatus"
+        );
 
     voiceWave =
-        document.getElementById("voiceWave");
+        document.getElementById(
+            "voiceWave"
+        );
 }
 
 
 /* =========================================================
-   STAR FIELD
+   STARS
 ========================================================= */
 
 function createStars() {
 
     const field =
-        document.getElementById("starField");
+        document.getElementById(
+            "starField"
+        );
 
     if (!field) return;
 
@@ -122,10 +154,16 @@ function createStars() {
             ? 55
             : 90;
 
-    for (let i = 0; i < amount; i++) {
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
 
         const star =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         star.className =
             "random-star";
@@ -140,12 +178,9 @@ function createStars() {
             `${Math.random() * 100}%`
         );
 
-        const size =
-            Math.random() * 2 + .5;
-
         star.style.setProperty(
             "--star-size",
-            `${size}px`
+            `${Math.random() * 2 + .5}px`
         );
 
         star.style.setProperty(
@@ -195,7 +230,9 @@ function createStars() {
 function setupSidebar() {
 
     const logo =
-        document.getElementById("sidebarLogo");
+        document.getElementById(
+            "sidebarLogo"
+        );
 
     if (logo) {
 
@@ -204,7 +241,7 @@ function setupSidebar() {
             () => {
 
                 if (
-                    window.innerWidth <= 700
+                    window.innerWidth <= 900
                 ) {
 
                     sidebar.classList.toggle(
@@ -271,7 +308,7 @@ function setupSidebar() {
 
 
 /* =========================================================
-   MAIN CHAT
+   CHAT
 ========================================================= */
 
 function setupChat() {
@@ -286,7 +323,8 @@ function setupChat() {
             "sendButton"
         );
 
-    if (!input || !send) return;
+    if (!input || !send)
+        return;
 
 
     send.addEventListener(
@@ -345,13 +383,15 @@ async function sendMessage() {
             "sendButton"
         );
 
-    if (!input || !send) return;
+    if (!input || !send)
+        return;
 
 
     const message =
         input.value.trim();
 
-    if (!message) return;
+    if (!message)
+        return;
 
 
     addMessage(
@@ -360,7 +400,9 @@ async function sendMessage() {
     );
 
     input.value = "";
-    input.style.height = "auto";
+
+    input.style.height =
+        "auto";
 
     showTyping();
 
@@ -390,7 +432,9 @@ async function sendMessage() {
         const data =
             await response
                 .json()
-                .catch(() => ({}));
+                .catch(
+                    () => ({})
+                );
 
 
         if (!response.ok) {
@@ -459,19 +503,21 @@ function addMessage(
             "emptyChat"
         );
 
-    if (!messages) return;
+    if (!messages)
+        return;
 
-    if (empty) {
+
+    if (empty)
         empty.remove();
-    }
 
 
     const bubble =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     bubble.className =
         `message-bubble ${sender}`;
-
 
     bubble.textContent =
         String(text);
@@ -522,7 +568,7 @@ function hideTyping() {
 
 
 /* =========================================================
-   CONVERSATION MODE
+   CONVERSATION SETUP
 ========================================================= */
 
 function setupConversation() {
@@ -562,7 +608,7 @@ function setupConversation() {
 
 
 /* =========================================================
-   OPEN CONVERSATION CHOOSER
+   CONVERSATION CHOOSER
 ========================================================= */
 
 function openConversationChooser() {
@@ -678,7 +724,9 @@ function closeConversationHistory() {
             "conversationHistory"
         );
 
-    if (!history) return;
+    if (!history)
+        return;
+
 
     history.classList.remove(
         "active"
@@ -692,7 +740,7 @@ function closeConversationHistory() {
 
 
 /* =========================================================
-   OPEN / CLOSE MODE
+   OPEN CONVERSATION MODE
 ========================================================= */
 
 function openConversationMode(
@@ -726,6 +774,9 @@ function openConversationMode(
 
     conversationText.textContent =
         "Tap the microphone to talk";
+
+
+    resetVoiceWave();
 }
 
 
@@ -734,6 +785,7 @@ function closeConversation() {
     stopConversationListening();
 
     stopConversationSpeaking();
+
 
     if (!conversationMode)
         return;
@@ -756,7 +808,7 @@ function closeConversation() {
 
 
 /* =========================================================
-   STATE
+   CONVERSATION STATE
 ========================================================= */
 
 function setConversationState(
@@ -862,24 +914,26 @@ function setupSpeechRecognition() {
         "en-US";
 
 
-    recognition.onstart = () => {
+    recognition.onstart =
+        () => {
 
-        conversationListening =
-            true;
+            conversationListening =
+                true;
 
-        setConversationState(
-            "listening"
-        );
+            setConversationState(
+                "listening"
+            );
 
-        conversationText.textContent =
-            "Listening...";
-    };
+            conversationText.textContent =
+                "Listening...";
+        };
 
 
     recognition.onresult =
         event => {
 
             let transcript = "";
+
 
             for (
                 let i = event.resultIndex;
@@ -956,29 +1010,31 @@ function setupSpeechRecognition() {
         };
 
 
-    recognition.onend = () => {
+    recognition.onend =
+        () => {
 
-        conversationListening =
-            false;
+            conversationListening =
+                false;
 
 
-        if (
-            !conversationSpeaking &&
-            conversationMode.classList.contains(
-                "active"
-            )
-        ) {
+            if (
+                !conversationSpeaking &&
+                conversationMode &&
+                conversationMode.classList.contains(
+                    "active"
+                )
+            ) {
 
-            setConversationState(
-                "idle"
-            );
-        }
-    };
+                setConversationState(
+                    "idle"
+                );
+            }
+        };
 }
 
 
 /* =========================================================
-   START / STOP LISTENING
+   LISTENING
 ========================================================= */
 
 function toggleConversationListening() {
@@ -1052,7 +1108,7 @@ function stopConversationListening() {
 
 
 /* =========================================================
-   CONVERSATION → AI
+   SEND CONVERSATION TO AI
 ========================================================= */
 
 async function processConversationMessage(
@@ -1111,7 +1167,9 @@ async function processConversationMessage(
         const data =
             await response
                 .json()
-                .catch(() => ({}));
+                .catch(
+                    () => ({})
+                );
 
 
         if (!response.ok) {
@@ -1140,11 +1198,15 @@ async function processConversationMessage(
         );
 
 
+        /*
+         * Also put the conversation
+         * into normal chat history.
+         */
+
         addMessage(
             cleanTranscript,
             "user"
         );
-
 
         addMessage(
             cleanReply,
@@ -1155,11 +1217,6 @@ async function processConversationMessage(
         conversationText.textContent =
             cleanReply;
 
-
-        /*
-         * THIS IS THE IMPORTANT PART:
-         * MoonPlug actually speaks the answer.
-         */
 
         speakConversation(
             cleanReply
@@ -1176,6 +1233,8 @@ async function processConversationMessage(
 
         conversationSpeaking =
             false;
+
+        stopVoiceWave();
 
 
         setConversationState(
@@ -1195,7 +1254,9 @@ async function processConversationMessage(
 
 function loadSpeechVoices() {
 
-    if (!("speechSynthesis" in window))
+    if (
+        !("speechSynthesis" in window)
+    )
         return;
 
 
@@ -1222,10 +1283,6 @@ function setupSpeechVoiceEvents() {
 }
 
 
-/* =========================================================
-   CHOOSE ENGLISH VOICE
-========================================================= */
-
 function getEnglishVoice() {
 
     if (!speechVoices.length) {
@@ -1247,11 +1304,6 @@ function getEnglishVoice() {
         return null;
 
 
-    /*
-     * Prefer an American English voice
-     * when the device has one.
-     */
-
     const american =
         english.find(
             voice =>
@@ -1270,7 +1322,7 @@ function getEnglishVoice() {
 
 
 /* =========================================================
-   ACTUAL MOONPLUG SPEECH
+   MOONPLUG SPEECH
 ========================================================= */
 
 function speakConversation(
@@ -1312,10 +1364,6 @@ function speakConversation(
     }
 
 
-    /*
-     * Natural English voice settings.
-     */
-
     utterance.lang =
         voice?.lang ||
         "en-US";
@@ -1336,9 +1384,11 @@ function speakConversation(
             conversationSpeaking =
                 true;
 
+
             setConversationState(
                 "talking"
             );
+
 
             startVoiceWave();
         };
@@ -1350,7 +1400,9 @@ function speakConversation(
             conversationSpeaking =
                 false;
 
+
             stopVoiceWave();
+
 
             setConversationState(
                 "idle"
@@ -1366,10 +1418,13 @@ function speakConversation(
                 event
             );
 
+
             conversationSpeaking =
                 false;
 
+
             stopVoiceWave();
+
 
             setConversationState(
                 "idle"
@@ -1377,12 +1432,8 @@ function speakConversation(
         };
 
 
-    /*
-     * Some mobile browsers need the
-     * speech queue cleared first.
-     */
-
     window.speechSynthesis.cancel();
+
 
     window.speechSynthesis.speak(
         utterance
@@ -1391,8 +1442,20 @@ function speakConversation(
 
 
 /* =========================================================
-   SPEAKING WAVE
+   WHITE VOICE WAVE
 ========================================================= */
+
+/*
+ * IMPORTANT:
+ *
+ * The browser SpeechSynthesis API does not expose the
+ * actual speaker audio waveform to JavaScript.
+ *
+ * Therefore this creates a smooth voice-reactive-looking
+ * waveform that runs for exactly as long as MoonPlug speaks.
+ *
+ * The black hole itself NEVER moves.
+ */
 
 function startVoiceWave() {
 
@@ -1404,9 +1467,18 @@ function startVoiceWave() {
 
 
     const bars =
-        voiceWave.querySelectorAll(
-            "span"
+        Array.from(
+            voiceWave.querySelectorAll(
+                "span"
+            )
         );
+
+
+    if (!bars.length)
+        return;
+
+
+    let phase = 0;
 
 
     function animate() {
@@ -1415,34 +1487,65 @@ function startVoiceWave() {
             return;
 
 
+        phase += .13;
+
+
+        const middle =
+            (bars.length - 1) / 2;
+
+
         bars.forEach(
             (bar, index) => {
 
-                const center =
+                const distance =
                     Math.abs(
-                        index -
-                        (bars.length - 1) / 2
+                        index - middle
+                    ) / middle;
+
+
+                /*
+                 * Multiple waves combined together
+                 * make it look more like a real voice.
+                 */
+
+                const waveOne =
+                    Math.sin(
+                        phase * 1.7 +
+                        index * .75
                     );
 
 
-                const centerStrength =
-                    1 -
-                    center /
-                    ((bars.length - 1) / 2);
+                const waveTwo =
+                    Math.sin(
+                        phase * 2.8 -
+                        index * .42
+                    );
 
 
-                const random =
-                    Math.random();
+                const waveThree =
+                    Math.sin(
+                        phase * 4.1 +
+                        index * .19
+                    );
+
+
+                const centerBoost =
+                    1 - distance * .55;
+
+
+                const value =
+                    (
+                        Math.abs(waveOne) * .52 +
+                        Math.abs(waveTwo) * .28 +
+                        Math.abs(waveThree) * .20
+                    );
 
 
                 const height =
-                    .2 +
-                    random *
-                    .75 *
-                    Math.max(
-                        .35,
-                        centerStrength
-                    );
+                    .12 +
+                    value *
+                    .88 *
+                    centerBoost;
 
 
                 bar.style.transform =
@@ -1462,6 +1565,10 @@ function startVoiceWave() {
 }
 
 
+/* =========================================================
+   STOP WAVE
+========================================================= */
+
 function stopVoiceWave() {
 
     if (speechTimer) {
@@ -1470,9 +1577,20 @@ function stopVoiceWave() {
             speechTimer
         );
 
-        speechTimer = null;
+        speechTimer =
+            null;
     }
 
+
+    resetVoiceWave();
+}
+
+
+/* =========================================================
+   RESET WAVE
+========================================================= */
+
+function resetVoiceWave() {
 
     if (!voiceWave)
         return;
@@ -1488,7 +1606,7 @@ function stopVoiceWave() {
         bar => {
 
             bar.style.transform =
-                "scaleY(.12)";
+                "scaleY(.08)";
         }
     );
 }
@@ -1525,6 +1643,9 @@ function stopConversationSpeaking() {
         setConversationState(
             "idle"
         );
+
+        conversationText.textContent =
+            "Tap the microphone to talk";
     }
 }
 
@@ -1720,7 +1841,9 @@ function openSettings() {
             "settingsPanel"
         );
 
-    if (!panel) return;
+    if (!panel)
+        return;
+
 
     panel.style.display =
         "flex";
@@ -1739,7 +1862,9 @@ function closeSettings() {
             "settingsPanel"
         );
 
-    if (!panel) return;
+    if (!panel)
+        return;
+
 
     panel.style.display =
         "none";
@@ -1813,7 +1938,7 @@ function setupAccount() {
 
     const account =
         document.getElementById(
-            "ownerButton"
+            "accountButton"
         );
 
     const close =
@@ -1831,11 +1956,6 @@ function setupAccount() {
             "signupTab"
         );
 
-
-    /*
-     * Account remains available from
-     * the sidebar.
-     */
 
     if (account) {
 
@@ -1859,7 +1979,7 @@ function setupAccount() {
 
         loginTab.addEventListener(
             "click",
-            () => showLoginTab()
+            showLoginTab
         );
     }
 
@@ -1868,7 +1988,7 @@ function setupAccount() {
 
         signupTab.addEventListener(
             "click",
-            () => showSignupTab()
+            showSignupTab
         );
     }
 }
@@ -1881,7 +2001,9 @@ function openAccount() {
             "accountScreen"
         );
 
-    if (!screen) return;
+    if (!screen)
+        return;
+
 
     screen.style.display =
         "flex";
@@ -1900,7 +2022,9 @@ function closeAccount() {
             "accountScreen"
         );
 
-    if (!screen) return;
+    if (!screen)
+        return;
+
 
     screen.style.display =
         "none";
@@ -1935,8 +2059,11 @@ function showLoginTab() {
         );
 
 
-    login.hidden = false;
-    signup.hidden = true;
+    login.hidden =
+        false;
+
+    signup.hidden =
+        true;
 
     loginTab.classList.add(
         "active"
@@ -1971,8 +2098,11 @@ function showSignupTab() {
         );
 
 
-    login.hidden = true;
-    signup.hidden = false;
+    login.hidden =
+        true;
+
+    signup.hidden =
+        false;
 
     loginTab.classList.remove(
         "active"
@@ -1985,8 +2115,71 @@ function showSignupTab() {
 
 
 /* =========================================================
-   OWNER ACCESS
-   15912014 TRIGGER
+   ACCOUNT FORMS
+========================================================= */
+
+function setupAccountForms() {
+
+    const loginForm =
+        document.getElementById(
+            "loginForm"
+        );
+
+    const signupForm =
+        document.getElementById(
+            "signupForm"
+        );
+
+
+    if (loginForm) {
+
+        loginForm.addEventListener(
+            "submit",
+            event => {
+
+                event.preventDefault();
+
+                const message =
+                    document.getElementById(
+                        "accountMessage"
+                    );
+
+                if (message) {
+
+                    message.textContent =
+                        "Account login can be connected to your backend.";
+                }
+            }
+        );
+    }
+
+
+    if (signupForm) {
+
+        signupForm.addEventListener(
+            "submit",
+            event => {
+
+                event.preventDefault();
+
+                const message =
+                    document.getElementById(
+                        "accountMessage"
+                    );
+
+                if (message) {
+
+                    message.textContent =
+                        "Account creation can be connected to your backend.";
+                }
+            }
+        );
+    }
+}
+
+
+/* =========================================================
+   HIDDEN OWNER ACCESS
 ========================================================= */
 
 function setupOwner() {
@@ -2004,11 +2197,6 @@ function setupOwner() {
     const ownerLogout =
         document.getElementById(
             "ownerLogout"
-        );
-
-    const showPassword =
-        document.getElementById(
-            "showPassword"
         );
 
 
@@ -2039,45 +2227,10 @@ function setupOwner() {
     }
 
 
-    if (showPassword) {
-
-        showPassword.addEventListener(
-            "click",
-            () => {
-
-                const input =
-                    document.getElementById(
-                        "ownerCode"
-                    );
-
-
-                if (
-                    input.type ===
-                    "password"
-                ) {
-
-                    input.type =
-                        "text";
-
-                    showPassword.textContent =
-                        "Hide";
-
-                } else {
-
-                    input.type =
-                        "password";
-
-                    showPassword.textContent =
-                        "Show";
-                }
-            }
-        );
-    }
-
-
     /*
-     * Type 15912014 anywhere on the page
-     * to open the hidden owner login.
+     * The owner button is NOT shown publicly.
+     *
+     * Type the private trigger anywhere on the page.
      */
 
     let triggerBuffer = "";
@@ -2087,11 +2240,33 @@ function setupOwner() {
         "keydown",
         event => {
 
+            /*
+             * Don't capture characters while
+             * typing normally into inputs.
+             */
+
+            const target =
+                event.target;
+
+
+            const isTyping =
+                target &&
+                (
+                    target.tagName ===
+                        "INPUT" ||
+                    target.tagName ===
+                        "TEXTAREA"
+                );
+
+
+            if (isTyping)
+                return;
+
+
             if (
                 event.key.length !== 1
-            ) {
+            )
                 return;
-            }
 
 
             triggerBuffer +=
@@ -2123,6 +2298,10 @@ function setupOwner() {
     );
 }
 
+
+/* =========================================================
+   SHOW OWNER LOGIN
+========================================================= */
 
 function showOwnerLogin() {
 
@@ -2162,6 +2341,10 @@ function showOwnerLogin() {
 }
 
 
+/* =========================================================
+   HIDE OWNER LOGIN
+========================================================= */
+
 function hideOwnerLogin() {
 
     const overlay =
@@ -2183,6 +2366,10 @@ function hideOwnerLogin() {
 }
 
 
+/* =========================================================
+   OWNER LOGIN
+========================================================= */
+
 async function loginOwner() {
 
     const codeInput =
@@ -2190,10 +2377,14 @@ async function loginOwner() {
             "ownerCode"
         );
 
-    const error =
+    const errorElement =
         document.getElementById(
             "ownerError"
         );
+
+
+    if (!codeInput)
+        return;
 
 
     const code =
@@ -2202,10 +2393,20 @@ async function loginOwner() {
 
     if (!code) {
 
-        error.textContent =
-            "Enter the owner code.";
+        if (errorElement) {
+
+            errorElement.textContent =
+                "Enter the owner code.";
+        }
 
         return;
+    }
+
+
+    if (errorElement) {
+
+        errorElement.textContent =
+            "Checking...";
     }
 
 
@@ -2232,7 +2433,9 @@ async function loginOwner() {
         const data =
             await response
                 .json()
-                .catch(() => ({}));
+                .catch(
+                    () => ({})
+                );
 
 
         if (!response.ok) {
@@ -2255,26 +2458,37 @@ async function loginOwner() {
         loadOwnerDashboard();
 
 
-    } catch (error) {
+    } catch (err) {
 
         console.error(
             "Owner login:",
-            error
+            err
         );
 
 
         /*
-         * The backend remains the authority.
-         * Do not expose the owner panel merely
-         * because the frontend code is entered.
+         * FIXED:
+         *
+         * The old version used `error` for both
+         * the DOM element and the catch variable.
+         *
+         * This version uses `errorElement`
+         * and `err` separately.
          */
 
-        error.textContent =
-            error.message ||
-            "Owner login failed.";
+        if (errorElement) {
+
+            errorElement.textContent =
+                err.message ||
+                "Owner login failed.";
+        }
     }
 }
 
+
+/* =========================================================
+   OWNER PANEL
+========================================================= */
 
 function openOwnerPanel() {
 
@@ -2283,7 +2497,9 @@ function openOwnerPanel() {
             "ownerPanel"
         );
 
-    if (!panel) return;
+    if (!panel)
+        return;
+
 
     panel.style.display =
         "flex";
@@ -2302,7 +2518,9 @@ function hideOwnerPanel() {
             "ownerPanel"
         );
 
-    if (!panel) return;
+    if (!panel)
+        return;
+
 
     panel.style.display =
         "none";
@@ -2367,7 +2585,9 @@ async function loadOwnerDashboard() {
         const data =
             await response
                 .json()
-                .catch(() => ({}));
+                .catch(
+                    () => ({})
+                );
 
 
         const users =
@@ -2423,10 +2643,12 @@ async function checkBackendHealth() {
             );
 
 
-        if (!response.ok)
+        if (!response.ok) {
+
             throw new Error(
                 "Backend unavailable"
             );
+        }
 
 
         console.log(
@@ -2445,7 +2667,59 @@ async function checkBackendHealth() {
 
 
 /* =========================================================
-   PLACEHOLDER OWNER FUNCTIONS
+   PASSWORD TOGGLE
+========================================================= */
+
+function setupPasswordToggle() {
+
+    const button =
+        document.getElementById(
+            "showPassword"
+        );
+
+    if (!button)
+        return;
+
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            const input =
+                document.getElementById(
+                    "ownerCode"
+                );
+
+            if (!input)
+                return;
+
+
+            if (
+                input.type ===
+                "password"
+            ) {
+
+                input.type =
+                    "text";
+
+                button.textContent =
+                    "Hide";
+
+            } else {
+
+                input.type =
+                    "password";
+
+                button.textContent =
+                    "Show";
+            }
+        }
+    );
+}
+
+
+/* =========================================================
+   OWNER PLACEHOLDERS
 ========================================================= */
 
 async function loadOwnerUsers() {
@@ -2538,103 +2812,3 @@ async function refreshTraining() {
     );
 }
 
-
-/* =========================================================
-   PASSWORD TOGGLE COMPATIBILITY
-========================================================= */
-
-function setupPasswordToggle() {
-    const button =
-        document.getElementById(
-            "showPassword"
-        );
-
-    if (!button) return;
-
-    button.onclick = () => {
-
-        const input =
-            document.getElementById(
-                "ownerCode"
-            );
-
-        if (!input) return;
-
-        input.type =
-            input.type === "password"
-                ? "text"
-                : "password";
-
-        button.textContent =
-            input.type === "password"
-                ? "Show"
-                : "Hide";
-    };
-}
-
-
-/* =========================================================
-   ACCOUNT FORM COMPATIBILITY
-========================================================= */
-
-function setupAccountForms() {
-
-    const loginForm =
-        document.getElementById(
-            "loginForm"
-        );
-
-    const signupForm =
-        document.getElementById(
-            "signupForm"
-        );
-
-
-    if (loginForm) {
-
-        loginForm.addEventListener(
-            "submit",
-            event => {
-
-                event.preventDefault();
-
-                const message =
-                    document.getElementById(
-                        "accountMessage"
-                    );
-
-                if (message) {
-
-                    message.textContent =
-                        "Account login can be connected to your backend.";
-                }
-            }
-        );
-    }
-
-
-    if (signupForm) {
-
-        signupForm.addEventListener(
-            "submit",
-            event => {
-
-                event.preventDefault();
-
-                const message =
-                    document.getElementById(
-                        "accountMessage"
-                    );
-
-                if (message) {
-
-                    message.textContent =
-                        "Account creation can be connected to your backend.";
-                }
-            }
-        );
-    }
-}
-
-
-setupAccountForms();
