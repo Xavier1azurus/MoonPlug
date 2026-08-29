@@ -1,6 +1,7 @@
 /* =========================================================
    MOONPLUG AI
    COMPLETE JAVASCRIPT
+   DEVICE MICROPHONE + DEVICE VOICE
 ========================================================= */
 
 
@@ -9,11 +10,6 @@
 ========================================================= */
 
 const API_BASE = "https://moonplug.onrender.com";
-
-
-/* =========================================================
-   DOM HELPERS
-========================================================= */
 
 const $ = (id) => document.getElementById(id);
 
@@ -26,16 +22,12 @@ const sidebar = $("sidebar");
 const sidebarLogo = $("sidebarLogo");
 
 const messages = $("messages");
-const emptyChat = $("emptyChat");
-
 const messageInput = $("messageInput");
 const sendButton = $("sendButton");
-
 const typing = $("typing");
 
 const settingsPanel = $("settingsPanel");
 const closeSettingsButton = $("closeSettings");
-
 const themeButton = $("themeButton");
 
 const accountScreen = $("accountScreen");
@@ -55,7 +47,6 @@ const ownerCode = $("ownerCode");
 const ownerLoginButton = $("ownerLoginButton");
 const ownerCancel = $("ownerCancel");
 const ownerError = $("ownerError");
-
 const showPassword = $("showPassword");
 
 const ownerPanel = $("ownerPanel");
@@ -66,6 +57,21 @@ const ownerChats = $("ownerChats");
 
 const trainerButton = $("trainerButton");
 const trainerContainer = $("trainerContainer");
+
+
+/* =========================================================
+   CONVERSATION MODE ELEMENTS
+========================================================= */
+
+const conversationMode = $("conversationMode");
+const conversationButton = $("conversationButton");
+const conversationClose = $("conversationClose");
+const conversationMic = $("conversationMic");
+
+const conversationStatus = $("conversationStatus");
+const conversationText = $("conversationText");
+
+const moonOrb = $("moonOrb");
 
 
 /* =========================================================
@@ -87,9 +93,11 @@ function createStars() {
 
     for (let i = 0; i < count; i++) {
 
-        const star = document.createElement("span");
+        const star =
+            document.createElement("span");
 
-        star.className = "random-star";
+        star.className =
+            "random-star";
 
         star.style.setProperty(
             "--star-x",
@@ -158,35 +166,33 @@ function toggleSidebar() {
 
         sidebar.classList.toggle("expanded");
 
-        return;
+    } else {
+
+        sidebar.classList.toggle("collapsed");
+
     }
-
-    sidebar.classList.toggle("collapsed");
 }
 
-if (sidebarLogo) {
+sidebarLogo?.addEventListener(
+    "click",
+    toggleSidebar
+);
 
-    sidebarLogo.addEventListener(
-        "click",
-        toggleSidebar
-    );
+sidebarLogo?.addEventListener(
+    "keydown",
+    (event) => {
 
-    sidebarLogo.addEventListener(
-        "keydown",
-        (event) => {
+        if (
+            event.key === "Enter" ||
+            event.key === " "
+        ) {
 
-            if (
-                event.key === "Enter" ||
-                event.key === " "
-            ) {
+            event.preventDefault();
 
-                event.preventDefault();
-
-                toggleSidebar();
-            }
+            toggleSidebar();
         }
-    );
-}
+    }
+);
 
 
 /* =========================================================
@@ -215,11 +221,14 @@ function startNewChat() {
         </div>
     `;
 
-    messageInput.value = "";
+    if (messageInput) {
 
-    autoResizeInput();
+        messageInput.value = "";
 
-    messageInput.focus();
+        autoResizeInput();
+
+        messageInput.focus();
+    }
 }
 
 $("newChatButton")?.addEventListener(
@@ -236,8 +245,11 @@ function addMessage(text, type = "ai") {
 
     if (!messages) return;
 
-    if (emptyChat) {
-        emptyChat.remove();
+    const empty =
+        $("emptyChat");
+
+    if (empty) {
+        empty.remove();
     }
 
     const bubble =
@@ -246,9 +258,12 @@ function addMessage(text, type = "ai") {
     bubble.className =
         `message-bubble ${type}`;
 
-    bubble.textContent = text;
+    bubble.textContent =
+        String(text);
 
-    messages.appendChild(bubble);
+    messages.appendChild(
+        bubble
+    );
 
     messages.scrollTop =
         messages.scrollHeight;
@@ -258,14 +273,15 @@ function addMessage(text, type = "ai") {
 
 
 /* =========================================================
-   TYPING
+   THINKING
 ========================================================= */
 
 function showTyping() {
 
     if (!typing) return;
 
-    typing.style.display = "block";
+    typing.style.display =
+        "block";
 
     messages.scrollTop =
         messages.scrollHeight;
@@ -275,30 +291,57 @@ function hideTyping() {
 
     if (!typing) return;
 
-    typing.style.display = "none";
+    typing.style.display =
+        "none";
 }
 
 
 /* =========================================================
-   SEND MESSAGE
+   SEND NORMAL CHAT MESSAGE
 ========================================================= */
 
 async function sendMessage() {
+
+    if (!messageInput) return;
 
     const text =
         messageInput.value.trim();
 
     if (!text) return;
 
-    addMessage(text, "user");
+
+    /* Hidden owner trigger */
+
+    if (
+        text.toLowerCase() ===
+        "moonplug-owner"
+    ) {
+
+        messageInput.value = "";
+
+        autoResizeInput();
+
+        showOwnerLogin();
+
+        return;
+    }
+
+
+    addMessage(
+        text,
+        "user"
+    );
 
     messageInput.value = "";
 
     autoResizeInput();
 
-    sendButton.disabled = true;
+    if (sendButton) {
+        sendButton.disabled = true;
+    }
 
     showTyping();
+
 
     try {
 
@@ -319,39 +362,44 @@ async function sendMessage() {
                 }
             );
 
-        let data = null;
 
-        try {
-            data =
-                await response.json();
-        } catch {
-            data = null;
-        }
+        const data =
+            await response
+                .json()
+                .catch(() => ({}));
 
-        hideTyping();
 
         if (!response.ok) {
 
-            addMessage(
-                "MoonPlug couldn't process that request right now.",
-                "ai"
+            throw new Error(
+                data.error ||
+                "Chat request failed."
             );
-
-            return;
         }
 
+
         const reply =
-            data?.response ||
-            data?.message ||
-            data?.answer ||
+            data.response ||
+            data.message ||
+            data.answer ||
             "MoonPlug received your message.";
+
+
+        hideTyping();
+
 
         addMessage(
             String(reply),
             "ai"
         );
 
+
     } catch (error) {
+
+        console.error(
+            "MoonPlug chat error:",
+            error
+        );
 
         hideTyping();
 
@@ -360,18 +408,16 @@ async function sendMessage() {
             "ai"
         );
 
-        console.error(
-            "MoonPlug chat error:",
-            error
-        );
-
     } finally {
 
-        sendButton.disabled = false;
+        if (sendButton) {
+            sendButton.disabled = false;
+        }
 
         messageInput.focus();
     }
 }
+
 
 sendButton?.addEventListener(
     "click",
@@ -408,7 +454,8 @@ function autoResizeInput() {
 
     if (!messageInput) return;
 
-    messageInput.style.height = "auto";
+    messageInput.style.height =
+        "auto";
 
     messageInput.style.height =
         `${Math.min(
@@ -431,7 +478,8 @@ function openSettings() {
 
     if (!settingsPanel) return;
 
-    settingsPanel.style.display = "flex";
+    settingsPanel.style.display =
+        "flex";
 
     settingsPanel.setAttribute(
         "aria-hidden",
@@ -443,7 +491,8 @@ function closeSettings() {
 
     if (!settingsPanel) return;
 
-    settingsPanel.style.display = "none";
+    settingsPanel.style.display =
+        "none";
 
     settingsPanel.setAttribute(
         "aria-hidden",
@@ -468,6 +517,7 @@ settingsPanel?.addEventListener(
         if (
             event.target === settingsPanel
         ) {
+
             closeSettings();
         }
     }
@@ -485,27 +535,20 @@ function loadTheme() {
             "moonplug-theme"
         ) || "dark";
 
-    if (theme === "light") {
+    const light =
+        theme === "light";
 
-        document.body.classList.add(
-            "light-theme"
-        );
+    document.body.classList.toggle(
+        "light-theme",
+        light
+    );
 
-        if (themeButton) {
-            themeButton.textContent =
-                "Light";
-        }
+    if (themeButton) {
 
-    } else {
-
-        document.body.classList.remove(
-            "light-theme"
-        );
-
-        if (themeButton) {
-            themeButton.textContent =
-                "Dark";
-        }
+        themeButton.textContent =
+            light
+                ? "Light"
+                : "Dark";
     }
 }
 
@@ -543,6 +586,16 @@ themeButton?.addEventListener(
 ========================================================= */
 
 function updateTextSize(size) {
+
+    if (
+        ![
+            "small",
+            "medium",
+            "large"
+        ].includes(size)
+    ) {
+        size = "medium";
+    }
 
     document.body.classList.remove(
         "text-small",
@@ -587,6 +640,7 @@ document
         button.addEventListener(
             "click",
             () => {
+
                 updateTextSize(
                     button.dataset.size
                 );
@@ -601,6 +655,8 @@ document
 
 function openAccount() {
 
+    if (!accountScreen) return;
+
     accountScreen.style.display =
         "flex";
 
@@ -611,6 +667,8 @@ function openAccount() {
 }
 
 function closeAccountScreen() {
+
+    if (!accountScreen) return;
 
     accountScreen.style.display =
         "none";
@@ -638,28 +696,38 @@ closeAccount?.addEventListener(
 
 function showLoginTab() {
 
-    loginTab.classList.add("active");
+    loginTab?.classList.add("active");
+    signupTab?.classList.remove("active");
 
-    signupTab.classList.remove("active");
+    if (loginForm) {
+        loginForm.hidden = false;
+    }
 
-    loginForm.hidden = false;
+    if (signupForm) {
+        signupForm.hidden = true;
+    }
 
-    signupForm.hidden = true;
-
-    accountMessage.textContent = "";
+    if (accountMessage) {
+        accountMessage.textContent = "";
+    }
 }
 
 function showSignupTab() {
 
-    signupTab.classList.add("active");
+    signupTab?.classList.add("active");
+    loginTab?.classList.remove("active");
 
-    loginTab.classList.remove("active");
+    if (loginForm) {
+        loginForm.hidden = true;
+    }
 
-    loginForm.hidden = true;
+    if (signupForm) {
+        signupForm.hidden = false;
+    }
 
-    signupForm.hidden = false;
-
-    accountMessage.textContent = "";
+    if (accountMessage) {
+        accountMessage.textContent = "";
+    }
 }
 
 loginTab?.addEventListener(
@@ -695,10 +763,10 @@ signupForm?.addEventListener(
         event.preventDefault();
 
         const password =
-            $("signupPassword").value;
+            $("signupPassword")?.value || "";
 
         const confirm =
-            $("signupConfirm").value;
+            $("signupConfirm")?.value || "";
 
         if (password !== confirm) {
 
@@ -720,6 +788,8 @@ signupForm?.addEventListener(
 
 function showOwnerLogin() {
 
+    if (!ownerLogin) return;
+
     ownerLogin.style.display =
         "flex";
 
@@ -728,14 +798,21 @@ function showOwnerLogin() {
         "false"
     );
 
-    ownerCode.value = "";
+    if (ownerCode) {
 
-    ownerError.textContent = "";
+        ownerCode.value = "";
 
-    ownerCode.focus();
+        ownerCode.focus();
+    }
+
+    if (ownerError) {
+        ownerError.textContent = "";
+    }
 }
 
 function hideOwnerLogin() {
+
+    if (!ownerLogin) return;
 
     ownerLogin.style.display =
         "none";
@@ -746,43 +823,6 @@ function hideOwnerLogin() {
     );
 }
 
-
-/*
-   Hidden owner trigger:
-   Enter a private trigger into the chat.
-*/
-
-messageInput?.addEventListener(
-    "keydown",
-    (event) => {
-
-        if (
-            event.key === "Enter" &&
-            !event.shiftKey
-        ) {
-
-            const value =
-                messageInput.value.trim();
-
-            if (
-                value ===
-                "moonplug-owner"
-            ) {
-
-                event.preventDefault();
-
-                messageInput.value = "";
-
-                showOwnerLogin();
-            }
-        }
-    }
-);
-
-
-/* =========================================================
-   PASSWORD TOGGLE
-========================================================= */
 
 showPassword?.addEventListener(
     "click",
@@ -810,20 +850,17 @@ showPassword?.addEventListener(
     }
 );
 
+
 ownerCancel?.addEventListener(
     "click",
     hideOwnerLogin
 );
 
 
-/* =========================================================
-   OWNER LOGIN
-========================================================= */
-
 async function loginOwner() {
 
     const code =
-        ownerCode.value.trim();
+        ownerCode?.value.trim();
 
     if (!code) {
 
@@ -833,10 +870,12 @@ async function loginOwner() {
         return;
     }
 
-    ownerLoginButton.disabled = true;
+    ownerLoginButton.disabled =
+        true;
 
     ownerError.textContent =
         "Checking...";
+
 
     try {
 
@@ -859,9 +898,12 @@ async function loginOwner() {
                 }
             );
 
+
         const data =
-            await response.json()
+            await response
+                .json()
                 .catch(() => ({}));
+
 
         if (!response.ok) {
 
@@ -872,19 +914,21 @@ async function loginOwner() {
             return;
         }
 
+
         hideOwnerLogin();
 
         openOwnerPanel();
 
-    } catch (error) {
 
-        ownerError.textContent =
-            "Unable to connect to MoonPlug.";
+    } catch (error) {
 
         console.error(
             "Owner login:",
             error
         );
+
+        ownerError.textContent =
+            "Unable to connect to MoonPlug.";
 
     } finally {
 
@@ -915,6 +959,8 @@ ownerCode?.addEventListener(
 
 function openOwnerPanel() {
 
+    if (!ownerPanel) return;
+
     ownerPanel.style.display =
         "flex";
 
@@ -927,6 +973,8 @@ function openOwnerPanel() {
 }
 
 function closeOwnerPanel() {
+
+    if (!ownerPanel) return;
 
     ownerPanel.style.display =
         "none";
@@ -945,32 +993,38 @@ async function loadOwnerDashboard() {
             await fetch(
                 `${API_BASE}/api/owner/dashboard`,
                 {
-                    credentials:
-                        "include"
+                    credentials: "include"
                 }
             );
 
         const data =
-            await response.json()
+            await response
+                .json()
                 .catch(() => ({}));
 
+
         if (!response.ok) return;
+
 
         if (
             ownerUsers &&
             data.users !== undefined
         ) {
+
             ownerUsers.textContent =
                 data.users;
         }
+
 
         if (
             ownerChats &&
             data.chats !== undefined
         ) {
+
             ownerChats.textContent =
                 data.chats;
         }
+
 
     } catch (error) {
 
@@ -980,6 +1034,7 @@ async function loadOwnerDashboard() {
         );
     }
 }
+
 
 ownerLogout?.addEventListener(
     "click",
@@ -1006,109 +1061,144 @@ ownerLogout?.addEventListener(
    CONVERSATION MODE
 ========================================================= */
 
-const conversationMode =
-    $("conversationMode");
 
-const conversationButton =
-    $("conversationButton");
+/*
+   DEVICE SPEECH RECOGNITION
 
-const conversationClose =
-    $("conversationClose");
+   This uses the microphone provided by the
+   user's device/browser.
 
-const conversationMic =
-    $("conversationMic");
-
-const conversationStatus =
-    $("conversationStatus");
-
-const conversationText =
-    $("conversationText");
-
-const moonOrb =
-    $("moonOrb");
-
-
-let conversationListening = false;
-let conversationRecognition = null;
-let conversationSpeaking = false;
-
-
-/* =========================================================
-   SPEECH RECOGNITION
-========================================================= */
+   Nothing is hard-coded to a particular
+   microphone.
+*/
 
 const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
+
+
+let conversationRecognition = null;
+
+let conversationListening = false;
+
+let conversationSpeaking = false;
+
+
+/* =========================================================
+   CREATE SPEECH RECOGNITION
+========================================================= */
 
 if (SpeechRecognition) {
 
     conversationRecognition =
         new SpeechRecognition();
 
+
     conversationRecognition.continuous =
         false;
+
 
     conversationRecognition.interimResults =
         false;
 
+
+    /*
+       Change this if you want another
+       recognition language.
+    */
+
     conversationRecognition.lang =
         "en-US";
+
 
     conversationRecognition.onstart =
         () => {
 
-            conversationListening = true;
+            conversationListening =
+                true;
 
             setConversationState(
                 "listening"
             );
         };
 
+
     conversationRecognition.onresult =
         async (event) => {
 
             const transcript =
-                event.results[0][0]
+                event
+                    .results[0][0]
                     .transcript
                     .trim();
 
+
+            conversationListening =
+                false;
+
+
             if (!transcript) {
 
-                stopConversationListening();
+                setConversationState(
+                    "idle"
+                );
 
                 return;
             }
 
+
             conversationText.textContent =
                 transcript;
+
 
             await processConversationMessage(
                 transcript
             );
         };
 
+
     conversationRecognition.onerror =
         (event) => {
 
             console.error(
-                "Speech recognition:",
+                "Device speech recognition:",
                 event.error
             );
 
-            stopConversationListening();
 
-            conversationStatus.textContent =
-                "Microphone unavailable";
+            conversationListening =
+                false;
 
-            conversationText.textContent =
-                "Tap the microphone to try again";
+
+            if (
+                event.error ===
+                "not-allowed"
+            ) {
+
+                conversationStatus.textContent =
+                    "Microphone permission needed";
+
+                conversationText.textContent =
+                    "Allow microphone access and try again.";
+
+            } else {
+
+                setConversationState(
+                    "idle"
+                );
+
+                conversationText.textContent =
+                    "Tap the microphone to try again.";
+            }
         };
+
 
     conversationRecognition.onend =
         () => {
 
-            conversationListening = false;
+            conversationListening =
+                false;
+
 
             if (!conversationSpeaking) {
 
@@ -1126,33 +1216,35 @@ if (SpeechRecognition) {
 
 function openConversationMode() {
 
-    /*
-       Only intended for mobile/tablet.
-    */
+    if (!conversationMode) return;
 
-    if (
-        window.innerWidth >= 700
-    ) {
-        return;
-    }
+
+    /*
+       Conversation Mode works on phones,
+       iPhones, iPads and tablets.
+    */
 
     conversationMode.classList.add(
         "active"
     );
+
 
     conversationMode.setAttribute(
         "aria-hidden",
         "false"
     );
 
+
     document.body.classList.add(
         "conversation-open"
     );
+
 
     setConversationState(
         "idle"
     );
 }
+
 
 conversationButton?.addEventListener(
     "click",
@@ -1168,31 +1260,40 @@ function closeConversationMode() {
 
     stopConversationListening();
 
+
     if (
         window.speechSynthesis
     ) {
+
         window.speechSynthesis.cancel();
     }
 
-    conversationSpeaking = false;
 
-    conversationMode.classList.remove(
+    conversationSpeaking =
+        false;
+
+
+    conversationMode?.classList.remove(
         "active"
     );
 
-    conversationMode.setAttribute(
+
+    conversationMode?.setAttribute(
         "aria-hidden",
         "true"
     );
+
 
     document.body.classList.remove(
         "conversation-open"
     );
 
+
     setConversationState(
         "idle"
     );
 }
+
 
 conversationClose?.addEventListener(
     "click",
@@ -1208,17 +1309,21 @@ function setConversationState(state) {
 
     if (!moonOrb) return;
 
+
     moonOrb.classList.remove(
         "listening",
         "thinking",
         "talking"
     );
 
-    conversationMic.classList.remove(
+
+    conversationMic?.classList.remove(
         "active"
     );
 
+
     switch (state) {
+
 
         case "listening":
 
@@ -1226,14 +1331,18 @@ function setConversationState(state) {
                 "listening"
             );
 
+
             conversationStatus.textContent =
                 "Listening...";
+
 
             conversationText.textContent =
                 "I'm listening";
 
+
             conversationMic.textContent =
                 "⏹";
+
 
             conversationMic.classList.add(
                 "active"
@@ -1248,11 +1357,14 @@ function setConversationState(state) {
                 "thinking"
             );
 
+
             conversationStatus.textContent =
                 "Thinking...";
 
+
             conversationText.textContent =
                 "MoonPlug is thinking";
+
 
             conversationMic.textContent =
                 "🎙️";
@@ -1266,8 +1378,10 @@ function setConversationState(state) {
                 "talking"
             );
 
+
             conversationStatus.textContent =
                 "MoonPlug is talking...";
+
 
             conversationMic.textContent =
                 "🔊";
@@ -1280,20 +1394,28 @@ function setConversationState(state) {
             conversationStatus.textContent =
                 "Ready";
 
+
             conversationText.textContent =
                 "Tap the microphone to talk";
 
+
             conversationMic.textContent =
                 "🎙️";
+
+            break;
     }
 }
 
 
 /* =========================================================
-   TOGGLE LISTENING
+   TOGGLE DEVICE MICROPHONE
 ========================================================= */
 
 function toggleConversationListening() {
+
+    /*
+       Browser doesn't support speech recognition.
+    */
 
     if (!conversationRecognition) {
 
@@ -1301,10 +1423,11 @@ function toggleConversationListening() {
             "Speech recognition unavailable";
 
         conversationText.textContent =
-            "Try a browser that supports microphone speech recognition.";
+            "Your browser doesn't support device speech recognition.";
 
         return;
     }
+
 
     if (conversationListening) {
 
@@ -1316,6 +1439,7 @@ function toggleConversationListening() {
     }
 }
 
+
 conversationMic?.addEventListener(
     "click",
     toggleConversationListening
@@ -1323,12 +1447,31 @@ conversationMic?.addEventListener(
 
 
 /* =========================================================
-   START LISTENING
+   START DEVICE MICROPHONE
 ========================================================= */
 
 function startConversationListening() {
 
-    if (!conversationRecognition) return;
+    if (!conversationRecognition) {
+        return;
+    }
+
+
+    /*
+       Stop any current speech output first.
+    */
+
+    if (
+        window.speechSynthesis
+    ) {
+
+        window.speechSynthesis.cancel();
+    }
+
+
+    conversationSpeaking =
+        false;
+
 
     try {
 
@@ -1337,21 +1480,27 @@ function startConversationListening() {
     } catch (error) {
 
         console.log(
-            "Recognition already running."
+            "Speech recognition start:",
+            error
         );
     }
 }
 
 
 /* =========================================================
-   STOP LISTENING
+   STOP DEVICE MICROPHONE
 ========================================================= */
 
 function stopConversationListening() {
 
-    if (!conversationRecognition) return;
+    conversationListening =
+        false;
 
-    conversationListening = false;
+
+    if (!conversationRecognition) {
+        return;
+    }
+
 
     try {
 
@@ -1362,7 +1511,7 @@ function stopConversationListening() {
 
 
 /* =========================================================
-   CONVERSATION → MOONPLUG
+   SEND VOICE MESSAGE TO MOONPLUG AI
 ========================================================= */
 
 async function processConversationMessage(
@@ -1371,11 +1520,20 @@ async function processConversationMessage(
 
     stopConversationListening();
 
+
     setConversationState(
         "thinking"
     );
 
+
     try {
+
+        /*
+           THIS IS THE IMPORTANT PART.
+
+           The spoken text goes to the same
+           MoonPlug AI backend as normal chat.
+        */
 
         const response =
             await fetch(
@@ -1389,22 +1547,27 @@ async function processConversationMessage(
                     },
 
                     body: JSON.stringify({
-                        message: transcript
+                        message:
+                            transcript
                     })
                 }
             );
 
+
         const data =
-            await response.json()
+            await response
+                .json()
                 .catch(() => ({}));
+
 
         if (!response.ok) {
 
             throw new Error(
                 data.error ||
-                "Chat request failed"
+                "MoonPlug chat failed."
             );
         }
+
 
         const reply =
             data.response ||
@@ -1412,12 +1575,9 @@ async function processConversationMessage(
             data.answer ||
             "I received your message.";
 
-        conversationText.textContent =
-            String(reply);
 
         /*
-           Also put the conversation into
-           the normal MoonPlug chat.
+           Add both sides to normal chat.
         */
 
         addMessage(
@@ -1425,67 +1585,143 @@ async function processConversationMessage(
             "user"
         );
 
+
         addMessage(
             String(reply),
             "ai"
         );
 
+
+        /*
+           Display AI response in
+           Conversation Mode.
+        */
+
+        conversationText.textContent =
+            String(reply);
+
+
+        /*
+           NOW USE THE DEVICE'S VOICE.
+        */
+
         speakConversation(
             String(reply)
         );
 
+
     } catch (error) {
 
         console.error(
-            "Conversation mode:",
+            "Conversation Mode error:",
             error
         );
 
-        conversationSpeaking = false;
+
+        conversationSpeaking =
+            false;
+
 
         setConversationState(
             "idle"
         );
 
+
         conversationText.textContent =
-            "I couldn't connect right now.";
+            "I couldn't connect to MoonPlug right now.";
     }
 }
 
 
 /* =========================================================
-   TEXT TO SPEECH
+   DEVICE TEXT-TO-SPEECH
 ========================================================= */
 
 function speakConversation(text) {
 
+    /*
+       Check whether the device/browser
+       provides text-to-speech.
+    */
+
     if (
-        !window.speechSynthesis
+        !window.speechSynthesis ||
+        !window.SpeechSynthesisUtterance
     ) {
 
-        setConversationState(
-            "idle"
-        );
+        conversationStatus.textContent =
+            "Device voice unavailable";
 
         return;
     }
 
+
+    /*
+       Stop anything already speaking.
+    */
+
     window.speechSynthesis.cancel();
+
 
     const utterance =
         new SpeechSynthesisUtterance(
             text
         );
 
-    utterance.rate = 1;
-    utterance.pitch = 1;
-    utterance.volume = 1;
 
-    conversationSpeaking = true;
+    /*
+       These are intentionally normal values.
+
+       The actual audio comes from the
+       device/browser's speech engine.
+    */
+
+    utterance.rate =
+        1;
+
+    utterance.pitch =
+        1;
+
+    utterance.volume =
+        1;
+
+
+    /*
+       Try to select a natural English
+       voice provided by the device.
+    */
+
+    const voices =
+        window.speechSynthesis.getVoices();
+
+
+    const preferredVoice =
+        voices.find(
+            voice =>
+                voice.lang
+                    ?.toLowerCase()
+                    .startsWith("en") &&
+                !voice.name
+                    ?.toLowerCase()
+                    .includes("novelty")
+        );
+
+
+    if (preferredVoice) {
+
+        utterance.voice =
+            preferredVoice;
+    }
+
+
+    conversationSpeaking =
+        true;
+
 
     setConversationState(
         "talking"
     );
+
 
     utterance.onend =
         () => {
@@ -1493,8 +1729,9 @@ function speakConversation(text) {
             conversationSpeaking =
                 false;
 
+
             if (
-                conversationMode.classList.contains(
+                conversationMode?.classList.contains(
                     "active"
                 )
             ) {
@@ -1505,20 +1742,52 @@ function speakConversation(text) {
             }
         };
 
+
     utterance.onerror =
-        () => {
+        (event) => {
+
+            console.error(
+                "Device text-to-speech:",
+                event
+            );
+
 
             conversationSpeaking =
                 false;
+
 
             setConversationState(
                 "idle"
             );
         };
 
+
     window.speechSynthesis.speak(
         utterance
     );
+}
+
+
+/* =========================================================
+   LOAD DEVICE VOICES
+========================================================= */
+
+if (
+    window.speechSynthesis
+) {
+
+    window.speechSynthesis.onvoiceschanged =
+        () => {
+
+            /*
+               Calling getVoices here forces
+               the browser to load its device
+               voice list.
+            */
+
+            window.speechSynthesis
+                .getVoices();
+        };
 }
 
 
@@ -1531,64 +1800,53 @@ document.addEventListener(
     (event) => {
 
         if (
-            event.key === "Escape"
+            event.key !== "Escape"
+        ) {
+            return;
+        }
+
+
+        if (
+            conversationMode?.classList.contains(
+                "active"
+            )
         ) {
 
-            if (
-                conversationMode.classList.contains(
-                    "active"
-                )
-            ) {
+            closeConversationMode();
 
-                closeConversationMode();
+            return;
+        }
 
-                return;
-            }
 
-            if (
-                settingsPanel.style.display ===
-                "flex"
-            ) {
+        if (
+            settingsPanel?.style.display ===
+            "flex"
+        ) {
 
-                closeSettings();
+            closeSettings();
 
-                return;
-            }
+            return;
+        }
 
-            if (
-                ownerLogin.style.display ===
-                "flex"
-            ) {
 
-                hideOwnerLogin();
-            }
+        if (
+            ownerLogin?.style.display ===
+            "flex"
+        ) {
+
+            hideOwnerLogin();
         }
     }
 );
 
 
 /* =========================================================
-   RESPONSIVE SAFETY
+   RESPONSIVE
 ========================================================= */
 
 window.addEventListener(
     "resize",
     () => {
-
-        /*
-           If the user rotates/resizes from
-           mobile into desktop, close conversation mode.
-        */
-
-        if (
-            window.innerWidth >= 700 &&
-            conversationMode.classList.contains(
-                "active"
-            )
-        ) {
-
-            closeConversationMode();
-        }
 
         createStars();
     }
@@ -1609,9 +1867,35 @@ function initializeMoonPlug() {
 
     autoResizeInput();
 
+
     console.log(
         "MoonPlug AI initialized."
     );
+
+
+    console.log(
+        "Conversation Mode:",
+        conversationButton
+            ? "Button loaded"
+            : "Button missing"
+    );
+
+
+    console.log(
+        "Device Speech Recognition:",
+        conversationRecognition
+            ? "Available"
+            : "Unavailable"
+    );
+
+
+    console.log(
+        "Device Text-to-Speech:",
+        window.speechSynthesis
+            ? "Available"
+            : "Unavailable"
+    );
 }
+
 
 initializeMoonPlug();
