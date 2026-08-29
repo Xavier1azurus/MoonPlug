@@ -1,19 +1,15 @@
-
 /* =========================================================
-   MOONPLUG AI
-   COMPLETE FRONTEND SCRIPT
-   GALAXY + MOON/PLUG RESPONSE ANIMATION
+   MOONPLUG AI — COMPLETE SCRIPT
 ========================================================= */
 
 "use strict";
 
 
 /* =========================================================
-   CONFIGURATION
+   CONFIG
 ========================================================= */
 
-const API_BASE =
-    "https://moonplug.onrender.com";
+const API_BASE = "https://moonplug.onrender.com";
 
 const STORAGE_KEYS = {
     theme: "moonplug_theme",
@@ -23,15 +19,12 @@ const STORAGE_KEYS = {
 
 
 /* =========================================================
-   GLOBAL STATE
+   STATE
 ========================================================= */
 
 let ownerAuthenticated = false;
-
 let currentChat = [];
-
 let isSending = false;
-
 let animationRunning = false;
 
 
@@ -50,115 +43,79 @@ function $(id) {
 
 function createStarField() {
 
-    const starField =
-        $("starField");
+    const starField = $("starField");
 
-    if (!starField) {
-
-        console.error(
-            "MoonPlug: starField element not found."
-        );
-
-        return;
-    }
+    if (!starField) return;
 
     starField.innerHTML = "";
 
-    const width =
-        window.innerWidth;
+    const width = window.innerWidth;
 
-    let starCount;
+    let starCount = 320;
 
     if (width <= 600) {
-
         starCount = 170;
-
     } else if (width <= 1200) {
-
         starCount = 240;
-
-    } else {
-
-        starCount = 320;
     }
 
+    for (let i = 0; i < starCount; i++) {
 
-    for (
-        let i = 0;
-        i < starCount;
-        i++
-    ) {
+        const star = document.createElement("span");
 
-        const star =
-            document.createElement("span");
-
-        star.className =
-            "random-star";
-
+        star.className = "random-star";
 
         star.style.setProperty(
             "--star-size",
-            `${Math.random() * 2.3 + 0.7}px`
+            `${Math.random() * 2.3 + .7}px`
         );
-
 
         star.style.setProperty(
             "--star-x",
             `${Math.random() * 100}%`
         );
 
-
         star.style.setProperty(
             "--star-y",
             `${Math.random() * 100}%`
         );
 
-
         star.style.setProperty(
             "--star-opacity",
-            `${Math.random() * 0.65 + 0.30}`
+            `${Math.random() * .65 + .30}`
         );
-
 
         star.style.setProperty(
             "--star-glow",
             `${Math.random() * 5 + 2}px`
         );
 
-
         star.style.setProperty(
             "--star-scale",
-            `${Math.random() * 0.65 + 0.75}`
+            `${Math.random() * .65 + .75}`
         );
-
 
         star.style.setProperty(
             "--star-move-x",
             `${Math.random() * 8 - 4}px`
         );
 
-
         star.style.setProperty(
             "--star-move-y",
             `${Math.random() * 8 - 4}px`
         );
-
 
         star.style.setProperty(
             "--star-duration",
             `${Math.random() * 4 + 3}s`
         );
 
-
         star.style.setProperty(
             "--star-delay",
             `${Math.random() * 5}s`
         );
 
-
-        starField.appendChild(
-            star
-        );
+        starField.appendChild(star);
     }
 }
 
@@ -169,113 +126,70 @@ function createStarField() {
 
 function setupSidebar() {
 
-    const sidebar =
-        $("sidebar");
+    const sidebar = $("sidebar");
+    const logo = $("sidebarLogo");
 
-    const logo =
-        $("sidebarLogo");
+    if (!sidebar || !logo) return;
 
-    if (!sidebar || !logo) {
-        return;
-    }
+    logo.addEventListener("click", () => {
 
-    logo.addEventListener(
-        "click",
-        () => {
+        if (window.innerWidth <= 1200) {
 
-            if (
-                window.innerWidth <= 1200
-            ) {
+            sidebar.classList.toggle("expanded");
 
-                sidebar.classList.toggle(
-                    "expanded"
-                );
+        } else {
 
-            } else {
-
-                sidebar.classList.toggle(
-                    "collapsed"
-                );
-            }
+            sidebar.classList.toggle("collapsed");
         }
-    );
+    });
 }
 
 
 /* =========================================================
-   EMPTY CHAT
+   MESSAGES
 ========================================================= */
 
 function removeEmptyChat() {
 
-    const empty =
-        document.querySelector(
-            ".empty-chat"
-        );
+    const empty = document.querySelector(".empty-chat");
 
-    if (empty) {
-        empty.remove();
-    }
+    if (empty) empty.remove();
 }
 
 
-/* =========================================================
-   ADD MESSAGE
-========================================================= */
+function addMessage(text, type) {
 
-function addMessage(
-    text,
-    type
-) {
+    const messages = $("messages");
 
-    const messages =
-        $("messages");
-
-    if (!messages) {
-        return;
-    }
+    if (!messages) return;
 
     removeEmptyChat();
 
-
-    const bubble =
-        document.createElement("div");
-
+    const bubble = document.createElement("div");
 
     bubble.className =
         `message-bubble ${type}`;
 
+    bubble.textContent = text;
 
-    bubble.textContent =
-        text;
-
-
-    messages.appendChild(
-        bubble
-    );
-
+    messages.appendChild(bubble);
 
     messages.scrollTop =
         messages.scrollHeight;
-
 
     return bubble;
 }
 
 
 /* =========================================================
-   CREATE AI THINKING ANIMATION
+   THINKING ANIMATION
 ========================================================= */
 
 function createThinkingAnimation() {
 
-    const typing =
-        $("typing");
+    const typing = $("typing");
 
-    if (!typing) {
-        return null;
-    }
-
+    if (!typing) return null;
 
     typing.innerHTML = `
         <div class="moonplug-animation">
@@ -297,196 +211,83 @@ function createThinkingAnimation() {
         </div>
     `;
 
-
-    typing.classList.remove(
-        "animating-out"
-    );
-
+    typing.classList.remove("animating-out");
 
     return typing;
 }
 
 
-/* =========================================================
-   WAIT
-========================================================= */
-
 function wait(ms) {
 
-    return new Promise(
-        resolve => {
-            setTimeout(
-                resolve,
-                ms
-            );
-        }
-    );
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
 }
 
 
-/* =========================================================
-   MOON + PLUG ANIMATION
-========================================================= */
-
 async function playMoonPlugAnimation() {
 
-    if (animationRunning) {
-        return;
-    }
+    if (animationRunning) return;
 
     animationRunning = true;
 
-
-    const typing =
-        createThinkingAnimation();
-
+    const typing = createThinkingAnimation();
 
     if (!typing) {
-
         animationRunning = false;
-
         return;
     }
 
+    typing.style.display = "block";
+    typing.setAttribute("aria-hidden", "false");
 
-    typing.style.display =
-        "block";
-
-    typing.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-
-    const messages =
-        $("messages");
-
+    const messages = $("messages");
 
     if (messages) {
-
         messages.scrollTop =
             messages.scrollHeight;
     }
 
-
-    /*
-       STEP 1
-       Let the moon appear first.
-    */
-
     await wait(450);
-
-
-    /*
-       STEP 2
-       Plug slowly rises.
-       CSS animation handles the movement.
-    */
-
     await wait(2800);
-
-
-    /*
-       STEP 3
-       Plug has reached the moon.
-       Give the connection a moment.
-    */
-
     await wait(900);
 
-
-    /*
-       STEP 4
-       Fade the entire animation away.
-    */
-
-    typing.classList.add(
-        "animating-out"
-    );
-
+    typing.classList.add("animating-out");
 
     await wait(280);
 
+    typing.style.display = "none";
+    typing.setAttribute("aria-hidden", "true");
 
-    /*
-       STEP 5
-       Remove animation completely.
-    */
-
-    typing.style.display =
-        "none";
-
-    typing.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-    typing.innerHTML =
-        "";
-
+    typing.innerHTML = "";
 
     animationRunning = false;
 }
 
 
-/* =========================================================
-   SHOW TYPING
-========================================================= */
-
 function showTyping() {
 
     createThinkingAnimation();
 
-    const typing =
-        $("typing");
+    const typing = $("typing");
 
-    if (!typing) {
-        return;
-    }
+    if (!typing) return;
 
-    typing.style.display =
-        "block";
-
-    typing.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-
-    const messages =
-        $("messages");
-
-    if (messages) {
-
-        messages.scrollTop =
-            messages.scrollHeight;
-    }
+    typing.style.display = "block";
+    typing.setAttribute("aria-hidden", "false");
 }
 
 
-/* =========================================================
-   HIDE TYPING
-========================================================= */
-
 function hideTyping() {
 
-    const typing =
-        $("typing");
+    const typing = $("typing");
 
-    if (!typing) {
-        return;
-    }
+    if (!typing) return;
 
-    typing.style.display =
-        "none";
+    typing.style.display = "none";
+    typing.setAttribute("aria-hidden", "true");
 
-    typing.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-    typing.innerHTML =
-        "";
+    typing.innerHTML = "";
 
     animationRunning = false;
 }
@@ -498,84 +299,55 @@ function hideTyping() {
 
 function setupInput() {
 
-    const input =
-        $("messageInput");
+    const input = $("messageInput");
+    const sendButton = $("sendButton");
 
-    const sendButton =
-        $("sendButton");
+    if (!input || !sendButton) return;
 
+    input.addEventListener("input", () => {
 
-    if (!input || !sendButton) {
-        return;
-    }
+        autoResizeInput();
 
+        sendButton.disabled =
+            !input.value.trim();
+    });
 
-    input.addEventListener(
-        "input",
-        () => {
+    input.addEventListener("keydown", event => {
 
-            autoResizeInput();
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
 
-            sendButton.disabled =
-                !input.value.trim();
+            event.preventDefault();
+
+            sendMessage();
         }
-    );
-
-
-    input.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Enter" &&
-                !event.shiftKey
-            ) {
-
-                event.preventDefault();
-
-                sendMessage();
-            }
-        }
-    );
-
+    });
 
     sendButton.addEventListener(
         "click",
         sendMessage
     );
 
-
-    sendButton.disabled =
-        true;
+    sendButton.disabled = true;
 }
 
 
-/* =========================================================
-   AUTO RESIZE INPUT
-========================================================= */
-
 function autoResizeInput() {
 
-    const input =
-        $("messageInput");
+    const input = $("messageInput");
 
-    if (!input) {
-        return;
-    }
+    if (!input) return;
 
-    input.style.height =
-        "auto";
+    input.style.height = "auto";
 
+    const height = Math.min(
+        input.scrollHeight,
+        180
+    );
 
-    const height =
-        Math.min(
-            input.scrollHeight,
-            180
-        );
-
-
-    input.style.height =
-        `${height}px`;
+    input.style.height = `${height}px`;
 }
 
 
@@ -585,191 +357,103 @@ function autoResizeInput() {
 
 async function sendMessage() {
 
-    if (isSending) {
-        return;
-    }
+    if (isSending) return;
 
+    const input = $("messageInput");
+    const sendButton = $("sendButton");
 
-    const input =
-        $("messageInput");
+    if (!input) return;
 
-    const sendButton =
-        $("sendButton");
+    const message = input.value.trim();
 
-
-    if (!input) {
-        return;
-    }
-
-
-    const message =
-        input.value.trim();
-
-
-    if (!message) {
-        return;
-    }
-
+    if (!message) return;
 
     isSending = true;
 
-
     if (sendButton) {
-
-        sendButton.disabled =
-            true;
+        sendButton.disabled = true;
     }
 
-
-    addMessage(
-        message,
-        "user"
-    );
-
+    addMessage(message, "user");
 
     currentChat.push({
-
         role: "user",
-
         content: message
     });
 
-
     saveHistory();
 
-
-    input.value =
-        "";
+    input.value = "";
 
     autoResizeInput();
 
-
-    /*
-       START THE ANIMATION
-    */
-
     showTyping();
-
-
-    /*
-       Start animation immediately.
-       We don't await it yet because
-       the backend request should happen
-       at the same time.
-    */
 
     const animationPromise =
         playMoonPlugAnimation();
 
-
     try {
 
-        const response =
-            await fetch(
-                `${API_BASE}/api/chat`,
-                {
-                    method: "POST",
+        const response = await fetch(
+            `${API_BASE}/api/chat`,
+            {
+                method: "POST",
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-                    body: JSON.stringify({
-
-                        message:
-                            message,
-
-                        history:
-                            currentChat
-                    })
-                }
-            );
-
+                body: JSON.stringify({
+                    message,
+                    history: currentChat
+                })
+            }
+        );
 
         let data;
 
-
         try {
-
-            data =
-                await response.json();
-
+            data = await response.json();
         } catch {
-
             data = {
-
                 success: false,
-
                 error:
                     "Server returned an invalid response."
             };
         }
 
-
         if (!response.ok) {
-
             throw new Error(
                 data.error ||
                 `Server error ${response.status}`
             );
         }
 
+        let aiResponse = data.response;
 
-        let aiResponse =
-            data.response;
-
-
-        if (
-            typeof aiResponse !==
-            "string"
-        ) {
-
+        if (typeof aiResponse !== "string") {
             aiResponse =
                 "MoonPlug received an invalid response.";
         }
 
-
-        aiResponse =
-            aiResponse.trim();
-
+        aiResponse = aiResponse.trim();
 
         if (!aiResponse) {
-
             aiResponse =
                 "MoonPlug didn't return a response.";
         }
 
-
-        /*
-           WAIT UNTIL THE MOON/PLUG
-           ANIMATION HAS COMPLETELY FINISHED.
-        */
-
         await animationPromise;
 
-
-        /*
-           NOW THE AI TEXT APPEARS.
-        */
-
-        addMessage(
-            aiResponse,
-            "ai"
-        );
-
+        addMessage(aiResponse, "ai");
 
         currentChat.push({
-
             role: "assistant",
-
-            content:
-                aiResponse
+            content: aiResponse
         });
 
-
         saveHistory();
-
 
     } catch (error) {
 
@@ -778,27 +462,21 @@ async function sendMessage() {
             error
         );
 
-
         hideTyping();
-
 
         addMessage(
             "I couldn't connect to the MoonPlug AI backend. Please check the backend URL and make sure the server is online.",
             "ai"
         );
 
-
     } finally {
 
         isSending = false;
 
-
         if (sendButton) {
-
             sendButton.disabled =
                 !input.value.trim();
         }
-
 
         input.focus();
     }
@@ -813,18 +491,11 @@ function startNewChat() {
 
     currentChat = [];
 
+    const messages = $("messages");
 
-    const messages =
-        $("messages");
-
-
-    if (!messages) {
-        return;
-    }
-
+    if (!messages) return;
 
     messages.innerHTML = `
-
         <div class="empty-chat">
 
             <div class="empty-moon">
@@ -840,31 +511,25 @@ function startNewChat() {
             </p>
 
         </div>
-
     `;
 
-
-    const input =
-        $("messageInput");
-
+    const input = $("messageInput");
 
     if (input) {
 
-        input.value =
-            "";
+        input.value = "";
 
         autoResizeInput();
 
         input.focus();
     }
 
-
     saveHistory();
 }
 
 
 /* =========================================================
-   CHAT HISTORY
+   HISTORY
 ========================================================= */
 
 function saveHistory() {
@@ -873,9 +538,7 @@ function saveHistory() {
 
         localStorage.setItem(
             STORAGE_KEYS.history,
-            JSON.stringify(
-                currentChat
-            )
+            JSON.stringify(currentChat)
         );
 
     } catch (error) {
@@ -897,85 +560,46 @@ function loadHistory() {
                 STORAGE_KEYS.history
             );
 
+        if (!saved) return;
 
-        if (!saved) {
-            return;
-        }
+        const history = JSON.parse(saved);
 
+        if (!Array.isArray(history)) return;
 
-        const history =
-            JSON.parse(saved);
+        currentChat = history;
 
+        if (!history.length) return;
 
-        if (!Array.isArray(history)) {
-            return;
-        }
+        const messages = $("messages");
 
+        if (!messages) return;
 
-        currentChat =
-            history;
+        messages.innerHTML = "";
 
+        history.forEach(item => {
 
-        if (
-            history.length === 0
-        ) {
-            return;
-        }
-
-
-        const messages =
-            $("messages");
-
-
-        if (!messages) {
-            return;
-        }
-
-
-        messages.innerHTML =
-            "";
-
-
-        history.forEach(
-            item => {
-
-                if (
-                    !item ||
-                    typeof item !==
-                    "object"
-                ) {
-                    return;
-                }
-
-
-                if (
-                    item.role !==
-                    "user" &&
-                    item.role !==
-                    "assistant"
-                ) {
-                    return;
-                }
-
-
-                if (
-                    typeof item.content !==
-                    "string"
-                ) {
-                    return;
-                }
-
-
-                addMessage(
-                    item.content,
-
-                    item.role === "user"
-                        ? "user"
-                        : "ai"
-                );
+            if (!item || typeof item !== "object") {
+                return;
             }
-        );
 
+            if (
+                item.role !== "user" &&
+                item.role !== "assistant"
+            ) {
+                return;
+            }
+
+            if (typeof item.content !== "string") {
+                return;
+            }
+
+            addMessage(
+                item.content,
+                item.role === "user"
+                    ? "user"
+                    : "ai"
+            );
+        });
 
     } catch (error) {
 
@@ -993,99 +617,66 @@ function loadHistory() {
 
 function openSettings() {
 
-    const panel =
-        $("settingsPanel");
+    const panel = $("settingsPanel");
 
-    if (!panel) {
-        return;
-    }
+    if (!panel) return;
 
-    panel.style.display =
-        "flex";
-
-    panel.setAttribute(
-        "aria-hidden",
-        "false"
-    );
+    panel.style.display = "flex";
+    panel.setAttribute("aria-hidden", "false");
 }
 
 
 function closeSettings() {
 
-    const panel =
-        $("settingsPanel");
+    const panel = $("settingsPanel");
 
-    if (!panel) {
-        return;
-    }
+    if (!panel) return;
 
-    panel.style.display =
-        "none";
-
-    panel.setAttribute(
-        "aria-hidden",
-        "true"
-    );
+    panel.style.display = "none";
+    panel.setAttribute("aria-hidden", "true");
 }
 
 
 function setupSettings() {
 
-    const settingsButton =
-        $("settingsButton");
-
-    const closeButton =
-        $("closeSettings");
-
-    const themeButton =
-        $("themeButton");
-
+    const settingsButton = $("settingsButton");
+    const closeButton = $("closeSettings");
+    const themeButton = $("themeButton");
 
     if (settingsButton) {
-
         settingsButton.addEventListener(
             "click",
             openSettings
         );
     }
 
-
     if (closeButton) {
-
         closeButton.addEventListener(
             "click",
             closeSettings
         );
     }
 
-
     if (themeButton) {
-
         themeButton.addEventListener(
             "click",
             toggleTheme
         );
     }
 
-
     document
-        .querySelectorAll(
-            ".size-button"
-        )
-        .forEach(
-            button => {
+        .querySelectorAll(".size-button")
+        .forEach(button => {
 
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        updateTextSize(
-                            button.dataset.size
-                        );
-                    }
-                );
-            }
-        );
+            button.addEventListener(
+                "click",
+                () => {
+                    updateTextSize(
+                        button.dataset.size
+                    );
+                }
+            );
+        });
 }
 
 
@@ -1100,20 +691,10 @@ function loadTheme() {
             STORAGE_KEYS.theme
         ) || "dark";
 
-
-    if (theme === "light") {
-
-        document.body.classList.add(
-            "light-theme"
-        );
-
-    } else {
-
-        document.body.classList.remove(
-            "light-theme"
-        );
-    }
-
+    document.body.classList.toggle(
+        "light-theme",
+        theme === "light"
+    );
 
     updateThemeButton();
 }
@@ -1126,30 +707,15 @@ function toggleTheme() {
             "light-theme"
         );
 
+    document.body.classList.toggle(
+        "light-theme",
+        !isLight
+    );
 
-    if (isLight) {
-
-        document.body.classList.remove(
-            "light-theme"
-        );
-
-        localStorage.setItem(
-            STORAGE_KEYS.theme,
-            "dark"
-        );
-
-    } else {
-
-        document.body.classList.add(
-            "light-theme"
-        );
-
-        localStorage.setItem(
-            STORAGE_KEYS.theme,
-            "light"
-        );
-    }
-
+    localStorage.setItem(
+        STORAGE_KEYS.theme,
+        isLight ? "dark" : "light"
+    );
 
     updateThemeButton();
 }
@@ -1157,23 +723,14 @@ function toggleTheme() {
 
 function updateThemeButton() {
 
-    const button =
-        $("themeButton");
+    const button = $("themeButton");
 
-
-    if (!button) {
-        return;
-    }
-
-
-    const isLight =
-        document.body.classList.contains(
-            "light-theme"
-        );
-
+    if (!button) return;
 
     button.textContent =
-        isLight
+        document.body.classList.contains(
+            "light-theme"
+        )
             ? "Light"
             : "Dark";
 }
@@ -1190,10 +747,8 @@ function updateTextSize(size) {
         size !== "medium" &&
         size !== "large"
     ) {
-
         size = "medium";
     }
-
 
     document.body.classList.remove(
         "text-small",
@@ -1201,46 +756,33 @@ function updateTextSize(size) {
         "text-large"
     );
 
-
     document.body.classList.add(
         `text-${size}`
     );
-
 
     localStorage.setItem(
         STORAGE_KEYS.textSize,
         size
     );
 
-
     document
-        .querySelectorAll(
-            ".size-button"
-        )
-        .forEach(
-            button => {
+        .querySelectorAll(".size-button")
+        .forEach(button => {
 
-                button.classList.toggle(
-                    "active",
-
-                    button.dataset.size ===
-                    size
-                );
-            }
-        );
+            button.classList.toggle(
+                "active",
+                button.dataset.size === size
+            );
+        });
 }
 
 
 function loadTextSize() {
 
-    const saved =
+    updateTextSize(
         localStorage.getItem(
             STORAGE_KEYS.textSize
-        ) || "medium";
-
-
-    updateTextSize(
-        saved
+        ) || "medium"
     );
 }
 
@@ -1251,180 +793,84 @@ function loadTextSize() {
 
 function openAccount() {
 
-    const screen =
-        $("accountScreen");
+    const screen = $("accountScreen");
 
-    if (!screen) {
-        return;
-    }
+    if (!screen) return;
 
-    screen.style.display =
-        "flex";
-
-    screen.setAttribute(
-        "aria-hidden",
-        "false"
-    );
+    screen.style.display = "flex";
+    screen.setAttribute("aria-hidden", "false");
 }
 
 
 function closeAccount() {
 
-    const screen =
-        $("accountScreen");
+    const screen = $("accountScreen");
 
-    if (!screen) {
-        return;
-    }
+    if (!screen) return;
 
-    screen.style.display =
-        "none";
-
-    screen.setAttribute(
-        "aria-hidden",
-        "true"
-    );
+    screen.style.display = "none";
+    screen.setAttribute("aria-hidden", "true");
 }
 
 
 function showLoginTab() {
 
-    const loginForm =
-        $("loginForm");
+    $("loginForm").hidden = false;
+    $("signupForm").hidden = true;
 
-    const signupForm =
-        $("signupForm");
-
-    const loginTab =
-        $("loginTab");
-
-    const signupTab =
-        $("signupTab");
-
-
-    if (loginForm) {
-        loginForm.hidden =
-            false;
-    }
-
-    if (signupForm) {
-        signupForm.hidden =
-            true;
-    }
-
-    if (loginTab) {
-        loginTab.classList.add(
-            "active"
-        );
-    }
-
-    if (signupTab) {
-        signupTab.classList.remove(
-            "active"
-        );
-    }
+    $("loginTab").classList.add("active");
+    $("signupTab").classList.remove("active");
 }
 
 
 function showSignupTab() {
 
-    const loginForm =
-        $("loginForm");
+    $("loginForm").hidden = true;
+    $("signupForm").hidden = false;
 
-    const signupForm =
-        $("signupForm");
-
-    const loginTab =
-        $("loginTab");
-
-    const signupTab =
-        $("signupTab");
-
-
-    if (loginForm) {
-        loginForm.hidden =
-            true;
-    }
-
-    if (signupForm) {
-        signupForm.hidden =
-            false;
-    }
-
-    if (loginTab) {
-        loginTab.classList.remove(
-            "active"
-        );
-    }
-
-    if (signupTab) {
-        signupTab.classList.add(
-            "active"
-        );
-    }
+    $("loginTab").classList.remove("active");
+    $("signupTab").classList.add("active");
 }
 
 
-/* =========================================================
-   ACCOUNT FORMS
-========================================================= */
-
 function setupAccountForms() {
 
-    const accountButton =
-        $("ownerButton");
+    const accountButton = $("ownerButton");
+    const closeButton = $("closeAccount");
 
-    const closeButton =
-        $("closeAccount");
+    const loginTab = $("loginTab");
+    const signupTab = $("signupTab");
 
-    const loginTab =
-        $("loginTab");
-
-    const signupTab =
-        $("signupTab");
-
-    const loginForm =
-        $("loginForm");
-
-    const signupForm =
-        $("signupForm");
-
+    const loginForm = $("loginForm");
+    const signupForm = $("signupForm");
 
     if (accountButton) {
-
         accountButton.addEventListener(
             "click",
             openAccount
         );
     }
 
-
     if (closeButton) {
-
         closeButton.addEventListener(
             "click",
             closeAccount
         );
     }
 
-
     if (loginTab) {
-
         loginTab.addEventListener(
             "click",
             showLoginTab
         );
     }
 
-
     if (signupTab) {
-
         signupTab.addEventListener(
             "click",
             showSignupTab
         );
     }
-
 
     if (loginForm) {
 
@@ -1434,19 +880,11 @@ function setupAccountForms() {
 
                 event.preventDefault();
 
-                const message =
-                    $("accountMessage");
-
-
-                if (message) {
-
-                    message.textContent =
-                        "Account login will be connected to the backend next.";
-                }
+                $("accountMessage").textContent =
+                    "Account login will be connected to the backend next.";
             }
         );
     }
-
 
     if (signupForm) {
 
@@ -1456,39 +894,23 @@ function setupAccountForms() {
 
                 event.preventDefault();
 
-
-                const password =
-                    $("signupPassword");
-
-                const confirm =
-                    $("signupConfirm");
-
-                const message =
-                    $("accountMessage");
-
+                const password = $("signupPassword");
+                const confirm = $("signupConfirm");
+                const message = $("accountMessage");
 
                 if (
-                    password &&
-                    confirm &&
                     password.value !==
                     confirm.value
                 ) {
 
-                    if (message) {
-
-                        message.textContent =
-                            "Passwords do not match.";
-                    }
+                    message.textContent =
+                        "Passwords do not match.";
 
                     return;
                 }
 
-
-                if (message) {
-
-                    message.textContent =
-                        "Account creation will be connected to the backend next.";
-                }
+                message.textContent =
+                    "Account creation will be connected to the backend next.";
             }
         );
     }
@@ -1496,169 +918,102 @@ function setupAccountForms() {
 
 
 /* =========================================================
-   HIDDEN OWNER LOGIN
+   OWNER
 ========================================================= */
 
 function showOwnerLogin() {
 
-    const overlay =
-        $("ownerLogin");
+    const overlay = $("ownerLogin");
 
+    if (!overlay) return;
 
-    if (!overlay) {
-        return;
-    }
+    overlay.style.display = "flex";
+    overlay.setAttribute("aria-hidden", "false");
 
-
-    overlay.style.display =
-        "flex";
-
-
-    overlay.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-
-    const code =
-        $("ownerCode");
-
+    const code = $("ownerCode");
 
     if (code) {
 
-        code.value =
-            "";
+        code.value = "";
 
-        code.focus();
+        setTimeout(
+            () => code.focus(),
+            50
+        );
     }
 
-
-    const error =
-        $("ownerError");
-
-
-    if (error) {
-
-        error.textContent =
-            "";
-    }
+    $("ownerError").textContent = "";
 }
 
 
 function hideOwnerLogin() {
 
-    const overlay =
-        $("ownerLogin");
+    const overlay = $("ownerLogin");
 
+    if (!overlay) return;
 
-    if (!overlay) {
-        return;
-    }
-
-
-    overlay.style.display =
-        "none";
-
-
-    overlay.setAttribute(
-        "aria-hidden",
-        "true"
-    );
+    overlay.style.display = "none";
+    overlay.setAttribute("aria-hidden", "true");
 }
 
 
-/* =========================================================
-   OWNER LOGIN
-========================================================= */
-
 async function loginOwner() {
 
-    const code =
-        $("ownerCode");
+    const code = $("ownerCode");
+    const error = $("ownerError");
 
-    const error =
-        $("ownerError");
+    if (!code) return;
 
-
-    if (!code) {
-        return;
-    }
-
-
-    const ownerCode =
-        code.value.trim();
-
+    const ownerCode = code.value.trim();
 
     if (!ownerCode) {
 
-        if (error) {
-
-            error.textContent =
-                "Enter the owner code.";
-        }
+        error.textContent =
+            "Enter the owner code.";
 
         return;
     }
 
-
-    if (error) {
-
-        error.textContent =
-            "Checking owner access...";
-    }
-
+    error.textContent =
+        "Checking owner access...";
 
     try {
 
-        const response =
-            await fetch(
-                `${API_BASE}/api/owner/login`,
-                {
-                    method: "POST",
+        const response = await fetch(
+            `${API_BASE}/api/owner/login`,
+            {
+                method: "POST",
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-                    credentials:
-                        "include",
+                credentials: "include",
 
-                    body: JSON.stringify({
-                        code:
-                            ownerCode
-                    })
-                }
-            );
-
+                body: JSON.stringify({
+                    code: ownerCode
+                })
+            }
+        );
 
         const data =
             await response
                 .json()
-                .catch(
-                    () => ({})
-                );
-
+                .catch(() => ({}));
 
         if (!response.ok) {
-
             throw new Error(
                 data.error ||
                 "Owner login failed."
             );
         }
 
-
-        ownerAuthenticated =
-            true;
-
+        ownerAuthenticated = true;
 
         hideOwnerLogin();
-
         openOwnerPanel();
-
         loadOwnerDashboard();
-
 
     } catch (err) {
 
@@ -1667,68 +1022,34 @@ async function loginOwner() {
             err
         );
 
-
-        if (error) {
-
-            error.textContent =
-                err.message ||
-                "Owner login failed.";
-        }
+        error.textContent =
+            err.message ||
+            "Owner login failed.";
     }
 }
 
 
-/* =========================================================
-   OWNER PANEL
-========================================================= */
-
 function openOwnerPanel() {
 
-    const panel =
-        $("ownerPanel");
+    const panel = $("ownerPanel");
 
+    if (!panel) return;
 
-    if (!panel) {
-        return;
-    }
-
-
-    panel.style.display =
-        "flex";
-
-
-    panel.setAttribute(
-        "aria-hidden",
-        "false"
-    );
+    panel.style.display = "flex";
+    panel.setAttribute("aria-hidden", "false");
 }
 
 
 function closeOwnerPanel() {
 
-    const panel =
-        $("ownerPanel");
+    const panel = $("ownerPanel");
 
+    if (!panel) return;
 
-    if (!panel) {
-        return;
-    }
-
-
-    panel.style.display =
-        "none";
-
-
-    panel.setAttribute(
-        "aria-hidden",
-        "true"
-    );
+    panel.style.display = "none";
+    panel.setAttribute("aria-hidden", "true");
 }
 
-
-/* =========================================================
-   OWNER LOGOUT
-========================================================= */
 
 async function logoutOwner() {
 
@@ -1738,9 +1059,7 @@ async function logoutOwner() {
             `${API_BASE}/api/owner/logout`,
             {
                 method: "POST",
-
-                credentials:
-                    "include"
+                credentials: "include"
             }
         );
 
@@ -1752,81 +1071,44 @@ async function logoutOwner() {
         );
     }
 
-
-    ownerAuthenticated =
-        false;
-
+    ownerAuthenticated = false;
 
     closeOwnerPanel();
 }
 
 
-/* =========================================================
-   OWNER DASHBOARD
-========================================================= */
-
 async function loadOwnerDashboard() {
 
     try {
 
-        const response =
-            await fetch(
-                `${API_BASE}/api/owner/dashboard`,
-                {
-                    credentials:
-                        "include"
-                }
-            );
-
+        const response = await fetch(
+            `${API_BASE}/api/owner/dashboard`,
+            {
+                credentials: "include"
+            }
+        );
 
         const data =
             await response
                 .json()
-                .catch(
-                    () => ({})
-                );
-
+                .catch(() => ({}));
 
         if (!response.ok) {
-
             throw new Error(
                 data.error ||
                 "Could not load dashboard."
             );
         }
 
-
-        if (
-            typeof data.users ===
-            "number"
-        ) {
-
-            const users =
-                $("ownerUsers");
-
-            if (users) {
-
-                users.textContent =
-                    data.users;
-            }
+        if (typeof data.users === "number") {
+            $("ownerUsers").textContent =
+                data.users;
         }
 
-
-        if (
-            typeof data.chats ===
-            "number"
-        ) {
-
-            const chats =
-                $("ownerChats");
-
-            if (chats) {
-
-                chats.textContent =
-                    data.chats;
-            }
+        if (typeof data.chats === "number") {
+            $("ownerChats").textContent =
+                data.chats;
         }
-
 
     } catch (error) {
 
@@ -1839,164 +1121,55 @@ async function loadOwnerDashboard() {
 
 
 /* =========================================================
-   BACKEND HEALTH
-========================================================= */
-
-async function checkBackendHealth() {
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_BASE}/api/health`,
-                {
-                    method: "GET"
-                }
-            );
-
-
-        const online =
-            response.ok;
-
-
-        updateOnlineStatus(
-            online
-        );
-
-
-        return online;
-
-
-    } catch (error) {
-
-        console.error(
-            "Backend health error:",
-            error
-        );
-
-
-        updateOnlineStatus(
-            false
-        );
-
-
-        return false;
-    }
-}
-
-
-function updateOnlineStatus(
-    online
-) {
-
-    const onlineBox =
-        document.querySelector(
-            ".online"
-        );
-
-
-    const dot =
-        document.querySelector(
-            ".online-dot"
-        );
-
-
-    if (!onlineBox || !dot) {
-        return;
-    }
-
-
-    if (online) {
-
-        onlineBox.lastChild.textContent =
-            " Online";
-
-    } else {
-
-        onlineBox.lastChild.textContent =
-            " Offline";
-    }
-}
-
-
-/* =========================================================
-   PASSWORD TOGGLE
+   OWNER CONTROLS
 ========================================================= */
 
 function setupPasswordToggle() {
 
-    const input =
-        $("ownerCode");
+    const input = $("ownerCode");
+    const button = $("showPassword");
 
-    const button =
-        $("showPassword");
-
-
-    if (!input || !button) {
-        return;
-    }
-
+    if (!input || !button) return;
 
     button.addEventListener(
         "click",
         () => {
 
-            if (
-                input.type ===
-                "password"
-            ) {
+            const visible =
+                input.type === "text";
 
-                input.type =
-                    "text";
+            input.type =
+                visible
+                    ? "password"
+                    : "text";
 
-                button.textContent =
-                    "Hide";
-
-            } else {
-
-                input.type =
-                    "password";
-
-                button.textContent =
-                    "Show";
-            }
+            button.textContent =
+                visible
+                    ? "Show"
+                    : "Hide";
         }
     );
 }
 
 
-/* =========================================================
-   HIDDEN OWNER TRIGGER
-========================================================= */
-
 function setupHiddenOwnerTrigger() {
 
-    const input =
-        $("messageInput");
+    const input = $("messageInput");
 
-
-    if (!input) {
-        return;
-    }
-
+    if (!input) return;
 
     input.addEventListener(
         "input",
         () => {
 
-            const value =
+            if (
                 input.value
                     .trim()
-                    .toLowerCase();
-
-
-            if (
-                value ===
+                    .toLowerCase() ===
                 "moonplug-owner"
             ) {
 
-                input.value =
-                    "";
+                input.value = "";
 
                 showOwnerLogin();
             }
@@ -2005,70 +1178,35 @@ function setupHiddenOwnerTrigger() {
 }
 
 
-/* =========================================================
-   OWNER CONTROLS
-========================================================= */
-
 function setupOwnerControls() {
 
-    const loginButton =
-        $("ownerLoginButton");
+    $("ownerLoginButton")?.addEventListener(
+        "click",
+        loginOwner
+    );
 
-    const cancelButton =
-        $("ownerCancel");
+    $("ownerCancel")?.addEventListener(
+        "click",
+        hideOwnerLogin
+    );
 
-    const logoutButton =
-        $("ownerLogout");
+    $("ownerLogout")?.addEventListener(
+        "click",
+        logoutOwner
+    );
 
-    const ownerCode =
-        $("ownerCode");
+    $("ownerCode")?.addEventListener(
+        "keydown",
+        event => {
 
+            if (event.key === "Enter") {
 
-    if (loginButton) {
+                event.preventDefault();
 
-        loginButton.addEventListener(
-            "click",
-            loginOwner
-        );
-    }
-
-
-    if (cancelButton) {
-
-        cancelButton.addEventListener(
-            "click",
-            hideOwnerLogin
-        );
-    }
-
-
-    if (logoutButton) {
-
-        logoutButton.addEventListener(
-            "click",
-            logoutOwner
-        );
-    }
-
-
-    if (ownerCode) {
-
-        ownerCode.addEventListener(
-            "keydown",
-            event => {
-
-                if (
-                    event.key ===
-                    "Enter"
-                ) {
-
-                    event.preventDefault();
-
-                    loginOwner();
-                }
+                loginOwner();
             }
-        );
-    }
+        }
+    );
 }
 
 
@@ -2081,57 +1219,31 @@ function openTrainer() {
     const message =
         $("ownerActionMessage");
 
-
     if (message) {
-
         message.textContent =
             "Trainer controls are available from the owner backend.";
     }
 }
 
-
 function closeTrainer() {}
 
-
-function generateTraining() {
-
-    const message =
-        $("ownerActionMessage");
-
-
-    if (message) {
-
-        message.textContent =
-            "Training generation is ready to connect to the backend.";
-    }
-}
-
+function generateTraining() {}
 
 function loadAndRenderTraining() {}
 
-
 function teachMoonPlug() {}
 
-
 function refreshTraining() {
-
     loadAndRenderTraining();
 }
 
 
 function setupTrainer() {
 
-    const trainerButton =
-        $("trainerButton");
-
-
-    if (trainerButton) {
-
-        trainerButton.addEventListener(
-            "click",
-            openTrainer
-        );
-    }
+    $("trainerButton")?.addEventListener(
+        "click",
+        openTrainer
+    );
 }
 
 
@@ -2141,143 +1253,102 @@ function setupTrainer() {
 
 function setupSidebarButtons() {
 
-    const newChat =
-        $("newChatButton");
+    $("newChatButton")?.addEventListener(
+        "click",
+        startNewChat
+    );
 
-    const learn =
-        $("learnButton");
+    $("studyButton")?.addEventListener(
+        "click",
+        () => addMessage(
+            "Study mode is coming soon.",
+            "ai"
+        )
+    );
 
-    const study =
-        $("studyButton");
+    $("cookButton")?.addEventListener(
+        "click",
+        () => addMessage(
+            "Cook mode is coming soon.",
+            "ai"
+        )
+    );
 
-    const cook =
-        $("cookButton");
+    $("imagesButton")?.addEventListener(
+        "click",
+        () => addMessage(
+            "Image mode is coming soon.",
+            "ai"
+        )
+    );
 
-    const images =
-        $("imagesButton");
+    $("codeButton")?.addEventListener(
+        "click",
+        () => addMessage(
+            "Code mode is coming soon.",
+            "ai"
+        )
+    );
 
-    const code =
-        $("codeButton");
+    $("historyButton")?.addEventListener(
+        "click",
+        () => addMessage(
+            "Your current conversation is saved locally.",
+            "ai"
+        )
+    );
+}
 
-    const switchButton =
-        $("switchButton");
 
-    const history =
-        $("historyButton");
+/* =========================================================
+   BACKEND
+========================================================= */
 
+async function checkBackendHealth() {
 
-    if (newChat) {
+    try {
 
-        newChat.addEventListener(
-            "click",
-            startNewChat
+        const response = await fetch(
+            `${API_BASE}/api/health`
         );
+
+        updateOnlineStatus(response.ok);
+
+        return response.ok;
+
+    } catch (error) {
+
+        console.error(
+            "Backend health error:",
+            error
+        );
+
+        updateOnlineStatus(false);
+
+        return false;
+    }
+}
+
+
+function updateOnlineStatus(online) {
+
+    const onlineBox =
+        document.querySelector(".online");
+
+    if (!onlineBox) return;
+
+    const dot =
+        onlineBox.querySelector(".online-dot");
+
+    if (dot) {
+        dot.style.opacity =
+            online ? "1" : ".45";
     }
 
-
-    if (learn) {
-
-        learn.addEventListener(
-            "click",
-            () => {
-
-                addMessage(
-                    "AI Learn is coming soon.",
-                    "ai"
-                );
-            }
-        );
-    }
-
-
-    if (study) {
-
-        study.addEventListener(
-            "click",
-            () => {
-
-                addMessage(
-                    "Study mode is coming soon.",
-                    "ai"
-                );
-            }
-        );
-    }
-
-
-    if (cook) {
-
-        cook.addEventListener(
-            "click",
-            () => {
-
-                addMessage(
-                    "Cook mode is coming soon.",
-                    "ai"
-                );
-            }
-        );
-    }
-
-
-    if (images) {
-
-        images.addEventListener(
-            "click",
-            () => {
-
-                addMessage(
-                    "Image mode is coming soon.",
-                    "ai"
-                );
-            }
-        );
-    }
-
-
-    if (code) {
-
-        code.addEventListener(
-            "click",
-            () => {
-
-                addMessage(
-                    "Code mode is coming soon.",
-                    "ai"
-                );
-            }
-        );
-    }
-
-
-    if (switchButton) {
-
-        switchButton.addEventListener(
-            "click",
-            () => {
-
-                addMessage(
-                    "AI switching is coming soon.",
-                    "ai"
-                );
-            }
-        );
-    }
-
-
-    if (history) {
-
-        history.addEventListener(
-            "click",
-            () => {
-
-                addMessage(
-                    "Your current conversation is saved locally.",
-                    "ai"
-                );
-            }
-        );
-    }
+    onlineBox.lastChild.textContent =
+        online
+            ? " Online"
+            : " Offline";
 }
 
 
@@ -2291,21 +1362,16 @@ function setupEscapeKey() {
         "keydown",
         event => {
 
-            if (
-                event.key !==
-                "Escape"
-            ) {
+            if (event.key !== "Escape") {
                 return;
             }
 
-
             closeSettings();
-
             closeAccount();
-
             hideOwnerLogin();
-
             closeOwnerPanel();
+
+            closeConversationMode();
         }
     );
 }
@@ -2317,24 +1383,214 @@ function setupEscapeKey() {
 
 function setupResize() {
 
-    let resizeTimer;
-
+    let timer;
 
     window.addEventListener(
         "resize",
         () => {
 
-            clearTimeout(
-                resizeTimer
+            clearTimeout(timer);
+
+            timer = setTimeout(
+                createStarField,
+                200
             );
-
-
-            resizeTimer =
-                setTimeout(
-                    createStarField,
-                    200
-                );
         }
+    );
+}
+
+
+/* =========================================================
+   MOBILE CONVERSATION MODE
+========================================================= */
+
+let conversationListening = false;
+
+let conversationMode;
+let moonOrb;
+let conversationStatus;
+let conversationText;
+let conversationMic;
+let conversationClose;
+
+
+function cacheConversationElements() {
+
+    conversationMode =
+        $("conversationMode");
+
+    moonOrb =
+        $("moonOrb");
+
+    conversationStatus =
+        $("conversationStatus");
+
+    conversationText =
+        $("conversationText");
+
+    conversationMic =
+        $("conversationMic");
+
+    conversationClose =
+        $("conversationClose");
+}
+
+
+/* =========================================================
+   OPEN
+========================================================= */
+
+function openConversationMode() {
+
+    if (
+        !conversationMode ||
+        window.innerWidth > 1200
+    ) {
+        return;
+    }
+
+    conversationMode.classList.add("active");
+
+    conversationMode.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    startConversationListening();
+}
+
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
+function closeConversationMode() {
+
+    if (!conversationMode) return;
+
+    conversationMode.classList.remove("active");
+
+    conversationMode.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    conversationListening = false;
+
+    moonOrb?.classList.remove("listening");
+    moonOrb?.classList.remove("thinking");
+
+    if (conversationStatus) {
+        conversationStatus.textContent =
+            "Listening...";
+    }
+
+    if (conversationText) {
+        conversationText.textContent =
+            "Talk to MoonPlug";
+    }
+}
+
+
+/* =========================================================
+   LISTENING
+========================================================= */
+
+function startConversationListening() {
+
+    conversationListening = true;
+
+    moonOrb?.classList.remove("thinking");
+    moonOrb?.classList.add("listening");
+
+    if (conversationStatus) {
+        conversationStatus.textContent =
+            "Listening...";
+    }
+
+    if (conversationText) {
+        conversationText.textContent =
+            "Talk to MoonPlug";
+    }
+}
+
+
+/* =========================================================
+   TOGGLE
+========================================================= */
+
+function toggleConversationListening() {
+
+    if (!moonOrb) return;
+
+    if (conversationListening) {
+
+        conversationListening = false;
+
+        moonOrb.classList.remove("listening");
+        moonOrb.classList.add("thinking");
+
+        if (conversationStatus) {
+            conversationStatus.textContent =
+                "Thinking...";
+        }
+
+        if (conversationText) {
+            conversationText.textContent =
+                "MoonPlug is thinking";
+        }
+
+        setTimeout(() => {
+
+            if (
+                !conversationMode ||
+                !conversationMode.classList.contains("active")
+            ) {
+                return;
+            }
+
+            moonOrb.classList.remove("thinking");
+            moonOrb.classList.add("listening");
+
+            conversationListening = true;
+
+            if (conversationStatus) {
+                conversationStatus.textContent =
+                    "Listening...";
+            }
+
+            if (conversationText) {
+                conversationText.textContent =
+                    "Talk to MoonPlug";
+            }
+
+        }, 1800);
+
+    } else {
+
+        startConversationListening();
+    }
+}
+
+
+/* =========================================================
+   CONVERSATION CONTROLS
+========================================================= */
+
+function setupConversationMode() {
+
+    cacheConversationElements();
+
+    if (!conversationMode) return;
+
+    conversationClose?.addEventListener(
+        "click",
+        closeConversationMode
+    );
+
+    conversationMic?.addEventListener(
+        "click",
+        toggleConversationListening
     );
 }
 
@@ -2349,49 +1605,39 @@ function initializeMoonPlug() {
         "MoonPlug AI starting..."
     );
 
-
     createStarField();
 
     setupSidebar();
-
     setupSidebarButtons();
 
     setupInput();
 
     setupSettings();
-
     setupAccountForms();
 
     setupPasswordToggle();
-
     setupOwnerControls();
 
     setupHiddenOwnerTrigger();
 
     setupTrainer();
 
-    setupEscapeKey();
+    setupConversationMode();
 
+    setupEscapeKey();
     setupResize();
 
     loadTheme();
-
     loadTextSize();
-
     loadHistory();
 
     hideTyping();
-
     hideOwnerLogin();
-
     closeSettings();
-
     closeAccount();
-
     closeOwnerPanel();
 
     checkBackendHealth();
-
 
     console.log(
         "MoonPlug AI initialized."
@@ -2404,8 +1650,7 @@ function initializeMoonPlug() {
 ========================================================= */
 
 if (
-    document.readyState ===
-    "loading"
+    document.readyState === "loading"
 ) {
 
     document.addEventListener(
@@ -2416,91 +1661,4 @@ if (
 } else {
 
     initializeMoonPlug();
-}
-
-/* =========================================================
-   MOONPLUG CONVERSATION MODE
-========================================================= */
-
-const conversationMode =
-    document.getElementById("conversationMode");
-
-const moonOrb =
-    document.getElementById("moonOrb");
-
-const conversationStatus =
-    document.getElementById("conversationStatus");
-
-const conversationText =
-    document.getElementById("conversationText");
-
-let conversationListening = false;
-
-function openConversationMode() {
-
-    if (!conversationMode) return;
-
-    conversationMode.classList.add("active");
-
-    startConversationListening();
-}
-
-function closeConversationMode() {
-
-    if (!conversationMode) return;
-
-    conversationMode.classList.remove("active");
-
-    conversationListening = false;
-
-    moonOrb.classList.remove("listening");
-    moonOrb.classList.remove("thinking");
-
-    conversationStatus.textContent = "Listening...";
-    conversationText.textContent = "Talk to MoonPlug";
-}
-
-function startConversationListening() {
-
-    conversationListening = true;
-
-    moonOrb.classList.remove("thinking");
-    moonOrb.classList.add("listening");
-
-    conversationStatus.textContent = "Listening...";
-    conversationText.textContent = "Talk to MoonPlug";
-}
-
-function toggleConversationListening() {
-
-    if (conversationListening) {
-
-        conversationListening = false;
-
-        moonOrb.classList.remove("listening");
-        moonOrb.classList.add("thinking");
-
-        conversationStatus.textContent = "Thinking...";
-        conversationText.textContent = "MoonPlug is thinking";
-
-        /*
-         * Connect your actual AI response here.
-         */
-
-        setTimeout(() => {
-
-            moonOrb.classList.remove("thinking");
-            moonOrb.classList.add("listening");
-
-            conversationListening = true;
-
-            conversationStatus.textContent = "Listening...";
-            conversationText.textContent = "Talk to MoonPlug";
-
-        }, 1800);
-
-    } else {
-
-        startConversationListening();
-    }
 }
