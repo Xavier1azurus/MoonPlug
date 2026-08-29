@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,7 +20,12 @@
 
 <body>
 
+<!-- =========================================================
+     STAR FIELD
+========================================================= -->
+
 <div id="starField" class="star-field" aria-hidden="true"></div>
+
 
 <!-- =========================================================
      SIDEBAR
@@ -39,12 +45,14 @@
         <span class="logo-ai">AI</span>
     </div>
 
+
     <div class="sidebar-buttons">
 
         <button id="newChatButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">➕</span>
             <span class="sidebar-label">New Chat</span>
         </button>
+
 
         <button
             id="conversationButton"
@@ -55,27 +63,33 @@
             <span class="sidebar-label">Conversation</span>
         </button>
 
+
         <button id="studyButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">📚</span>
             <span class="sidebar-label">Study</span>
         </button>
+
 
         <button id="cookButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">🍳</span>
             <span class="sidebar-label">Cook</span>
         </button>
 
+
         <button id="imagesButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">🖼️</span>
             <span class="sidebar-label">Images</span>
         </button>
+
 
         <button id="codeButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">💻</span>
             <span class="sidebar-label">Code</span>
         </button>
 
+
         <div class="sidebar-divider"></div>
+
 
         <button id="historyButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">💬</span>
@@ -84,6 +98,7 @@
 
     </div>
 
+
     <div class="sidebar-bottom">
 
         <button id="settingsButton" class="sidebar-button" type="button">
@@ -91,7 +106,8 @@
             <span class="sidebar-label">Settings</span>
         </button>
 
-        <button id="ownerButton" class="sidebar-button" type="button">
+
+        <button id="accountButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">👤</span>
             <span class="sidebar-label">Account</span>
         </button>
@@ -122,6 +138,7 @@
 
         </header>
 
+
         <div id="messages" class="messages" aria-live="polite">
 
             <div id="emptyChat" class="empty-chat">
@@ -135,6 +152,9 @@
             </div>
 
         </div>
+
+
+        <!-- THINKING -->
 
         <div id="typing" class="typing" aria-live="polite">
 
@@ -153,6 +173,7 @@
             </span>
 
         </div>
+
 
         <div class="chat-bottom-area">
 
@@ -221,7 +242,9 @@
     </div>
 
 
-    <!-- BLACK HOLE -->
+    <!-- =====================================================
+         STILL BLACK HOLE
+    ====================================================== -->
 
     <div class="black-hole-container">
 
@@ -238,12 +261,22 @@
             <div class="black-hole-core">
 
                 <!-- WHITE VOICE WAVE -->
-
                 <div
                     id="voiceWave"
                     class="voice-wave"
                     aria-hidden="true"
                 >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                     <span></span>
                     <span></span>
                     <span></span>
@@ -294,6 +327,7 @@
                 <span class="mic-base"></span>
             </span>
         </button>
+
 
         <button
             id="conversationSpeaker"
@@ -404,6 +438,7 @@
 
         </div>
 
+
         <div class="setting-item">
 
             <strong>Appearance</strong>
@@ -422,6 +457,7 @@
             </div>
 
         </div>
+
 
         <div class="setting-item">
 
@@ -484,6 +520,7 @@
             Sign in or create your MoonPlug account.
         </p>
 
+
         <div class="account-tabs">
 
             <button
@@ -504,28 +541,27 @@
 
         </div>
 
+
         <form id="loginForm" class="account-form">
 
-            <label for="loginEmail">
-                Email address
-            </label>
+            <label for="loginEmail">Email address</label>
 
             <input
                 id="loginEmail"
                 type="email"
                 placeholder="Email address"
                 autocomplete="email"
+                required
             >
 
-            <label for="loginPassword">
-                Password
-            </label>
+            <label for="loginPassword">Password</label>
 
             <input
                 id="loginPassword"
                 type="password"
                 placeholder="Password"
                 autocomplete="current-password"
+                required
             >
 
             <button
@@ -537,43 +573,41 @@
 
         </form>
 
+
         <form
             id="signupForm"
             class="account-form"
             hidden
         >
 
-            <label for="signupEmail">
-                Email address
-            </label>
+            <label for="signupEmail">Email address</label>
 
             <input
                 id="signupEmail"
                 type="email"
                 placeholder="Email address"
                 autocomplete="email"
+                required
             >
 
-            <label for="signupPassword">
-                Password
-            </label>
+            <label for="signupPassword">Password</label>
 
             <input
                 id="signupPassword"
                 type="password"
                 placeholder="Password"
                 autocomplete="new-password"
+                required
             >
 
-            <label for="signupConfirm">
-                Confirm password
-            </label>
+            <label for="signupConfirm">Confirm password</label>
 
             <input
                 id="signupConfirm"
                 type="password"
                 placeholder="Confirm password"
                 autocomplete="new-password"
+                required
             >
 
             <button
@@ -585,6 +619,7 @@
 
         </form>
 
+
         <button
             id="closeAccount"
             class="account-close"
@@ -592,6 +627,7 @@
         >
             Continue as guest
         </button>
+
 
         <p
             id="accountMessage"
@@ -696,6 +732,7 @@
 
     </div>
 
+
     <div class="owner-content">
 
         <div class="owner-grid">
@@ -721,6 +758,7 @@
             </div>
 
         </div>
+
 
         <div class="owner-section">
 
@@ -753,6 +791,7 @@
 
         </div>
 
+
         <div class="owner-section">
 
             <h2>AI Trainer</h2>
@@ -781,3 +820,4 @@
 
 </body>
 </html>
+
