@@ -1,9 +1,9 @@
-
 /* =========================================================
    MOONPLUG AI
-   COMPLETE SCRIPT
-   Matches the provided index.html + style.css
+   COMPLETE JAVASCRIPT
 ========================================================= */
+
+"use strict";
 
 
 /* =========================================================
@@ -14,248 +14,35 @@ const API_BASE = "https://moonplug.onrender.com";
 
 const OWNER_TRIGGER = "15912014";
 
-const CONVERSATION_STORAGE_KEY =
-    "moonplug_conversation";
-
-const TEXT_SIZE_KEY =
-    "moonplug_text_size";
-
-const THEME_KEY =
-    "moonplug_theme";
-
-
-/* =========================================================
-   DOM
-========================================================= */
-
-const sidebar =
-    document.getElementById("sidebar");
-
-const sidebarLogo =
-    document.getElementById("sidebarLogo");
-
-const newChatButton =
-    document.getElementById("newChatButton");
-
-const conversationButton =
-    document.getElementById("conversationButton");
-
-const studyButton =
-    document.getElementById("studyButton");
-
-const cookButton =
-    document.getElementById("cookButton");
-
-const imagesButton =
-    document.getElementById("imagesButton");
-
-const codeButton =
-    document.getElementById("codeButton");
-
-const historyButton =
-    document.getElementById("historyButton");
-
-const settingsButton =
-    document.getElementById("settingsButton");
-
-const ownerButton =
-    document.getElementById("ownerButton");
-
-
-/* Main chat */
-
-const messages =
-    document.getElementById("messages");
-
-const emptyChat =
-    document.getElementById("emptyChat");
-
-const typing =
-    document.getElementById("typing");
-
-const messageInput =
-    document.getElementById("messageInput");
-
-const sendButton =
-    document.getElementById("sendButton");
-
-
-/* Conversation */
-
-const conversationMode =
-    document.getElementById("conversationMode");
-
-const conversationClose =
-    document.getElementById("conversationClose");
-
-const conversationMic =
-    document.getElementById("conversationMic");
-
-const conversationSpeaker =
-    document.getElementById("conversationSpeaker");
-
-const conversationStatus =
-    document.getElementById("conversationStatus");
-
-const conversationText =
-    document.getElementById("conversationText");
-
-
-/* Conversation history */
-
-const conversationHistory =
-    document.getElementById("conversationHistory");
-
-const conversationHistoryClose =
-    document.getElementById(
-        "conversationHistoryClose"
-    );
-
-const newConversationButton =
-    document.getElementById(
-        "newConversationButton"
-    );
-
-const continueConversationButton =
-    document.getElementById(
-        "continueConversationButton"
-    );
-
-const conversationHistoryStatus =
-    document.getElementById(
-        "conversationHistoryStatus"
-    );
-
-
-/* Settings */
-
-const settingsPanel =
-    document.getElementById("settingsPanel");
-
-const closeSettings =
-    document.getElementById("closeSettings");
-
-const themeButton =
-    document.getElementById("themeButton");
-
-
-/* Account */
-
-const accountScreen =
-    document.getElementById("accountScreen");
-
-const loginTab =
-    document.getElementById("loginTab");
-
-const signupTab =
-    document.getElementById("signupTab");
-
-const loginForm =
-    document.getElementById("loginForm");
-
-const signupForm =
-    document.getElementById("signupForm");
-
-const closeAccount =
-    document.getElementById("closeAccount");
-
-const accountMessage =
-    document.getElementById("accountMessage");
-
-
-/* Owner */
-
-const ownerLogin =
-    document.getElementById("ownerLogin");
-
-const ownerCode =
-    document.getElementById("ownerCode");
-
-const ownerLoginButton =
-    document.getElementById(
-        "ownerLoginButton"
-    );
-
-const ownerCancel =
-    document.getElementById("ownerCancel");
-
-const ownerError =
-    document.getElementById("ownerError");
-
-const showPassword =
-    document.getElementById("showPassword");
-
-const ownerPanel =
-    document.getElementById("ownerPanel");
-
-const ownerLogout =
-    document.getElementById("ownerLogout");
-
-const ownerUsers =
-    document.getElementById("ownerUsers");
-
-const ownerChats =
-    document.getElementById("ownerChats");
-
-const manageUsersButton =
-    document.getElementById(
-        "manageUsersButton"
-    );
-
-const manageChatsButton =
-    document.getElementById(
-        "manageChatsButton"
-    );
-
-const appSettingsButton =
-    document.getElementById(
-        "appSettingsButton"
-    );
-
-const ownerActionMessage =
-    document.getElementById(
-        "ownerActionMessage"
-    );
-
-const trainerButton =
-    document.getElementById("trainerButton");
-
-const trainerContainer =
-    document.getElementById(
-        "trainerContainer"
-    );
-
-
-/* =========================================================
-   STATE
-========================================================= */
+let sidebar;
+let conversationMode;
+let conversationMic;
+let conversationSpeaker;
+let conversationText;
+let conversationStatus;
+let voiceWave;
 
 let recognition = null;
+let recognitionAvailable = false;
 
 let conversationListening = false;
-
 let conversationSpeaking = false;
 
-let lastSpokenReply = "";
+let speechVoices = [];
+let speechTimer = null;
 
-let currentConversation = [];
+let conversationMessages = [];
 
-let ownerLoggedIn = false;
-
-let speechReady = false;
+let ownerAuthenticated = false;
 
 
 /* =========================================================
-   STARTUP
+   DOM READY
 ========================================================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    initializeMoonPlug
-);
+document.addEventListener("DOMContentLoaded", () => {
 
-
-function initializeMoonPlug() {
+    cacheElements();
 
     createStars();
 
@@ -273,18 +60,47 @@ function initializeMoonPlug() {
 
     setupOwner();
 
-    setupSpeech();
-
     loadTextSize();
-
-    loadTheme();
 
     loadConversation();
 
+    loadSpeechVoices();
+
+    setupSpeechVoiceEvents();
+
+    setupSpeechRecognition();
+
     checkBackendHealth();
 
-    checkOwnerSession();
+});
 
+
+/* =========================================================
+   CACHE ELEMENTS
+========================================================= */
+
+function cacheElements() {
+
+    sidebar =
+        document.getElementById("sidebar");
+
+    conversationMode =
+        document.getElementById("conversationMode");
+
+    conversationMic =
+        document.getElementById("conversationMic");
+
+    conversationSpeaker =
+        document.getElementById("conversationSpeaker");
+
+    conversationText =
+        document.getElementById("conversationText");
+
+    conversationStatus =
+        document.getElementById("conversationStatus");
+
+    voiceWave =
+        document.getElementById("voiceWave");
 }
 
 
@@ -295,20 +111,18 @@ function initializeMoonPlug() {
 function createStars() {
 
     const field =
-        document.getElementById(
-            "starField"
-        );
+        document.getElementById("starField");
 
     if (!field) return;
 
     field.innerHTML = "";
 
-    const count =
-        window.innerWidth <= 700
-            ? 45
+    const amount =
+        window.innerWidth < 700
+            ? 55
             : 90;
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < amount; i++) {
 
         const star =
             document.createElement("div");
@@ -341,17 +155,17 @@ function createStars() {
 
         star.style.setProperty(
             "--star-glow",
-            `${Math.random() * 5 + 2}px`
+            `${Math.random() * 5 + 1}px`
         );
 
         star.style.setProperty(
             "--star-duration",
-            `${Math.random() * 5 + 4}s`
+            `${Math.random() * 5 + 3}s`
         );
 
         star.style.setProperty(
             "--star-delay",
-            `${Math.random() * 4}s`
+            `${Math.random() * -8}s`
         );
 
         star.style.setProperty(
@@ -361,12 +175,12 @@ function createStars() {
 
         star.style.setProperty(
             "--star-move-x",
-            `${Math.random() * 12 - 6}px`
+            `${Math.random() * 10 - 5}px`
         );
 
         star.style.setProperty(
             "--star-move-y",
-            `${Math.random() * 12 - 6}px`
+            `${Math.random() * 10 - 5}px`
         );
 
         field.appendChild(star);
@@ -380,9 +194,12 @@ function createStars() {
 
 function setupSidebar() {
 
-    if (sidebarLogo) {
+    const logo =
+        document.getElementById("sidebarLogo");
 
-        sidebarLogo.addEventListener(
+    if (logo) {
+
+        logo.addEventListener(
             "click",
             () => {
 
@@ -405,14 +222,10 @@ function setupSidebar() {
     }
 
 
-    if (newChatButton) {
-
-        newChatButton.addEventListener(
-            "click",
-            startNewChat
+    const conversationButton =
+        document.getElementById(
+            "conversationButton"
         );
-    }
-
 
     if (conversationButton) {
 
@@ -423,88 +236,34 @@ function setupSidebar() {
     }
 
 
+    const newChatButton =
+        document.getElementById(
+            "newChatButton"
+        );
+
+    if (newChatButton) {
+
+        newChatButton.addEventListener(
+            "click",
+            startNewChat
+        );
+    }
+
+
+    const historyButton =
+        document.getElementById(
+            "historyButton"
+        );
+
     if (historyButton) {
 
         historyButton.addEventListener(
             "click",
-            openConversationChooser
-        );
-    }
-
-
-    if (settingsButton) {
-
-        settingsButton.addEventListener(
-            "click",
-            openSettings
-        );
-    }
-
-
-    if (ownerButton) {
-
-        ownerButton.addEventListener(
-            "click",
-            openAccount
-        );
-    }
-
-
-    if (studyButton) {
-
-        studyButton.addEventListener(
-            "click",
             () => {
 
-                messageInput.value =
-                    "Help me study.";
-
-                messageInput.focus();
-            }
-        );
-    }
-
-
-    if (cookButton) {
-
-        cookButton.addEventListener(
-            "click",
-            () => {
-
-                messageInput.value =
-                    "Help me cook something.";
-
-                messageInput.focus();
-            }
-        );
-    }
-
-
-    if (imagesButton) {
-
-        imagesButton.addEventListener(
-            "click",
-            () => {
-
-                messageInput.value =
-                    "I want help with an image.";
-
-                messageInput.focus();
-            }
-        );
-    }
-
-
-    if (codeButton) {
-
-        codeButton.addEventListener(
-            "click",
-            () => {
-
-                messageInput.value =
-                    "Help me write code.";
-
-                messageInput.focus();
+                alert(
+                    "Chat history is available in MoonPlug."
+                );
             }
         );
     }
@@ -512,82 +271,100 @@ function setupSidebar() {
 
 
 /* =========================================================
-   CHAT
+   MAIN CHAT
 ========================================================= */
 
 function setupChat() {
 
-    if (sendButton) {
-
-        sendButton.addEventListener(
-            "click",
-            sendMessage
+    const input =
+        document.getElementById(
+            "messageInput"
         );
-    }
+
+    const send =
+        document.getElementById(
+            "sendButton"
+        );
+
+    if (!input || !send) return;
 
 
-    if (messageInput) {
+    send.addEventListener(
+        "click",
+        sendMessage
+    );
 
-        messageInput.addEventListener(
-            "keydown",
-            event => {
 
-                if (
-                    event.key === "Enter" &&
-                    !event.shiftKey
-                ) {
+    input.addEventListener(
+        "keydown",
+        event => {
 
-                    event.preventDefault();
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
 
-                    sendMessage();
-                }
+                event.preventDefault();
+
+                sendMessage();
             }
-        );
+        }
+    );
 
 
-        messageInput.addEventListener(
-            "input",
-            () => {
+    input.addEventListener(
+        "input",
+        () => {
 
-                messageInput.style.height =
-                    "auto";
+            input.style.height =
+                "auto";
 
-                messageInput.style.height =
-                    Math.min(
-                        messageInput.scrollHeight,
-                        180
-                    ) + "px";
-            }
-        );
-    }
+            input.style.height =
+                Math.min(
+                    input.scrollHeight,
+                    180
+                ) + "px";
+        }
+    );
 }
 
 
 /* =========================================================
-   SEND NORMAL CHAT
+   NORMAL CHAT
 ========================================================= */
 
 async function sendMessage() {
 
-    if (!messageInput) return;
+    const input =
+        document.getElementById(
+            "messageInput"
+        );
 
-    const text =
-        messageInput.value.trim();
+    const send =
+        document.getElementById(
+            "sendButton"
+        );
 
-    if (!text) return;
+    if (!input || !send) return;
+
+
+    const message =
+        input.value.trim();
+
+    if (!message) return;
 
 
     addMessage(
-        text,
+        message,
         "user"
     );
 
-    messageInput.value = "";
-
-    messageInput.style.height =
-        "auto";
+    input.value = "";
+    input.style.height = "auto";
 
     showTyping();
+
+    send.disabled = true;
 
 
     try {
@@ -604,7 +381,7 @@ async function sendMessage() {
                     },
 
                     body: JSON.stringify({
-                        message: text
+                        message
                     })
                 }
             );
@@ -632,8 +409,6 @@ async function sendMessage() {
             "I received your message.";
 
 
-        hideTyping();
-
         addMessage(
             String(reply),
             "ai"
@@ -647,12 +422,20 @@ async function sendMessage() {
             error
         );
 
-        hideTyping();
 
         addMessage(
             "I couldn't connect to MoonPlug right now.",
             "ai"
         );
+
+
+    } finally {
+
+        hideTyping();
+
+        send.disabled = false;
+
+        input.focus();
     }
 }
 
@@ -666,13 +449,20 @@ function addMessage(
     sender
 ) {
 
+    const messages =
+        document.getElementById(
+            "messages"
+        );
+
+    const empty =
+        document.getElementById(
+            "emptyChat"
+        );
+
     if (!messages) return;
 
-
-    if (emptyChat) {
-
-        emptyChat.style.display =
-            "none";
+    if (empty) {
+        empty.remove();
     }
 
 
@@ -684,7 +474,7 @@ function addMessage(
 
 
     bubble.textContent =
-        text;
+        String(text);
 
 
     messages.appendChild(
@@ -703,6 +493,11 @@ function addMessage(
 
 function showTyping() {
 
+    const typing =
+        document.getElementById(
+            "typing"
+        );
+
     if (typing) {
 
         typing.style.display =
@@ -712,6 +507,11 @@ function showTyping() {
 
 
 function hideTyping() {
+
+    const typing =
+        document.getElementById(
+            "typing"
+        );
 
     if (typing) {
 
@@ -727,9 +527,15 @@ function hideTyping() {
 
 function setupConversation() {
 
-    if (conversationClose) {
+    const close =
+        document.getElementById(
+            "conversationClose"
+        );
 
-        conversationClose.addEventListener(
+
+    if (close) {
+
+        close.addEventListener(
             "click",
             closeConversation
         );
@@ -749,23 +555,7 @@ function setupConversation() {
 
         conversationSpeaker.addEventListener(
             "click",
-            () => {
-
-                if (
-                    conversationSpeaking
-                ) {
-
-                    stopConversationSpeech();
-
-                } else if (
-                    lastSpokenReply
-                ) {
-
-                    speakConversation(
-                        lastSpokenReply
-                    );
-                }
-            }
+            stopConversationSpeaking
         );
     }
 }
@@ -777,20 +567,35 @@ function setupConversation() {
 
 function openConversationChooser() {
 
-    stopConversationListening();
+    const history =
+        document.getElementById(
+            "conversationHistory"
+        );
 
-    stopConversationSpeech();
+    const saved =
+        getSavedConversation();
 
 
     if (
-        conversationHistory
+        !saved ||
+        !saved.length
     ) {
 
-        conversationHistory.classList.add(
+        openConversationMode(
+            true
+        );
+
+        return;
+    }
+
+
+    if (history) {
+
+        history.classList.add(
             "active"
         );
 
-        conversationHistory.setAttribute(
+        history.setAttribute(
             "aria-hidden",
             "false"
         );
@@ -799,67 +604,87 @@ function openConversationChooser() {
 
 
 /* =========================================================
-   CONVERSATION HISTORY
+   HISTORY
 ========================================================= */
 
 function setupConversationHistory() {
 
-    if (conversationHistoryClose) {
+    const close =
+        document.getElementById(
+            "conversationHistoryClose"
+        );
 
-        conversationHistoryClose.addEventListener(
+    const newButton =
+        document.getElementById(
+            "newConversationButton"
+        );
+
+    const continueButton =
+        document.getElementById(
+            "continueConversationButton"
+        );
+
+
+    if (close) {
+
+        close.addEventListener(
             "click",
-            closeConversationChooser
+            closeConversationHistory
         );
     }
 
 
-    if (newConversationButton) {
+    if (newButton) {
 
-        newConversationButton.addEventListener(
+        newButton.addEventListener(
             "click",
             () => {
 
-                currentConversation = [];
+                clearConversation();
 
-                saveConversation();
+                closeConversationHistory();
 
-                closeConversationChooser();
-
-                openConversation();
+                openConversationMode(
+                    true
+                );
             }
         );
     }
 
 
-    if (continueConversationButton) {
+    if (continueButton) {
 
-        continueConversationButton.addEventListener(
+        continueButton.addEventListener(
             "click",
             () => {
 
                 loadConversation();
 
-                closeConversationChooser();
+                closeConversationHistory();
 
-                openConversation();
-
-                renderConversationHistory();
+                openConversationMode(
+                    false
+                );
             }
         );
     }
 }
 
 
-function closeConversationChooser() {
+function closeConversationHistory() {
 
-    if (!conversationHistory)
-        return;
+    const history =
+        document.getElementById(
+            "conversationHistory"
+        );
 
-    conversationHistory.classList.remove(
+    if (!history) return;
+
+    history.classList.remove(
         "active"
     );
 
-    conversationHistory.setAttribute(
+    history.setAttribute(
         "aria-hidden",
         "true"
     );
@@ -867,13 +692,21 @@ function closeConversationChooser() {
 
 
 /* =========================================================
-   OPEN CONVERSATION
+   OPEN / CLOSE MODE
 ========================================================= */
 
-function openConversation() {
+function openConversationMode(
+    fresh = false
+) {
 
     if (!conversationMode)
         return;
+
+
+    if (fresh) {
+
+        clearConversation();
+    }
 
 
     conversationMode.classList.add(
@@ -892,22 +725,15 @@ function openConversation() {
 
 
     conversationText.textContent =
-        currentConversation.length
-            ? "Continue talking to MoonPlug."
-            : "Tap the microphone to talk";
+        "Tap the microphone to talk";
 }
 
-
-/* =========================================================
-   CLOSE CONVERSATION
-========================================================= */
 
 function closeConversation() {
 
     stopConversationListening();
 
-    stopConversationSpeech();
-
+    stopConversationSpeaking();
 
     if (!conversationMode)
         return;
@@ -921,11 +747,16 @@ function closeConversation() {
         "aria-hidden",
         "true"
     );
+
+
+    setConversationState(
+        "idle"
+    );
 }
 
 
 /* =========================================================
-   CONVERSATION STATE
+   STATE
 ========================================================= */
 
 function setConversationState(
@@ -943,47 +774,52 @@ function setConversationState(
     );
 
 
-    if (state === "listening") {
+    if (state !== "idle") {
 
         conversationMode.classList.add(
-            "listening"
+            state
         );
-
-        conversationStatus.textContent =
-            "Listening";
     }
 
 
-    else if (
-        state === "thinking"
-    ) {
+    const labels = {
 
-        conversationMode.classList.add(
-            "thinking"
-        );
+        idle:
+            "Ready",
 
-        conversationStatus.textContent =
-            "Thinking";
-    }
+        listening:
+            "Listening",
+
+        thinking:
+            "Thinking",
+
+        talking:
+            "Speaking"
+    };
 
 
-    else if (
-        state === "talking"
-    ) {
-
-        conversationMode.classList.add(
-            "talking"
-        );
+    if (conversationStatus) {
 
         conversationStatus.textContent =
-            "Speaking";
-    }
-
-
-    else {
-
-        conversationStatus.textContent =
+            labels[state] ||
             "Ready";
+    }
+
+
+    if (
+        conversationMic &&
+        state === "listening"
+    ) {
+
+        conversationMic.classList.add(
+            "active"
+        );
+
+    } else if (conversationMic) {
+
+        conversationMic.classList.remove(
+            "active"
+        );
     }
 }
 
@@ -992,89 +828,97 @@ function setConversationState(
    SPEECH RECOGNITION
 ========================================================= */
 
-function setupSpeech() {
+function setupSpeechRecognition() {
 
-    const SpeechRecognition =
+    const Recognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
 
 
-    if (!SpeechRecognition) {
+    if (!Recognition) {
 
-        console.warn(
-            "Speech recognition is not supported."
-        );
+        recognitionAvailable =
+            false;
 
         return;
     }
 
 
+    recognitionAvailable =
+        true;
+
+
     recognition =
-        new SpeechRecognition();
+        new Recognition();
 
 
     recognition.continuous =
         false;
 
     recognition.interimResults =
-        false;
+        true;
 
     recognition.lang =
         "en-US";
 
-    recognition.maxAlternatives =
-        1;
 
+    recognition.onstart = () => {
 
-    recognition.onstart =
-        () => {
+        conversationListening =
+            true;
 
-            conversationListening =
-                true;
+        setConversationState(
+            "listening"
+        );
 
-            setConversationState(
-                "listening"
-            );
-
-
-            if (conversationMic) {
-
-                conversationMic.classList.add(
-                    "active"
-                );
-            }
-
-
-            conversationText.textContent =
-                "Listening...";
-        };
+        conversationText.textContent =
+            "Listening...";
+    };
 
 
     recognition.onresult =
         event => {
 
-            const transcript =
-                event.results[0][0]
-                    .transcript
-                    .trim();
+            let transcript = "";
 
+            for (
+                let i = event.resultIndex;
+                i < event.results.length;
+                i++
+            ) {
 
-            if (!transcript) {
-
-                setConversationState(
-                    "idle"
-                );
-
-                conversationText.textContent =
-                    "I didn't hear anything.";
-
-                return;
+                transcript +=
+                    event.results[i][0]
+                        .transcript;
             }
 
 
-            processConversationMessage(
-                transcript
-            );
+            transcript =
+                transcript.trim();
+
+
+            if (transcript) {
+
+                conversationText.textContent =
+                    transcript;
+            }
+
+
+            const lastResult =
+                event.results[
+                    event.results.length - 1
+                ];
+
+
+            if (
+                lastResult &&
+                lastResult.isFinal
+            ) {
+
+                processConversationMessage(
+                    transcript
+                );
+            }
         };
 
 
@@ -1082,21 +926,13 @@ function setupSpeech() {
         event => {
 
             console.error(
-                "Speech recognition error:",
+                "Speech recognition:",
                 event.error
             );
 
 
             conversationListening =
                 false;
-
-
-            if (conversationMic) {
-
-                conversationMic.classList.remove(
-                    "active"
-                );
-            }
 
 
             setConversationState(
@@ -1110,10 +946,9 @@ function setupSpeech() {
             ) {
 
                 conversationText.textContent =
-                    "Microphone permission was blocked.";
-            }
+                    "Microphone permission was denied.";
 
-            else {
+            } else {
 
                 conversationText.textContent =
                     "I couldn't hear you. Try again.";
@@ -1121,34 +956,24 @@ function setupSpeech() {
         };
 
 
-    recognition.onend =
-        () => {
+    recognition.onend = () => {
 
-            conversationListening =
-                false;
-
-
-            if (conversationMic) {
-
-                conversationMic.classList.remove(
-                    "active"
-                );
-            }
+        conversationListening =
+            false;
 
 
-            if (
-                !conversationSpeaking &&
-                conversationMode &&
-                conversationMode.classList.contains(
-                    "active"
-                )
-            ) {
+        if (
+            !conversationSpeaking &&
+            conversationMode.classList.contains(
+                "active"
+            )
+        ) {
 
-                setConversationState(
-                    "idle"
-                );
-            }
-        };
+            setConversationState(
+                "idle"
+            );
+        }
+    };
 }
 
 
@@ -1158,10 +983,9 @@ function setupSpeech() {
 
 function toggleConversationListening() {
 
-    if (!recognition) {
+    if (conversationSpeaking) {
 
-        conversationText.textContent =
-            "Speech recognition isn't supported by this browser.";
+        stopConversationSpeaking();
 
         return;
     }
@@ -1175,7 +999,19 @@ function toggleConversationListening() {
     }
 
 
-    stopConversationSpeech();
+    startConversationListening();
+}
+
+
+function startConversationListening() {
+
+    if (!recognitionAvailable) {
+
+        conversationText.textContent =
+            "Speech recognition isn't supported in this browser.";
+
+        return;
+    }
 
 
     try {
@@ -1185,7 +1021,7 @@ function toggleConversationListening() {
     } catch (error) {
 
         console.warn(
-            "Recognition start:",
+            "Recognition could not start:",
             error
         );
     }
@@ -1194,29 +1030,24 @@ function toggleConversationListening() {
 
 function stopConversationListening() {
 
-    if (!recognition)
-        return;
+    if (
+        recognition &&
+        conversationListening
+    ) {
 
+        try {
 
-    try {
+            recognition.stop();
 
-        recognition.stop();
+        } catch (error) {
 
-    } catch {
-        /* Already stopped */
+            console.warn(error);
+        }
     }
 
 
     conversationListening =
         false;
-
-
-    if (conversationMic) {
-
-        conversationMic.classList.remove(
-            "active"
-        );
-    }
 }
 
 
@@ -1231,19 +1062,29 @@ async function processConversationMessage(
     stopConversationListening();
 
 
+    const cleanTranscript =
+        String(
+            transcript || ""
+        ).trim();
+
+
+    if (!cleanTranscript)
+        return;
+
+
     saveConversationMessage(
         "user",
-        transcript
+        cleanTranscript
     );
-
-
-    conversationText.textContent =
-        transcript;
 
 
     setConversationState(
         "thinking"
     );
+
+
+    conversationText.textContent =
+        "MoonPlug is thinking...";
 
 
     try {
@@ -1261,7 +1102,7 @@ async function processConversationMessage(
 
                     body: JSON.stringify({
                         message:
-                            transcript
+                            cleanTranscript
                     })
                 }
             );
@@ -1299,12 +1140,8 @@ async function processConversationMessage(
         );
 
 
-        /*
-           Also save it to normal MoonPlug chat.
-        */
-
         addMessage(
-            transcript,
+            cleanTranscript,
             "user"
         );
 
@@ -1315,19 +1152,16 @@ async function processConversationMessage(
         );
 
 
-        /*
-           Show response.
-        */
-
         conversationText.textContent =
             cleanReply;
 
 
         /*
-           Actually speak response.
-        */
+         * THIS IS THE IMPORTANT PART:
+         * MoonPlug actually speaks the answer.
+         */
 
-        await speakConversation(
+        speakConversation(
             cleanReply
         );
 
@@ -1356,258 +1190,305 @@ async function processConversationMessage(
 
 
 /* =========================================================
-   SPEECH SYNTHESIS
+   SPEECH VOICES
 ========================================================= */
 
-function setupSpeechSynthesis() {
+function loadSpeechVoices() {
 
-    if (!("speechSynthesis" in window)) {
+    if (!("speechSynthesis" in window))
+        return;
 
-        console.warn(
-            "Speech synthesis is not available."
+
+    speechVoices =
+        window.speechSynthesis
+            .getVoices();
+}
+
+
+function setupSpeechVoiceEvents() {
+
+    if (
+        "speechSynthesis" in window &&
+        "onvoiceschanged" in
+        window.speechSynthesis
+    ) {
+
+        window.speechSynthesis.onvoiceschanged =
+            () => {
+
+                loadSpeechVoices();
+            };
+    }
+}
+
+
+/* =========================================================
+   CHOOSE ENGLISH VOICE
+========================================================= */
+
+function getEnglishVoice() {
+
+    if (!speechVoices.length) {
+
+        loadSpeechVoices();
+    }
+
+
+    const english =
+        speechVoices.filter(
+            voice =>
+                /^en(-|_)/i.test(
+                    voice.lang
+                )
+        );
+
+
+    if (!english.length)
+        return null;
+
+
+    /*
+     * Prefer an American English voice
+     * when the device has one.
+     */
+
+    const american =
+        english.find(
+            voice =>
+                /en-US/i.test(
+                    voice.lang
+                )
+        );
+
+
+    if (american)
+        return american;
+
+
+    return english[0];
+}
+
+
+/* =========================================================
+   ACTUAL MOONPLUG SPEECH
+========================================================= */
+
+function speakConversation(
+    text
+) {
+
+    if (
+        !("speechSynthesis" in window)
+    ) {
+
+        conversationText.textContent =
+            "Your browser doesn't support voice playback.";
+
+        setConversationState(
+            "idle"
         );
 
         return;
     }
 
 
-    speechReady = true;
-
-    /*
-       Some browsers don't expose voices
-       until voiceschanged fires.
-    */
-
-    window.speechSynthesis.onvoiceschanged =
-        () => {
-
-            getBestEnglishVoice();
-        };
+    stopConversationSpeaking();
 
 
-    getBestEnglishVoice();
-}
-
-
-function getBestEnglishVoice() {
-
-    if (
-        !("speechSynthesis" in window)
-    ) {
-
-        return null;
-    }
-
-
-    const voices =
-        window.speechSynthesis
-            .getVoices();
-
-
-    if (!voices.length) {
-
-        return null;
-    }
-
-
-    /*
-       Prefer English voices.
-
-       Priority:
-       1. en-US
-       2. en-CA
-       3. en-GB
-       4. any English voice
-    */
-
-    const preferred =
-        voices.find(
-            voice =>
-                voice.lang === "en-US"
-        ) ||
-        voices.find(
-            voice =>
-                voice.lang === "en-CA"
-        ) ||
-        voices.find(
-            voice =>
-                voice.lang === "en-GB"
-        ) ||
-        voices.find(
-            voice =>
-                voice.lang &&
-                voice.lang
-                    .toLowerCase()
-                    .startsWith("en")
+    const utterance =
+        new SpeechSynthesisUtterance(
+            String(text)
         );
 
 
-    return preferred || null;
+    const voice =
+        getEnglishVoice();
+
+
+    if (voice) {
+
+        utterance.voice =
+            voice;
+    }
+
+
+    /*
+     * Natural English voice settings.
+     */
+
+    utterance.lang =
+        voice?.lang ||
+        "en-US";
+
+    utterance.rate =
+        .95;
+
+    utterance.pitch =
+        1;
+
+    utterance.volume =
+        1;
+
+
+    utterance.onstart =
+        () => {
+
+            conversationSpeaking =
+                true;
+
+            setConversationState(
+                "talking"
+            );
+
+            startVoiceWave();
+        };
+
+
+    utterance.onend =
+        () => {
+
+            conversationSpeaking =
+                false;
+
+            stopVoiceWave();
+
+            setConversationState(
+                "idle"
+            );
+        };
+
+
+    utterance.onerror =
+        event => {
+
+            console.error(
+                "Speech synthesis error:",
+                event
+            );
+
+            conversationSpeaking =
+                false;
+
+            stopVoiceWave();
+
+            setConversationState(
+                "idle"
+            );
+        };
+
+
+    /*
+     * Some mobile browsers need the
+     * speech queue cleared first.
+     */
+
+    window.speechSynthesis.cancel();
+
+    window.speechSynthesis.speak(
+        utterance
+    );
 }
 
 
-/*
-   This is the important function.
+/* =========================================================
+   SPEAKING WAVE
+========================================================= */
 
-   It uses the device/browser's available
-   English voice and DOES NOT require an
-   external voice API.
-*/
+function startVoiceWave() {
 
-function speakConversation(
-    text
-) {
-
-    return new Promise(
-        resolve => {
-
-            if (
-                !("speechSynthesis" in window)
-            ) {
-
-                conversationSpeaking =
-                    false;
-
-                setConversationState(
-                    "idle"
-                );
-
-                resolve(false);
-
-                return;
-            }
+    if (!voiceWave)
+        return;
 
 
-            const cleanText =
-                String(text || "")
-                    .replace(
-                        /[*_#`]/g,
-                        ""
-                    )
-                    .trim();
+    stopVoiceWave();
 
 
-            if (!cleanText) {
-
-                resolve(false);
-
-                return;
-            }
+    const bars =
+        voiceWave.querySelectorAll(
+            "span"
+        );
 
 
-            /*
-               Cancel anything already speaking.
-            */
+    function animate() {
 
-            window.speechSynthesis.cancel();
-
-
-            lastSpokenReply =
-                cleanText;
+        if (!conversationSpeaking)
+            return;
 
 
-            const utterance =
-                new SpeechSynthesisUtterance(
-                    cleanText
-                );
+        bars.forEach(
+            (bar, index) => {
 
-
-            const voice =
-                getBestEnglishVoice();
-
-
-            if (voice) {
-
-                utterance.voice =
-                    voice;
-
-                utterance.lang =
-                    voice.lang;
-            }
-
-            else {
-
-                utterance.lang =
-                    "en-US";
-            }
-
-
-            /*
-               Natural but clear.
-            */
-
-            utterance.rate =
-                0.96;
-
-            utterance.pitch =
-                1.0;
-
-            utterance.volume =
-                1.0;
-
-
-            utterance.onstart =
-                () => {
-
-                    conversationSpeaking =
-                        true;
-
-                    setConversationState(
-                        "talking"
-                    );
-                };
-
-
-            utterance.onend =
-                () => {
-
-                    conversationSpeaking =
-                        false;
-
-                    setConversationState(
-                        "idle"
+                const center =
+                    Math.abs(
+                        index -
+                        (bars.length - 1) / 2
                     );
 
-                    resolve(true);
-                };
+
+                const centerStrength =
+                    1 -
+                    center /
+                    ((bars.length - 1) / 2);
 
 
-            utterance.onerror =
-                event => {
+                const random =
+                    Math.random();
 
-                    console.error(
-                        "Speech synthesis error:",
-                        event
+
+                const height =
+                    .2 +
+                    random *
+                    .75 *
+                    Math.max(
+                        .35,
+                        centerStrength
                     );
 
-                    conversationSpeaking =
-                        false;
 
-                    setConversationState(
-                        "idle"
-                    );
-
-                    resolve(false);
-                };
+                bar.style.transform =
+                    `scaleY(${height})`;
+            }
+        );
 
 
-            /*
-               Small delay helps Safari/iOS
-               and some browsers actually
-               begin playback.
-            */
-
-            setTimeout(
-                () => {
-
-                    window.speechSynthesis
-                        .speak(
-                            utterance
-                        );
-
-                },
-                50
+        speechTimer =
+            requestAnimationFrame(
+                animate
             );
+    }
+
+
+    animate();
+}
+
+
+function stopVoiceWave() {
+
+    if (speechTimer) {
+
+        cancelAnimationFrame(
+            speechTimer
+        );
+
+        speechTimer = null;
+    }
+
+
+    if (!voiceWave)
+        return;
+
+
+    const bars =
+        voiceWave.querySelectorAll(
+            "span"
+        );
+
+
+    bars.forEach(
+        bar => {
+
+            bar.style.transform =
+                "scaleY(.12)";
         }
     );
 }
@@ -1617,7 +1498,7 @@ function speakConversation(
    STOP SPEAKING
 ========================================================= */
 
-function stopConversationSpeech() {
+function stopConversationSpeaking() {
 
     if (
         "speechSynthesis" in window
@@ -1629,6 +1510,9 @@ function stopConversationSpeech() {
 
     conversationSpeaking =
         false;
+
+
+    stopVoiceWave();
 
 
     if (
@@ -1651,122 +1535,70 @@ function stopConversationSpeech() {
 
 function saveConversationMessage(
     role,
-    content
+    text
 ) {
 
-    currentConversation.push({
+    conversationMessages.push({
         role,
-        content,
+        text,
         timestamp:
             Date.now()
     });
 
 
-    saveConversation();
+    localStorage.setItem(
+        "moonplugConversation",
+        JSON.stringify(
+            conversationMessages
+        )
+    );
 }
 
 
-function saveConversation() {
-
-    try {
-
-        localStorage.setItem(
-            CONVERSATION_STORAGE_KEY,
-            JSON.stringify(
-                currentConversation
-            )
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Could not save conversation:",
-            error
-        );
-    }
-}
-
-
-function loadConversation() {
+function getSavedConversation() {
 
     try {
 
         const saved =
             localStorage.getItem(
-                CONVERSATION_STORAGE_KEY
+                "moonplugConversation"
             );
 
 
-        if (!saved) {
-
-            currentConversation = [];
-
-            return;
-        }
+        if (!saved)
+            return [];
 
 
         const parsed =
             JSON.parse(saved);
 
 
-        if (Array.isArray(parsed)) {
+        return Array.isArray(parsed)
+            ? parsed
+            : [];
 
-            currentConversation =
-                parsed;
 
-        } else {
+    } catch {
 
-            currentConversation = [];
-        }
-
-    } catch (error) {
-
-        console.error(
-            "Could not load conversation:",
-            error
-        );
-
-        currentConversation = [];
+        return [];
     }
 }
 
 
-/* =========================================================
-   RENDER SAVED CONVERSATION
-========================================================= */
+function loadConversation() {
 
-function renderConversationHistory() {
-
-    if (!conversationText)
-        return;
+    conversationMessages =
+        getSavedConversation();
+}
 
 
-    if (!currentConversation.length) {
+function clearConversation() {
 
-        conversationText.textContent =
-            "No saved conversation yet.";
+    conversationMessages = [];
 
-        return;
-    }
-
-
-    const lastMessages =
-        currentConversation
-            .slice(-4);
-
-
-    conversationText.textContent =
-        lastMessages
-            .map(
-                message =>
-                    `${
-                        message.role ===
-                        "user"
-                            ? "You"
-                            : "MoonPlug"
-                    }: ${message.content}`
-            )
-            .join("\n\n");
+    localStorage.removeItem(
+        "moonplugConversation"
+    );
 }
 
 
@@ -1776,46 +1608,32 @@ function renderConversationHistory() {
 
 function startNewChat() {
 
-    stopConversationListening();
-
-    stopConversationSpeech();
-
-
-    currentConversation = [];
-
-    saveConversation();
-
-
-    if (messages) {
-
-        messages.innerHTML = "";
-
-        if (emptyChat) {
-
-            messages.appendChild(
-                emptyChat
-            );
-
-            emptyChat.style.display =
-                "flex";
-        }
-    }
-
-
-    if (conversationMode) {
-
-        conversationMode.classList.remove(
-            "active"
+    const messages =
+        document.getElementById(
+            "messages"
         );
-    }
+
+    if (!messages)
+        return;
 
 
-    if (sidebar) {
+    messages.innerHTML = `
+        <div id="emptyChat" class="empty-chat">
 
-        sidebar.classList.remove(
-            "expanded"
-        );
-    }
+            <div class="empty-moon">
+                🌙
+            </div>
+
+            <h1>
+                What can I help with?
+            </h1>
+
+            <p>
+                Ask MoonPlug anything.
+            </p>
+
+        </div>
+    `;
 }
 
 
@@ -1825,24 +1643,31 @@ function startNewChat() {
 
 function setupSettings() {
 
-    if (closeSettings) {
+    const button =
+        document.getElementById(
+            "settingsButton"
+        );
 
-        closeSettings.addEventListener(
+    const close =
+        document.getElementById(
+            "closeSettings"
+        );
+
+
+    if (button) {
+
+        button.addEventListener(
             "click",
-            () => {
-
-                settingsPanel.style.display =
-                    "none";
-            }
+            openSettings
         );
     }
 
 
-    if (themeButton) {
+    if (close) {
 
-        themeButton.addEventListener(
+        close.addEventListener(
             "click",
-            toggleTheme
+            closeSettings
         );
     }
 
@@ -1865,21 +1690,63 @@ function setupSettings() {
                 );
             }
         );
+
+
+    const themeButton =
+        document.getElementById(
+            "themeButton"
+        );
+
+
+    if (themeButton) {
+
+        themeButton.addEventListener(
+            "click",
+            () => {
+
+                document.body.classList.toggle(
+                    "light-theme"
+                );
+            }
+        );
+    }
 }
 
 
 function openSettings() {
 
-    if (!settingsPanel)
-        return;
+    const panel =
+        document.getElementById(
+            "settingsPanel"
+        );
 
+    if (!panel) return;
 
-    settingsPanel.style.display =
+    panel.style.display =
         "flex";
 
-    settingsPanel.setAttribute(
+    panel.setAttribute(
         "aria-hidden",
         "false"
+    );
+}
+
+
+function closeSettings() {
+
+    const panel =
+        document.getElementById(
+            "settingsPanel"
+        );
+
+    if (!panel) return;
+
+    panel.style.display =
+        "none";
+
+    panel.setAttribute(
+        "aria-hidden",
+        "true"
     );
 }
 
@@ -1901,7 +1768,7 @@ function updateTextSize(
 
 
     localStorage.setItem(
-        TEXT_SIZE_KEY,
+        "moonplugTextSize",
         size
     );
 
@@ -1925,64 +1792,16 @@ function updateTextSize(
 
 function loadTextSize() {
 
-    const saved =
+    const size =
         localStorage.getItem(
-            TEXT_SIZE_KEY
-        ) || "medium";
+            "moonplugTextSize"
+        ) ||
+        "medium";
 
 
     updateTextSize(
-        saved
+        size
     );
-}
-
-
-function toggleTheme() {
-
-    const light =
-        document.body.classList.toggle(
-            "light-theme"
-        );
-
-
-    localStorage.setItem(
-        THEME_KEY,
-        light
-            ? "light"
-            : "dark"
-    );
-
-
-    if (themeButton) {
-
-        themeButton.textContent =
-            light
-                ? "Light"
-                : "Dark";
-    }
-}
-
-
-function loadTheme() {
-
-    const theme =
-        localStorage.getItem(
-            THEME_KEY
-        );
-
-
-    if (theme === "light") {
-
-        document.body.classList.add(
-            "light-theme"
-        );
-
-        if (themeButton) {
-
-            themeButton.textContent =
-                "Light";
-        }
-    }
 }
 
 
@@ -1992,11 +1811,55 @@ function loadTheme() {
 
 function setupAccount() {
 
+    const account =
+        document.getElementById(
+            "ownerButton"
+        );
+
+    const close =
+        document.getElementById(
+            "closeAccount"
+        );
+
+    const loginTab =
+        document.getElementById(
+            "loginTab"
+        );
+
+    const signupTab =
+        document.getElementById(
+            "signupTab"
+        );
+
+
+    /*
+     * Account remains available from
+     * the sidebar.
+     */
+
+    if (account) {
+
+        account.addEventListener(
+            "click",
+            openAccount
+        );
+    }
+
+
+    if (close) {
+
+        close.addEventListener(
+            "click",
+            closeAccount
+        );
+    }
+
+
     if (loginTab) {
 
         loginTab.addEventListener(
             "click",
-            showLoginTab
+            () => showLoginTab()
         );
     }
 
@@ -2005,46 +1868,7 @@ function setupAccount() {
 
         signupTab.addEventListener(
             "click",
-            showSignupTab
-        );
-    }
-
-
-    if (closeAccount) {
-
-        closeAccount.addEventListener(
-            "click",
-            closeAccountScreen
-        );
-    }
-
-
-    if (loginForm) {
-
-        loginForm.addEventListener(
-            "submit",
-            event => {
-
-                event.preventDefault();
-
-                accountMessage.textContent =
-                    "Account login is connected to the MoonPlug backend.";
-            }
-        );
-    }
-
-
-    if (signupForm) {
-
-        signupForm.addEventListener(
-            "submit",
-            event => {
-
-                event.preventDefault();
-
-                accountMessage.textContent =
-                    "Account creation is ready for backend integration.";
-            }
+            () => showSignupTab()
         );
     }
 }
@@ -2052,30 +1876,36 @@ function setupAccount() {
 
 function openAccount() {
 
-    if (!accountScreen)
-        return;
+    const screen =
+        document.getElementById(
+            "accountScreen"
+        );
 
+    if (!screen) return;
 
-    accountScreen.style.display =
+    screen.style.display =
         "flex";
 
-    accountScreen.setAttribute(
+    screen.setAttribute(
         "aria-hidden",
         "false"
     );
 }
 
 
-function closeAccountScreen() {
+function closeAccount() {
 
-    if (!accountScreen)
-        return;
+    const screen =
+        document.getElementById(
+            "accountScreen"
+        );
 
+    if (!screen) return;
 
-    accountScreen.style.display =
+    screen.style.display =
         "none";
 
-    accountScreen.setAttribute(
+    screen.setAttribute(
         "aria-hidden",
         "true"
     );
@@ -2084,6 +1914,30 @@ function closeAccountScreen() {
 
 function showLoginTab() {
 
+    const login =
+        document.getElementById(
+            "loginForm"
+        );
+
+    const signup =
+        document.getElementById(
+            "signupForm"
+        );
+
+    const loginTab =
+        document.getElementById(
+            "loginTab"
+        );
+
+    const signupTab =
+        document.getElementById(
+            "signupTab"
+        );
+
+
+    login.hidden = false;
+    signup.hidden = true;
+
     loginTab.classList.add(
         "active"
     );
@@ -2091,56 +1945,76 @@ function showLoginTab() {
     signupTab.classList.remove(
         "active"
     );
-
-    loginForm.hidden =
-        false;
-
-    signupForm.hidden =
-        true;
 }
 
 
 function showSignupTab() {
 
-    signupTab.classList.add(
-        "active"
-    );
+    const login =
+        document.getElementById(
+            "loginForm"
+        );
+
+    const signup =
+        document.getElementById(
+            "signupForm"
+        );
+
+    const loginTab =
+        document.getElementById(
+            "loginTab"
+        );
+
+    const signupTab =
+        document.getElementById(
+            "signupTab"
+        );
+
+
+    login.hidden = true;
+    signup.hidden = false;
 
     loginTab.classList.remove(
         "active"
     );
 
-    signupForm.hidden =
-        false;
-
-    loginForm.hidden =
-        true;
+    signupTab.classList.add(
+        "active"
+    );
 }
 
 
 /* =========================================================
-   HIDDEN OWNER ACCESS
+   OWNER ACCESS
+   15912014 TRIGGER
 ========================================================= */
 
 function setupOwner() {
 
-    /*
-       Owner button still behaves as Account.
+    const ownerLogin =
+        document.getElementById(
+            "ownerLoginButton"
+        );
 
-       The owner login is intentionally not
-       shown publicly.
-    */
+    const ownerCancel =
+        document.getElementById(
+            "ownerCancel"
+        );
+
+    const ownerLogout =
+        document.getElementById(
+            "ownerLogout"
+        );
+
+    const showPassword =
+        document.getElementById(
+            "showPassword"
+        );
 
 
-    document.addEventListener(
-        "keydown",
-        handleOwnerTrigger
-    );
+    if (ownerLogin) {
 
-
-    if (ownerLoginButton) {
-
-        ownerLoginButton.addEventListener(
+        ownerLogin.addEventListener(
             "click",
             loginOwner
         );
@@ -2171,12 +2045,18 @@ function setupOwner() {
             "click",
             () => {
 
+                const input =
+                    document.getElementById(
+                        "ownerCode"
+                    );
+
+
                 if (
-                    ownerCode.type ===
+                    input.type ===
                     "password"
                 ) {
 
-                    ownerCode.type =
+                    input.type =
                         "text";
 
                     showPassword.textContent =
@@ -2184,7 +2064,7 @@ function setupOwner() {
 
                 } else {
 
-                    ownerCode.type =
+                    input.type =
                         "password";
 
                     showPassword.textContent =
@@ -2195,140 +2075,108 @@ function setupOwner() {
     }
 
 
-    if (ownerCode) {
-
-        ownerCode.addEventListener(
-            "keydown",
-            event => {
-
-                if (
-                    event.key ===
-                    "Enter"
-                ) {
-
-                    loginOwner();
-                }
-            }
-        );
-    }
-
-
-    if (manageUsersButton) {
-
-        manageUsersButton.addEventListener(
-            "click",
-            loadOwnerUsers
-        );
-    }
-
-
-    if (manageChatsButton) {
-
-        manageChatsButton.addEventListener(
-            "click",
-            () => {
-
-                ownerActionMessage.textContent =
-                    "Chat management is connected to the owner backend.";
-            }
-        );
-    }
-
-
-    if (appSettingsButton) {
-
-        appSettingsButton.addEventListener(
-            "click",
-            loadOwnerSettings
-        );
-    }
-
-
-    if (trainerButton) {
-
-        trainerButton.addEventListener(
-            "click",
-            openTrainer
-        );
-    }
-}
-
-
-function handleOwnerTrigger(
-    event
-) {
-
     /*
-       Only react when typing the code
-       into a normal text/password input.
-    */
+     * Type 15912014 anywhere on the page
+     * to open the hidden owner login.
+     */
 
-    const target =
-        event.target;
-
-
-    if (
-        target &&
-        (
-            target.tagName ===
-                "INPUT" ||
-            target.tagName ===
-                "TEXTAREA"
-        )
-    ) {
-
-        const value =
-            target.value;
+    let triggerBuffer = "";
 
 
-        if (
-            value ===
-            OWNER_TRIGGER
-        ) {
+    document.addEventListener(
+        "keydown",
+        event => {
 
-            target.value = "";
+            if (
+                event.key.length !== 1
+            ) {
+                return;
+            }
 
-            showOwnerLogin();
+
+            triggerBuffer +=
+                event.key;
+
+
+            if (
+                triggerBuffer.length >
+                OWNER_TRIGGER.length
+            ) {
+
+                triggerBuffer =
+                    triggerBuffer.slice(
+                        -OWNER_TRIGGER.length
+                    );
+            }
+
+
+            if (
+                triggerBuffer ===
+                OWNER_TRIGGER
+            ) {
+
+                triggerBuffer = "";
+
+                showOwnerLogin();
+            }
         }
-    }
+    );
 }
 
 
 function showOwnerLogin() {
 
-    if (!ownerLogin)
+    const overlay =
+        document.getElementById(
+            "ownerLogin"
+        );
+
+    const code =
+        document.getElementById(
+            "ownerCode"
+        );
+
+
+    if (!overlay)
         return;
 
 
-    ownerLogin.style.display =
+    overlay.style.display =
         "flex";
 
-    ownerLogin.setAttribute(
+    overlay.setAttribute(
         "aria-hidden",
         "false"
     );
 
 
-    ownerError.textContent =
-        "";
+    if (code) {
 
-    ownerCode.value =
-        "";
+        code.value = "";
 
-    ownerCode.focus();
+        setTimeout(
+            () => code.focus(),
+            100
+        );
+    }
 }
 
 
 function hideOwnerLogin() {
 
-    if (!ownerLogin)
+    const overlay =
+        document.getElementById(
+            "ownerLogin"
+        );
+
+    if (!overlay)
         return;
 
 
-    ownerLogin.style.display =
+    overlay.style.display =
         "none";
 
-    ownerLogin.setAttribute(
+    overlay.setAttribute(
         "aria-hidden",
         "true"
     );
@@ -2337,26 +2185,29 @@ function hideOwnerLogin() {
 
 async function loginOwner() {
 
+    const codeInput =
+        document.getElementById(
+            "ownerCode"
+        );
+
+    const error =
+        document.getElementById(
+            "ownerError"
+        );
+
+
     const code =
-        ownerCode.value.trim();
+        codeInput.value.trim();
 
 
     if (!code) {
 
-        ownerError.textContent =
+        error.textContent =
             "Enter the owner code.";
 
         return;
     }
 
-
-    /*
-       The real authentication should
-       happen on the backend.
-
-       The trigger above only reveals
-       this hidden login.
-    */
 
     try {
 
@@ -2370,8 +2221,6 @@ async function loginOwner() {
                         "Content-Type":
                             "application/json"
                     },
-
-                    credentials: "include",
 
                     body: JSON.stringify({
                         code
@@ -2395,7 +2244,7 @@ async function loginOwner() {
         }
 
 
-        ownerLoggedIn =
+        ownerAuthenticated =
             true;
 
 
@@ -2414,28 +2263,100 @@ async function loginOwner() {
         );
 
 
-        ownerError.textContent =
+        /*
+         * The backend remains the authority.
+         * Do not expose the owner panel merely
+         * because the frontend code is entered.
+         */
+
+        error.textContent =
             error.message ||
             "Owner login failed.";
     }
 }
 
 
+function openOwnerPanel() {
+
+    const panel =
+        document.getElementById(
+            "ownerPanel"
+        );
+
+    if (!panel) return;
+
+    panel.style.display =
+        "flex";
+
+    panel.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+}
+
+
+function hideOwnerPanel() {
+
+    const panel =
+        document.getElementById(
+            "ownerPanel"
+        );
+
+    if (!panel) return;
+
+    panel.style.display =
+        "none";
+
+    panel.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+}
+
+
+async function logoutOwner() {
+
+    try {
+
+        await fetch(
+            `${API_BASE}/api/owner/logout`,
+            {
+                method: "POST"
+            }
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Owner logout:",
+            error
+        );
+    }
+
+
+    ownerAuthenticated =
+        false;
+
+
+    hideOwnerPanel();
+}
+
+
 /* =========================================================
-   OWNER SESSION
+   OWNER DASHBOARD
 ========================================================= */
 
-async function checkOwnerSession() {
+async function loadOwnerDashboard() {
+
+    if (!ownerAuthenticated)
+        return;
+
 
     try {
 
         const response =
             await fetch(
-                `${API_BASE}/api/owner/session`,
-                {
-                    credentials:
-                        "include"
-                }
+                `${API_BASE}/api/owner/dashboard`
             );
 
 
@@ -2449,733 +2370,42 @@ async function checkOwnerSession() {
                 .catch(() => ({}));
 
 
-        if (
-            data.loggedIn ||
-            data.authenticated
-        ) {
-
-            ownerLoggedIn =
-                true;
-        }
-
-    } catch (error) {
-
-        console.warn(
-            "Owner session unavailable:",
-            error
-        );
-    }
-}
-
-
-async function logoutOwner() {
-
-    try {
-
-        await fetch(
-            `${API_BASE}/api/owner/logout`,
-            {
-                method: "POST",
-
-                credentials:
-                    "include"
-            }
-        );
-
-    } catch (error) {
-
-        console.warn(
-            "Owner logout:",
-            error
-        );
-    }
-
-
-    ownerLoggedIn =
-        false;
-
-
-    hideOwnerPanel();
-}
-
-
-function openOwnerPanel() {
-
-    if (!ownerPanel)
-        return;
-
-
-    ownerPanel.style.display =
-        "flex";
-
-    ownerPanel.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-}
-
-
-function hideOwnerPanel() {
-
-    if (!ownerPanel)
-        return;
-
-
-    ownerPanel.style.display =
-        "none";
-
-    ownerPanel.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-}
-
-
-/* =========================================================
-   OWNER DASHBOARD
-========================================================= */
-
-async function loadOwnerDashboard() {
-
-    if (!ownerLoggedIn)
-        return;
-
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_BASE}/api/owner/dashboard`,
-                {
-                    credentials:
-                        "include"
-                }
-            );
-
-
-        const data =
-            await response
-                .json()
-                .catch(() => ({}));
-
-
-        if (!response.ok)
-            throw new Error(
-                data.error ||
-                "Dashboard failed."
-            );
-
-
-        if (
-            ownerUsers &&
-            data.users !== undefined
-        ) {
-
-            ownerUsers.textContent =
-                data.users;
-        }
-
-
-        if (
-            ownerChats &&
-            data.chats !== undefined
-        ) {
-
-            ownerChats.textContent =
-                data.chats;
-        }
-
-
-    } catch (error) {
-
-        console.error(
-            "Owner dashboard:",
-            error
-        );
-    }
-}
-
-
-async function loadOwnerUsers() {
-
-    if (!ownerLoggedIn)
-        return;
-
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_BASE}/api/owner/users`,
-                {
-                    credentials:
-                        "include"
-                }
-            );
-
-
-        const data =
-            await response
-                .json()
-                .catch(() => ({}));
-
-
-        ownerActionMessage.textContent =
-            `Users loaded: ${
-                Array.isArray(data.users)
-                    ? data.users.length
-                    : data.count ||
-                      0
-            }`;
-
-    } catch (error) {
-
-        ownerActionMessage.textContent =
-            "Could not load users.";
-    }
-}
-
-
-async function loadOwnerSettings() {
-
-    if (!ownerLoggedIn)
-        return;
-
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_BASE}/api/owner/settings`,
-                {
-                    credentials:
-                        "include"
-                }
-            );
-
-
-        const data =
-            await response
-                .json()
-                .catch(() => ({}));
-
-
-        ownerActionMessage.textContent =
-            "Owner settings loaded.";
-
-        console.log(
-            "Owner settings:",
-            data
-        );
-
-    } catch (error) {
-
-        ownerActionMessage.textContent =
-            "Could not load owner settings.";
-    }
-}
-
-
-async function updateOwnerSettings(
-    settings
-) {
-
-    if (!ownerLoggedIn)
-        return;
-
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_BASE}/api/owner/settings`,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    credentials:
-                        "include",
-
-                    body: JSON.stringify(
-                        settings
-                    )
-                }
-            );
-
-
-        if (!response.ok)
-            throw new Error(
-                "Settings update failed."
-            );
-
-
-        ownerActionMessage.textContent =
-            "Settings updated.";
-
-    } catch (error) {
-
-        ownerActionMessage.textContent =
-            "Could not update settings.";
-    }
-}
-
-
-/* =========================================================
-   OWNER TRAINER
-========================================================= */
-
-function openTrainer() {
-
-    if (!trainerContainer)
-        return;
-
-
-    trainerContainer.innerHTML = `
-        <div style="
-            margin-top:20px;
-            padding:18px;
-            border:1px solid #222;
-            border-radius:14px;
-            background:#080808;
-        ">
-
-            <h3>Teach MoonPlug</h3>
-
-            <input
-                id="trainingQuestion"
-                placeholder="Question"
-                style="margin-bottom:8px;"
-            >
-
-            <input
-                id="trainingAnswer"
-                placeholder="Answer"
-                style="margin-bottom:8px;"
-            >
-
-            <input
-                id="trainingCategory"
-                placeholder="Category"
-                style="margin-bottom:12px;"
-            >
-
-            <button
-                id="teachButton"
-                type="button"
-            >
-                Teach MoonPlug
-            </button>
-
-            <button
-                id="refreshTrainingButton"
-                type="button"
-                style="margin-left:8px;"
-            >
-                Refresh
-            </button>
-
-            <div
-                id="trainingList"
-                style="margin-top:15px;"
-            ></div>
-
-        </div>
-    `;
-
-
-    const teachButton =
-        document.getElementById(
-            "teachButton"
-        );
-
-
-    const refreshButton =
-        document.getElementById(
-            "refreshTrainingButton"
-        );
-
-
-    if (teachButton) {
-
-        teachButton.addEventListener(
-            "click",
-            teachMoonPlug
-        );
-    }
-
-
-    if (refreshButton) {
-
-        refreshButton.addEventListener(
-            "click",
-            refreshTraining
-        );
-    }
-
-
-    loadAndRenderTraining();
-}
-
-
-function closeTrainer() {
-
-    if (trainerContainer) {
-
-        trainerContainer.innerHTML =
-            "";
-    }
-}
-
-
-async function teachMoonPlug() {
-
-    const question =
-        document.getElementById(
-            "trainingQuestion"
-        )?.value.trim();
-
-
-    const answer =
-        document.getElementById(
-            "trainingAnswer"
-        )?.value.trim();
-
-
-    const category =
-        document.getElementById(
-            "trainingCategory"
-        )?.value.trim();
-
-
-    if (
-        !question ||
-        !answer
-    ) {
-
-        ownerActionMessage.textContent =
-            "Enter both a question and answer.";
-
-        return;
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_BASE}/api/owner/training`,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    credentials:
-                        "include",
-
-                    body: JSON.stringify({
-                        question,
-                        answer,
-                        category:
-                            category ||
-                            "General"
-                    })
-                }
-            );
-
-
-        const data =
-            await response
-                .json()
-                .catch(() => ({}));
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.error ||
-                "Training failed."
-            );
-        }
-
-
-        document.getElementById(
-            "trainingQuestion"
-        ).value = "";
-
-        document.getElementById(
-            "trainingAnswer"
-        ).value = "";
-
-        document.getElementById(
-            "trainingCategory"
-        ).value = "";
-
-
-        ownerActionMessage.textContent =
-            "MoonPlug learned the new training.";
-
-
-        await refreshTraining();
-
-
-    } catch (error) {
-
-        ownerActionMessage.textContent =
-            error.message ||
-            "Could not add training.";
-    }
-}
-
-
-async function loadTraining() {
-
-    const response =
-        await fetch(
-            `${API_BASE}/api/owner/training`,
-            {
-                credentials:
-                    "include"
-            }
-        );
-
-
-    const data =
-        await response
-            .json()
-            .catch(() => ({}));
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            data.error ||
-            "Training could not be loaded."
-        );
-    }
-
-
-    return data.training ||
-        data.items ||
-        [];
-}
-
-
-async function loadAndRenderTraining() {
-
-    try {
-
-        const training =
-            await loadTraining();
-
-
-        renderTrainingList(
-            training
-        );
-
-    } catch (error) {
-
-        const list =
+        const users =
             document.getElementById(
-                "trainingList"
+                "ownerUsers"
+            );
+
+        const chats =
+            document.getElementById(
+                "ownerChats"
             );
 
 
-        if (list) {
+        if (users) {
 
-            list.textContent =
-                "Could not load training.";
+            users.textContent =
+                data.users ??
+                data.totalUsers ??
+                0;
         }
-    }
-}
 
 
-function renderTrainingList(
-    training
-) {
+        if (chats) {
 
-    const list =
-        document.getElementById(
-            "trainingList"
+            chats.textContent =
+                data.chats ??
+                data.totalChats ??
+                0;
+        }
+
+
+    } catch (error) {
+
+        console.warn(
+            "Dashboard:",
+            error
         );
-
-
-    if (!list)
-        return;
-
-
-    list.innerHTML = "";
-
-
-    if (!Array.isArray(training) ||
-        !training.length
-    ) {
-
-        list.textContent =
-            "No training yet.";
-
-        return;
     }
-
-
-    training.forEach(
-        item => {
-
-            const row =
-                document.createElement(
-                    "div"
-                );
-
-
-            row.style.cssText = `
-                padding:12px;
-                margin-top:8px;
-                border:1px solid #191919;
-                border-radius:10px;
-                background:#0b0b0b;
-            `;
-
-
-            const question =
-                document.createElement(
-                    "strong"
-                );
-
-
-            question.textContent =
-                item.question ||
-                "Training";
-
-
-            const answer =
-                document.createElement(
-                    "div"
-                );
-
-
-            answer.style.cssText =
-                "color:#888;margin-top:5px;";
-
-
-            answer.textContent =
-                item.answer ||
-                "";
-
-
-            row.appendChild(
-                question
-            );
-
-            row.appendChild(
-                answer
-            );
-
-
-            if (item.id) {
-
-                const deleteButton =
-                    document.createElement(
-                        "button"
-                    );
-
-
-                deleteButton.textContent =
-                    "Delete";
-
-
-                deleteButton.style.marginTop =
-                    "10px";
-
-
-                deleteButton.addEventListener(
-                    "click",
-                    () =>
-                        deleteTraining(
-                            item.id
-                        )
-                );
-
-
-                row.appendChild(
-                    deleteButton
-                );
-            }
-
-
-            list.appendChild(
-                row
-            );
-        }
-    );
-}
-
-
-async function deleteTraining(
-    id
-) {
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_BASE}/api/owner/training/${encodeURIComponent(id)}`,
-                {
-                    method: "DELETE",
-
-                    credentials:
-                        "include"
-                }
-            );
-
-
-        if (!response.ok)
-            throw new Error();
-
-
-        await refreshTraining();
-
-    } catch {
-
-        ownerActionMessage.textContent =
-            "Could not delete training.";
-    }
-}
-
-
-async function addTraining(
-    training
-) {
-
-    return fetch(
-        `${API_BASE}/api/owner/training`,
-        {
-            method: "POST",
-
-            headers: {
-                "Content-Type":
-                    "application/json"
-            },
-
-            credentials:
-                "include",
-
-            body: JSON.stringify(
-                training
-            )
-        }
-    );
-}
-
-
-async function refreshTraining() {
-
-    await loadAndRenderTraining();
 }
 
 
@@ -3189,24 +2419,25 @@ async function checkBackendHealth() {
 
         const response =
             await fetch(
-                `${API_BASE}/api/health`,
-                {
-                    method: "GET"
-                }
+                `${API_BASE}/api/health`
+            );
+
+
+        if (!response.ok)
+            throw new Error(
+                "Backend unavailable"
             );
 
 
         console.log(
-            "MoonPlug backend:",
-            response.ok
-                ? "online"
-                : "offline"
+            "MoonPlug backend online."
         );
+
 
     } catch (error) {
 
         console.warn(
-            "MoonPlug backend is unavailable.",
+            "MoonPlug backend health:",
             error
         );
     }
@@ -3214,117 +2445,196 @@ async function checkBackendHealth() {
 
 
 /* =========================================================
-   PASSWORD TOGGLE
+   PLACEHOLDER OWNER FUNCTIONS
 ========================================================= */
 
-function setupPasswordToggle() {
-
-    if (!showPassword)
-        return;
-
-
-    showPassword.addEventListener(
-        "click",
-        () => {
-
-            const showing =
-                ownerCode.type ===
-                "text";
+async function loadOwnerUsers() {
+    console.log(
+        "Owner users requested."
+    );
+}
 
 
-            ownerCode.type =
-                showing
-                    ? "password"
-                    : "text";
+async function loadOwnerSettings() {
+    console.log(
+        "Owner settings requested."
+    );
+}
 
 
-            showPassword.textContent =
-                showing
-                    ? "Show"
-                    : "Hide";
-        }
+async function updateOwnerSettings() {
+    console.log(
+        "Owner settings update requested."
+    );
+}
+
+
+async function loadTraining() {
+    console.log(
+        "Training requested."
+    );
+}
+
+
+async function addTraining() {
+    console.log(
+        "Add training requested."
+    );
+}
+
+
+async function deleteTraining() {
+    console.log(
+        "Delete training requested."
+    );
+}
+
+
+function openTrainer() {
+    console.log(
+        "Trainer opened."
+    );
+}
+
+
+function closeTrainer() {
+    console.log(
+        "Trainer closed."
+    );
+}
+
+
+async function generateTraining() {
+    console.log(
+        "Generate training requested."
+    );
+}
+
+
+async function loadAndRenderTraining() {
+    console.log(
+        "Loading training."
+    );
+}
+
+
+function renderTrainingList() {
+    console.log(
+        "Rendering training."
+    );
+}
+
+
+async function teachMoonPlug() {
+    console.log(
+        "Teaching MoonPlug."
+    );
+}
+
+
+async function refreshTraining() {
+    console.log(
+        "Refreshing training."
     );
 }
 
 
 /* =========================================================
-   AUTO RESIZE / MOBILE
+   PASSWORD TOGGLE COMPATIBILITY
 ========================================================= */
 
-window.addEventListener(
-    "resize",
-    () => {
+function setupPasswordToggle() {
+    const button =
+        document.getElementById(
+            "showPassword"
+        );
 
-        if (
-            window.innerWidth >
-            700
-        ) {
+    if (!button) return;
 
-            sidebar.classList.remove(
-                "expanded"
+    button.onclick = () => {
+
+        const input =
+            document.getElementById(
+                "ownerCode"
             );
-        }
+
+        if (!input) return;
+
+        input.type =
+            input.type === "password"
+                ? "text"
+                : "password";
+
+        button.textContent =
+            input.type === "password"
+                ? "Show"
+                : "Hide";
+    };
+}
+
+
+/* =========================================================
+   ACCOUNT FORM COMPATIBILITY
+========================================================= */
+
+function setupAccountForms() {
+
+    const loginForm =
+        document.getElementById(
+            "loginForm"
+        );
+
+    const signupForm =
+        document.getElementById(
+            "signupForm"
+        );
+
+
+    if (loginForm) {
+
+        loginForm.addEventListener(
+            "submit",
+            event => {
+
+                event.preventDefault();
+
+                const message =
+                    document.getElementById(
+                        "accountMessage"
+                    );
+
+                if (message) {
+
+                    message.textContent =
+                        "Account login can be connected to your backend.";
+                }
+            }
+        );
     }
-);
 
 
-/* =========================================================
-   CLEANUP
-========================================================= */
+    if (signupForm) {
 
-window.addEventListener(
-    "beforeunload",
-    () => {
+        signupForm.addEventListener(
+            "submit",
+            event => {
 
-        stopConversationListening();
+                event.preventDefault();
 
-        stopConversationSpeech();
+                const message =
+                    document.getElementById(
+                        "accountMessage"
+                    );
 
-        saveConversation();
+                if (message) {
+
+                    message.textContent =
+                        "Account creation can be connected to your backend.";
+                }
+            }
+        );
     }
-);
+}
 
 
-/* =========================================================
-   START SPEECH SYSTEM
-========================================================= */
-
-setupSpeechSynthesis();
-
-
-/* =========================================================
-   GLOBAL ACCESS
-   Useful for debugging from console.
-========================================================= */
-
-window.MoonPlug = {
-
-    openConversation,
-
-    closeConversation,
-
-    startListening:
-        toggleConversationListening,
-
-    stopListening:
-        stopConversationListening,
-
-    speak:
-        speakConversation,
-
-    stopSpeaking:
-        stopConversationSpeech,
-
-    newChat:
-        startNewChat,
-
-    openOwnerLogin:
-        showOwnerLogin,
-
-    openOwnerPanel,
-
-    hideOwnerPanel,
-
-    refreshTraining
-};
-
+setupAccountForms();
