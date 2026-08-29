@@ -3,7 +3,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -11,10 +10,7 @@
         content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
 
-    <meta
-        name="theme-color"
-        content="#020205"
-    >
+    <meta name="theme-color" content="#020205">
 
     <meta
         name="description"
@@ -23,34 +19,16 @@
 
     <title>MoonPlug AI</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
-<!-- =========================================================
-     STAR FIELD
-========================================================= -->
+<div id="starField" class="star-field"></div>
 
-<div
-    id="starField"
-    class="star-field"
-></div>
+<!-- ================= SIDEBAR ================= -->
 
-
-<!-- =========================================================
-     SIDEBAR
-========================================================= -->
-
-<aside
-    id="sidebar"
-    class="sidebar"
->
+<aside id="sidebar" class="sidebar">
 
     <button
         id="sidebarLogo"
@@ -58,110 +36,60 @@
         type="button"
         aria-label="Toggle sidebar"
     >
-
         <span class="logo-moon">🌙</span>
-
         <strong>MOONPLUG</strong>
-
         <span class="logo-ai">AI</span>
-
     </button>
-
 
     <div class="sidebar-buttons">
 
-        <button
-            id="newChatButton"
-            class="sidebar-button"
-            type="button"
-        >
+        <button id="newChatButton" class="sidebar-button" type="button">
             <span>＋</span>
             <b>New Chat</b>
         </button>
 
-
-        <button
-            id="conversationButton"
-            class="sidebar-button conversation-button"
-            type="button"
-        >
+        <button id="conversationButton" class="sidebar-button" type="button">
             <span>◉</span>
             <b>Conversation</b>
         </button>
 
-
-        <button
-            id="studyButton"
-            class="sidebar-button"
-            type="button"
-        >
+        <button id="studyButton" class="sidebar-button" type="button">
             <span>📚</span>
             <b>Study</b>
         </button>
 
-
-        <button
-            id="cookButton"
-            class="sidebar-button"
-            type="button"
-        >
+        <button id="cookButton" class="sidebar-button" type="button">
             <span>🍳</span>
             <b>Cook</b>
         </button>
 
-
-        <button
-            id="imagesButton"
-            class="sidebar-button"
-            type="button"
-        >
+        <button id="imagesButton" class="sidebar-button" type="button">
             <span>🖼</span>
             <b>Images</b>
         </button>
 
-
-        <button
-            id="codeButton"
-            class="sidebar-button"
-            type="button"
-        >
+        <button id="codeButton" class="sidebar-button" type="button">
             <span>💻</span>
             <b>Code</b>
         </button>
 
-
         <div class="sidebar-divider"></div>
 
-
-        <button
-            id="historyButton"
-            class="sidebar-button"
-            type="button"
-        >
+        <button id="historyButton" class="sidebar-button" type="button">
             <span>💬</span>
             <b>Chat History</b>
         </button>
 
     </div>
 
-
     <div class="sidebar-bottom">
 
-        <button
-            id="settingsButton"
-            class="sidebar-button"
-            type="button"
-        >
+        <button id="settingsButton" class="sidebar-button" type="button">
             <span>⚙</span>
             <b>Settings</b>
         </button>
 
-
-        <button
-            id="accountButton"
-            class="sidebar-button"
-            type="button"
-        >
+        <button id="accountButton" class="sidebar-button" type="button">
             <span>👤</span>
             <b>Account</b>
         </button>
@@ -171,14 +99,11 @@
 </aside>
 
 
-<!-- =========================================================
-     MAIN CHAT
-========================================================= -->
+<!-- ================= MAIN CHAT ================= -->
 
 <main class="chat-section">
 
     <div class="chat-container">
-
 
         <header class="chat-header">
 
@@ -191,58 +116,31 @@
 
         </header>
 
+        <div id="messages" class="messages">
 
-        <div
-            id="messages"
-            class="messages"
-        >
-
-            <div
-                id="emptyChat"
-                class="empty-chat"
-            >
+            <div id="emptyChat" class="empty-chat">
 
                 <div class="home-orb">
                     <span></span>
                 </div>
 
-                <h1>
-                    What can I help with?
-                </h1>
+                <h1>What can I help with?</h1>
 
-                <p>
-                    Ask MoonPlug anything.
-                </p>
+                <p>Ask MoonPlug anything.</p>
 
             </div>
 
         </div>
 
-
-        <!--
-            IMPORTANT:
-            Hidden when the app starts.
-            JS only shows this after a real prompt.
-        -->
-
-        <div
-            id="typing"
-            class="typing"
-            hidden
-        >
+        <div id="typing" class="typing" hidden>
 
             <span class="typing-dot"></span>
-
+            <span class="typing-dot"></span>
             <span class="typing-dot"></span>
 
-            <span class="typing-dot"></span>
-
-            <span>
-                MoonPlug is thinking...
-            </span>
+            <span>MoonPlug is thinking...</span>
 
         </div>
-
 
         <div class="chat-bottom-area">
 
@@ -255,7 +153,6 @@
                     autocomplete="off"
                 ></textarea>
 
-
                 <button
                     id="sendButton"
                     type="button"
@@ -265,7 +162,6 @@
                 </button>
 
             </div>
-
 
             <p class="input-hint">
                 MoonPlug can make mistakes.
@@ -279,16 +175,13 @@
 </main>
 
 
-<!-- =========================================================
-     CONVERSATION MODE
-========================================================= -->
+<!-- ================= CONVERSATION MODE ================= -->
 
 <section
     id="conversationMode"
     class="conversation-mode"
     aria-hidden="true"
 >
-
 
     <div class="conversation-top">
 
@@ -301,56 +194,35 @@
             ×
         </button>
 
-
         <div class="conversation-brand">
-
             <span>🌙</span>
-
             <strong>MoonPlug</strong>
-
         </div>
 
-
         <div class="conversation-live">
-
             <i></i>
-
             LIVE
-
         </div>
 
     </div>
 
 
-    <!-- =====================================================
-         CONVERSATION ORB
-    ====================================================== -->
+    <!-- OLD BLACK HOLE -->
 
     <div class="black-hole-stage">
 
         <div class="black-hole">
 
             <div class="orbit orbit-one"></div>
-
             <div class="orbit orbit-two"></div>
-
             <div class="orbit orbit-three"></div>
-
             <div class="orbit orbit-four"></div>
 
-
             <div class="black-hole-outline"></div>
-
             <div class="black-hole-core"></div>
 
+            <div id="voiceWave" class="voice-wave">
 
-            <div
-                id="voiceWave"
-                class="voice-wave"
-                aria-hidden="true"
-            >
-
-                <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
@@ -379,25 +251,14 @@
     </div>
 
 
-    <div
-        id="conversationStatus"
-        class="conversation-status"
-    >
+    <div id="conversationStatus" class="conversation-status">
         Ready
     </div>
 
-
-    <div
-        id="conversationText"
-        class="conversation-text"
-    >
+    <div id="conversationText" class="conversation-text">
         Tap the microphone to talk
     </div>
 
-
-    <!-- =====================================================
-         MICROPHONE
-    ====================================================== -->
 
     <div class="conversation-button-area">
 
@@ -409,38 +270,27 @@
         >
 
             <span class="button-mic">
-
                 <span class="mic-head"></span>
-
                 <span class="mic-body"></span>
-
                 <span class="mic-stand"></span>
-
             </span>
 
-
             <span class="button-ripple ripple-one"></span>
-
             <span class="button-ripple ripple-two"></span>
 
         </button>
 
     </div>
 
-
     <p class="conversation-hint">
-
         Tap once to talk.
         MoonPlug will answer aloud.
-
     </p>
 
 </section>
 
 
-<!-- =========================================================
-     SETTINGS
-========================================================= -->
+<!-- ================= SETTINGS ================= -->
 
 <section
     id="settingsPanel"
@@ -449,7 +299,6 @@
 >
 
     <div class="settings-box">
-
 
         <div class="modal-header">
 
@@ -466,18 +315,11 @@
         </div>
 
 
-        <!-- =================================================
-             TEXT SIZE
-        ================================================== -->
-
         <div class="setting-item">
 
             <strong>Text Size</strong>
 
-            <p>
-                Change the size of chat messages.
-            </p>
-
+            <p>Change the size of chat messages.</p>
 
             <div class="setting-buttons">
 
@@ -489,7 +331,6 @@
                     Small
                 </button>
 
-
                 <button
                     class="size-button active"
                     data-size="medium"
@@ -497,7 +338,6 @@
                 >
                     Medium
                 </button>
-
 
                 <button
                     class="size-button"
@@ -512,10 +352,6 @@
         </div>
 
 
-        <!-- =================================================
-             MOONPLUG VOICE
-        ================================================== -->
-
         <div class="setting-item voice-setting">
 
             <strong>MoonPlug Voice</strong>
@@ -525,7 +361,6 @@
                 in Conversation Mode.
             </p>
 
-
             <label
                 for="voiceSelect"
                 class="setting-label"
@@ -533,39 +368,38 @@
                 Voice
             </label>
 
-
             <select
                 id="voiceSelect"
                 class="voice-select"
             >
-
-                <option value="af_heart">
-                    Heart
+                <option value="">
+                    Loading voices...
                 </option>
-
-                <option value="af_sky">
-                    Sky
-                </option>
-
-                <option value="am_adam">
-                    Adam
-                </option>
-
-                <option value="am_michael">
-                    Michael
-                </option>
-
             </select>
-
 
             <div
                 id="voiceStatus"
                 class="voice-status"
             >
-             
-<!-- =========================================================
-     ACCOUNT
-========================================================= -->
+                Loading voice options...
+            </div>
+
+            <button
+                id="testVoiceButton"
+                class="voice-test-button"
+                type="button"
+            >
+                Test Voice
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ACCOUNT ================= -->
 
 <section
     id="accountScreen"
@@ -575,21 +409,14 @@
 
     <div class="account-box">
 
-        <div class="account-logo">
-            🌙
-        </div>
+        <div class="account-logo">🌙</div>
 
-
-        <h2>
-            MoonPlug
-        </h2>
-
+        <h2>MoonPlug</h2>
 
         <p>
             Account features can be connected
             to your backend.
         </p>
-
 
         <button
             id="closeAccount"
@@ -603,50 +430,8 @@
 </section>
 
 
-<!-- =========================================================
-     KOKORO TTS
-     
-     Kokoro.js runs the TTS model locally
-     in the browser through Transformers.js.
-========================================================= -->
-
-<script type="module">
-
-    /*
-     * Expose KokoroTTS globally so your
-     * normal script.js can use it.
-     *
-     * This does NOT replace your MoonPlug
-     * backend. It only handles voice output.
-     */
-
-    import {
-        KokoroTTS
-    } from "https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm";
-
-
-    window.MoonPlugKokoro = {
-        KokoroTTS
-    };
-
-
-    window.dispatchEvent(
-        new Event("kokoro-ready")
-    );
-
-</script>
-
-
-<!-- =========================================================
-     MOONPLUG JS
-========================================================= -->
-
-<script
-    src="script.js"
-></script>
-
+<script src="script.js"></script>
 
 </body>
-
 </html>
 
