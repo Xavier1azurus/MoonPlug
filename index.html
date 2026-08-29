@@ -10,7 +10,11 @@
         content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
 
-    <meta name="theme-color" content="#020205">
+    <meta
+        name="theme-color"
+        content="#020205"
+    >
+
     <meta
         name="description"
         content="MoonPlug AI"
@@ -18,133 +22,396 @@
 
     <title>MoonPlug AI</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        /* =====================================================
+           SMALL ICON FIX
+           Uses SVG instead of emoji so mobile does not show
+           weird symbols.
+        ===================================================== */
+
+        .sidebar-icon {
+            width: 20px;
+            height: 20px;
+            flex: 0 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-icon svg {
+            width: 19px;
+            height: 19px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .sidebar-logo-icon {
+            width: 25px;
+            height: 25px;
+            flex: 0 0 25px;
+        }
+
+        .sidebar-logo-icon svg {
+            width: 25px;
+            height: 25px;
+            fill: currentColor;
+        }
+
+        /* =====================================================
+           VOICE SETTINGS
+        ===================================================== */
+
+        .voice-setting {
+            margin-top: 22px;
+        }
+
+        .voice-setting strong {
+            display: block;
+        }
+
+        .voice-setting p {
+            margin: 5px 0 12px;
+        }
+
+        #voiceSelect {
+            width: 100%;
+            min-height: 44px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.12);
+            background: rgba(255,255,255,.06);
+            color: inherit;
+            outline: none;
+            font: inherit;
+        }
+
+        #voiceSelect option {
+            background: #111118;
+            color: white;
+        }
+
+        .voice-test-button {
+            width: 100%;
+            margin-top: 10px;
+            min-height: 42px;
+            border: 0;
+            border-radius: 11px;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .voice-note {
+            font-size: .8rem;
+            opacity: .55;
+            margin-top: 9px;
+        }
+
+        /* =====================================================
+           ACCESSIBILITY
+        ===================================================== */
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        textarea {
+            -webkit-appearance: none;
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<div id="starField" class="star-field"></div>
+<div
+    id="starField"
+    class="star-field"
+></div>
 
 
 <!-- =========================================================
      SIDEBAR
 ========================================================= -->
 
-<aside id="sidebar" class="sidebar">
+<aside
+    id="sidebar"
+    class="sidebar"
+>
 
     <button
         id="sidebarLogo"
         class="sidebar-logo"
         type="button"
         aria-label="Collapse sidebar"
+        aria-expanded="true"
     >
 
-        <span class="logo-moon">🌙</span>
+        <span class="sidebar-logo-icon">
+
+            <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+                <path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/>
+            </svg>
+
+        </span>
 
         <strong>MOONPLUG</strong>
 
-        <span class="logo-ai">AI</span>
+        <span class="logo-ai">
+            AI
+        </span>
 
     </button>
 
 
     <div class="sidebar-buttons">
 
+
+        <!-- NEW CHAT -->
+
         <button
             id="newChatButton"
             class="sidebar-button"
             type="button"
         >
-            <span>＋</span>
+
+            <span class="sidebar-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 5v14"/>
+                    <path d="M5 12h14"/>
+                </svg>
+
+            </span>
+
             <b>New Chat</b>
+
         </button>
 
+
+        <!-- CONVERSATION -->
 
         <button
             id="conversationButton"
             class="sidebar-button conversation-button"
             type="button"
         >
-            <span>◉</span>
+
+            <span class="sidebar-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="7"/>
+                    <circle cx="12" cy="12" r="2"/>
+                </svg>
+
+            </span>
+
             <b>Conversation</b>
+
         </button>
 
+
+        <!-- STUDY -->
 
         <button
             id="studyButton"
             class="sidebar-button"
             type="button"
         >
-            <span>▣</span>
+
+            <span class="sidebar-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5Z"/>
+                    <path d="M4 5.5v15"/>
+                    <path d="M8 7h8"/>
+                    <path d="M8 11h8"/>
+                </svg>
+
+            </span>
+
             <b>Study</b>
+
         </button>
 
+
+        <!-- COOK -->
 
         <button
             id="cookButton"
             class="sidebar-button"
             type="button"
         >
-            <span>⌁</span>
+
+            <span class="sidebar-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M7 3v7"/>
+                    <path d="M5 3v4"/>
+                    <path d="M9 3v4"/>
+                    <path d="M7 10v11"/>
+                    <path d="M16 3c-2 2-3 4-3 7 0 2 1 3 3 3v8"/>
+                    <path d="M16 3v18"/>
+                </svg>
+
+            </span>
+
             <b>Cook</b>
+
         </button>
 
+
+        <!-- IMAGES -->
 
         <button
             id="imagesButton"
             class="sidebar-button"
             type="button"
         >
-            <span>▧</span>
+
+            <span class="sidebar-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <rect
+                        x="3"
+                        y="4"
+                        width="18"
+                        height="16"
+                        rx="2"
+                    />
+                    <circle
+                        cx="8"
+                        cy="9"
+                        r="1.5"
+                    />
+                    <path d="m4 17 5-5 4 4 2-2 5 5"/>
+                </svg>
+
+            </span>
+
             <b>Images</b>
+
         </button>
 
+
+        <!-- CODE -->
 
         <button
             id="codeButton"
             class="sidebar-button"
             type="button"
         >
-            <span>&lt;/&gt;</span>
+
+            <span class="sidebar-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="m8 8-4 4 4 4"/>
+                    <path d="m16 8 4 4-4 4"/>
+                    <path d="m14 5-4 14"/>
+                </svg>
+
+            </span>
+
             <b>Code</b>
+
         </button>
 
 
         <div class="sidebar-divider"></div>
 
 
+        <!-- HISTORY -->
+
         <button
             id="historyButton"
             class="sidebar-button"
             type="button"
         >
-            <span>◌</span>
+
+            <span class="sidebar-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 6h14"/>
+                    <path d="M5 12h14"/>
+                    <path d="M5 18h10"/>
+                </svg>
+
+            </span>
+
             <b>Chat History</b>
+
         </button>
 
     </div>
 
 
+    <!-- SIDEBAR BOTTOM -->
+
     <div class="sidebar-bottom">
+
+
+        <!-- SETTINGS -->
 
         <button
             id="settingsButton"
             class="sidebar-button"
             type="button"
         >
-            <span>⚙</span>
+
+            <span class="sidebar-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="3"
+                    />
+                    <path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2.1-1.2L14.2 3h-4.4l-.3 2.7a7 7 0 0 0-2.1 1.2l-2.3-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 2.1 1.2l.3 2.7h4.4l.3-2.7a7 7 0 0 0 2.1-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2Z"/>
+                </svg>
+
+            </span>
+
             <b>Settings</b>
+
         </button>
 
+
+        <!-- ACCOUNT -->
 
         <button
             id="accountButton"
             class="sidebar-button"
             type="button"
         >
-            <span>○</span>
+
+            <span class="sidebar-icon">
+
+                <svg viewBox="0 0 24 24">
+                    <circle
+                        cx="12"
+                        cy="8"
+                        r="3"
+                    />
+                    <path d="M5 20c1.2-4 3.5-6 7-6s5.8 2 7 6"/>
+                </svg>
+
+            </span>
+
             <b>Account</b>
+
         </button>
 
     </div>
@@ -163,7 +430,9 @@
 
         <header class="chat-header">
 
-            <strong>MoonPlug AI</strong>
+            <strong>
+                MoonPlug AI
+            </strong>
 
             <span class="online">
 
@@ -203,10 +472,7 @@
         </div>
 
 
-        <!-- IMPORTANT:
-             Starts hidden.
-             JS only shows this after a real prompt.
-        -->
+        <!-- THINKING IS HIDDEN ON STARTUP -->
 
         <div
             id="typing"
@@ -236,13 +502,12 @@
                     autocomplete="off"
                 ></textarea>
 
-
                 <button
                     id="sendButton"
                     type="button"
                     aria-label="Send message"
                 >
-                    ➤
+                    <span aria-hidden="true">➤</span>
                 </button>
 
             </div>
@@ -285,7 +550,16 @@
 
         <div class="conversation-brand">
 
-            <span>🌙</span>
+            <span class="sidebar-logo-icon">
+
+                <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/>
+                </svg>
+
+            </span>
 
             <strong>
                 MoonPlug
@@ -306,7 +580,7 @@
 
 
     <!-- =====================================================
-         BLACK HOLE / MOONPLUG ORB
+         ORB / BLACK HOLE
     ====================================================== -->
 
     <div class="black-hole-stage">
@@ -325,10 +599,9 @@
 
             <div class="black-hole-outline"></div>
 
+
             <div class="black-hole-core"></div>
 
-
-            <!-- VOICE WAVE -->
 
             <div
                 id="voiceWave"
@@ -352,6 +625,12 @@
                 <span></span>
                 <span></span>
                 <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
 
             </div>
 
@@ -359,10 +638,6 @@
 
     </div>
 
-
-    <!-- =====================================================
-         STATUS
-    ====================================================== -->
 
     <div
         id="conversationStatus"
@@ -390,38 +665,16 @@
             id="conversationMic"
             class="conversation-main-button"
             type="button"
-            aria-label="Start talking"
+            aria-label="Start conversation"
         >
 
+            <span class="button-mic">
 
-            <span class="mic-icon">
+                <span class="mic-head"></span>
 
-                <svg
-                    viewBox="0 0 24 32"
-                    aria-hidden="true"
-                >
+                <span class="mic-body"></span>
 
-                    <rect
-                        x="7"
-                        y="1"
-                        width="10"
-                        height="19"
-                        rx="5"
-                    ></rect>
-
-                    <path
-                        d="M3.5 15.5v2.2a8.5 8.5 0 0 0 17 0v-2.2"
-                    ></path>
-
-                    <path
-                        d="M12 26v5"
-                    ></path>
-
-                    <path
-                        d="M8 31h8"
-                    ></path>
-
-                </svg>
+                <span class="mic-stand"></span>
 
             </span>
 
@@ -456,24 +709,14 @@
     aria-hidden="true"
 >
 
-
     <div class="settings-box">
 
 
         <div class="modal-header">
 
-            <div>
-
-                <h2>
-                    Settings
-                </h2>
-
-                <p class="settings-subtitle">
-                    Customize your MoonPlug experience.
-                </p>
-
-            </div>
-
+            <h2>
+                Settings
+            </h2>
 
             <button
                 id="closeSettings"
@@ -486,9 +729,7 @@
         </div>
 
 
-        <!-- =================================================
-             TEXT SIZE
-        ================================================== -->
+        <!-- TEXT SIZE -->
 
         <div class="setting-item">
 
@@ -511,7 +752,6 @@
                     Small
                 </button>
 
-
                 <button
                     class="size-button active"
                     data-size="medium"
@@ -519,7 +759,6 @@
                 >
                     Medium
                 </button>
-
 
                 <button
                     class="size-button"
@@ -534,64 +773,45 @@
         </div>
 
 
-        <!-- =================================================
-             VOICE
-        ================================================== -->
+        <!-- VOICE -->
 
         <div class="setting-item voice-setting">
 
-            <div class="setting-title-row">
+            <strong>
+                MoonPlug Voice
+            </strong>
 
-                <div>
-
-                    <strong>
-                        MoonPlug Voice
-                    </strong>
-
-                    <p>
-                        Choose the voice MoonPlug uses in Conversation Mode.
-                    </p>
-
-                </div>
-
-            </div>
+            <p>
+                Choose the voice MoonPlug uses in Conversation Mode.
+            </p>
 
 
-            <div class="voice-selector-wrap">
+            <select
+                id="voiceSelect"
+                aria-label="MoonPlug voice"
+            >
 
-                <select
-                    id="voiceSelect"
-                    class="voice-select"
-                    aria-label="MoonPlug voice"
-                >
+                <option value="">
+                    Loading voices...
+                </option>
 
-                    <option value="">
-                        Loading voices...
-                    </option>
-
-                </select>
-
-            </div>
+            </select>
 
 
             <button
                 id="testVoiceButton"
-                class="test-voice-button"
+                class="voice-test-button"
                 type="button"
             >
                 Test Voice
             </button>
 
 
-            <p
-                id="voiceStatus"
-                class="voice-status"
-            >
-                Voices are provided by your device/browser.
-            </p>
+            <div class="voice-note">
+                Safari may provide different voices depending on your device.
+            </div>
 
         </div>
-
 
     </div>
 
