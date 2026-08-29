@@ -1,16 +1,14 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
 
-    <meta name="theme-color" content="#050505">
+    <meta name="theme-color" content="#020205">
     <meta name="description" content="MoonPlug AI">
 
     <title>MoonPlug AI</title>
@@ -20,12 +18,7 @@
 
 <body>
 
-<!-- =========================================================
-     STAR FIELD
-========================================================= -->
-
-<div id="starField" class="star-field" aria-hidden="true"></div>
-
+<div id="starField" class="star-field"></div>
 
 <!-- =========================================================
      SIDEBAR
@@ -33,114 +26,63 @@
 
 <aside id="sidebar" class="sidebar">
 
-    <button
-        id="sidebarLogo"
-        class="sidebar-logo"
-        type="button"
-        aria-label="Toggle sidebar"
-    >
+    <button id="sidebarLogo" class="sidebar-logo" type="button">
         <span class="logo-moon">🌙</span>
         <strong>MOONPLUG</strong>
         <span class="logo-ai">AI</span>
     </button>
 
-
     <div class="sidebar-buttons">
 
-        <button
-            id="newChatButton"
-            class="sidebar-button"
-            type="button"
-        >
-            <span class="sidebar-icon">＋</span>
-            <span class="sidebar-label">New Chat</span>
+        <button id="newChatButton" class="sidebar-button" type="button">
+            <span>➕</span>
+            <b>New Chat</b>
         </button>
 
-
-        <button
-            id="conversationButton"
-            class="sidebar-button conversation-sidebar-button"
-            type="button"
-        >
-            <span class="sidebar-icon">◉</span>
-            <span class="sidebar-label">Conversation</span>
+        <button id="conversationButton" class="sidebar-button conversation-button" type="button">
+            <span>◉</span>
+            <b>Conversation</b>
         </button>
 
-
-        <button
-            id="studyButton"
-            class="sidebar-button"
-            type="button"
-        >
-            <span class="sidebar-icon">📚</span>
-            <span class="sidebar-label">Study</span>
+        <button id="studyButton" class="sidebar-button" type="button">
+            <span>📚</span>
+            <b>Study</b>
         </button>
 
-
-        <button
-            id="cookButton"
-            class="sidebar-button"
-            type="button"
-        >
-            <span class="sidebar-icon">🍳</span>
-            <span class="sidebar-label">Cook</span>
+        <button id="cookButton" class="sidebar-button" type="button">
+            <span>🍳</span>
+            <b>Cook</b>
         </button>
 
-
-        <button
-            id="imagesButton"
-            class="sidebar-button"
-            type="button"
-        >
-            <span class="sidebar-icon">🖼</span>
-            <span class="sidebar-label">Images</span>
+        <button id="imagesButton" class="sidebar-button" type="button">
+            <span>🖼️</span>
+            <b>Images</b>
         </button>
 
-
-        <button
-            id="codeButton"
-            class="sidebar-button"
-            type="button"
-        >
-            <span class="sidebar-icon">💻</span>
-            <span class="sidebar-label">Code</span>
+        <button id="codeButton" class="sidebar-button" type="button">
+            <span>💻</span>
+            <b>Code</b>
         </button>
-
 
         <div class="sidebar-divider"></div>
 
-
-        <button
-            id="historyButton"
-            class="sidebar-button"
-            type="button"
-        >
-            <span class="sidebar-icon">💬</span>
-            <span class="sidebar-label">Chat History</span>
+        <button id="historyButton" class="sidebar-button" type="button">
+            <span>💬</span>
+            <b>Chat History</b>
         </button>
 
     </div>
 
-
     <div class="sidebar-bottom">
 
-        <button
-            id="settingsButton"
-            class="sidebar-button"
-            type="button"
-        >
-            <span class="sidebar-icon">⚙</span>
-            <span class="sidebar-label">Settings</span>
+        <button id="settingsButton" class="sidebar-button" type="button">
+            <span>⚙️</span>
+            <b>Settings</b>
         </button>
 
-
-        <button
-            id="accountButton"
-            class="sidebar-button"
-            type="button"
-        >
-            <span class="sidebar-icon">👤</span>
-            <span class="sidebar-label">Account</span>
+        <button id="accountButton" class="sidebar-button" type="button">
+            <span>👤</span>
+            <b>Account</b>
         </button>
 
     </div>
@@ -157,69 +99,30 @@
     <div class="chat-container">
 
         <header class="chat-header">
+            <strong>MoonPlug AI</strong>
 
-            <div class="header-title">
-                <strong>MoonPlug AI</strong>
-            </div>
-
-            <div class="online">
-                <span class="online-dot"></span>
+            <span class="online">
+                <i></i>
                 Online
-            </div>
-
+            </span>
         </header>
 
+        <div id="messages" class="messages">
 
-        <div
-            id="messages"
-            class="messages"
-            aria-live="polite"
-        >
-
-            <div
-                id="emptyChat"
-                class="empty-chat"
-            >
-
-                <div class="empty-moon">
-                    🌙
-                </div>
-
-                <h1>
-                    What can I help with?
-                </h1>
-
-                <p>
-                    Ask MoonPlug anything.
-                </p>
-
+            <div id="emptyChat" class="empty-chat">
+                <div>🌙</div>
+                <h1>What can I help with?</h1>
+                <p>Ask MoonPlug anything.</p>
             </div>
 
         </div>
 
-
-        <!-- =================================================
-             NORMAL CHAT THINKING
-        ================================================== -->
-
-        <div
-            id="typing"
-            class="typing"
-            aria-live="polite"
-        >
-
-            <div class="typing-orb">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-            <span>
-                MoonPlug is thinking...
-            </span>
-
+        <div id="typing" class="typing" hidden>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span>MoonPlug is thinking...</span>
         </div>
-
 
         <div class="chat-bottom-area">
 
@@ -230,25 +133,17 @@
                     rows="1"
                     placeholder="Ask MoonPlug anything..."
                     autocomplete="off"
-                    enterkeyhint="send"
-                    aria-label="Message MoonPlug"
                 ></textarea>
 
-
-                <button
-                    id="sendButton"
-                    type="button"
-                    aria-label="Send message"
-                >
+                <button id="sendButton" type="button">
                     ➤
                 </button>
 
             </div>
 
-
-            <div class="input-hint">
+            <p class="input-hint">
                 MoonPlug can make mistakes. Check important information.
-            </div>
+            </p>
 
         </div>
 
@@ -273,19 +168,18 @@
             id="conversationClose"
             class="conversation-close"
             type="button"
-            aria-label="Close conversation mode"
+            aria-label="Close"
         >
             ×
         </button>
 
-
-        <div class="conversation-title">
-            MoonPlug
+        <div class="conversation-brand">
+            <span>🌙</span>
+            <strong>MoonPlug</strong>
         </div>
 
-
         <div class="conversation-live">
-            <span></span>
+            <i></i>
             LIVE
         </div>
 
@@ -294,37 +188,26 @@
 
     <!-- =====================================================
          BLACK HOLE
-         THE CORE NEVER MOVES.
-         ONLY THE RINGS + WAVE ANIMATE.
     ====================================================== -->
 
-    <div class="orb-wrapper">
+    <div class="black-hole-stage">
 
-        <div
-            id="blackHole"
-            class="black-hole"
-        >
+        <div class="black-hole">
 
-            <!-- OUTER RINGS -->
+            <!-- Moving rings -->
+            <div class="orbit orbit-one"></div>
+            <div class="orbit orbit-two"></div>
+            <div class="orbit orbit-three"></div>
+            <div class="orbit orbit-four"></div>
 
-            <div class="ring ring-1"></div>
-            <div class="ring ring-2"></div>
-            <div class="ring ring-3"></div>
-            <div class="ring ring-4"></div>
+            <!-- Bright fixed outline -->
+            <div class="black-hole-outline"></div>
 
-
-            <!-- STATIC CORE -->
-
+            <!-- Completely still core -->
             <div class="black-hole-core"></div>
 
-
-            <!-- WHITE VOICE WAVE -->
-
-            <div
-                id="voiceWave"
-                class="voice-wave"
-                aria-hidden="true"
-            >
+            <!-- Actual voice visualizer -->
+            <div id="voiceWave" class="voice-wave" aria-hidden="true">
 
                 <span></span>
                 <span></span>
@@ -341,7 +224,13 @@
                 <span></span>
                 <span></span>
                 <span></span>
-
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
 
         </div>
@@ -349,19 +238,12 @@
     </div>
 
 
-    <div
-        id="conversationStatus"
-        class="conversation-status"
-    >
+    <div id="conversationStatus" class="conversation-status">
         Ready
     </div>
 
-
-    <div
-        id="conversationText"
-        class="conversation-text"
-    >
-        Tap the microphone to talk
+    <div id="conversationText" class="conversation-text">
+        Tap the button to talk
     </div>
 
 
@@ -369,159 +251,73 @@
          ONE BUTTON ONLY
     ====================================================== -->
 
-    <div class="conversation-controls">
+    <div class="conversation-button-area">
 
         <button
             id="conversationMic"
-            class="conversation-mic"
+            class="conversation-main-button"
             type="button"
-            aria-label="Start talking"
+            aria-label="Start conversation"
         >
 
-            <span class="mic-symbol">
+            <span class="button-mic">
 
                 <span class="mic-head"></span>
-                <span class="mic-stem"></span>
-                <span class="mic-base"></span>
+
+                <span class="mic-body"></span>
+
+                <span class="mic-stand"></span>
 
             </span>
 
+            <span class="button-ripple ripple-one"></span>
+            <span class="button-ripple ripple-two"></span>
+
         </button>
 
     </div>
 
 
-    <div class="conversation-hint">
-        MoonPlug listens and speaks using your device.
-    </div>
+    <p class="conversation-hint">
+        Tap once to talk. MoonPlug will answer aloud.
+    </p>
 
 </section>
-
-
-<!-- =========================================================
-     CONVERSATION HISTORY
-========================================================= -->
-
-<div
-    id="conversationHistory"
-    class="modal-overlay"
-    aria-hidden="true"
->
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-
-            <h2>Conversation Mode</h2>
-
-            <button
-                id="conversationHistoryClose"
-                type="button"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <p>
-            Start a new conversation or continue your previous one.
-        </p>
-
-
-        <button
-            id="newConversationButton"
-            class="history-choice"
-            type="button"
-        >
-            <strong>New Conversation</strong>
-            <span>Start fresh with MoonPlug.</span>
-        </button>
-
-
-        <button
-            id="continueConversationButton"
-            class="history-choice"
-            type="button"
-        >
-            <strong>Continue Conversation</strong>
-            <span>Continue your saved conversation.</span>
-        </button>
-
-    </div>
-
-</div>
 
 
 <!-- =========================================================
      SETTINGS
 ========================================================= -->
 
-<div
-    id="settingsPanel"
-    class="modal-overlay"
-    aria-hidden="true"
->
+<section id="settingsPanel" class="modal" aria-hidden="true">
 
-    <div class="modal-box settings-box">
+    <div class="settings-box">
 
         <div class="modal-header">
-
             <h2>Settings</h2>
 
-            <button
-                id="closeSettings"
-                type="button"
-            >
+            <button id="closeSettings" type="button">
                 ×
             </button>
-
         </div>
-
-
-        <div class="setting-item">
-
-            <strong>Appearance</strong>
-
-            <span>
-                MoonPlug currently uses dark mode.
-            </span>
-
-        </div>
-
 
         <div class="setting-item">
 
             <strong>Text Size</strong>
 
-            <span>
-                Change the chat text size.
-            </span>
+            <p>Change the size of chat messages.</p>
 
+            <div class="setting-buttons">
 
-            <div class="appearance-options">
-
-                <button
-                    class="size-button"
-                    data-size="small"
-                    type="button"
-                >
+                <button class="size-button" data-size="small">
                     Small
                 </button>
 
-                <button
-                    class="size-button active"
-                    data-size="medium"
-                    type="button"
-                >
+                <button class="size-button active" data-size="medium">
                     Medium
                 </button>
 
-                <button
-                    class="size-button"
-                    data-size="large"
-                    type="button"
-                >
+                <button class="size-button" data-size="large">
                     Large
                 </button>
 
@@ -531,338 +327,26 @@
 
     </div>
 
-</div>
+</section>
 
 
 <!-- =========================================================
      ACCOUNT
 ========================================================= -->
 
-<div
-    id="accountScreen"
-    class="modal-overlay"
-    aria-hidden="true"
->
+<section id="accountScreen" class="modal" aria-hidden="true">
 
-    <div class="modal-box account-box">
+    <div class="account-box">
 
-        <div class="account-logo">
-            🌙
-        </div>
+        <div class="account-logo">🌙</div>
 
-        <h1>
-            Welcome to MoonPlug
-        </h1>
+        <h2>MoonPlug</h2>
 
-        <p class="account-subtitle">
-            Sign in or create your MoonPlug account.
-        </p>
+        <p>Account features can be connected to your backend.</p>
 
-
-        <div class="account-tabs">
-
-            <button
-                id="loginTab"
-                class="account-tab active"
-                type="button"
-            >
-                Log In
-            </button>
-
-            <button
-                id="signupTab"
-                class="account-tab"
-                type="button"
-            >
-                Sign Up
-            </button>
-
-        </div>
-
-
-        <form
-            id="loginForm"
-            class="account-form"
-        >
-
-            <label for="loginEmail">
-                Email address
-            </label>
-
-            <input
-                id="loginEmail"
-                type="email"
-                required
-                autocomplete="email"
-            >
-
-
-            <label for="loginPassword">
-                Password
-            </label>
-
-            <input
-                id="loginPassword"
-                type="password"
-                required
-                autocomplete="current-password"
-            >
-
-
-            <button
-                type="submit"
-                class="account-submit"
-            >
-                Log In
-            </button>
-
-        </form>
-
-
-        <form
-            id="signupForm"
-            class="account-form"
-            hidden
-        >
-
-            <label for="signupEmail">
-                Email address
-            </label>
-
-            <input
-                id="signupEmail"
-                type="email"
-                required
-                autocomplete="email"
-            >
-
-
-            <label for="signupPassword">
-                Password
-            </label>
-
-            <input
-                id="signupPassword"
-                type="password"
-                required
-                autocomplete="new-password"
-            >
-
-
-            <label for="signupConfirm">
-                Confirm password
-            </label>
-
-            <input
-                id="signupConfirm"
-                type="password"
-                required
-                autocomplete="new-password"
-            >
-
-
-            <button
-                type="submit"
-                class="account-submit"
-            >
-                Create Account
-            </button>
-
-        </form>
-
-
-        <button
-            id="closeAccount"
-            class="account-close"
-            type="button"
-        >
+        <button id="closeAccount" type="button">
             Continue as guest
         </button>
-
-
-        <p
-            id="accountMessage"
-            class="account-message"
-        ></p>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     HIDDEN OWNER LOGIN
-========================================================= -->
-
-<div
-    id="ownerLogin"
-    class="modal-overlay owner-overlay"
-    aria-hidden="true"
->
-
-    <div class="modal-box owner-box">
-
-        <div class="account-logo">
-            🌙
-        </div>
-
-        <h2>Owner Access</h2>
-
-        <p>
-            Enter the owner code.
-        </p>
-
-
-        <div class="password-wrapper">
-
-            <input
-                id="ownerCode"
-                type="password"
-                placeholder="Owner code"
-                autocomplete="off"
-            >
-
-            <button
-                id="showPassword"
-                type="button"
-            >
-                Show
-            </button>
-
-        </div>
-
-
-        <button
-            id="ownerLoginButton"
-            class="account-submit"
-            type="button"
-        >
-            Enter
-        </button>
-
-
-        <p
-            id="ownerError"
-            class="owner-error"
-        ></p>
-
-
-        <button
-            id="ownerCancel"
-            class="account-close"
-            type="button"
-        >
-            Cancel
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     OWNER PANEL
-========================================================= -->
-
-<section
-    id="ownerPanel"
-    class="owner-panel"
-    aria-hidden="true"
->
-
-    <div class="owner-header">
-
-        <div>
-            <h1>Owner Panel</h1>
-            <span>MoonPlug AI Administration</span>
-        </div>
-
-
-        <button
-            id="ownerLogout"
-            type="button"
-        >
-            Logout
-        </button>
-
-    </div>
-
-
-    <div class="owner-content">
-
-        <div class="owner-grid">
-
-            <div class="owner-card">
-                <strong>Users</strong>
-                <span id="ownerUsers">0</span>
-            </div>
-
-            <div class="owner-card">
-                <strong>Chats</strong>
-                <span id="ownerChats">0</span>
-            </div>
-
-            <div class="owner-card">
-                <strong>Status</strong>
-                <span>Online</span>
-            </div>
-
-            <div class="owner-card">
-                <strong>AI</strong>
-                <span>MoonPlug</span>
-            </div>
-
-        </div>
-
-
-        <div class="owner-section">
-
-            <h2>App Controls</h2>
-
-            <button
-                id="manageUsersButton"
-                type="button"
-            >
-                Manage Users
-            </button>
-
-
-            <button
-                id="manageChatsButton"
-                type="button"
-            >
-                Manage Chats
-            </button>
-
-
-            <button
-                id="appSettingsButton"
-                type="button"
-            >
-                App Settings
-            </button>
-
-        </div>
-
-
-        <div class="owner-section">
-
-            <h2>AI Trainer</h2>
-
-            <p>
-                Teach MoonPlug new knowledge.
-            </p>
-
-            <button
-                id="trainerButton"
-                type="button"
-            >
-                Open Trainer
-            </button>
-
-            <div id="trainerContainer"></div>
-
-        </div>
 
     </div>
 
