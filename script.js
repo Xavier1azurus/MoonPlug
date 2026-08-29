@@ -1,8 +1,15 @@
 
 /* =========================================================
    MOONPLUG AI
-   COMPLETE JAVASCRIPT
-   CHAT + CONVERSATION MODE + VOICE WAVE
+   COMPLETE MATCHED JAVASCRIPT
+
+   Conversation Mode:
+   - One microphone button
+   - Browser speech recognition
+   - MoonPlug backend response
+   - Browser speech synthesis
+   - White voice wave while speaking
+   - Black hole NEVER moves
 ========================================================= */
 
 "use strict";
@@ -27,23 +34,38 @@ let sidebar = null;
 
 let conversationMode = null;
 let conversationMic = null;
-let conversationSpeaker = null;
+
 let conversationText = null;
 let conversationStatus = null;
+
 let voiceWave = null;
 
 let recognition = null;
-let recognitionAvailable = false;
 
-let conversationListening = false;
-let conversationSpeaking = false;
+let recognitionAvailable =
+    false;
+
+let conversationListening =
+    false;
+
+let conversationSpeaking =
+    false;
+
+let speechAnimationFrame =
+    null;
 
 let speechVoices = [];
-let speechTimer = null;
 
-let conversationMessages = [];
+let conversationMessages =
+    [];
 
-let ownerAuthenticated = false;
+
+/* =========================================================
+   OWNER
+========================================================= */
+
+let ownerAuthenticated =
+    false;
 
 
 /* =========================================================
@@ -87,12 +109,13 @@ document.addEventListener(
         setupSpeechRecognition();
 
         checkBackendHealth();
+
     }
 );
 
 
 /* =========================================================
-   CACHE
+   CACHE ELEMENTS
 ========================================================= */
 
 function cacheElements() {
@@ -110,11 +133,6 @@ function cacheElements() {
     conversationMic =
         document.getElementById(
             "conversationMic"
-        );
-
-    conversationSpeaker =
-        document.getElementById(
-            "conversationSpeaker"
         );
 
     conversationText =
@@ -135,7 +153,7 @@ function cacheElements() {
 
 
 /* =========================================================
-   STARS
+   STAR FIELD
 ========================================================= */
 
 function createStars() {
@@ -145,7 +163,9 @@ function createStars() {
             "starField"
         );
 
-    if (!field) return;
+    if (!field) {
+        return;
+    }
 
     field.innerHTML = "";
 
@@ -218,7 +238,9 @@ function createStars() {
             `${Math.random() * 10 - 5}px`
         );
 
-        field.appendChild(star);
+        field.appendChild(
+            star
+        );
     }
 }
 
@@ -241,7 +263,7 @@ function setupSidebar() {
             () => {
 
                 if (
-                    window.innerWidth <= 900
+                    window.innerWidth <= 700
                 ) {
 
                     sidebar.classList.toggle(
@@ -253,6 +275,20 @@ function setupSidebar() {
                     sidebar.classList.toggle(
                         "collapsed"
                     );
+                }
+            }
+        );
+
+        logo.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    logo.click();
                 }
             }
         );
@@ -308,7 +344,7 @@ function setupSidebar() {
 
 
 /* =========================================================
-   CHAT
+   NORMAL CHAT
 ========================================================= */
 
 function setupChat() {
@@ -323,8 +359,9 @@ function setupChat() {
             "sendButton"
         );
 
-    if (!input || !send)
+    if (!input || !send) {
         return;
+    }
 
 
     send.addEventListener(
@@ -368,7 +405,7 @@ function setupChat() {
 
 
 /* =========================================================
-   NORMAL CHAT
+   NORMAL CHAT SEND
 ========================================================= */
 
 async function sendMessage() {
@@ -383,15 +420,18 @@ async function sendMessage() {
             "sendButton"
         );
 
-    if (!input || !send)
+    if (!input || !send) {
         return;
+    }
 
 
     const message =
         input.value.trim();
 
-    if (!message)
+
+    if (!message) {
         return;
+    }
 
 
     addMessage(
@@ -399,14 +439,17 @@ async function sendMessage() {
         "user"
     );
 
+
     input.value = "";
 
     input.style.height =
         "auto";
 
+
     showTyping();
 
-    send.disabled = true;
+    send.disabled =
+        true;
 
 
     try {
@@ -422,9 +465,10 @@ async function sendMessage() {
                             "application/json"
                     },
 
-                    body: JSON.stringify({
-                        message
-                    })
+                    body:
+                        JSON.stringify({
+                            message
+                        })
                 }
             );
 
@@ -477,7 +521,8 @@ async function sendMessage() {
 
         hideTyping();
 
-        send.disabled = false;
+        send.disabled =
+            false;
 
         input.focus();
     }
@@ -503,12 +548,14 @@ function addMessage(
             "emptyChat"
         );
 
-    if (!messages)
+    if (!messages) {
         return;
+    }
 
 
-    if (empty)
+    if (empty) {
         empty.remove();
+    }
 
 
     const bubble =
@@ -518,6 +565,7 @@ function addMessage(
 
     bubble.className =
         `message-bubble ${sender}`;
+
 
     bubble.textContent =
         String(text);
@@ -588,22 +636,56 @@ function setupConversation() {
     }
 
 
+    /*
+     * ONLY ONE CONVERSATION BUTTON.
+     *
+     * There is intentionally NO
+     * speaker button anymore.
+     */
+
     if (conversationMic) {
 
         conversationMic.addEventListener(
             "click",
-            toggleConversationListening
+            handleConversationButton
         );
+    }
+}
+
+
+/* =========================================================
+   CONVERSATION BUTTON
+========================================================= */
+
+function handleConversationButton() {
+
+    /*
+     * If MoonPlug is talking,
+     * the same button stops it.
+     */
+
+    if (conversationSpeaking) {
+
+        stopConversationSpeaking();
+
+        return;
     }
 
 
-    if (conversationSpeaker) {
+    /*
+     * If MoonPlug is listening,
+     * the same button stops listening.
+     */
 
-        conversationSpeaker.addEventListener(
-            "click",
-            stopConversationSpeaking
-        );
+    if (conversationListening) {
+
+        stopConversationListening();
+
+        return;
     }
+
+
+    startConversationListening();
 }
 
 
@@ -624,7 +706,7 @@ function openConversationChooser() {
 
     if (
         !saved ||
-        !saved.length
+        saved.length === 0
     ) {
 
         openConversationMode(
@@ -724,8 +806,9 @@ function closeConversationHistory() {
             "conversationHistory"
         );
 
-    if (!history)
+    if (!history) {
         return;
+    }
 
 
     history.classList.remove(
@@ -747,12 +830,12 @@ function openConversationMode(
     fresh = false
 ) {
 
-    if (!conversationMode)
+    if (!conversationMode) {
         return;
+    }
 
 
     if (fresh) {
-
         clearConversation();
     }
 
@@ -774,11 +857,12 @@ function openConversationMode(
 
     conversationText.textContent =
         "Tap the microphone to talk";
-
-
-    resetVoiceWave();
 }
 
+
+/* =========================================================
+   CLOSE CONVERSATION MODE
+========================================================= */
 
 function closeConversation() {
 
@@ -787,8 +871,9 @@ function closeConversation() {
     stopConversationSpeaking();
 
 
-    if (!conversationMode)
+    if (!conversationMode) {
         return;
+    }
 
 
     conversationMode.classList.remove(
@@ -815,8 +900,9 @@ function setConversationState(
     state
 ) {
 
-    if (!conversationMode)
+    if (!conversationMode) {
         return;
+    }
 
 
     conversationMode.classList.remove(
@@ -858,19 +944,12 @@ function setConversationState(
     }
 
 
-    if (
-        conversationMic &&
-        state === "listening"
-    ) {
+    if (conversationMic) {
 
-        conversationMic.classList.add(
-            "active"
-        );
-
-    } else if (conversationMic) {
-
-        conversationMic.classList.remove(
-            "active"
+        conversationMic.classList.toggle(
+            "active",
+            state === "listening" ||
+            state === "talking"
         );
     }
 }
@@ -891,6 +970,10 @@ function setupSpeechRecognition() {
 
         recognitionAvailable =
             false;
+
+        console.warn(
+            "Speech recognition is unavailable."
+        );
 
         return;
     }
@@ -958,15 +1041,15 @@ function setupSpeechRecognition() {
             }
 
 
-            const lastResult =
+            const finalResult =
                 event.results[
                     event.results.length - 1
                 ];
 
 
             if (
-                lastResult &&
-                lastResult.isFinal
+                finalResult &&
+                finalResult.isFinal
             ) {
 
                 processConversationMessage(
@@ -980,7 +1063,7 @@ function setupSpeechRecognition() {
         event => {
 
             console.error(
-                "Speech recognition:",
+                "Speech recognition error:",
                 event.error
             );
 
@@ -1001,6 +1084,14 @@ function setupSpeechRecognition() {
 
                 conversationText.textContent =
                     "Microphone permission was denied.";
+
+            } else if (
+                event.error ===
+                "no-speech"
+            ) {
+
+                conversationText.textContent =
+                    "I didn't hear anything.";
 
             } else {
 
@@ -1034,40 +1125,26 @@ function setupSpeechRecognition() {
 
 
 /* =========================================================
-   LISTENING
+   START LISTENING
 ========================================================= */
-
-function toggleConversationListening() {
-
-    if (conversationSpeaking) {
-
-        stopConversationSpeaking();
-
-        return;
-    }
-
-
-    if (conversationListening) {
-
-        stopConversationListening();
-
-        return;
-    }
-
-
-    startConversationListening();
-}
-
 
 function startConversationListening() {
 
     if (!recognitionAvailable) {
 
         conversationText.textContent =
-            "Speech recognition isn't supported in this browser.";
+            "Speech recognition isn't supported here.";
 
         return;
     }
+
+
+    /*
+     * Make sure old speech is stopped
+     * before listening.
+     */
+
+    stopConversationSpeaking();
 
 
     try {
@@ -1077,12 +1154,16 @@ function startConversationListening() {
     } catch (error) {
 
         console.warn(
-            "Recognition could not start:",
+            "Recognition start:",
             error
         );
     }
 }
 
+
+/* =========================================================
+   STOP LISTENING
+========================================================= */
 
 function stopConversationListening() {
 
@@ -1097,18 +1178,35 @@ function stopConversationListening() {
 
         } catch (error) {
 
-            console.warn(error);
+            console.warn(
+                "Recognition stop:",
+                error
+            );
         }
     }
 
 
     conversationListening =
         false;
+
+
+    if (
+        !conversationSpeaking &&
+        conversationMode &&
+        conversationMode.classList.contains(
+            "active"
+        )
+    ) {
+
+        setConversationState(
+            "idle"
+        );
+    }
 }
 
 
 /* =========================================================
-   SEND CONVERSATION TO AI
+   SEND CONVERSATION MESSAGE
 ========================================================= */
 
 async function processConversationMessage(
@@ -1124,8 +1222,14 @@ async function processConversationMessage(
         ).trim();
 
 
-    if (!cleanTranscript)
+    if (!cleanTranscript) {
+
+        setConversationState(
+            "idle"
+        );
+
         return;
+    }
 
 
     saveConversationMessage(
@@ -1156,10 +1260,11 @@ async function processConversationMessage(
                             "application/json"
                     },
 
-                    body: JSON.stringify({
-                        message:
-                            cleanTranscript
-                    })
+                    body:
+                        JSON.stringify({
+                            message:
+                                cleanTranscript
+                        })
                 }
             );
 
@@ -1200,7 +1305,7 @@ async function processConversationMessage(
 
         /*
          * Also put the conversation
-         * into normal chat history.
+         * into the normal chat.
          */
 
         addMessage(
@@ -1218,6 +1323,10 @@ async function processConversationMessage(
             cleanReply;
 
 
+        /*
+         * ACTUALLY SPEAK IT.
+         */
+
         speakConversation(
             cleanReply
         );
@@ -1234,6 +1343,7 @@ async function processConversationMessage(
         conversationSpeaking =
             false;
 
+
         stopVoiceWave();
 
 
@@ -1249,15 +1359,16 @@ async function processConversationMessage(
 
 
 /* =========================================================
-   SPEECH VOICES
+   LOAD SPEECH VOICES
 ========================================================= */
 
 function loadSpeechVoices() {
 
     if (
         !("speechSynthesis" in window)
-    )
+    ) {
         return;
+    }
 
 
     speechVoices =
@@ -1266,12 +1377,14 @@ function loadSpeechVoices() {
 }
 
 
+/* =========================================================
+   VOICE EVENTS
+========================================================= */
+
 function setupSpeechVoiceEvents() {
 
     if (
-        "speechSynthesis" in window &&
-        "onvoiceschanged" in
-        window.speechSynthesis
+        "speechSynthesis" in window
     ) {
 
         window.speechSynthesis.onvoiceschanged =
@@ -1283,25 +1396,68 @@ function setupSpeechVoiceEvents() {
 }
 
 
+/* =========================================================
+   FIND BEST ENGLISH VOICE
+========================================================= */
+
 function getEnglishVoice() {
 
-    if (!speechVoices.length) {
+    loadSpeechVoices();
 
-        loadSpeechVoices();
+
+    if (!speechVoices.length) {
+        return null;
     }
 
 
     const english =
         speechVoices.filter(
             voice =>
-                /^en(-|_)/i.test(
+                /^en[-_]/i.test(
                     voice.lang
                 )
         );
 
 
-    if (!english.length)
+    if (!english.length) {
         return null;
+    }
+
+
+    /*
+     * Prefer common natural voices.
+     */
+
+    const preferredNames = [
+        "Google US English",
+        "Microsoft Jenny",
+        "Microsoft Aria",
+        "Samantha",
+        "Alex",
+        "Daniel"
+    ];
+
+
+    for (
+        const preferred
+        of preferredNames
+    ) {
+
+        const found =
+            english.find(
+                voice =>
+                    voice.name
+                        .toLowerCase()
+                        .includes(
+                            preferred.toLowerCase()
+                        )
+            );
+
+
+        if (found) {
+            return found;
+        }
+    }
 
 
     const american =
@@ -1313,16 +1469,15 @@ function getEnglishVoice() {
         );
 
 
-    if (american)
-        return american;
-
-
-    return english[0];
+    return (
+        american ||
+        english[0]
+    );
 }
 
 
 /* =========================================================
-   MOONPLUG SPEECH
+   MOONPLUG SPEAKING
 ========================================================= */
 
 function speakConversation(
@@ -1334,7 +1489,7 @@ function speakConversation(
     ) {
 
         conversationText.textContent =
-            "Your browser doesn't support voice playback.";
+            "Your browser does not support voice playback.";
 
         setConversationState(
             "idle"
@@ -1344,32 +1499,55 @@ function speakConversation(
     }
 
 
-    stopConversationSpeaking();
+    /*
+     * Cancel anything already speaking.
+     */
+
+    window.speechSynthesis.cancel();
+
+    stopVoiceWave();
 
 
-    const utterance =
-        new SpeechSynthesisUtterance(
-            String(text)
-        );
+    const cleanText =
+        String(text || "")
+            .trim();
+
+
+    if (!cleanText) {
+        return;
+    }
 
 
     const voice =
         getEnglishVoice();
 
 
+    const utterance =
+        new SpeechSynthesisUtterance(
+            cleanText
+        );
+
+
     if (voice) {
 
         utterance.voice =
             voice;
+
+        utterance.lang =
+            voice.lang;
+    } else {
+
+        utterance.lang =
+            "en-US";
     }
 
 
-    utterance.lang =
-        voice?.lang ||
-        "en-US";
+    /*
+     * Voice settings.
+     */
 
     utterance.rate =
-        .95;
+        0.95;
 
     utterance.pitch =
         1;
@@ -1389,6 +1567,11 @@ function speakConversation(
                 "talking"
             );
 
+
+            /*
+             * This is the ONLY
+             * thing that moves.
+             */
 
             startVoiceWave();
         };
@@ -1432,168 +1615,47 @@ function speakConversation(
         };
 
 
-    window.speechSynthesis.cancel();
+    /*
+     * Chrome can sometimes fail when
+     * speech is queued too quickly.
+     *
+     * A tiny delay makes it much more
+     * reliable.
+     */
 
+    setTimeout(
+        () => {
 
-    window.speechSynthesis.speak(
-        utterance
+            if (
+                conversationMode &&
+                conversationMode.classList.contains(
+                    "active"
+                )
+            ) {
+
+                window.speechSynthesis.speak(
+                    utterance
+                );
+            }
+
+        },
+        80
     );
 }
 
 
 /* =========================================================
-   WHITE VOICE WAVE
+   VOICE WAVE
 ========================================================= */
-
-/*
- * IMPORTANT:
- *
- * The browser SpeechSynthesis API does not expose the
- * actual speaker audio waveform to JavaScript.
- *
- * Therefore this creates a smooth voice-reactive-looking
- * waveform that runs for exactly as long as MoonPlug speaks.
- *
- * The black hole itself NEVER moves.
- */
 
 function startVoiceWave() {
 
-    if (!voiceWave)
+    if (!voiceWave) {
         return;
+    }
 
 
     stopVoiceWave();
-
-
-    const bars =
-        Array.from(
-            voiceWave.querySelectorAll(
-                "span"
-            )
-        );
-
-
-    if (!bars.length)
-        return;
-
-
-    let phase = 0;
-
-
-    function animate() {
-
-        if (!conversationSpeaking)
-            return;
-
-
-        phase += .13;
-
-
-        const middle =
-            (bars.length - 1) / 2;
-
-
-        bars.forEach(
-            (bar, index) => {
-
-                const distance =
-                    Math.abs(
-                        index - middle
-                    ) / middle;
-
-
-                /*
-                 * Multiple waves combined together
-                 * make it look more like a real voice.
-                 */
-
-                const waveOne =
-                    Math.sin(
-                        phase * 1.7 +
-                        index * .75
-                    );
-
-
-                const waveTwo =
-                    Math.sin(
-                        phase * 2.8 -
-                        index * .42
-                    );
-
-
-                const waveThree =
-                    Math.sin(
-                        phase * 4.1 +
-                        index * .19
-                    );
-
-
-                const centerBoost =
-                    1 - distance * .55;
-
-
-                const value =
-                    (
-                        Math.abs(waveOne) * .52 +
-                        Math.abs(waveTwo) * .28 +
-                        Math.abs(waveThree) * .20
-                    );
-
-
-                const height =
-                    .12 +
-                    value *
-                    .88 *
-                    centerBoost;
-
-
-                bar.style.transform =
-                    `scaleY(${height})`;
-            }
-        );
-
-
-        speechTimer =
-            requestAnimationFrame(
-                animate
-            );
-    }
-
-
-    animate();
-}
-
-
-/* =========================================================
-   STOP WAVE
-========================================================= */
-
-function stopVoiceWave() {
-
-    if (speechTimer) {
-
-        cancelAnimationFrame(
-            speechTimer
-        );
-
-        speechTimer =
-            null;
-    }
-
-
-    resetVoiceWave();
-}
-
-
-/* =========================================================
-   RESET WAVE
-========================================================= */
-
-function resetVoiceWave() {
-
-    if (!voiceWave)
-        return;
 
 
     const bars =
@@ -1602,18 +1664,156 @@ function resetVoiceWave() {
         );
 
 
-    bars.forEach(
-        bar => {
+    /*
+     * Generate slightly different
+     * motion for every bar.
+     */
 
-            bar.style.transform =
-                "scaleY(.08)";
+    function animateWave() {
+
+        if (
+            !conversationSpeaking
+        ) {
+
+            stopVoiceWave();
+
+            return;
         }
-    );
+
+
+        const time =
+            performance.now();
+
+
+        bars.forEach(
+            (bar, index) => {
+
+                const distance =
+                    Math.abs(
+                        index -
+                        (bars.length - 1) / 2
+                    );
+
+
+                const center =
+                    1 -
+                    distance /
+                    ((bars.length - 1) / 2);
+
+
+                /*
+                 * Multiple sine waves give
+                 * the waveform a more natural
+                 * voice-like movement.
+                 */
+
+                const waveOne =
+                    Math.sin(
+                        time * .012 +
+                        index * .9
+                    );
+
+
+                const waveTwo =
+                    Math.sin(
+                        time * .019 -
+                        index * .55
+                    );
+
+
+                const random =
+                    Math.random() * .35;
+
+
+                let strength =
+                    (
+                        (waveOne + 1) / 2
+                    ) * .5
+                    +
+                    (
+                        (waveTwo + 1) / 2
+                    ) * .35
+                    +
+                    random;
+
+
+                strength *=
+                    .45 +
+                    center * .55;
+
+
+                const scale =
+                    Math.max(
+                        .12,
+                        Math.min(
+                            2.8,
+                            .18 +
+                            strength * 2.5
+                        )
+                    );
+
+
+                bar.style.transform =
+                    `scaleY(${scale})`;
+            }
+        );
+
+
+        speechAnimationFrame =
+            requestAnimationFrame(
+                animateWave
+            );
+    }
+
+
+    animateWave();
 }
 
 
 /* =========================================================
-   STOP SPEAKING
+   STOP VOICE WAVE
+========================================================= */
+
+function stopVoiceWave() {
+
+    if (
+        speechAnimationFrame
+    ) {
+
+        cancelAnimationFrame(
+            speechAnimationFrame
+        );
+
+        speechAnimationFrame =
+            null;
+    }
+
+
+    if (!voiceWave) {
+        return;
+    }
+
+
+    voiceWave
+        .querySelectorAll(
+            "span"
+        )
+        .forEach(
+            bar => {
+
+                bar.style.transform =
+                    "scaleY(.15)";
+            }
+        );
+
+
+    voiceWave.style.opacity =
+        "";
+}
+
+
+/* =========================================================
+   STOP MOONPLUG SPEAKING
 ========================================================= */
 
 function stopConversationSpeaking() {
@@ -1644,6 +1844,7 @@ function stopConversationSpeaking() {
             "idle"
         );
 
+
         conversationText.textContent =
             "Tap the microphone to talk";
     }
@@ -1667,6 +1868,23 @@ function saveConversationMessage(
     });
 
 
+    /*
+     * Keep storage from growing
+     * forever.
+     */
+
+    if (
+        conversationMessages.length >
+        100
+    ) {
+
+        conversationMessages =
+            conversationMessages.slice(
+                -100
+            );
+    }
+
+
     localStorage.setItem(
         "moonplugConversation",
         JSON.stringify(
@@ -1686,8 +1904,9 @@ function getSavedConversation() {
             );
 
 
-        if (!saved)
+        if (!saved) {
             return [];
+        }
 
 
         const parsed =
@@ -1715,7 +1934,9 @@ function loadConversation() {
 
 function clearConversation() {
 
-    conversationMessages = [];
+    conversationMessages =
+        [];
+
 
     localStorage.removeItem(
         "moonplugConversation"
@@ -1729,17 +1950,28 @@ function clearConversation() {
 
 function startNewChat() {
 
+    stopConversationSpeaking();
+
+    stopConversationListening();
+
+
     const messages =
         document.getElementById(
             "messages"
         );
 
-    if (!messages)
+
+    if (!messages) {
         return;
+    }
 
 
     messages.innerHTML = `
-        <div id="emptyChat" class="empty-chat">
+
+        <div
+            id="emptyChat"
+            class="empty-chat"
+        >
 
             <div class="empty-moon">
                 🌙
@@ -1754,7 +1986,11 @@ function startNewChat() {
             </p>
 
         </div>
+
     `;
+
+
+    clearConversation();
 }
 
 
@@ -1841,8 +2077,9 @@ function openSettings() {
             "settingsPanel"
         );
 
-    if (!panel)
+    if (!panel) {
         return;
+    }
 
 
     panel.style.display =
@@ -1862,8 +2099,9 @@ function closeSettings() {
             "settingsPanel"
         );
 
-    if (!panel)
+    if (!panel) {
         return;
+    }
 
 
     panel.style.display =
@@ -1938,7 +2176,7 @@ function setupAccount() {
 
     const account =
         document.getElementById(
-            "accountButton"
+            "ownerButton"
         );
 
     const close =
@@ -2001,8 +2239,9 @@ function openAccount() {
             "accountScreen"
         );
 
-    if (!screen)
+    if (!screen) {
         return;
+    }
 
 
     screen.style.display =
@@ -2022,8 +2261,9 @@ function closeAccount() {
             "accountScreen"
         );
 
-    if (!screen)
+    if (!screen) {
         return;
+    }
 
 
     screen.style.display =
@@ -2065,6 +2305,7 @@ function showLoginTab() {
     signup.hidden =
         true;
 
+
     loginTab.classList.add(
         "active"
     );
@@ -2103,6 +2344,7 @@ function showSignupTab() {
 
     signup.hidden =
         false;
+
 
     loginTab.classList.remove(
         "active"
@@ -2162,16 +2404,36 @@ function setupAccountForms() {
 
                 event.preventDefault();
 
+                const password =
+                    document.getElementById(
+                        "signupPassword"
+                    ).value;
+
+                const confirm =
+                    document.getElementById(
+                        "signupConfirm"
+                    ).value;
+
+
                 const message =
                     document.getElementById(
                         "accountMessage"
                     );
 
-                if (message) {
+
+                if (
+                    password !== confirm
+                ) {
 
                     message.textContent =
-                        "Account creation can be connected to your backend.";
+                        "Passwords do not match.";
+
+                    return;
                 }
+
+
+                message.textContent =
+                    "Account creation can be connected to your backend.";
             }
         );
     }
@@ -2179,7 +2441,7 @@ function setupAccountForms() {
 
 
 /* =========================================================
-   HIDDEN OWNER ACCESS
+   OWNER ACCESS
 ========================================================= */
 
 function setupOwner() {
@@ -2228,45 +2490,25 @@ function setupOwner() {
 
 
     /*
-     * The owner button is NOT shown publicly.
+     * Hidden owner trigger.
      *
-     * Type the private trigger anywhere on the page.
+     * There is NO visible owner
+     * access button.
      */
 
-    let triggerBuffer = "";
+    let triggerBuffer =
+        "";
 
 
     document.addEventListener(
         "keydown",
         event => {
 
-            /*
-             * Don't capture characters while
-             * typing normally into inputs.
-             */
-
-            const target =
-                event.target;
-
-
-            const isTyping =
-                target &&
-                (
-                    target.tagName ===
-                        "INPUT" ||
-                    target.tagName ===
-                        "TEXTAREA"
-                );
-
-
-            if (isTyping)
-                return;
-
-
             if (
                 event.key.length !== 1
-            )
+            ) {
                 return;
+            }
 
 
             triggerBuffer +=
@@ -2290,7 +2532,8 @@ function setupOwner() {
                 OWNER_TRIGGER
             ) {
 
-                triggerBuffer = "";
+                triggerBuffer =
+                    "";
 
                 showOwnerLogin();
             }
@@ -2316,8 +2559,9 @@ function showOwnerLogin() {
         );
 
 
-    if (!overlay)
+    if (!overlay) {
         return;
+    }
 
 
     overlay.style.display =
@@ -2331,7 +2575,8 @@ function showOwnerLogin() {
 
     if (code) {
 
-        code.value = "";
+        code.value =
+            "";
 
         setTimeout(
             () => code.focus(),
@@ -2352,8 +2597,10 @@ function hideOwnerLogin() {
             "ownerLogin"
         );
 
-    if (!overlay)
+
+    if (!overlay) {
         return;
+    }
 
 
     overlay.style.display =
@@ -2383,8 +2630,9 @@ async function loginOwner() {
         );
 
 
-    if (!codeInput)
+    if (!codeInput) {
         return;
+    }
 
 
     const code =
@@ -2403,13 +2651,6 @@ async function loginOwner() {
     }
 
 
-    if (errorElement) {
-
-        errorElement.textContent =
-            "Checking...";
-    }
-
-
     try {
 
         const response =
@@ -2423,9 +2664,10 @@ async function loginOwner() {
                             "application/json"
                     },
 
-                    body: JSON.stringify({
-                        code
-                    })
+                    body:
+                        JSON.stringify({
+                            code
+                        })
                 }
             );
 
@@ -2458,28 +2700,29 @@ async function loginOwner() {
         loadOwnerDashboard();
 
 
-    } catch (err) {
+    } catch (loginError) {
 
         console.error(
             "Owner login:",
-            err
+            loginError
         );
 
 
         /*
-         * FIXED:
+         * IMPORTANT:
          *
-         * The old version used `error` for both
-         * the DOM element and the catch variable.
+         * The previous version accidentally
+         * reused the variable name "error".
          *
-         * This version uses `errorElement`
-         * and `err` separately.
+         * This version uses loginError so
+         * the actual DOM error element
+         * remains available.
          */
 
         if (errorElement) {
 
             errorElement.textContent =
-                err.message ||
+                loginError.message ||
                 "Owner login failed.";
         }
     }
@@ -2497,8 +2740,10 @@ function openOwnerPanel() {
             "ownerPanel"
         );
 
-    if (!panel)
+
+    if (!panel) {
         return;
+    }
 
 
     panel.style.display =
@@ -2518,8 +2763,10 @@ function hideOwnerPanel() {
             "ownerPanel"
         );
 
-    if (!panel)
+
+    if (!panel) {
         return;
+    }
 
 
     panel.style.display =
@@ -2531,6 +2778,10 @@ function hideOwnerPanel() {
     );
 }
 
+
+/* =========================================================
+   OWNER LOGOUT
+========================================================= */
 
 async function logoutOwner() {
 
@@ -2566,8 +2817,9 @@ async function logoutOwner() {
 
 async function loadOwnerDashboard() {
 
-    if (!ownerAuthenticated)
+    if (!ownerAuthenticated) {
         return;
+    }
 
 
     try {
@@ -2578,8 +2830,9 @@ async function loadOwnerDashboard() {
             );
 
 
-        if (!response.ok)
+        if (!response.ok) {
             return;
+        }
 
 
         const data =
@@ -2677,8 +2930,10 @@ function setupPasswordToggle() {
             "showPassword"
         );
 
-    if (!button)
+
+    if (!button) {
         return;
+    }
 
 
     button.addEventListener(
@@ -2690,39 +2945,37 @@ function setupPasswordToggle() {
                     "ownerCode"
                 );
 
-            if (!input)
+
+            if (!input) {
                 return;
-
-
-            if (
-                input.type ===
-                "password"
-            ) {
-
-                input.type =
-                    "text";
-
-                button.textContent =
-                    "Hide";
-
-            } else {
-
-                input.type =
-                    "password";
-
-                button.textContent =
-                    "Show";
             }
+
+
+            const showing =
+                input.type === "text";
+
+
+            input.type =
+                showing
+                    ? "password"
+                    : "text";
+
+
+            button.textContent =
+                showing
+                    ? "Show"
+                    : "Hide";
         }
     );
 }
 
 
 /* =========================================================
-   OWNER PLACEHOLDERS
+   PLACEHOLDER OWNER / TRAINER FUNCTIONS
 ========================================================= */
 
 async function loadOwnerUsers() {
+
     console.log(
         "Owner users requested."
     );
@@ -2730,6 +2983,7 @@ async function loadOwnerUsers() {
 
 
 async function loadOwnerSettings() {
+
     console.log(
         "Owner settings requested."
     );
@@ -2737,6 +2991,7 @@ async function loadOwnerSettings() {
 
 
 async function updateOwnerSettings() {
+
     console.log(
         "Owner settings update requested."
     );
@@ -2744,6 +2999,7 @@ async function updateOwnerSettings() {
 
 
 async function loadTraining() {
+
     console.log(
         "Training requested."
     );
@@ -2751,6 +3007,7 @@ async function loadTraining() {
 
 
 async function addTraining() {
+
     console.log(
         "Add training requested."
     );
@@ -2758,6 +3015,7 @@ async function addTraining() {
 
 
 async function deleteTraining() {
+
     console.log(
         "Delete training requested."
     );
@@ -2765,6 +3023,7 @@ async function deleteTraining() {
 
 
 function openTrainer() {
+
     console.log(
         "Trainer opened."
     );
@@ -2772,6 +3031,7 @@ function openTrainer() {
 
 
 function closeTrainer() {
+
     console.log(
         "Trainer closed."
     );
@@ -2779,6 +3039,7 @@ function closeTrainer() {
 
 
 async function generateTraining() {
+
     console.log(
         "Generate training requested."
     );
@@ -2786,6 +3047,7 @@ async function generateTraining() {
 
 
 async function loadAndRenderTraining() {
+
     console.log(
         "Loading training."
     );
@@ -2793,6 +3055,7 @@ async function loadAndRenderTraining() {
 
 
 function renderTrainingList() {
+
     console.log(
         "Rendering training."
     );
@@ -2800,6 +3063,7 @@ function renderTrainingList() {
 
 
 async function teachMoonPlug() {
+
     console.log(
         "Teaching MoonPlug."
     );
@@ -2807,6 +3071,7 @@ async function teachMoonPlug() {
 
 
 async function refreshTraining() {
+
     console.log(
         "Refreshing training."
     );
