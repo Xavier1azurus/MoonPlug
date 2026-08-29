@@ -3,8 +3,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
 
     <meta name="theme-color" content="#020205">
     <meta name="description" content="MoonPlug AI">
@@ -18,47 +20,47 @@
 
 <div id="starField" class="star-field"></div>
 
-<!-- ================= SIDEBAR ================= -->
+<!-- =========================
+     SIDEBAR
+========================= -->
 
 <aside id="sidebar" class="sidebar">
 
-    <button id="sidebarLogo"
-            class="sidebar-logo"
-            type="button"
-            aria-label="Collapse sidebar">
-
+    <button
+        id="sidebarLogo"
+        class="sidebar-logo"
+        type="button"
+        aria-label="Toggle sidebar"
+    >
         <span class="logo-moon">🌙</span>
-        <span class="logo-name">MOONPLUG</span>
+        <strong>MOONPLUG</strong>
         <span class="logo-ai">AI</span>
-
     </button>
 
-    <nav class="sidebar-buttons">
+    <div class="sidebar-buttons">
 
         <button id="newChatButton" class="sidebar-button" type="button">
-            <span class="side-icon">＋</span>
+            <span class="side-icon">+</span>
             <b>New Chat</b>
         </button>
 
-        <button id="conversationButton"
-                class="sidebar-button conversation-button"
-                type="button">
+        <button id="conversationButton" class="sidebar-button" type="button">
             <span class="side-icon">◉</span>
             <b>Conversation</b>
         </button>
 
         <button id="studyButton" class="sidebar-button" type="button">
-            <span class="side-icon">📚</span>
+            <span class="side-icon">▣</span>
             <b>Study</b>
         </button>
 
         <button id="cookButton" class="sidebar-button" type="button">
-            <span class="side-icon">🍳</span>
+            <span class="side-icon">⌁</span>
             <b>Cook</b>
         </button>
 
         <button id="imagesButton" class="sidebar-button" type="button">
-            <span class="side-icon">▧</span>
+            <span class="side-icon">□</span>
             <b>Images</b>
         </button>
 
@@ -70,11 +72,11 @@
         <div class="sidebar-divider"></div>
 
         <button id="historyButton" class="sidebar-button" type="button">
-            <span class="side-icon">◌</span>
+            <span class="side-icon">≡</span>
             <b>Chat History</b>
         </button>
 
-    </nav>
+    </div>
 
     <div class="sidebar-bottom">
 
@@ -84,7 +86,7 @@
         </button>
 
         <button id="accountButton" class="sidebar-button" type="button">
-            <span class="side-icon">●</span>
+            <span class="side-icon">○</span>
             <b>Account</b>
         </button>
 
@@ -93,37 +95,51 @@
 </aside>
 
 
-<!-- ================= MAIN CHAT ================= -->
+<!-- =========================
+     MAIN CHAT
+========================= -->
 
 <main class="chat-section">
 
     <div class="chat-container">
 
         <header class="chat-header">
+
             <strong>MoonPlug AI</strong>
 
             <span class="online">
                 <i></i>
                 Online
             </span>
+
         </header>
+
 
         <div id="messages" class="messages">
 
             <div id="emptyChat" class="empty-chat">
-                <div class="empty-moon">🌙</div>
+
+                <div class="moon-symbol">🌙</div>
+
                 <h1>What can I help with?</h1>
+
                 <p>Ask MoonPlug anything.</p>
+
             </div>
 
         </div>
 
+
         <div id="typing" class="typing" hidden>
+
             <span class="typing-dot"></span>
             <span class="typing-dot"></span>
             <span class="typing-dot"></span>
+
             <span>MoonPlug is thinking...</span>
+
         </div>
+
 
         <div class="chat-bottom-area">
 
@@ -133,11 +149,14 @@
                     id="messageInput"
                     rows="1"
                     placeholder="Ask MoonPlug anything..."
-                    autocomplete="off"></textarea>
+                    autocomplete="off"
+                ></textarea>
 
-                <button id="sendButton"
-                        type="button"
-                        aria-label="Send message">
+                <button
+                    id="sendButton"
+                    type="button"
+                    aria-label="Send message"
+                >
                     ↑
                 </button>
 
@@ -154,25 +173,33 @@
 </main>
 
 
-<!-- ================= CONVERSATION MODE ================= -->
+<!-- =========================
+     CONVERSATION MODE
+========================= -->
 
-<section id="conversationMode"
-         class="conversation-mode"
-         aria-hidden="true">
+<section
+    id="conversationMode"
+    class="conversation-mode"
+    aria-hidden="true"
+>
 
     <div class="conversation-top">
 
-        <button id="conversationClose"
-                class="conversation-close"
-                type="button"
-                aria-label="Close conversation">
+        <button
+            id="conversationClose"
+            class="conversation-close"
+            type="button"
+            aria-label="Close conversation"
+        >
             ×
         </button>
+
 
         <div class="conversation-brand">
             <span>🌙</span>
             <strong>MoonPlug</strong>
         </div>
+
 
         <div class="conversation-live">
             <i></i>
@@ -182,7 +209,9 @@
     </div>
 
 
-    <!-- BLACK HOLE -->
+    <!-- =========================
+         BLACK HOLE
+    ========================= -->
 
     <div class="black-hole-stage">
 
@@ -199,18 +228,24 @@
 
             <div class="black-hole-core"></div>
 
-            <div id="voiceWave"
-                 class="voice-wave"
-                 aria-hidden="true">
-
-                <span></span><span></span><span></span>
-                <span></span><span></span><span></span>
-                <span></span><span></span><span></span>
-                <span></span><span></span><span></span>
-                <span></span><span></span><span></span>
-                <span></span><span></span><span></span>
-                <span></span><span></span><span></span>
-
+            <div
+                id="voiceWave"
+                class="voice-wave"
+                aria-hidden="true"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
 
         </div>
@@ -218,53 +253,68 @@
     </div>
 
 
-    <div id="conversationStatus"
-         class="conversation-status">
+    <div
+        id="conversationStatus"
+        class="conversation-status"
+    >
         Ready
     </div>
 
-    <div id="conversationText"
-         class="conversation-text">
+
+    <div
+        id="conversationText"
+        class="conversation-text"
+    >
         Tap the button to talk
     </div>
 
 
-    <!-- THE ONLY CONVERSATION BUTTON -->
+    <!-- =========================
+         ONE BUTTON
+    ========================= -->
 
     <div class="conversation-button-area">
 
-        <button id="conversationMic"
-                class="conversation-main-button"
-                type="button"
-                aria-label="Talk to MoonPlug">
+        <button
+            id="conversationMic"
+            class="conversation-main-button"
+            type="button"
+            aria-label="Start talking"
+        >
 
-            <span class="button-mic">
+            <span class="mic-icon">
 
                 <span class="mic-head"></span>
+
                 <span class="mic-body"></span>
+
                 <span class="mic-stand"></span>
 
-            </span>
+                <span class="mic-base"></span>
 
-            <span class="button-ripple ripple-one"></span>
-            <span class="button-ripple ripple-two"></span>
+            </span>
 
         </button>
 
     </div>
 
+
     <p class="conversation-hint">
-        Tap to talk · Tap again to stop
+        Tap to talk
     </p>
 
 </section>
 
 
-<!-- ================= SETTINGS ================= -->
+<!-- =========================
+     SETTINGS
+========================= -->
 
-<section id="settingsPanel"
-         class="modal"
-         aria-hidden="true">
+<section
+    id="settingsPanel"
+    class="modal"
+    aria-hidden="true"
+>
 
     <div class="settings-box">
 
@@ -272,33 +322,44 @@
 
             <h2>Settings</h2>
 
-            <button id="closeSettings"
-                    type="button">
+            <button
+                id="closeSettings"
+                type="button"
+            >
                 ×
             </button>
 
         </div>
 
+
         <div class="setting-item">
 
             <strong>Text Size</strong>
 
-            <p>Change the size of chat messages.</p>
+            <p>
+                Change the size of chat messages.
+            </p>
 
             <div class="setting-buttons">
 
-                <button class="size-button"
-                        data-size="small">
+                <button
+                    class="size-button"
+                    data-size="small"
+                >
                     Small
                 </button>
 
-                <button class="size-button active"
-                        data-size="medium">
+                <button
+                    class="size-button active"
+                    data-size="medium"
+                >
                     Medium
                 </button>
 
-                <button class="size-button"
-                        data-size="large">
+                <button
+                    class="size-button"
+                    data-size="large"
+                >
                     Large
                 </button>
 
