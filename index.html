@@ -36,15 +36,14 @@
     <div
         id="sidebarLogo"
         class="sidebar-logo"
-        title="Toggle sidebar"
         role="button"
         tabindex="0"
+        title="Toggle sidebar"
     >
         <span class="logo-moon">🌙</span>
         <strong>MOONPLUG</strong>
         <span class="logo-ai">AI</span>
     </div>
-
 
     <div class="sidebar-buttons">
 
@@ -53,43 +52,36 @@
             <span class="sidebar-label">New Chat</span>
         </button>
 
-
         <button
             id="conversationButton"
             class="sidebar-button conversation-sidebar-button"
             type="button"
         >
-            <span class="sidebar-icon conversation-sidebar-icon">◉</span>
+            <span class="sidebar-icon">◉</span>
             <span class="sidebar-label">Conversation</span>
         </button>
-
 
         <button id="studyButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">📚</span>
             <span class="sidebar-label">Study</span>
         </button>
 
-
         <button id="cookButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">🍳</span>
             <span class="sidebar-label">Cook</span>
         </button>
-
 
         <button id="imagesButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">🖼️</span>
             <span class="sidebar-label">Images</span>
         </button>
 
-
         <button id="codeButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">💻</span>
             <span class="sidebar-label">Code</span>
         </button>
 
-
         <div class="sidebar-divider"></div>
-
 
         <button id="historyButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">💬</span>
@@ -98,7 +90,6 @@
 
     </div>
 
-
     <div class="sidebar-bottom">
 
         <button id="settingsButton" class="sidebar-button" type="button">
@@ -106,8 +97,7 @@
             <span class="sidebar-label">Settings</span>
         </button>
 
-
-        <button id="accountButton" class="sidebar-button" type="button">
+        <button id="ownerButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">👤</span>
             <span class="sidebar-label">Account</span>
         </button>
@@ -118,7 +108,7 @@
 
 
 <!-- =========================================================
-     MAIN CHAT
+     NORMAL CHAT
 ========================================================= -->
 
 <main class="chat-section">
@@ -139,36 +129,52 @@
         </header>
 
 
-        <div id="messages" class="messages" aria-live="polite">
+        <div
+            id="messages"
+            class="messages"
+            aria-live="polite"
+        >
 
             <div id="emptyChat" class="empty-chat">
 
-                <div class="empty-moon">🌙</div>
+                <div class="empty-moon">
+                    🌙
+                </div>
 
-                <h1>What can I help with?</h1>
+                <h1>
+                    What can I help with?
+                </h1>
 
-                <p>Ask MoonPlug anything.</p>
+                <p>
+                    Ask MoonPlug anything.
+                </p>
 
             </div>
 
         </div>
 
 
-        <!-- THINKING -->
-
-        <div id="typing" class="typing" aria-live="polite">
+        <div
+            id="typing"
+            class="typing"
+            aria-live="polite"
+        >
 
             <div class="moonplug-animation">
 
-                <div class="animation-moon">🌙</div>
+                <div class="animation-moon">
+                    🌙
+                </div>
 
-                <div class="animation-plug">🔌</div>
+                <div class="animation-plug">
+                    🔌
+                </div>
 
                 <div class="plug-glow"></div>
 
             </div>
 
-            <span class="typing-text">
+            <span>
                 MoonPlug is thinking...
             </span>
 
@@ -213,7 +219,7 @@
      CONVERSATION MODE
 ========================================================= -->
 
-<div
+<section
     id="conversationMode"
     class="conversation-mode"
     aria-hidden="true"
@@ -243,8 +249,8 @@
 
 
     <!-- =====================================================
-         STILL BLACK HOLE
-    ====================================================== -->
+         STATIC BLACK HOLE
+    ===================================================== -->
 
     <div class="black-hole-container">
 
@@ -260,12 +266,13 @@
 
             <div class="black-hole-core">
 
-                <!-- WHITE VOICE WAVE -->
+                <!-- ONLY THE WAVE MOVES -->
                 <div
                     id="voiceWave"
                     class="voice-wave"
                     aria-hidden="true"
                 >
+
                     <span></span>
                     <span></span>
                     <span></span>
@@ -279,15 +286,7 @@
                     <span></span>
                     <span></span>
                     <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+
                 </div>
 
             </div>
@@ -313,46 +312,37 @@
     </div>
 
 
+    <!-- =====================================================
+         ONE BUTTON ONLY
+    ====================================================== -->
+
     <div class="conversation-controls">
 
         <button
             id="conversationMic"
             class="conversation-control mic-control"
             type="button"
-            aria-label="Start talking"
+            aria-label="Talk to MoonPlug"
         >
+
             <span class="mic-icon">
+
                 <span class="mic-head"></span>
                 <span class="mic-stem"></span>
                 <span class="mic-base"></span>
-            </span>
-        </button>
-
-
-        <button
-            id="conversationSpeaker"
-            class="conversation-control speaker-control"
-            type="button"
-            aria-label="Stop speaking"
-        >
-            <span class="speaker-icon">
-
-                <span class="speaker-box"></span>
-
-                <span class="speaker-wave wave-one"></span>
-                <span class="speaker-wave wave-two"></span>
 
             </span>
+
         </button>
 
     </div>
 
 
     <div class="conversation-hint">
-        MoonPlug listens and speaks using your device.
+        Tap the microphone to talk to MoonPlug.
     </div>
 
-</div>
+</section>
 
 
 <!-- =========================================================
@@ -369,7 +359,9 @@
 
         <div class="conversation-history-header">
 
-            <h2>Conversation Mode</h2>
+            <h2>
+                Conversation Mode
+            </h2>
 
             <button
                 id="conversationHistoryClose"
@@ -438,12 +430,13 @@
 
         </div>
 
-
         <div class="setting-item">
 
             <strong>Appearance</strong>
 
-            <span>Choose how MoonPlug looks.</span>
+            <span>
+                Choose how MoonPlug looks.
+            </span>
 
             <div class="appearance-options">
 
@@ -458,12 +451,13 @@
 
         </div>
 
-
         <div class="setting-item">
 
             <strong>Text Size</strong>
 
-            <span>Change the chat text size.</span>
+            <span>
+                Change the chat text size.
+            </span>
 
             <div class="appearance-options">
 
@@ -512,14 +506,17 @@
 
     <div class="account-box">
 
-        <div class="account-logo">🌙</div>
+        <div class="account-logo">
+            🌙
+        </div>
 
-        <h1>Welcome to MoonPlug</h1>
+        <h1>
+            Welcome to MoonPlug
+        </h1>
 
         <p class="account-subtitle">
             Sign in or create your MoonPlug account.
         </p>
-
 
         <div class="account-tabs">
 
@@ -541,27 +538,28 @@
 
         </div>
 
-
         <form id="loginForm" class="account-form">
 
-            <label for="loginEmail">Email address</label>
+            <label for="loginEmail">
+                Email address
+            </label>
 
             <input
                 id="loginEmail"
                 type="email"
                 placeholder="Email address"
                 autocomplete="email"
-                required
             >
 
-            <label for="loginPassword">Password</label>
+            <label for="loginPassword">
+                Password
+            </label>
 
             <input
                 id="loginPassword"
                 type="password"
                 placeholder="Password"
                 autocomplete="current-password"
-                required
             >
 
             <button
@@ -573,41 +571,43 @@
 
         </form>
 
-
         <form
             id="signupForm"
             class="account-form"
             hidden
         >
 
-            <label for="signupEmail">Email address</label>
+            <label for="signupEmail">
+                Email address
+            </label>
 
             <input
                 id="signupEmail"
                 type="email"
                 placeholder="Email address"
                 autocomplete="email"
-                required
             >
 
-            <label for="signupPassword">Password</label>
+            <label for="signupPassword">
+                Password
+            </label>
 
             <input
                 id="signupPassword"
                 type="password"
                 placeholder="Password"
                 autocomplete="new-password"
-                required
             >
 
-            <label for="signupConfirm">Confirm password</label>
+            <label for="signupConfirm">
+                Confirm password
+            </label>
 
             <input
                 id="signupConfirm"
                 type="password"
                 placeholder="Confirm password"
                 autocomplete="new-password"
-                required
             >
 
             <button
@@ -619,7 +619,6 @@
 
         </form>
 
-
         <button
             id="closeAccount"
             class="account-close"
@@ -627,7 +626,6 @@
         >
             Continue as guest
         </button>
-
 
         <p
             id="accountMessage"
@@ -651,11 +649,17 @@
 
     <div class="owner-box">
 
-        <div class="owner-logo">🌙</div>
+        <div class="owner-logo">
+            🌙
+        </div>
 
-        <h2>Owner Access</h2>
+        <h2>
+            Owner Access
+        </h2>
 
-        <p>Enter the owner code.</p>
+        <p>
+            Enter the owner code.
+        </p>
 
         <div class="password-wrapper">
 
@@ -715,7 +719,9 @@
 
         <div>
 
-            <h1>Owner Panel</h1>
+            <h1>
+                Owner Panel
+            </h1>
 
             <span>
                 MoonPlug AI Administration
@@ -731,7 +737,6 @@
         </button>
 
     </div>
-
 
     <div class="owner-content">
 
@@ -759,10 +764,11 @@
 
         </div>
 
-
         <div class="owner-section">
 
-            <h2>App Controls</h2>
+            <h2>
+                App Controls
+            </h2>
 
             <p class="owner-description">
                 Manage MoonPlug from the owner dashboard.
@@ -791,10 +797,11 @@
 
         </div>
 
-
         <div class="owner-section">
 
-            <h2>AI Trainer</h2>
+            <h2>
+                AI Trainer
+            </h2>
 
             <p class="owner-description">
                 Teach MoonPlug new knowledge and manage its learned training.
