@@ -2304,3 +2304,63 @@ try {
 }
 
 }
+
+/* =========================================================
+   MOONPLUG BUILT-IN QUESTIONS
+   Handles identity questions locally.
+   Backend stays completely unchanged.
+========================================================= */
+
+function getMoonPlugBuiltInResponse(message) {
+
+    const text = String(message)
+        .toLowerCase()
+        .trim()
+        .replace(/[?!.,]/g, "");
+
+    /* WHO MADE MOONPLUG */
+
+    if (
+        text.includes("who made you") ||
+        text.includes("who created you") ||
+        text.includes("who built you") ||
+        text.includes("who developed you") ||
+        text.includes("who is your creator") ||
+        text.includes("who created moonplug") ||
+        text.includes("who made moonplug")
+    ) {
+
+        return "I was created by Narayan Xavier Gill, at the age of 12";
+    }
+
+
+    /* WHEN WAS MOONPLUG MADE */
+
+    if (
+        text.includes("when were you made") ||
+        text.includes("when were you created") ||
+        text.includes("when was moonplug made") ||
+        text.includes("when was moonplug created") ||
+        text.includes("when did you get created")
+    ) {
+
+        return "MoonPlug AI was created in 2026.";
+    }
+
+
+    /* WHAT ARE YOU */
+
+    if (
+        text === "what are you" ||
+        text === "what is moonplug" ||
+        text === "who are you"
+    ) {
+
+        return "I'm MoonPlug AI, an AI assistant created by Narayan Xavier Gill.";
+    }
+
+
+    return null;
+}
+
+
