@@ -9,16 +9,16 @@
 
 html,
 body {
-    margin: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
 }
 
 body {
-    background: #050507;
-    color: white;
+    background: #000;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
 }
 
 
@@ -29,40 +29,42 @@ body {
 .star-field {
     position: fixed;
     inset: 0;
-    pointer-events: none;
+    z-index: -5;
     overflow: hidden;
-    z-index: 0;
+    pointer-events: none;
+    background: #000;
 }
 
 .random-star {
     position: absolute;
+
     left: var(--star-x);
     top: var(--star-y);
 
     width: var(--star-size);
     height: var(--star-size);
 
+    background: #fff;
     border-radius: 50%;
-    background: white;
 
     opacity: var(--star-opacity);
 
     box-shadow:
-        0 0 var(--star-glow) rgba(255,255,255,.7);
+        0 0 var(--star-glow) #fff;
 
     animation:
         starMove
         var(--star-duration)
         ease-in-out
         var(--star-delay)
-        infinite alternate;
+        infinite
+        alternate;
 }
 
 @keyframes starMove {
 
     from {
-        transform: translate(0,0)
-                   scale(var(--star-scale));
+        transform: scale(var(--star-scale));
     }
 
     to {
@@ -82,6 +84,7 @@ body {
 
 .sidebar {
     position: fixed;
+
     left: 0;
     top: 0;
     bottom: 0;
@@ -90,13 +93,14 @@ body {
 
     padding: 18px 12px;
 
-    background: rgba(12,12,16,.94);
-    border-right: 1px solid rgba(255,255,255,.08);
-
-    z-index: 20;
-
     display: flex;
     flex-direction: column;
+
+    background: rgba(5, 5, 5, .96);
+
+    border-right: 1px solid #222;
+
+    z-index: 50;
 
     transition:
         width .25s ease,
@@ -104,38 +108,35 @@ body {
 }
 
 .sidebar-logo {
-    height: 52px;
+    height: 55px;
 
     display: flex;
     align-items: center;
-    gap: 9px;
+
+    gap: 8px;
 
     padding: 0 12px;
 
     cursor: pointer;
 
-    border-radius: 14px;
-}
-
-.sidebar-logo:hover {
-    background: rgba(255,255,255,.06);
+    user-select: none;
 }
 
 .logo-moon {
-    font-size: 25px;
+    font-size: 24px;
 }
 
 .logo-ai {
-    font-size: 11px;
-    opacity: .5;
+    color: #888;
+    font-size: 12px;
 }
 
 .sidebar-buttons {
-    margin-top: 22px;
-
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 6px;
+
+    margin-top: 20px;
 }
 
 .sidebar-bottom {
@@ -143,46 +144,76 @@ body {
 
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 6px;
 }
 
 .sidebar-button {
     width: 100%;
+
     min-height: 46px;
 
     border: 0;
-    border-radius: 13px;
+    border-radius: 12px;
 
     background: transparent;
-    color: white;
+    color: #ccc;
 
     display: flex;
     align-items: center;
-    gap: 13px;
+
+    gap: 14px;
 
     padding: 0 13px;
 
     font-size: 14px;
 
     cursor: pointer;
-    text-align: left;
+
+    transition:
+        background .2s,
+        color .2s,
+        transform .2s;
 }
 
 .sidebar-button:hover {
-    background: rgba(255,255,255,.07);
+    background: #171717;
+    color: #fff;
+}
+
+.sidebar-button:active {
+    transform: scale(.97);
+}
+
+.conversation-sidebar-button {
+    border: 1px solid #252525;
 }
 
 .sidebar-icon {
     width: 25px;
-    text-align: center;
+
     flex-shrink: 0;
+
+    text-align: center;
+
+    font-size: 18px;
+}
+
+.sidebar-label {
+    white-space: nowrap;
 }
 
 .sidebar-divider {
     height: 1px;
-    background: rgba(255,255,255,.08);
-    margin: 9px 4px;
+
+    background: #222;
+
+    margin: 10px 5px;
 }
+
+
+/* =========================================================
+   COLLAPSED SIDEBAR
+========================================================= */
 
 .sidebar.collapsed {
     width: 76px;
@@ -192,10 +223,6 @@ body {
 .sidebar.collapsed .logo-ai,
 .sidebar.collapsed .sidebar-logo strong {
     display: none;
-}
-
-.sidebar.collapsed .sidebar-logo {
-    justify-content: center;
 }
 
 .sidebar.collapsed .sidebar-button {
@@ -209,20 +236,19 @@ body {
 ========================================================= */
 
 .chat-section {
-    position: relative;
-    z-index: 2;
+    position: fixed;
 
-    margin-left: 250px;
+    inset: 0 0 0 250px;
 
-    width: calc(100% - 250px);
-    height: 100vh;
+    transition: left .25s ease;
+}
+
+.sidebar.collapsed ~ .chat-section {
+    left: 76px;
 }
 
 .chat-container {
-    width: min(1000px, 100%);
     height: 100%;
-
-    margin: auto;
 
     display: flex;
     flex-direction: column;
@@ -234,40 +260,43 @@ body {
 ========================================================= */
 
 .chat-header {
-    height: 70px;
+    height: 65px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    padding: 0 25px;
+    padding: 0 28px;
 
-    border-bottom: 1px solid rgba(255,255,255,.06);
+    border-bottom: 1px solid #191919;
+
+    background: rgba(0, 0, 0, .7);
 }
 
 .header-title {
-    font-size: 18px;
+    font-size: 17px;
 }
 
 .online {
-    font-size: 13px;
-    opacity: .65;
-
     display: flex;
     align-items: center;
+
     gap: 7px;
+
+    color: #999;
+
+    font-size: 12px;
 }
 
 .online-dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
 
     border-radius: 50%;
 
-    background: #55e88b;
+    background: #fff;
 
-    box-shadow:
-        0 0 10px rgba(85,232,139,.7);
+    box-shadow: 0 0 8px #fff;
 }
 
 
@@ -280,51 +309,47 @@ body {
 
     overflow-y: auto;
 
-    padding: 35px 25px 150px;
+    padding:
+        30px
+        max(20px, 7vw);
 
     display: flex;
     flex-direction: column;
+
     gap: 14px;
 
-    scrollbar-width: thin;
+    scroll-behavior: smooth;
 }
 
 .empty-chat {
     margin: auto;
 
     text-align: center;
-
-    opacity: .9;
 }
 
 .empty-moon {
-    font-size: 65px;
+    font-size: 55px;
 
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 
     filter:
         drop-shadow(
-            0 0 22px
-            rgba(255,255,255,.15)
+            0 0 15px #fff
         );
 }
 
 .empty-chat h1 {
     margin: 0;
+
     font-size: 30px;
 }
 
 .empty-chat p {
-    opacity: .5;
+    color: #777;
 }
 
-
-/* =========================================================
-   MESSAGE BUBBLES
-========================================================= */
-
 .message-bubble {
-    max-width: 78%;
+    max-width: min(720px, 85%);
 
     padding: 13px 17px;
 
@@ -333,14 +358,13 @@ body {
     line-height: 1.5;
 
     white-space: pre-wrap;
-
-    word-break: break-word;
 }
 
 .message-bubble.user {
     align-self: flex-end;
 
-    background: #26262d;
+    background: #fff;
+    color: #000;
 
     border-bottom-right-radius: 5px;
 }
@@ -348,77 +372,57 @@ body {
 .message-bubble.ai {
     align-self: flex-start;
 
-    background: rgba(255,255,255,.07);
+    background: #171717;
+    color: #fff;
+
+    border: 1px solid #292929;
 
     border-bottom-left-radius: 5px;
 }
 
 
 /* =========================================================
-   THINKING
+   TYPING
 ========================================================= */
 
 .typing {
     display: none;
 
-    padding: 8px 25px;
+    padding: 10px 30px;
 
-    opacity: .8;
+    color: #999;
 }
 
 .moonplug-animation {
     display: inline-flex;
+
     align-items: center;
+
     gap: 5px;
+
+    margin-right: 8px;
 }
 
 .animation-moon {
-    animation: thinkingMoon 1.2s infinite ease-in-out;
+    animation: thinkingMoon 1.5s infinite;
 }
 
 .animation-plug {
-    animation: thinkingPlug 1.2s infinite ease-in-out;
-}
-
-.plug-glow {
-    width: 7px;
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: white;
-
-    animation: plugGlow 1s infinite alternate;
+    animation: thinkingPlug 1.5s infinite;
 }
 
 @keyframes thinkingMoon {
 
     50% {
-        transform: translateY(-4px);
+        transform: rotate(-15deg) scale(1.15);
     }
 }
 
 @keyframes thinkingPlug {
 
     50% {
-        transform: rotate(8deg);
+        transform: rotate(15deg) scale(1.15);
     }
-}
-
-@keyframes plugGlow {
-
-    from {
-        opacity: .2;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-.typing-text {
-    margin-left: 8px;
-    font-size: 13px;
 }
 
 
@@ -427,30 +431,32 @@ body {
 ========================================================= */
 
 .chat-bottom-area {
-    padding: 12px 20px 18px;
+    padding: 12px 25px 20px;
 }
 
 .chat-input-area {
+    max-width: 900px;
+
+    margin: auto;
+
     display: flex;
     align-items: flex-end;
+
     gap: 8px;
 
-    padding: 9px;
+    padding: 8px;
 
-    background: rgba(24,24,29,.96);
+    background: #111;
 
-    border: 1px solid rgba(255,255,255,.1);
+    border: 1px solid #292929;
 
-    border-radius: 22px;
-
-    box-shadow:
-        0 12px 40px rgba(0,0,0,.25);
+    border-radius: 20px;
 }
 
 #messageInput {
     flex: 1;
 
-    min-height: 43px;
+    min-height: 42px;
     max-height: 180px;
 
     resize: none;
@@ -459,72 +465,40 @@ body {
     outline: 0;
 
     background: transparent;
-    color: white;
+    color: #fff;
+
+    padding: 11px 12px;
 
     font: inherit;
-
-    padding: 11px 8px;
-}
-
-#messageInput::placeholder {
-    color: rgba(255,255,255,.4);
-}
-
-#sendButton,
-.conversation-button {
-    width: 43px;
-    height: 43px;
-
-    flex-shrink: 0;
-
-    border: 0;
-
-    border-radius: 50%;
-
-    cursor: pointer;
-
-    color: white;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 18px;
 }
 
 #sendButton {
-    background: white;
-    color: black;
+    width: 42px;
+    height: 42px;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: #fff;
+    color: #000;
+
+    font-size: 19px;
+
+    cursor: pointer;
 }
 
 #sendButton:disabled {
     opacity: .4;
-    cursor: not-allowed;
-}
-
-.conversation-button {
-    background: #19191f;
-
-    border: 1px solid rgba(255,255,255,.1);
-
-    transition:
-        transform .2s ease,
-        background .2s ease;
-}
-
-.conversation-button:hover {
-    background: #292930;
-    transform: scale(1.05);
 }
 
 .input-hint {
     text-align: center;
 
+    color: #555;
+
     font-size: 11px;
 
-    opacity: .35;
-
-    margin-top: 9px;
+    margin-top: 8px;
 }
 
 
@@ -534,25 +508,21 @@ body {
 
 .conversation-mode {
     position: fixed;
+
     inset: 0;
 
-    z-index: 100;
+    z-index: 200;
 
     display: none;
 
     flex-direction: column;
+
     align-items: center;
     justify-content: center;
 
-    padding: 30px;
+    overflow: hidden;
 
-    background:
-        radial-gradient(
-            circle at center,
-            #171725 0%,
-            #08080d 45%,
-            #030305 100%
-        );
+    background: #000;
 
     opacity: 0;
 
@@ -564,254 +534,376 @@ body {
     opacity: 1;
 }
 
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
 .conversation-close {
     position: absolute;
 
-    top: max(20px, env(safe-area-inset-top));
+    top: max(18px, env(safe-area-inset-top));
     right: 20px;
 
-    width: 48px;
-    height: 48px;
+    width: 45px;
+    height: 45px;
 
-    border: 1px solid rgba(255,255,255,.12);
+    border: 1px solid #333;
 
     border-radius: 50%;
 
-    background: rgba(255,255,255,.06);
+    background: #090909;
+    color: #fff;
 
-    color: white;
-
-    font-size: 28px;
+    font-size: 19px;
 
     cursor: pointer;
-}
 
-.conversation-status {
-    font-size: 15px;
-
-    opacity: .6;
-
-    margin-bottom: 40px;
+    z-index: 10;
 }
 
 
 /* =========================================================
-   BIG MOON ORB
+   STATUS
 ========================================================= */
 
-.moon-orb {
+.conversation-status {
+    position: absolute;
+
+    top: calc(
+        max(20px, env(safe-area-inset-top))
+        + 70px
+    );
+
+    color: #888;
+
+    font-size: 14px;
+
+    letter-spacing: .5px;
+}
+
+
+/* =========================================================
+   BLACK HOLE
+========================================================= */
+
+.black-hole {
     position: relative;
 
-    width: min(68vw, 360px);
-    height: min(68vw, 360px);
+    width: min(72vw, 380px);
+    height: min(72vw, 380px);
+
+    border-radius: 50%;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    margin-bottom: 45px;
-}
-
-.orb-core {
-    width: 48%;
-    height: 48%;
-
-    border-radius: 50%;
-
     background:
         radial-gradient(
-            circle at 35% 30%,
-            #ffffff,
-            #d6d6df 18%,
-            #777789 45%,
-            #272735 75%,
-            #0b0b12 100%
+            circle,
+            #000 0 37%,
+            #080808 39%,
+            #000 62%,
+            #111 66%,
+            #000 73%,
+            #fff 74%,
+            #777 75%,
+            #000 78%,
+            #000 100%
         );
 
     box-shadow:
-        0 0 35px rgba(255,255,255,.18),
-        0 0 90px rgba(130,130,255,.12);
+        0 0 25px #fff,
+        0 0 60px #777,
+        0 0 120px #222;
 
-    animation: orbFloat 4s ease-in-out infinite;
+    animation:
+        blackHolePulse 3s ease-in-out infinite,
+        blackHoleRotate 18s linear infinite;
 }
 
-@keyframes orbFloat {
 
-    0%,
-    100% {
-        transform: translateY(0) scale(1);
-    }
+/* Inner black center */
 
-    50% {
-        transform: translateY(-8px) scale(1.02);
-    }
-}
-
-.orb-ring {
+.black-hole-center {
     position: absolute;
 
-    left: 50%;
-    top: 50%;
-
-    transform: translate(-50%, -50%);
+    width: 43%;
+    height: 43%;
 
     border-radius: 50%;
 
-    border: 1px solid rgba(255,255,255,.12);
+    background: #000;
 
-    pointer-events: none;
+    box-shadow:
+        inset 0 0 25px #000,
+        0 0 30px #000;
+
+    z-index: 3;
 }
 
-.ring-1 {
-    width: 65%;
-    height: 65%;
-}
 
-.ring-2 {
-    width: 78%;
-    height: 78%;
-}
+/* =========================================================
+   STARS INSIDE BLACK HOLE
+========================================================= */
 
-.ring-3 {
-    width: 92%;
-    height: 92%;
-}
+.black-hole-stars {
+    position: absolute;
 
-.ring-4 {
-    width: 108%;
-    height: 108%;
-}
+    inset: -10%;
 
-.moon-orb.listening .orb-core {
+    border-radius: 50%;
+
+    overflow: hidden;
+
     animation:
-        orbListening 1.2s infinite ease-in-out;
+        starsRotate 9s linear infinite;
 }
 
-.moon-orb.listening .orb-ring {
-    animation:
-        ringPulse 1.5s infinite ease-in-out;
+.black-hole-stars span {
+    position: absolute;
+
+    width: 3px;
+    height: 3px;
+
+    border-radius: 50%;
+
+    background: #fff;
+
+    box-shadow:
+        0 0 7px #fff;
 }
 
-.moon-orb.thinking .orb-core {
-    animation:
-        orbThinking .8s infinite ease-in-out;
+
+/* individual stars */
+
+.black-hole-stars span:nth-child(1) {
+    left: 12%;
+    top: 35%;
 }
 
-.moon-orb.thinking .orb-ring {
-    animation:
-        ringRotate 2s linear infinite;
+.black-hole-stars span:nth-child(2) {
+    left: 22%;
+    top: 70%;
 }
 
-.moon-orb.talking .orb-core {
-    animation:
-        orbTalking .45s infinite alternate;
+.black-hole-stars span:nth-child(3) {
+    left: 31%;
+    top: 18%;
 }
 
-.moon-orb.talking .orb-ring {
-    animation:
-        ringPulse .6s infinite ease-in-out;
+.black-hole-stars span:nth-child(4) {
+    left: 40%;
+    top: 78%;
 }
 
-@keyframes orbListening {
+.black-hole-stars span:nth-child(5) {
+    left: 50%;
+    top: 12%;
+}
+
+.black-hole-stars span:nth-child(6) {
+    left: 62%;
+    top: 25%;
+}
+
+.black-hole-stars span:nth-child(7) {
+    left: 72%;
+    top: 72%;
+}
+
+.black-hole-stars span:nth-child(8) {
+    left: 83%;
+    top: 43%;
+}
+
+.black-hole-stars span:nth-child(9) {
+    left: 17%;
+    top: 52%;
+}
+
+.black-hole-stars span:nth-child(10) {
+    left: 29%;
+    top: 87%;
+}
+
+.black-hole-stars span:nth-child(11) {
+    left: 55%;
+    top: 87%;
+}
+
+.black-hole-stars span:nth-child(12) {
+    left: 78%;
+    top: 18%;
+}
+
+.black-hole-stars span:nth-child(13) {
+    left: 91%;
+    top: 61%;
+}
+
+.black-hole-stars span:nth-child(14) {
+    left: 8%;
+    top: 58%;
+}
+
+.black-hole-stars span:nth-child(15) {
+    left: 67%;
+    top: 48%;
+}
+
+.black-hole-stars span:nth-child(16) {
+    left: 45%;
+    top: 35%;
+}
+
+@keyframes blackHolePulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
 
     50% {
-        transform: scale(1.08);
-        box-shadow:
-            0 0 55px rgba(255,255,255,.25),
-            0 0 120px rgba(130,130,255,.2);
+        transform: scale(1.07);
     }
 }
 
-@keyframes orbThinking {
-
-    50% {
-        transform: scale(.94);
-    }
-}
-
-@keyframes orbTalking {
+@keyframes blackHoleRotate {
 
     from {
-        transform: scale(.98);
+        rotate: 0deg;
     }
 
     to {
-        transform: scale(1.08);
+        rotate: 360deg;
     }
 }
 
-@keyframes ringPulse {
-
-    50% {
-        opacity: .8;
-        transform:
-            translate(-50%, -50%)
-            scale(1.07);
-    }
-}
-
-@keyframes ringRotate {
+@keyframes starsRotate {
 
     from {
-        transform:
-            translate(-50%, -50%)
-            rotate(0deg);
+        rotate: 0deg;
     }
 
     to {
-        transform:
-            translate(-50%, -50%)
-            rotate(360deg);
+        rotate: -360deg;
     }
 }
+
+
+/* LISTENING */
+
+.black-hole.listening {
+    box-shadow:
+        0 0 35px #fff,
+        0 0 80px #aaa,
+        0 0 150px #555;
+
+    animation:
+        blackHolePulseFast 1.1s ease-in-out infinite,
+        blackHoleRotate 9s linear infinite;
+}
+
+@keyframes blackHolePulseFast {
+
+    0%,
+    100% {
+        transform: scale(.96);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+
+/* THINKING */
+
+.black-hole.thinking {
+    animation:
+        blackHolePulseFast .8s ease-in-out infinite,
+        blackHoleRotate 5s linear infinite;
+}
+
+
+/* TALKING */
+
+.black-hole.talking {
+    box-shadow:
+        0 0 45px #fff,
+        0 0 100px #fff,
+        0 0 180px #555;
+
+    animation:
+        blackHolePulseFast .55s ease-in-out infinite,
+        blackHoleRotate 7s linear infinite;
+}
+
+
+/* =========================================================
+   CONVERSATION TEXT
+========================================================= */
 
 .conversation-text {
-    width: min(90vw, 600px);
+    max-width: 85%;
 
-    min-height: 30px;
+    margin-top: 35px;
+
+    min-height: 28px;
 
     text-align: center;
 
-    font-size: 20px;
+    color: #ddd;
+
+    font-size: 17px;
+
     line-height: 1.4;
-
-    opacity: .9;
-
-    margin-bottom: 30px;
 }
+
+
+/* =========================================================
+   MICROPHONE
+========================================================= */
 
 .conversation-mic {
     width: 70px;
     height: 70px;
 
+    margin-top: 25px;
+
+    border: 1px solid #444;
+
     border-radius: 50%;
 
-    border: 1px solid rgba(255,255,255,.15);
-
-    background: white;
-    color: black;
+    background: #fff;
+    color: #000;
 
     font-size: 27px;
 
     cursor: pointer;
 
+    box-shadow:
+        0 0 25px rgba(255,255,255,.25);
+
     transition:
-        transform .2s ease,
-        background .2s ease;
+        transform .2s,
+        box-shadow .2s;
 }
 
-.conversation-mic:hover {
-    transform: scale(1.06);
+.conversation-mic:active {
+    transform: scale(.9);
 }
 
 .conversation-mic.active {
-    background: #25252d;
-    color: white;
+    box-shadow:
+        0 0 35px #fff;
 }
 
 
 /* =========================================================
-   SETTINGS
+   SETTINGS / ACCOUNT / OWNER
 ========================================================= */
 
 .settings-panel,
@@ -821,84 +913,80 @@ body {
     position: fixed;
     inset: 0;
 
-    z-index: 80;
+    z-index: 100;
 
     display: none;
 
     align-items: center;
     justify-content: center;
 
-    background: rgba(0,0,0,.72);
-
-    backdrop-filter: blur(12px);
+    background: rgba(0,0,0,.8);
 }
 
 .settings-box,
 .account-box,
 .owner-box {
-    width: min(92%, 470px);
+    width: min(92%, 480px);
 
-    padding: 28px;
+    padding: 25px;
 
-    border-radius: 22px;
+    border: 1px solid #292929;
 
-    background: #15151b;
+    border-radius: 20px;
 
-    border: 1px solid rgba(255,255,255,.1);
-
-    box-shadow:
-        0 25px 80px rgba(0,0,0,.45);
+    background: #101010;
 }
 
-.settings-header {
+.settings-header,
+.owner-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
 }
 
+.settings-header button,
 .close-settings {
     border: 0;
     background: transparent;
-    color: white;
+    color: #fff;
     font-size: 20px;
     cursor: pointer;
 }
 
 .setting-item {
-    margin-top: 28px;
+    margin-top: 25px;
 
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.setting-item > span {
-    opacity: .5;
+.setting-item span {
+    color: #888;
     font-size: 13px;
+}
+
+.setting-item button,
+.appearance-options button {
+    border: 1px solid #333;
+    border-radius: 10px;
+
+    padding: 9px 13px;
+
+    background: #181818;
+    color: #fff;
+
+    cursor: pointer;
 }
 
 .appearance-options {
     display: flex;
     gap: 8px;
-    margin-top: 5px;
-}
-
-.appearance-options button {
-    padding: 9px 14px;
-
-    border-radius: 10px;
-
-    border: 1px solid rgba(255,255,255,.1);
-
-    background: #24242b;
-    color: white;
-
-    cursor: pointer;
 }
 
 .size-button.active {
-    background: white;
-    color: black;
+    background: #fff;
+    color: #000;
 }
 
 
@@ -908,24 +996,19 @@ body {
 
 .account-logo,
 .owner-logo {
-    font-size: 50px;
+    font-size: 45px;
     text-align: center;
 }
 
 .account-box h1,
-.owner-box h2 {
+.account-box p {
     text-align: center;
-}
-
-.account-subtitle,
-.owner-box > p {
-    text-align: center;
-    opacity: .55;
 }
 
 .account-tabs {
     display: flex;
-    margin: 25px 0 20px;
+    gap: 5px;
+    margin: 20px 0;
 }
 
 .account-tab {
@@ -933,60 +1016,52 @@ body {
 
     padding: 11px;
 
-    background: transparent;
-    color: white;
+    background: #181818;
+    color: #aaa;
 
     border: 0;
-
-    border-bottom: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px;
 
     cursor: pointer;
 }
 
 .account-tab.active {
-    border-bottom-color: white;
+    background: #fff;
+    color: #000;
 }
 
 .account-form {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 9px;
 }
 
 .account-form input,
-.owner-box input {
+.password-wrapper input {
     width: 100%;
-
-    padding: 13px;
-
-    border-radius: 11px;
-
-    border: 1px solid rgba(255,255,255,.1);
-
-    outline: none;
-
-    background: #0d0d12;
-    color: white;
-
-    margin-bottom: 8px;
-}
-
-.account-submit,
-.owner-box > button,
-#trainerButton,
-.owner-actions button {
-    border: 0;
-
-    border-radius: 11px;
 
     padding: 12px;
 
-    background: white;
-    color: black;
+    border: 1px solid #333;
+    border-radius: 10px;
+
+    background: #050505;
+    color: #fff;
+
+    outline: none;
+}
+
+.account-submit,
+.owner-box > button {
+    padding: 12px;
+
+    border: 0;
+    border-radius: 10px;
+
+    background: #fff;
+    color: #000;
 
     cursor: pointer;
-
-    font-weight: 600;
 }
 
 .account-close {
@@ -996,12 +1071,11 @@ body {
 
     padding: 11px;
 
-    border: 1px solid rgba(255,255,255,.1);
-
-    border-radius: 11px;
-
     background: transparent;
-    color: white;
+    color: #999;
+
+    border: 1px solid #333;
+    border-radius: 10px;
 
     cursor: pointer;
 }
@@ -1011,119 +1085,75 @@ body {
    OWNER
 ========================================================= */
 
-.password-wrapper {
-    display: flex;
-    gap: 7px;
-}
-
-.password-toggle {
-    width: 65px;
-    background: #292930 !important;
-    color: white !important;
-}
-
-.owner-error {
-    color: #ff7777;
-}
-
-.owner-cancel {
-    margin-top: 8px;
-    width: 100%;
-    background: transparent !important;
-    color: white !important;
-    border: 1px solid rgba(255,255,255,.1) !important;
-}
-
 .owner-panel {
+    flex-direction: column;
+
     overflow-y: auto;
 
     align-items: stretch;
     justify-content: flex-start;
 
-    flex-direction: column;
-
-    background: #08080c;
+    background: #050505;
 }
 
 .owner-header {
     padding: 25px;
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    border-bottom: 1px solid rgba(255,255,255,.08);
-}
-
-.owner-header h1 {
-    margin: 0 0 5px;
-}
-
-.owner-header span {
-    opacity: .5;
+    border-bottom: 1px solid #222;
 }
 
 .owner-header button {
     padding: 10px 15px;
+
+    background: #fff;
+    color: #000;
+
     border: 0;
     border-radius: 10px;
-    cursor: pointer;
 }
 
 .owner-content {
-    width: min(1100px, 94%);
-    margin: 30px auto;
+    padding: 25px;
 }
 
 .owner-grid {
     display: grid;
+
     grid-template-columns:
         repeat(4, 1fr);
-    gap: 14px;
-}
 
-.owner-card,
-.owner-section {
-    padding: 20px;
-
-    border-radius: 17px;
-
-    background: #15151b;
-
-    border: 1px solid rgba(255,255,255,.08);
+    gap: 12px;
 }
 
 .owner-card {
+    padding: 20px;
+
+    background: #111;
+
+    border: 1px solid #292929;
+
+    border-radius: 15px;
+
     display: flex;
     flex-direction: column;
+
     gap: 10px;
 }
 
 .owner-card span {
-    font-size: 25px;
-}
-
-.owner-online {
-    color: #63e899;
+    font-size: 24px;
 }
 
 .owner-section {
-    margin-top: 18px;
-}
+    margin-top: 25px;
 
-.owner-description {
-    opacity: .5;
-}
+    padding: 20px;
 
-.owner-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
+    background: #111;
 
-.owner-actions button {
-    background: #25252c;
-    color: white;
+    border: 1px solid #292929;
+
+    border-radius: 15px;
 }
 
 
@@ -1148,33 +1178,45 @@ body {
    LIGHT THEME
 ========================================================= */
 
-body.light-theme {
-    background: #f4f4f7;
+.light-theme {
+    background: #f5f5f5;
     color: #111;
 }
 
-body.light-theme .sidebar,
-body.light-theme .chat-input-area,
-body.light-theme .settings-box,
-body.light-theme .account-box,
-body.light-theme .owner-box {
-    background: white;
-    color: #111;
+.light-theme .star-field {
+    background: #f5f5f5;
 }
 
-body.light-theme .sidebar-button,
-body.light-theme #messageInput,
-body.light-theme .conversation-button {
-    color: #111;
+.light-theme .sidebar {
+    background: #fff;
+    border-color: #ddd;
 }
 
-body.light-theme #messageInput::placeholder {
-    color: rgba(0,0,0,.4);
+.light-theme .sidebar-button {
+    color: #333;
+}
+
+.light-theme .sidebar-button:hover {
+    background: #eee;
+}
+
+.light-theme .chat-header {
+    background: rgba(255,255,255,.8);
+    border-color: #ddd;
+}
+
+.light-theme .chat-input-area {
+    background: #fff;
+    border-color: #ddd;
+}
+
+.light-theme #messageInput {
+    color: #111;
 }
 
 
 /* =========================================================
-   MOBILE / IPHONE / IPAD
+   IPHONE + IPAD
 ========================================================= */
 
 @media (max-width: 1200px) {
@@ -1185,12 +1227,8 @@ body.light-theme #messageInput::placeholder {
 
     .sidebar-label,
     .sidebar-logo strong,
-    .logo-ai {
+    .sidebar-logo .logo-ai {
         display: none;
-    }
-
-    .sidebar-logo {
-        justify-content: center;
     }
 
     .sidebar-button {
@@ -1199,128 +1237,117 @@ body.light-theme #messageInput::placeholder {
     }
 
     .chat-section {
-        margin-left: 76px;
-        width: calc(100% - 76px);
-    }
-
-    .sidebar.expanded {
-        width: 250px;
-    }
-
-    .sidebar.expanded .sidebar-label,
-    .sidebar.expanded .sidebar-logo strong,
-    .sidebar.expanded .logo-ai {
-        display: inline;
-    }
-
-    .sidebar.expanded .sidebar-button {
-        justify-content: flex-start;
-        padding: 0 13px;
-    }
-
-    .sidebar.expanded .sidebar-logo {
-        justify-content: flex-start;
+        left: 76px;
     }
 }
 
 
-/* Conversation mode is available on mobile AND iPad/tablet. */
-
-@media (max-width: 1200px) {
-
-    .conversation-mode {
-        display: none;
-    }
-
-    .conversation-mode.active {
-        display: flex;
-    }
-}
-
+/* =========================================================
+   PHONE / IPAD PORTRAIT
+========================================================= */
 
 @media (max-width: 700px) {
 
     .sidebar {
-        width: 62px;
+        width: 76px;
+
+        padding:
+            12px 8px
+            max(12px, env(safe-area-inset-top))
+            8px;
     }
 
     .chat-section {
-        margin-left: 62px;
-        width: calc(100% - 62px);
+        left: 76px;
     }
 
     .chat-header {
         padding: 0 14px;
-        height: 60px;
     }
 
     .messages {
-        padding:
-            25px
-            12px
-            140px;
+        padding: 20px 12px;
     }
 
     .chat-bottom-area {
         padding:
             8px
-            8px
+            10px
             max(10px, env(safe-area-inset-bottom));
     }
 
-    .chat-input-area {
-        border-radius: 18px;
+    .input-hint {
+        display: none;
     }
 
     .empty-chat h1 {
         font-size: 24px;
     }
 
-    .message-bubble {
-        max-width: 88%;
+    .conversation-sidebar-button {
+        background: #111;
     }
 
-    .moon-orb {
-        width: min(78vw, 330px);
-        height: min(78vw, 330px);
+    .conversation-mode {
+        padding:
+            env(safe-area-inset-top)
+            0
+            env(safe-area-inset-bottom);
+    }
+
+    .black-hole {
+        width: min(78vw, 340px);
+        height: min(78vw, 340px);
     }
 
     .conversation-text {
-        font-size: 18px;
+        font-size: 16px;
+        margin-top: 28px;
     }
 }
 
 
 /* =========================================================
-   VERY SMALL PHONES
+   SMALL IPHONE
 ========================================================= */
 
 @media (max-width: 430px) {
 
     .sidebar {
-        width: 55px;
+        width: 64px;
     }
 
     .chat-section {
-        margin-left: 55px;
-        width: calc(100% - 55px);
+        left: 64px;
     }
 
-    .header-title {
-        font-size: 15px;
+    .sidebar-button {
+        min-height: 44px;
     }
 
-    .online {
-        font-size: 11px;
+    .sidebar-icon {
+        font-size: 17px;
     }
 
-    .conversation-close {
-        top: max(15px, env(safe-area-inset-top));
-        right: 15px;
+    .black-hole {
+        width: 260px;
+        height: 260px;
     }
 
-    .moon-orb {
-        width: 72vw;
-        height: 72vw;
+    .conversation-mic {
+        width: 64px;
+        height: 64px;
+    }
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 1201px) {
+
+    .conversation-sidebar-button {
+        display: none;
     }
 }
