@@ -5,17 +5,20 @@
    MOONPLUG AI
    COMPLETE FRONTEND JS
    BACKEND UNCHANGED
+
+   CHAT:
+   https://moonplug.onrender.com/api/chat
+
+   VOICE:
+   Kokoro local browser TTS
+
+   SPEECH INPUT:
+   Safari/Web Speech Recognition when available
 ========================================================= */
 
 const API_BASE = "https://moonplug.onrender.com";
 
-
-/* =========================================================
-   STATE
-========================================================= */
-
 let recognition = null;
-
 let recognitionSupported = false;
 
 let listening = false;
@@ -24,18 +27,27 @@ let thinking = false;
 
 let speechAnimationFrame = null;
 
-let speechVoices = [];
-
-let selectedVoiceName =
-    localStorage.getItem("moonplugVoice") || "";
-
 let conversationRequestId = 0;
-
-let speechUnlocked = false;
 
 
 /* =========================================================
-   DOM
+   KOKORO
+========================================================= */
+
+let kokoro = null;
+let kokoroLoading = false;
+let kokoroReady = false;
+
+let kokoroAudio = null;
+let kokoroAudioURL = null;
+
+let selectedVoiceName =
+    localStorage.getItem("moonplugVoice") ||
+    "af_heart";
+
+
+/* =========================================================
+   DOM HELPER
 ========================================================= */
 
 const $ = id =>
@@ -51,7 +63,7 @@ document.addEventListener(
     () => {
 
         /*
-         * NOTHING starts thinking on page load.
+         * NEVER start normal chat in thinking mode.
          */
 
         listening = false;
@@ -74,13 +86,18 @@ document.addEventListener(
 
         setupSpeechRecognition();
 
-        setupVoiceLoading();
-
-        loadSpeechVoices();
+        setupVoicePicker();
 
         loadTextSize();
 
         checkBackendHealth();
+
+        /*
+         * Load Kokoro after the UI is ready.
+         * This does NOT call the backend.
+         */
+
+        setupKokoro();
 
     }
 );
@@ -185,29 +202,17 @@ function setupSidebar() {
     const logo =
         $("sidebarLogo");
 
-    if (logo && sidebar) {
+    if (
+        sidebar &&
+        logo
+    ) {
 
         logo.addEventListener(
             "click",
-            event => {
+            () => {
 
-                event.preventDefault();
-
-                const collapsed =
-                    sidebar.classList.toggle(
-                        "collapsed"
-                    );
-
-                logo.setAttribute(
-                    "aria-expanded",
-                    String(!collapsed)
-                );
-
-                logo.setAttribute(
-                    "aria-label",
-                    collapsed
-                        ? "Expand sidebar"
-                        : "Collapse sidebar"
+                sidebar.classList.toggle(
+                    "collapsed"
                 );
 
             }
@@ -222,13 +227,7 @@ function setupSidebar() {
 
         conversation.addEventListener(
             "click",
-            () => {
-
-                openConversation();
-
-                collapseSidebarOnSmallScreen();
-
-            }
+            openConversation
         );
     }
 
@@ -240,13 +239,7 @@ function setupSidebar() {
 
         newChat.addEventListener(
             "click",
-            () => {
-
-                startNewChat();
-
-                collapseSidebarOnSmallScreen();
-
-            }
+            startNewChat
         );
     }
 
@@ -258,13 +251,7 @@ function setupSidebar() {
 
         settings.addEventListener(
             "click",
-            () => {
-
-                openSettings();
-
-                collapseSidebarOnSmallScreen();
-
-            }
+            openSettings
         );
     }
 
@@ -276,13 +263,7 @@ function setupSidebar() {
 
         account.addEventListener(
             "click",
-            () => {
-
-                openAccount();
-
-                collapseSidebarOnSmallScreen();
-
-            }
+            openAccount
         );
     }
 
@@ -301,128 +282,54 @@ function setupSidebar() {
                     "ai"
                 );
 
-                collapseSidebarOnSmallScreen();
-
             }
         );
     }
 
 
-    const study =
-        $("studyButton");
+    /*
+     * On smaller screens, choosing a feature
+     * closes the expanded sidebar.
+     */
 
-    if (study) {
+    document
+        .querySelectorAll(
+            ".sidebar-button"
+        )
+        .forEach(
+            button => {
 
-        study.addEventListener(
-            "click",
-            () => {
+                button.addEventListener(
+                    "click",
+                    event => {
 
-                addMessage(
-                    "Study Mode is coming soon.",
-                    "ai"
+                        /*
+                         * Do not collapse when
+                         * the logo is clicked.
+                         */
+
+                        if (
+                            event.currentTarget ===
+                            logo
+                        ) {
+                            return;
+                        }
+
+                        if (
+                            window.innerWidth <= 900 &&
+                            sidebar
+                        ) {
+
+                            sidebar.classList.remove(
+                                "expanded"
+                            );
+                        }
+
+                    }
                 );
 
-                collapseSidebarOnSmallScreen();
-
             }
         );
-    }
-
-
-    const cook =
-        $("cookButton");
-
-    if (cook) {
-
-        cook.addEventListener(
-            "click",
-            () => {
-
-                addMessage(
-                    "Cook Mode is coming soon.",
-                    "ai"
-                );
-
-                collapseSidebarOnSmallScreen();
-
-            }
-        );
-    }
-
-
-    const images =
-        $("imagesButton");
-
-    if (images) {
-
-        images.addEventListener(
-            "click",
-            () => {
-
-                addMessage(
-                    "Image Mode is coming soon.",
-                    "ai"
-                );
-
-                collapseSidebarOnSmallScreen();
-
-            }
-        );
-    }
-
-
-    const code =
-        $("codeButton");
-
-    if (code) {
-
-        code.addEventListener(
-            "click",
-            () => {
-
-                addMessage(
-                    "Code Mode is coming soon.",
-                    "ai"
-                );
-
-                collapseSidebarOnSmallScreen();
-
-            }
-        );
-    }
-
-}
-
-
-/* =========================================================
-   MOBILE SIDEBAR
-========================================================= */
-
-function collapseSidebarOnSmallScreen() {
-
-    const sidebar =
-        $("sidebar");
-
-    if (!sidebar) return;
-
-
-    if (
-        window.innerWidth <= 900
-    ) {
-
-        sidebar.classList.remove(
-            "expanded"
-        );
-
-        /*
-         * Keep the sidebar collapsed.
-         * The MoonPlug logo opens it again.
-         */
-
-        sidebar.classList.add(
-            "collapsed"
-        );
-    }
 }
 
 
@@ -438,7 +345,12 @@ function setupChat() {
     const button =
         $("sendButton");
 
-    if (!input || !button) return;
+    if (
+        !input ||
+        !button
+    ) {
+        return;
+    }
 
 
     button.addEventListener(
@@ -459,7 +371,6 @@ function setupChat() {
                 event.preventDefault();
 
                 sendMessage();
-
             }
 
         }
@@ -481,12 +392,11 @@ function setupChat() {
 
         }
     );
-
 }
 
 
 /* =========================================================
-   NORMAL CHAT REQUEST
+   NORMAL CHAT
 ========================================================= */
 
 async function sendMessage() {
@@ -497,7 +407,12 @@ async function sendMessage() {
     const button =
         $("sendButton");
 
-    if (!input || !button) return;
+    if (
+        !input ||
+        !button
+    ) {
+        return;
+    }
 
 
     const message =
@@ -505,8 +420,7 @@ async function sendMessage() {
 
 
     /*
-     * CRITICAL:
-     * Empty input does NOTHING.
+     * EMPTY INPUT DOES NOTHING.
      */
 
     if (!message) {
@@ -520,6 +434,7 @@ async function sendMessage() {
 
 
     thinking = true;
+
 
     addMessage(
         message,
@@ -551,7 +466,8 @@ async function sendMessage() {
                     },
 
                     body: JSON.stringify({
-                        message: message
+                        message:
+                            message
                     })
                 }
             );
@@ -600,6 +516,7 @@ async function sendMessage() {
             "ai"
         );
 
+
     } finally {
 
         thinking = false;
@@ -609,14 +526,12 @@ async function sendMessage() {
         button.disabled = false;
 
         input.focus();
-
     }
-
 }
 
 
 /* =========================================================
-   ADD MESSAGE
+   MESSAGES
 ========================================================= */
 
 function addMessage(
@@ -630,13 +545,13 @@ function addMessage(
     const empty =
         $("emptyChat");
 
-    if (!messages) return;
+    if (!messages) {
+        return;
+    }
 
 
     if (empty) {
-
         empty.remove();
-
     }
 
 
@@ -659,12 +574,11 @@ function addMessage(
 
     messages.scrollTop =
         messages.scrollHeight;
-
 }
 
 
 /* =========================================================
-   THINKING
+   THINKING INDICATOR
 ========================================================= */
 
 function showTyping() {
@@ -672,7 +586,9 @@ function showTyping() {
     const typing =
         $("typing");
 
-    if (!typing) return;
+    if (!typing) {
+        return;
+    }
 
 
     typing.hidden = false;
@@ -687,7 +603,9 @@ function hideTyping() {
     const typing =
         $("typing");
 
-    if (!typing) return;
+    if (!typing) {
+        return;
+    }
 
 
     typing.hidden = true;
@@ -715,37 +633,29 @@ function startNewChat() {
     const messages =
         $("messages");
 
-    if (!messages) return;
+    if (!messages) {
+        return;
+    }
 
 
     messages.innerHTML = `
-
-        <div
-            id="emptyChat"
-            class="empty-chat"
-        >
+        <div id="emptyChat" class="empty-chat">
 
             <div class="home-orb">
                 <span></span>
             </div>
 
-            <h1>
-                What can I help with?
-            </h1>
+            <h1>What can I help with?</h1>
 
-            <p>
-                Ask MoonPlug anything.
-            </p>
+            <p>Ask MoonPlug anything.</p>
 
         </div>
-
     `;
-
 }
 
 
 /* =========================================================
-   CONVERSATION SETUP
+   CONVERSATION MODE
 ========================================================= */
 
 function setupConversation() {
@@ -763,7 +673,6 @@ function setupConversation() {
             "click",
             closeConversation
         );
-
     }
 
 
@@ -773,9 +682,7 @@ function setupConversation() {
             "click",
             handleConversationButton
         );
-
     }
-
 }
 
 
@@ -788,7 +695,9 @@ function openConversation() {
     const mode =
         $("conversationMode");
 
-    if (!mode) return;
+    if (!mode) {
+        return;
+    }
 
 
     stopListening();
@@ -801,6 +710,7 @@ function openConversation() {
     mode.classList.add(
         "active"
     );
+
 
     mode.setAttribute(
         "aria-hidden",
@@ -816,14 +726,6 @@ function openConversation() {
     setConversationText(
         "Tap the microphone to talk"
     );
-
-
-    /*
-     * IMPORTANT:
-     * We DO NOT start speech here.
-     * We DO NOT start recognition here.
-     */
-
 }
 
 
@@ -845,7 +747,9 @@ function closeConversation() {
     const mode =
         $("conversationMode");
 
-    if (!mode) return;
+    if (!mode) {
+        return;
+    }
 
 
     mode.classList.remove(
@@ -865,23 +769,18 @@ function closeConversation() {
     setConversationState(
         "idle"
     );
-
 }
 
 
 /* =========================================================
-   MICROPHONE BUTTON
+   CONVERSATION BUTTON
 ========================================================= */
 
 function handleConversationButton() {
 
     /*
-     * Unlock Safari speech while this function
-     * is running directly from the user's tap.
+     * Stop current AI speech.
      */
-
-    unlockSpeechSynthesis();
-
 
     if (speaking) {
 
@@ -899,6 +798,10 @@ function handleConversationButton() {
     }
 
 
+    /*
+     * Stop listening.
+     */
+
     if (listening) {
 
         stopListening();
@@ -907,68 +810,17 @@ function handleConversationButton() {
     }
 
 
+    /*
+     * IMPORTANT FOR SAFARI:
+     *
+     * Unlock audio during the actual
+     * microphone button click.
+     */
+
+    unlockAudio();
+
+
     startListening();
-
-}
-
-
-/* =========================================================
-   SAFARI SPEECH UNLOCK
-========================================================= */
-
-function unlockSpeechSynthesis() {
-
-    if (
-        !("speechSynthesis" in window)
-    ) {
-        return;
-    }
-
-
-    try {
-
-        window.speechSynthesis.cancel();
-
-        window.speechSynthesis.resume();
-
-
-        /*
-         * Safari/iOS sometimes needs speak()
-         * to be called during a user gesture.
-         *
-         * This tiny silent utterance unlocks
-         * the speech engine without saying anything.
-         */
-
-        const unlock =
-            new SpeechSynthesisUtterance(
-                " "
-            );
-
-        unlock.volume = 0;
-
-        unlock.rate = 10;
-
-        unlock.pitch = 0;
-
-
-        window.speechSynthesis.speak(
-            unlock
-        );
-
-
-        speechUnlocked = true;
-
-
-    } catch (error) {
-
-        console.warn(
-            "Safari speech unlock:",
-            error
-        );
-
-    }
-
 }
 
 
@@ -986,7 +838,9 @@ function setConversationState(
     const status =
         $("conversationStatus");
 
-    if (!mode) return;
+    if (!mode) {
+        return;
+    }
 
 
     mode.classList.remove(
@@ -1003,19 +857,22 @@ function setConversationState(
         mode.classList.add(
             state
         );
-
     }
 
 
     const labels = {
 
-        idle: "Ready",
+        idle:
+            "Ready",
 
-        listening: "Listening",
+        listening:
+            "Listening",
 
-        thinking: "Thinking",
+        thinking:
+            "Thinking",
 
-        talking: "Speaking"
+        talking:
+            "Speaking"
 
     };
 
@@ -1025,9 +882,7 @@ function setConversationState(
         status.textContent =
             labels[state] ||
             "Ready";
-
     }
-
 }
 
 
@@ -1042,12 +897,13 @@ function setConversationText(
     const element =
         $("conversationText");
 
-    if (!element) return;
+    if (!element) {
+        return;
+    }
 
 
     element.textContent =
         String(text);
-
 }
 
 
@@ -1068,7 +924,6 @@ function setupSpeechRecognition() {
             false;
 
         return;
-
     }
 
 
@@ -1105,7 +960,6 @@ function setupSpeechRecognition() {
         setConversationText(
             "Listening..."
         );
-
     };
 
 
@@ -1129,7 +983,6 @@ function setupSpeechRecognition() {
                 transcript +=
                     event.results[i][0]
                         .transcript;
-
             }
 
 
@@ -1138,7 +991,8 @@ function setupSpeechRecognition() {
 
 
             /*
-             * SHOW WHAT THE USER IS SAYING.
+             * SHOW EXACTLY WHAT
+             * THE USER SAID.
              */
 
             if (transcript) {
@@ -1146,7 +1000,6 @@ function setupSpeechRecognition() {
                 setConversationText(
                     transcript
                 );
-
             }
 
 
@@ -1155,11 +1008,6 @@ function setupSpeechRecognition() {
                     event.results.length - 1
                 ];
 
-
-            /*
-             * ONLY FINAL SPEECH
-             * starts the backend request.
-             */
 
             if (
                 last &&
@@ -1170,7 +1018,6 @@ function setupSpeechRecognition() {
                 processConversation(
                     transcript
                 );
-
             }
 
         };
@@ -1225,9 +1072,7 @@ function setupSpeechRecognition() {
                 setConversationText(
                     "Microphone error. Try again."
                 );
-
             }
-
         };
 
 
@@ -1245,11 +1090,8 @@ function setupSpeechRecognition() {
                 setConversationState(
                     "idle"
                 );
-
             }
-
         };
-
 }
 
 
@@ -1265,9 +1107,11 @@ function startListening() {
             "idle"
         );
 
+
         setConversationText(
             "Speech recognition isn't supported in this browser."
         );
+
 
         return;
     }
@@ -1289,9 +1133,7 @@ function startListening() {
 
 
         try {
-
             recognition.stop();
-
         } catch {}
 
 
@@ -1305,11 +1147,9 @@ function startListening() {
                 } catch {}
 
             },
-            200
+            250
         );
-
     }
-
 }
 
 
@@ -1326,7 +1166,6 @@ function stopListening() {
             recognition.stop();
 
         } catch {}
-
     }
 
 
@@ -1341,14 +1180,13 @@ function stopListening() {
         setConversationState(
             "idle"
         );
-
     }
-
 }
 
 
 /* =========================================================
    CONVERSATION BACKEND
+   BACKEND UNCHANGED
 ========================================================= */
 
 async function processConversation(
@@ -1366,25 +1204,17 @@ async function processConversation(
 
     if (!message) {
 
-        thinking = false;
-
         setConversationState(
             "idle"
         );
 
         return;
-
     }
 
 
     const requestId =
         ++conversationRequestId;
 
-
-    /*
-     * NOW — AND ONLY NOW —
-     * MoonPlug starts thinking.
-     */
 
     thinking = true;
 
@@ -1395,8 +1225,8 @@ async function processConversation(
 
 
     /*
-     * Keep exactly what the user said visible
-     * while the backend is processing.
+     * Keep the user's spoken words
+     * visible while processing.
      */
 
     setConversationText(
@@ -1418,7 +1248,8 @@ async function processConversation(
                     },
 
                     body: JSON.stringify({
-                        message: message
+                        message:
+                            message
                     })
                 }
             );
@@ -1438,7 +1269,6 @@ async function processConversation(
                 data.error ||
                 "Chat request failed."
             );
-
         }
 
 
@@ -1448,7 +1278,6 @@ async function processConversation(
         ) {
 
             return;
-
         }
 
 
@@ -1467,7 +1296,8 @@ async function processConversation(
 
 
         /*
-         * SHOW USER SPEECH IN NORMAL CHAT.
+         * Show the spoken conversation
+         * in normal chat.
          */
 
         addMessage(
@@ -1476,19 +1306,11 @@ async function processConversation(
         );
 
 
-        /*
-         * SHOW AI RESPONSE IN NORMAL CHAT.
-         */
-
         addMessage(
             cleanReply,
             "ai"
         );
 
-
-        /*
-         * SHOW AI RESPONSE IN CONVERSATION MODE.
-         */
 
         setConversationText(
             cleanReply
@@ -1496,7 +1318,7 @@ async function processConversation(
 
 
         /*
-         * SPEAK IT.
+         * KOKORO SPEAKS HERE.
          */
 
         speakConversation(
@@ -1525,151 +1347,321 @@ async function processConversation(
         setConversationText(
             "I couldn't connect to MoonPlug right now."
         );
-
     }
-
 }
 
 
 /* =========================================================
-   SPEECH VOICES
+   KOKORO LOADING
 ========================================================= */
 
-function setupVoiceLoading() {
-
-    if (
-        !("speechSynthesis" in window)
-    ) {
-        return;
-    }
-
-
-    window.speechSynthesis.onvoiceschanged =
-        () => {
-
-            loadSpeechVoices();
-
-        };
-
+async function setupKokoro() {
 
     /*
-     * Safari can populate voices slowly.
+     * Load in the background.
+     *
+     * It does NOT start speaking.
      */
 
     setTimeout(
-        loadSpeechVoices,
-        100
-    );
+        async () => {
 
-    setTimeout(
-        loadSpeechVoices,
-        500
-    );
+            await loadKokoro();
 
-    setTimeout(
-        loadSpeechVoices,
-        1200
+        },
+        300
     );
-
-    setTimeout(
-        loadSpeechVoices,
-        2500
-    );
-
 }
 
 
 /* =========================================================
-   LOAD VOICES
+   LOAD KOKORO
 ========================================================= */
 
-function loadSpeechVoices() {
+async function loadKokoro() {
 
     if (
-        !("speechSynthesis" in window)
+        kokoroReady &&
+        kokoro
     ) {
 
-        speechVoices = [];
-
-        return;
-
+        return kokoro;
     }
 
 
-    speechVoices =
-        window.speechSynthesis
-            .getVoices() || [];
+    if (kokoroLoading) {
+
+        while (kokoroLoading) {
+
+            await new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        100
+                    )
+            );
+        }
 
 
-    populateVoiceSelector();
+        return kokoro;
+    }
 
+
+    kokoroLoading =
+        true;
+
+
+    try {
+
+        /*
+         * Load kokoro-js dynamically.
+         */
+
+        const module =
+            await import(
+                "https://esm.sh/kokoro-js@1.2.1"
+            );
+
+
+        const KokoroTTS =
+            module.KokoroTTS;
+
+
+        if (!KokoroTTS) {
+
+            throw new Error(
+                "KokoroTTS was not found."
+            );
+        }
+
+
+        const modelId =
+            "onnx-community/Kokoro-82M-v1.0-ONNX";
+
+
+        /*
+         * WASM is used because it has
+         * broader browser compatibility.
+         */
+
+        kokoro =
+            await KokoroTTS.from_pretrained(
+                modelId,
+                {
+                    dtype:
+                        "q8",
+
+                    device:
+                        "wasm"
+                }
+            );
+
+
+        kokoroReady =
+            true;
+
+
+        console.log(
+            "MoonPlug Kokoro TTS ready."
+        );
+
+
+        populateVoicePicker();
+
+
+        return kokoro;
+
+
+    } catch (error) {
+
+        console.error(
+            "MoonPlug Kokoro load failed:",
+            error
+        );
+
+
+        kokoro =
+            null;
+
+        kokoroReady =
+            false;
+
+
+        return null;
+
+
+    } finally {
+
+        kokoroLoading =
+            false;
+    }
 }
 
 
 /* =========================================================
-   VOICE SELECTOR
+   VOICE PICKER SETUP
 ========================================================= */
 
-function populateVoiceSelector() {
+function setupVoicePicker() {
 
     const selector =
         $("voiceSelect");
 
-    if (!selector) return;
 
-
-    const voices =
-        window.speechSynthesis
-            .getVoices() || [];
-
-
-    speechVoices =
-        voices;
-
-
-    if (!voices.length) {
-
-        selector.innerHTML = "";
-
-        const option =
-            document.createElement(
-                "option"
-            );
-
-        option.value = "";
-
-        option.textContent =
-            "Loading voices...";
-
-        selector.appendChild(
-            option
-        );
-
+    if (!selector) {
         return;
-
     }
 
 
-    const englishVoices =
-        voices.filter(
-            voice =>
-                /^en[-_]/i.test(
-                    voice.lang
-                )
+    selector.addEventListener(
+        "change",
+        () => {
+
+            selectedVoiceName =
+                selector.value;
+
+
+            localStorage.setItem(
+                "moonplugVoice",
+                selectedVoiceName
+            );
+
+        }
+    );
+
+
+    /*
+     * If Kokoro isn't loaded yet,
+     * show a temporary state.
+     */
+
+    selector.innerHTML = `
+        <option value="">
+            Loading MoonPlug voices...
+        </option>
+    `;
+
+
+    /*
+     * Try again after the model loads.
+     */
+
+    setTimeout(
+        populateVoicePicker,
+        2500
+    );
+}
+
+
+/* =========================================================
+   POPULATE VOICE PICKER
+========================================================= */
+
+function populateVoicePicker() {
+
+    const selector =
+        $("voiceSelect");
+
+
+    if (
+        !selector ||
+        !kokoro
+    ) {
+
+        return;
+    }
+
+
+    let voices = [];
+
+
+    /*
+     * kokoro-js exposes list_voices().
+     */
+
+    try {
+
+        voices =
+            kokoro.list_voices();
+
+    } catch (error) {
+
+        console.warn(
+            "Could not read Kokoro voices:",
+            error
         );
 
-
-    const availableVoices =
-        englishVoices.length
-            ? englishVoices
-            : voices;
+        return;
+    }
 
 
-    selector.innerHTML = "";
+    if (!Array.isArray(voices)) {
+
+        return;
+    }
 
 
-    availableVoices.forEach(
-        voice => {
+    selector.innerHTML =
+        "";
+
+
+    const friendlyNames = {
+
+        af_heart:
+            "Heart — Natural Female",
+
+        af_bella:
+            "Bella — Warm Female",
+
+        af_nicole:
+            "Nicole — Smooth Female",
+
+        af_sarah:
+            "Sarah — Natural Female",
+
+        af_sky:
+            "Sky — Clear Female",
+
+        am_adam:
+            "Adam — Natural Male",
+
+        am_michael:
+            "Michael — Natural Male",
+
+        am_fenrir:
+            "Fenrir — Deep Male",
+
+        am_puck:
+            "Puck — Male",
+
+        am_eric:
+            "Eric — Male",
+
+        bm_george:
+            "George — British Male",
+
+        bf_emma:
+            "Emma — British Female"
+
+    };
+
+
+    voices.forEach(
+        voiceName => {
+
+            /*
+             * English only for MoonPlug.
+             */
+
+            if (
+                !/^(a|b)[fm]_/.test(
+                    voiceName
+                )
+            ) {
+
+                return;
+            }
+
 
             const option =
                 document.createElement(
@@ -1678,21 +1670,23 @@ function populateVoiceSelector() {
 
 
             option.value =
-                voice.name;
+                voiceName;
 
 
             option.textContent =
-                `${voice.name} — ${voice.lang}`;
+                friendlyNames[
+                    voiceName
+                ] ||
+                voiceName;
 
 
             if (
-                voice.name ===
+                voiceName ===
                 selectedVoiceName
             ) {
 
                 option.selected =
                     true;
-
             }
 
 
@@ -1705,453 +1699,375 @@ function populateVoiceSelector() {
 
 
     /*
-     * Saved voice disappeared from Safari.
+     * If the saved voice isn't available,
+     * use Heart.
      */
 
-    const savedExists =
-        availableVoices.some(
-            voice =>
-                voice.name ===
+    const exists =
+        Array.from(
+            selector.options
+        ).some(
+            option =>
+                option.value ===
                 selectedVoiceName
         );
 
 
     if (
-        selectedVoiceName &&
-        !savedExists
+        !exists
     ) {
 
         selectedVoiceName =
-            "";
+            "af_heart";
 
-        localStorage.removeItem(
-            "moonplugVoice"
+
+        localStorage.setItem(
+            "moonplugVoice",
+            selectedVoiceName
         );
 
+
+        selector.value =
+            selectedVoiceName;
     }
-
-
-    selector.onchange =
-        () => {
-
-            selectedVoiceName =
-                selector.value;
-
-
-            localStorage.setItem(
-                "moonplugVoice",
-                selectedVoiceName
-            );
-
-
-            console.log(
-                "MoonPlug voice selected:",
-                selectedVoiceName
-            );
-
-        };
-
 }
 
 
 /* =========================================================
-   GET USER VOICE
+   KOKORO SPEECH
 ========================================================= */
 
-function getBestVoice() {
-
-    if (
-        !("speechSynthesis" in window)
-    ) {
-
-        return null;
-
-    }
-
-
-    const voices =
-        window.speechSynthesis
-            .getVoices() || [];
-
-
-    if (!voices.length) {
-
-        return null;
-
-    }
-
-
-    /*
-     * USER SELECTED VOICE
-     */
-
-    if (selectedVoiceName) {
-
-        const selected =
-            voices.find(
-                voice =>
-                    voice.name ===
-                    selectedVoiceName
-            );
-
-
-        if (selected) {
-
-            return selected;
-
-        }
-
-    }
-
-
-    /*
-     * ENGLISH
-     */
-
-    const english =
-        voices.filter(
-            voice =>
-                /^en[-_]/i.test(
-                    voice.lang
-                )
-        );
-
-
-    const candidates =
-        english.length
-            ? english
-            : voices;
-
-
-    /*
-     * DEFAULTS
-     */
-
-    const preferred = [
-
-        "Samantha",
-
-        "Alex",
-
-        "Daniel",
-
-        "Karen",
-
-        "Fred",
-
-        "Google US English",
-
-        "Microsoft Aria",
-
-        "Microsoft Jenny",
-
-        "Microsoft Guy"
-
-    ];
-
-
-    for (
-        const name
-        of preferred
-    ) {
-
-        const found =
-            candidates.find(
-                voice =>
-                    voice.name
-                        .toLowerCase()
-                        .includes(
-                            name.toLowerCase()
-                        )
-            );
-
-
-        if (found) {
-
-            return found;
-
-        }
-
-    }
-
-
-    /*
-     * EN-US
-     */
-
-    const american =
-        candidates.find(
-            voice =>
-                /^en-US/i.test(
-                    voice.lang
-                )
-        );
-
-
-    if (american) {
-
-        return american;
-
-    }
-
-
-    return candidates[0] || null;
-
-}
-
-
-/* =========================================================
-   SPEAK RESPONSE
-========================================================= */
-
-function speakConversation(
+async function speakConversation(
     text
 ) {
 
-    if (
-        !("speechSynthesis" in window)
-    ) {
+    const message =
+        String(
+            text || ""
+        ).trim();
+
+
+    if (!message) {
+        return;
+    }
+
+
+    /*
+     * Stop old speech first.
+     */
+
+    stopKokoro();
+
+
+    const tts =
+        await loadKokoro();
+
+
+    if (!tts) {
+
+        speaking = false;
 
         setConversationState(
             "idle"
         );
 
+
         setConversationText(
-            "Voice playback isn't supported by this browser."
+            "MoonPlug voice is still loading."
         );
+
 
         return;
-
     }
-
-
-    stopSpeechAnimation();
 
 
     try {
 
-        window.speechSynthesis.cancel();
+        thinking = false;
 
-        window.speechSynthesis.resume();
-
-    } catch {}
+        speaking = true;
 
 
-    /*
-     * Safari voices can become available
-     * between the request and this function.
-     */
-
-    loadSpeechVoices();
-
-
-    const utterance =
-        new SpeechSynthesisUtterance(
-            String(text)
+        setConversationState(
+            "talking"
         );
 
 
-    const voice =
-        getBestVoice();
+        startVoiceWave();
 
 
-    if (voice) {
+        /*
+         * Generate the audio locally.
+         */
 
-        utterance.voice =
-            voice;
+        const audio =
+            await tts.generate(
+                message,
+                {
+                    voice:
+                        selectedVoiceName,
 
-        utterance.lang =
-            voice.lang;
-
-    } else {
-
-        utterance.lang =
-            "en-US";
-
-    }
-
-
-    utterance.rate =
-        0.92;
-
-    utterance.pitch =
-        1;
-
-    utterance.volume =
-        1;
-
-
-    utterance.onstart =
-        () => {
-
-            thinking = false;
-
-            speaking = true;
-
-
-            setConversationState(
-                "talking"
+                    speed:
+                        0.95
+                }
             );
 
 
-            startVoiceWave();
+        /*
+         * User may have stopped speech
+         * while Kokoro was generating.
+         */
 
-        };
+        if (!speaking) {
 
-
-    utterance.onend =
-        () => {
-
-            speaking = false;
-
-            thinking = false;
+            return;
+        }
 
 
-            stopSpeechAnimation();
+        /*
+         * kokoro-js RawAudio supports
+         * converting to a Blob.
+         */
+
+        const blob =
+            audio.toBlob();
 
 
-            setConversationState(
-                "idle"
+        if (!blob) {
+
+            throw new Error(
+                "Kokoro returned no audio."
+            );
+        }
+
+
+        if (kokoroAudioURL) {
+
+            URL.revokeObjectURL(
+                kokoroAudioURL
+            );
+        }
+
+
+        kokoroAudioURL =
+            URL.createObjectURL(
+                blob
             );
 
 
-            setConversationText(
-                "Tap the microphone to talk"
-            );
-
-        };
-
-
-    utterance.onerror =
-        error => {
-
-            console.error(
-                "Speech synthesis:",
-                error
+        kokoroAudio =
+            new Audio(
+                kokoroAudioURL
             );
 
 
-            speaking = false;
-
-            thinking = false;
-
-
-            stopSpeechAnimation();
+        kokoroAudio.volume =
+            1;
 
 
-            setConversationState(
-                "idle"
-            );
+        kokoroAudio.onended =
+            () => {
+
+                speaking = false;
+
+                stopSpeechAnimation();
 
 
-            setConversationText(
-                "Tap the microphone to talk"
-            );
+                if (
+                    kokoroAudioURL
+                ) {
 
-        };
+                    URL.revokeObjectURL(
+                        kokoroAudioURL
+                    );
+
+                    kokoroAudioURL =
+                        null;
+                }
 
 
-    try {
+                kokoroAudio =
+                    null;
 
-        window.speechSynthesis.speak(
-            utterance
-        );
+
+                setConversationState(
+                    "idle"
+                );
+
+
+                setConversationText(
+                    "Tap the microphone to talk"
+                );
+            };
+
+
+        kokoroAudio.onerror =
+            error => {
+
+                console.error(
+                    "Kokoro audio error:",
+                    error
+                );
+
+
+                speaking = false;
+
+                stopSpeechAnimation();
+
+
+                setConversationState(
+                    "idle"
+                );
+
+
+                setConversationText(
+                    "MoonPlug couldn't play the voice."
+                );
+            };
+
+
+        /*
+         * Play the generated audio.
+         */
+
+        await kokoroAudio.play();
 
 
     } catch (error) {
 
         console.error(
-            "Speech failed:",
+            "Kokoro speech error:",
             error
         );
 
 
         speaking = false;
 
-        thinking = false;
+        stopSpeechAnimation();
+
 
         setConversationState(
             "idle"
         );
 
-    }
 
+        setConversationText(
+            "MoonPlug couldn't play its voice."
+        );
+    }
 }
 
 
 /* =========================================================
-   TEST SELECTED VOICE
+   SAFARI AUDIO UNLOCK
 ========================================================= */
 
-function testSelectedVoice() {
+let audioContext = null;
 
-    if (
-        !("speechSynthesis" in window)
-    ) {
+function unlockAudio() {
 
-        return;
-
-    }
-
-
-    unlockSpeechSynthesis();
-
-
-    const voice =
-        getBestVoice();
-
-
-    const utterance =
-        new SpeechSynthesisUtterance(
-            "Hi. I'm MoonPlug."
-        );
-
-
-    if (voice) {
-
-        utterance.voice =
-            voice;
-
-        utterance.lang =
-            voice.lang;
-
-    } else {
-
-        utterance.lang =
-            "en-US";
-
-    }
-
-
-    utterance.rate =
-        0.92;
-
-    utterance.pitch =
-        1;
-
-    utterance.volume =
-        1;
-
+    /*
+     * Safari can be strict about audio playback.
+     *
+     * We create/resume an AudioContext directly
+     * from the microphone button press.
+     */
 
     try {
 
-        window.speechSynthesis.cancel();
+        if (!audioContext) {
 
-        window.speechSynthesis.resume();
+            const AudioContextClass =
+                window.AudioContext ||
+                window.webkitAudioContext;
 
-        window.speechSynthesis.speak(
-            utterance
-        );
+
+            if (!AudioContextClass) {
+                return;
+            }
+
+
+            audioContext =
+                new AudioContextClass();
+        }
+
+
+        if (
+            audioContext.state ===
+            "suspended"
+        ) {
+
+            audioContext.resume()
+                .catch(
+                    () => {}
+                );
+        }
+
 
     } catch (error) {
 
-        console.error(
-            "Voice test failed:",
+        console.warn(
+            "Audio unlock:",
             error
         );
+    }
+}
 
+
+/* =========================================================
+   STOP KOKORO
+========================================================= */
+
+function stopKokoro() {
+
+    if (kokoroAudio) {
+
+        try {
+
+            kokoroAudio.pause();
+
+            kokoroAudio.currentTime =
+                0;
+
+        } catch {}
     }
 
+
+    kokoroAudio =
+        null;
+
+
+    if (kokoroAudioURL) {
+
+        try {
+
+            URL.revokeObjectURL(
+                kokoroAudioURL
+            );
+
+        } catch {}
+    }
+
+
+    kokoroAudioURL =
+        null;
+
+
+    speaking =
+        false;
+
+
+    stopSpeechAnimation();
+}
+
+
+/* =========================================================
+   STOP SPEAKING
+========================================================= */
+
+function stopSpeaking() {
+
+    stopKokoro();
 }
 
 
@@ -2164,7 +2080,9 @@ function startVoiceWave() {
     const wave =
         $("voiceWave");
 
-    if (!wave) return;
+    if (!wave) {
+        return;
+    }
 
 
     stopSpeechAnimation();
@@ -2185,7 +2103,6 @@ function startVoiceWave() {
             stopSpeechAnimation();
 
             return;
-
         }
 
 
@@ -2194,8 +2111,10 @@ function startVoiceWave() {
 
                 const pulse =
                     Math.sin(
-                        Date.now() / 90 +
-                        index * 0.75
+                        Date.now() /
+                            90 +
+                        index *
+                            0.75
                     );
 
 
@@ -2207,7 +2126,8 @@ function startVoiceWave() {
                     0.25 +
                     (
                         random * 0.55 +
-                        (pulse + 1) * 0.2
+                        (pulse + 1) *
+                            0.2
                     );
 
 
@@ -2216,7 +2136,6 @@ function startVoiceWave() {
                         1.8,
                         height
                     )})`;
-
             }
         );
 
@@ -2225,12 +2144,10 @@ function startVoiceWave() {
             requestAnimationFrame(
                 animate
             );
-
     }
 
 
     animate();
-
 }
 
 
@@ -2248,57 +2165,32 @@ function stopSpeechAnimation() {
             speechAnimationFrame
         );
 
+
         speechAnimationFrame =
             null;
-
     }
 
 
     const wave =
         $("voiceWave");
 
-    if (!wave) return;
 
-
-    wave.querySelectorAll(
-        "span"
-    ).forEach(
-        bar => {
-
-            bar.style.transform =
-                "scaleY(.15)";
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   STOP SPEAKING
-========================================================= */
-
-function stopSpeaking() {
-
-    if (
-        "speechSynthesis" in window
-    ) {
-
-        try {
-
-            window.speechSynthesis.cancel();
-
-            window.speechSynthesis.resume();
-
-        } catch {}
-
+    if (!wave) {
+        return;
     }
 
 
-    speaking = false;
+    wave
+        .querySelectorAll(
+            "span"
+        )
+        .forEach(
+            bar => {
 
-    stopSpeechAnimation();
-
+                bar.style.transform =
+                    "scaleY(.15)";
+            }
+        );
 }
 
 
@@ -2318,7 +2210,6 @@ function setupSettings() {
             "click",
             closeSettings
         );
-
     }
 
 
@@ -2342,21 +2233,6 @@ function setupSettings() {
 
             }
         );
-
-
-    const testVoice =
-        $("testVoiceButton");
-
-
-    if (testVoice) {
-
-        testVoice.addEventListener(
-            "click",
-            testSelectedVoice
-        );
-
-    }
-
 }
 
 
@@ -2369,7 +2245,10 @@ function openSettings() {
     const panel =
         $("settingsPanel");
 
-    if (!panel) return;
+
+    if (!panel) {
+        return;
+    }
 
 
     panel.setAttribute(
@@ -2378,8 +2257,11 @@ function openSettings() {
     );
 
 
-    loadSpeechVoices();
+    /*
+     * Refresh the voice selector.
+     */
 
+    populateVoicePicker();
 }
 
 
@@ -2392,14 +2274,16 @@ function closeSettings() {
     const panel =
         $("settingsPanel");
 
-    if (!panel) return;
+
+    if (!panel) {
+        return;
+    }
 
 
     panel.setAttribute(
         "aria-hidden",
         "true"
     );
-
 }
 
 
@@ -2410,16 +2294,6 @@ function closeSettings() {
 function updateTextSize(
     size
 ) {
-
-    if (
-        !["small", "medium", "large"]
-            .includes(size)
-    ) {
-
-        size = "medium";
-
-    }
-
 
     document.body.classList.remove(
         "text-small",
@@ -2454,7 +2328,6 @@ function updateTextSize(
 
             }
         );
-
 }
 
 
@@ -2474,7 +2347,6 @@ function loadTextSize() {
     updateTextSize(
         saved
     );
-
 }
 
 
@@ -2494,49 +2366,43 @@ function setupAccount() {
             "click",
             closeAccount
         );
-
     }
-
 }
 
-
-/* =========================================================
-   OPEN ACCOUNT
-========================================================= */
 
 function openAccount() {
 
     const screen =
         $("accountScreen");
 
-    if (!screen) return;
+
+    if (!screen) {
+        return;
+    }
 
 
     screen.setAttribute(
         "aria-hidden",
         "false"
     );
-
 }
 
-
-/* =========================================================
-   CLOSE ACCOUNT
-========================================================= */
 
 function closeAccount() {
 
     const screen =
         $("accountScreen");
 
-    if (!screen) return;
+
+    if (!screen) {
+        return;
+    }
 
 
     screen.setAttribute(
         "aria-hidden",
         "true"
     );
-
 }
 
 
@@ -2560,7 +2426,6 @@ async function checkBackendHealth() {
             throw new Error(
                 "Backend unavailable"
             );
-
         }
 
 
@@ -2575,7 +2440,6 @@ async function checkBackendHealth() {
             "MoonPlug backend:",
             error
         );
-
     }
-
 }
+
