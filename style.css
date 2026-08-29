@@ -1,8 +1,3 @@
-/* =========================================================
-   MOONPLUG AI
-   COMPLETE STYLE
-========================================================= */
-
 * {
     box-sizing: border-box;
 }
@@ -16,17 +11,8 @@ body {
 
 body {
     overflow: hidden;
-
-    background:
-        radial-gradient(
-            circle at 70% 20%,
-            rgba(80,80,120,.05),
-            transparent 35%
-        ),
-        #020205;
-
-    color: #fff;
-
+    background: #020205;
+    color: white;
     font-family:
         Inter,
         -apple-system,
@@ -36,24 +22,20 @@ body {
 }
 
 
-/* =========================================================
-   STAR FIELD
-========================================================= */
+/* =========================
+   STARS
+========================= */
 
 .star-field {
     position: fixed;
     inset: 0;
-
-    overflow: hidden;
-
-    pointer-events: none;
-
     z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
 }
 
 .random-star {
     position: absolute;
-
     left: var(--star-x);
     top: var(--star-y);
 
@@ -61,13 +43,12 @@ body {
     height: var(--star-size);
 
     border-radius: 50%;
-
-    background: #fff;
+    background: white;
 
     opacity: var(--star-opacity);
 
     box-shadow:
-        0 0 var(--star-glow) rgba(255,255,255,.75);
+        0 0 var(--star-glow) rgba(255,255,255,.8);
 
     animation:
         starFloat
@@ -78,11 +59,8 @@ body {
 }
 
 @keyframes starFloat {
-
     from {
-        transform:
-            translate(0,0)
-            scale(.7);
+        transform: translate(0,0) scale(.7);
     }
 
     to {
@@ -96,12 +74,13 @@ body {
 }
 
 
-/* =========================================================
+/* =========================
    SIDEBAR
-========================================================= */
+========================= */
 
 .sidebar {
     position: fixed;
+    z-index: 50;
 
     top: 0;
     left: 0;
@@ -109,170 +88,68 @@ body {
     width: 250px;
     height: 100dvh;
 
-    z-index: 50;
-
     display: flex;
     flex-direction: column;
 
-    padding: 17px 13px;
+    padding: 18px 13px;
 
     background:
         linear-gradient(
             180deg,
-            rgba(13,13,19,.98),
-            rgba(4,4,8,.98)
+            rgba(12,12,18,.98),
+            rgba(3,3,7,.99)
         );
 
     border-right:
         1px solid rgba(255,255,255,.08);
 
     transition:
-        width .28s cubic-bezier(.2,.8,.2,1),
-        transform .28s ease;
+        width .3s ease,
+        transform .3s ease;
 }
-
-
-/* =========================================================
-   COLLAPSED SIDEBAR
-========================================================= */
-
-.sidebar.collapsed {
-    width: 72px;
-}
-
-.sidebar.collapsed .logo-word,
-.sidebar.collapsed .side-label {
-    opacity: 0;
-    width: 0;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.sidebar.collapsed .sidebar-logo {
-    justify-content: center;
-}
-
-.sidebar.collapsed .sidebar-button {
-    justify-content: center;
-    padding-left: 0;
-    padding-right: 0;
-}
-
-.sidebar.collapsed .sidebar-divider {
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-
-/* =========================================================
-   LOGO
-========================================================= */
 
 .sidebar-logo {
     width: 100%;
-    min-height: 50px;
+    height: 52px;
 
     display: flex;
     align-items: center;
+    justify-content: flex-start;
 
-    gap: 11px;
+    gap: 8px;
 
-    padding: 7px 9px;
-    margin-bottom: 18px;
+    padding: 0 10px;
+
+    border: 0;
+    background: transparent;
 
     color: white;
 
-    background: transparent;
-
-    border: 0;
+    cursor: pointer;
 
     border-radius: 13px;
 
-    cursor: pointer;
-
-    text-align: left;
-
-    transition:
-        background .18s ease,
-        transform .18s ease;
+    white-space: nowrap;
 }
 
 .sidebar-logo:hover {
     background: rgba(255,255,255,.06);
 }
 
-.sidebar-logo:active {
-    transform: scale(.97);
+.logo-moon {
+    font-size: 25px;
+    flex-shrink: 0;
 }
 
-
-.moon-logo,
-.brand-moon,
-.account-moon,
-.mini-moon {
-    position: relative;
-
-    width: 29px;
-    height: 29px;
-
-    flex: 0 0 29px;
-
-    border-radius: 50%;
-
-    background: #fff;
-
-    overflow: hidden;
-
-    box-shadow:
-        0 0 18px rgba(255,255,255,.16);
-}
-
-.moon-cut,
-.brand-moon span,
-.account-moon span,
-.mini-moon span {
-    position: absolute;
-
-    width: 27px;
-    height: 27px;
-
-    left: 8px;
-    top: -4px;
-
-    border-radius: 50%;
-
-    background: #0b0b10;
-}
-
-.logo-word {
-    display: flex;
-    align-items: baseline;
-
-    gap: 5px;
-
-    white-space: nowrap;
-
-    transition:
-        opacity .18s ease,
-        width .28s ease;
-}
-
-.logo-word strong {
-    font-size: 14px;
-    letter-spacing: .7px;
-}
-
-.logo-word small {
-    color: #a8a8ff;
-
-    font-size: 11px;
+.logo-name {
     font-weight: 700;
+    letter-spacing: .5px;
 }
 
-
-/* =========================================================
-   SIDEBAR BUTTONS
-========================================================= */
+.logo-ai {
+    color: #a4a4ff;
+    font-weight: 600;
+}
 
 .sidebar-buttons,
 .sidebar-bottom {
@@ -287,19 +164,18 @@ body {
 
 .sidebar-button {
     width: 100%;
-    min-height: 45px;
+    min-height: 46px;
 
     display: flex;
     align-items: center;
 
     gap: 13px;
 
-    padding: 9px 12px;
+    padding: 10px 12px;
 
-    color: #c8c8d0;
+    color: #c9c9d2;
 
     background: transparent;
-
     border: 0;
     border-radius: 12px;
 
@@ -311,9 +187,9 @@ body {
     text-align: left;
 
     transition:
-        background .17s ease,
-        color .17s ease,
-        transform .17s ease;
+        background .18s ease,
+        color .18s ease,
+        transform .18s ease;
 }
 
 .sidebar-button:hover {
@@ -322,354 +198,80 @@ body {
 }
 
 .sidebar-button:active {
-    transform: scale(.97);
+    transform: scale(.98);
 }
 
-.side-label {
-    white-space: nowrap;
-
-    transition:
-        opacity .18s ease,
-        width .28s ease;
-}
-
-
-/* =========================================================
-   CSS ICONS
-========================================================= */
-
-.side-icon {
-    position: relative;
-
-    width: 22px;
-    height: 22px;
-
-    flex: 0 0 22px;
-
-    display: block;
-}
-
-
-/* plus */
-
-.icon-plus::before,
-.icon-plus::after {
-    content: "";
-
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    background: #cfcfd8;
-
-    transform: translate(-50%,-50%);
-
-    border-radius: 2px;
-}
-
-.icon-plus::before {
-    width: 14px;
-    height: 2px;
-}
-
-.icon-plus::after {
-    width: 2px;
-    height: 14px;
-}
-
-
-/* orbit */
-
-.icon-orbit {
-    border:
-        1.5px solid #cfcfd8;
-
-    border-radius: 50%;
-
-    transform: rotate(-20deg);
-}
-
-.icon-orbit::before {
-    content: "";
-
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    width: 7px;
-    height: 7px;
-
-    transform: translate(-50%,-50%);
-
-    border-radius: 50%;
-
-    background: #fff;
-}
-
-.icon-orbit::after {
-    content: "";
-
-    position: absolute;
-
-    left: -2px;
-    top: 8px;
-
+.sidebar-button .icon {
     width: 25px;
-    height: 6px;
+    min-width: 25px;
 
-    border-top:
-        1px solid rgba(255,255,255,.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    border-bottom:
-        1px solid rgba(255,255,255,.25);
+    font-size: 17px;
+    font-weight: 600;
 
-    border-radius: 50%;
+    color: #d8d8df;
 }
 
-
-/* book */
-
-.icon-book {
-    border:
-        1.5px solid #cfcfd8;
-
-    border-radius: 3px;
-}
-
-.icon-book::before {
-    content: "";
-
-    position: absolute;
-
-    top: 2px;
-    bottom: 2px;
-    left: 50%;
-
-    width: 1px;
-
-    background: #cfcfd8;
-}
-
-
-/* cook */
-
-.icon-cook {
-    border:
-        1.5px solid #cfcfd8;
-
-    border-radius: 3px 3px 7px 7px;
-
-    height: 13px;
-
-    margin-top: 7px;
-}
-
-.icon-cook::before {
-    content: "";
-
-    position: absolute;
-
-    width: 9px;
-    height: 9px;
-
-    left: 5px;
-    top: -7px;
-
-    border:
-        1.5px solid #cfcfd8;
-
-    border-radius: 50%;
-}
-
-
-/* image */
-
-.icon-image {
-    border:
-        1.5px solid #cfcfd8;
-
-    border-radius: 3px;
-}
-
-.icon-image::before {
-    content: "";
-
-    position: absolute;
-
-    left: 3px;
-    bottom: 3px;
-
-    width: 13px;
-    height: 8px;
-
-    border-left:
-        1.5px solid #cfcfd8;
-
-    border-top:
-        1.5px solid #cfcfd8;
-
-    transform: skew(-35deg) rotate(35deg);
-}
-
-
-/* code */
-
-.icon-code::before {
-    content: "<>";
-
-    position: absolute;
-
-    inset: 0;
-
-    display: grid;
-    place-items: center;
-
-    color: #cfcfd8;
-
-    font-size: 14px;
-    font-weight: 700;
-}
-
-
-/* history */
-
-.icon-history {
-    border:
-        1.5px solid #cfcfd8;
-
-    border-radius: 50%;
-}
-
-.icon-history::before {
-    content: "";
-
-    position: absolute;
-
-    width: 6px;
-    height: 1.5px;
-
-    background: #cfcfd8;
-
-    left: 50%;
-    top: 50%;
-
-    transform-origin: left center;
-
-    transform: rotate(-20deg);
-}
-
-.icon-history::after {
-    content: "";
-
-    position: absolute;
-
-    width: 5px;
-    height: 1.5px;
-
-    background: #cfcfd8;
-
-    left: 50%;
-    top: 50%;
-
-    transform-origin: left center;
-
-    transform: rotate(80deg);
-}
-
-
-/* settings */
-
-.icon-settings {
-    border:
-        2px solid #cfcfd8;
-
-    border-radius: 50%;
-}
-
-.icon-settings::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 5px;
-
-    border-radius: 50%;
-
-    background: #cfcfd8;
-}
-
-
-/* user */
-
-.icon-user::before {
-    content: "";
-
-    position: absolute;
-
-    width: 7px;
-    height: 7px;
-
-    left: 50%;
-    top: 2px;
-
-    transform: translateX(-50%);
-
-    border:
-        1.5px solid #cfcfd8;
-
-    border-radius: 50%;
-}
-
-.icon-user::after {
-    content: "";
-
-    position: absolute;
-
-    width: 15px;
-    height: 8px;
-
-    left: 50%;
-    bottom: 2px;
-
-    transform: translateX(-50%);
-
-    border:
-        1.5px solid #cfcfd8;
-
-    border-radius: 9px 9px 4px 4px;
-}
-
-
-/* divider */
-
-.sidebar-divider {
-    height: 1px;
-
-    margin: 9px 8px;
-
-    background:
-        rgba(255,255,255,.08);
+.sidebar-button .label {
+    white-space: nowrap;
 }
 
 .conversation-button {
     background:
         linear-gradient(
             90deg,
-            rgba(125,125,255,.11),
-            rgba(255,255,255,.015)
+            rgba(130,130,255,.12),
+            transparent
         );
 }
 
+.sidebar-divider {
+    height: 1px;
 
-/* =========================================================
-   MAIN CHAT
-========================================================= */
+    margin:
+        9px 8px;
+
+    background:
+        rgba(255,255,255,.08);
+}
+
+
+/* COLLAPSED */
+
+.sidebar.collapsed {
+    width: 72px;
+}
+
+.sidebar.collapsed .sidebar-logo {
+    justify-content: center;
+    padding: 0;
+}
+
+.sidebar.collapsed .logo-name,
+.sidebar.collapsed .logo-ai,
+.sidebar.collapsed .label {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-button {
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.sidebar.collapsed .sidebar-button .icon {
+    margin: 0;
+}
+
+
+/* =========================
+   CHAT
+========================= */
 
 .chat-section {
     position: relative;
-
     z-index: 1;
 
     width: 100%;
@@ -678,7 +280,7 @@ body {
     padding-left: 250px;
 
     transition:
-        padding-left .28s cubic-bezier(.2,.8,.2,1);
+        padding-left .3s ease;
 }
 
 body.sidebar-collapsed .chat-section {
@@ -695,8 +297,7 @@ body.sidebar-collapsed .chat-section {
 
 .chat-header {
     height: 64px;
-
-    flex: 0 0 64px;
+    flex-shrink: 0;
 
     display: flex;
     align-items: center;
@@ -718,8 +319,7 @@ body.sidebar-collapsed .chat-section {
     align-items: center;
     gap: 7px;
 
-    color: #a5a5b0;
-
+    color: #9696a1;
     font-size: 12px;
 }
 
@@ -729,21 +329,14 @@ body.sidebar-collapsed .chat-section {
 
     border-radius: 50%;
 
-    background: #fff;
+    background: white;
 
     box-shadow:
-        0 0 9px #fff;
+        0 0 10px white;
 }
-
-
-/* =========================================================
-   MESSAGES
-========================================================= */
 
 .messages {
     flex: 1;
-
-    min-height: 0;
 
     overflow-y: auto;
 
@@ -760,30 +353,25 @@ body.sidebar-collapsed .chat-section {
 
     text-align: center;
 
-    color: #9b9ba7;
+    color: #9797a3;
 }
 
-.mini-moon {
-    margin: 0 auto 17px;
+.moon-large {
+    font-size: 58px;
 
-    width: 55px;
-    height: 55px;
+    margin-bottom: 12px;
 
-    opacity: .9;
-}
-
-.mini-moon span {
-    width: 50px;
-    height: 50px;
-
-    left: 14px;
-    top: -7px;
+    filter:
+        drop-shadow(
+            0 0 22px
+            rgba(255,255,255,.18)
+        );
 }
 
 .empty-chat h1 {
     margin: 0 0 8px;
 
-    color: #fff;
+    color: white;
 
     font-size:
         clamp(25px,4vw,42px);
@@ -799,9 +387,9 @@ body.sidebar-collapsed .chat-section {
 
     padding: 13px 16px;
 
-    line-height: 1.55;
-
     border-radius: 18px;
+
+    line-height: 1.55;
 
     white-space: pre-wrap;
 
@@ -810,7 +398,6 @@ body.sidebar-collapsed .chat-section {
 
 .message-bubble.user {
     align-self: flex-end;
-
     background: #292932;
 }
 
@@ -824,22 +411,20 @@ body.sidebar-collapsed .chat-section {
 }
 
 
-/* =========================================================
+/* =========================
    TYPING
-========================================================= */
+========================= */
 
 .typing {
     display: flex;
-
     align-items: center;
-
     gap: 6px;
 
     padding:
-        0 30px 12px;
+        0 30px
+        12px;
 
     color: #9696a2;
-
     font-size: 13px;
 }
 
@@ -853,7 +438,9 @@ body.sidebar-collapsed .chat-section {
 
     animation:
         typingPulse
-        .9s infinite alternate;
+        .9s
+        infinite
+        alternate;
 }
 
 .typing-dot:nth-child(2) {
@@ -865,7 +452,6 @@ body.sidebar-collapsed .chat-section {
 }
 
 @keyframes typingPulse {
-
     from {
         opacity: .2;
         transform: translateY(2px);
@@ -878,9 +464,9 @@ body.sidebar-collapsed .chat-section {
 }
 
 
-/* =========================================================
-   CHAT INPUT
-========================================================= */
+/* =========================
+   INPUT
+========================= */
 
 .chat-bottom-area {
     width:
@@ -900,20 +486,21 @@ body.sidebar-collapsed .chat-section {
     display: flex;
     align-items: flex-end;
 
-    gap: 10px;
+    gap: 9px;
 
     padding: 9px;
 
     background:
-        rgba(20,20,27,.95);
+        rgba(20,20,27,.96);
 
     border:
-        1px solid rgba(255,255,255,.10);
+        1px solid rgba(255,255,255,.1);
 
     border-radius: 18px;
 
     box-shadow:
-        0 12px 45px rgba(0,0,0,.35);
+        0 12px 45px
+        rgba(0,0,0,.35);
 }
 
 .chat-input-area textarea {
@@ -931,7 +518,6 @@ body.sidebar-collapsed .chat-section {
     background: transparent;
 
     border: 0;
-
     outline: 0;
 
     font: inherit;
@@ -947,14 +533,14 @@ body.sidebar-collapsed .chat-section {
 
     flex: 0 0 42px;
 
-    display: grid;
-    place-items: center;
-
     border: 0;
-
     border-radius: 13px;
 
-    background: #fff;
+    background: white;
+    color: #050505;
+
+    font-size: 21px;
+    font-weight: 700;
 
     cursor: pointer;
 
@@ -968,42 +554,7 @@ body.sidebar-collapsed .chat-section {
 }
 
 #sendButton:disabled {
-    opacity: .45;
-    cursor: default;
-}
-
-.send-arrow {
-    position: relative;
-
-    width: 16px;
-    height: 16px;
-
-    border-top:
-        2px solid #050505;
-
-    border-right:
-        2px solid #050505;
-
-    transform:
-        rotate(-45deg)
-        translate(-1px,1px);
-}
-
-.send-arrow::after {
-    content: "";
-
-    position: absolute;
-
-    width: 12px;
-    height: 2px;
-
-    right: -3px;
-    top: 7px;
-
-    background: #050505;
-
-    transform:
-        rotate(45deg);
+    opacity: .5;
 }
 
 .input-hint {
@@ -1017,43 +568,34 @@ body.sidebar-collapsed .chat-section {
 }
 
 
-/* =========================================================
-   CONVERSATION MODE
-========================================================= */
+/* =========================
+   CONVERSATION
+========================= */
 
 .conversation-mode {
     position: fixed;
-
     inset: 0;
 
-    z-index: 100;
+    z-index: 200;
 
     display: none;
 
-    overflow: hidden;
-
     background:
         radial-gradient(
-            circle at 50% 43%,
-            rgba(100,100,130,.12),
-            transparent 31%
-        ),
-        radial-gradient(
-            circle at 50% 43%,
-            rgba(255,255,255,.025),
-            transparent 55%
+            circle at 50% 40%,
+            rgba(65,65,90,.16),
+            transparent 35%
         ),
         #010104;
 }
 
 .conversation-mode.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
 
-/* =========================================================
-   TOP BAR
-========================================================= */
+/* TOP */
 
 .conversation-top {
     position: absolute;
@@ -1062,12 +604,7 @@ body.sidebar-collapsed .chat-section {
     left: 0;
     right: 0;
 
-    height: 75px;
-
-    padding:
-        env(safe-area-inset-top)
-        22px
-        0;
+    height: 76px;
 
     display: grid;
 
@@ -1076,70 +613,43 @@ body.sidebar-collapsed .chat-section {
 
     align-items: center;
 
-    box-sizing: content-box;
+    padding:
+        env(safe-area-inset-top)
+        20px
+        0;
 }
 
 .conversation-close {
-    width: 43px;
-    height: 43px;
-
-    display: grid;
-    place-items: center;
-
     justify-self: start;
 
-    border:
-        1px solid rgba(255,255,255,.11);
+    width: 44px;
+    height: 44px;
 
     border-radius: 50%;
 
+    border:
+        1px solid rgba(255,255,255,.12);
+
     background:
-        rgba(255,255,255,.055);
+        rgba(255,255,255,.06);
+
+    color: white;
+
+    font-size: 28px;
 
     cursor: pointer;
-}
-
-.conversation-close span {
-    position: absolute;
-
-    width: 17px;
-    height: 1.5px;
-
-    background: #fff;
-
-    border-radius: 2px;
-}
-
-.conversation-close span:first-child {
-    transform: rotate(45deg);
-}
-
-.conversation-close span:last-child {
-    transform: rotate(-45deg);
 }
 
 .conversation-brand {
     display: flex;
     align-items: center;
-
     gap: 8px;
 
     font-size: 17px;
 }
 
-.brand-moon {
-    width: 22px;
-    height: 22px;
-
-    flex-basis: 22px;
-}
-
-.brand-moon span {
-    width: 20px;
-    height: 20px;
-
-    left: 6px;
-    top: -3px;
+.conversation-brand span {
+    font-size: 22px;
 }
 
 .conversation-live {
@@ -1147,13 +657,11 @@ body.sidebar-collapsed .chat-section {
 
     display: flex;
     align-items: center;
-
     gap: 7px;
 
-    color: #9999a5;
+    color: #92929e;
 
     font-size: 10px;
-
     letter-spacing: 1.5px;
 }
 
@@ -1170,21 +678,21 @@ body.sidebar-collapsed .chat-section {
 
     animation:
         livePulse
-        1.4s infinite;
+        1.4s
+        infinite;
 }
 
 @keyframes livePulse {
-
     50% {
         opacity: .3;
-        transform: scale(.65);
+        transform: scale(.7);
     }
 }
 
 
-/* =========================================================
-   BLACK HOLE STAGE
-========================================================= */
+/* =========================
+   BLACK HOLE
+========================= */
 
 .black-hole-stage {
     position: absolute;
@@ -1192,11 +700,8 @@ body.sidebar-collapsed .chat-section {
     left: 50%;
     top: 40%;
 
-    width:
-        min(600px,90vw);
-
-    height:
-        min(600px,90vw);
+    width: min(560px,90vw);
+    height: min(560px,90vw);
 
     transform:
         translate(-50%,-50%);
@@ -1204,76 +709,49 @@ body.sidebar-collapsed .chat-section {
     display: grid;
     place-items: center;
 
-    perspective: 900px;
-
     pointer-events: none;
 }
 
 .black-hole {
     position: relative;
 
-    width: 470px;
-    height: 470px;
+    width: 360px;
+    height: 360px;
 
-    transform-style: preserve-3d;
+    display: grid;
+    place-items: center;
+
+    perspective: 900px;
 }
 
 
-/* =========================================================
-   AURA
-========================================================= */
+/* OUTER AURA */
 
-.hole-aura {
+.black-hole-glow {
     position: absolute;
 
-    left: 50%;
-    top: 50%;
-
-    width: 330px;
-    height: 330px;
-
-    transform:
-        translate(-50%,-50%);
+    width: 260px;
+    height: 260px;
 
     border-radius: 50%;
 
     background:
         radial-gradient(
             circle,
-            rgba(255,255,255,.055),
-            rgba(255,255,255,.015) 45%,
-            transparent 70%
+            #000 45%,
+            rgba(255,255,255,.04) 63%,
+            transparent 72%
         );
 
-    filter: blur(8px);
+    box-shadow:
+        0 0 55px rgba(255,255,255,.08),
+        0 0 100px rgba(255,255,255,.04);
 
-    animation:
-        auraPulse
-        4s ease-in-out infinite;
-}
-
-@keyframes auraPulse {
-
-    0%,
-    100% {
-        opacity: .55;
-        transform:
-            translate(-50%,-50%)
-            scale(.96);
-    }
-
-    50% {
-        opacity: .9;
-        transform:
-            translate(-50%,-50%)
-            scale(1.04);
-    }
+    z-index: 2;
 }
 
 
-/* =========================================================
-   ORBITS
-========================================================= */
+/* RINGS */
 
 .orbit {
     position: absolute;
@@ -1285,58 +763,122 @@ body.sidebar-collapsed .chat-section {
 
     transform-style: preserve-3d;
 
-    pointer-events: none;
-}
-
-.orbit::after {
-    content: "";
-
-    position: absolute;
-
-    left: 8%;
-    top: 50%;
-
-    width: 9px;
-    height: 9px;
-
-    margin-top: -4.5px;
-
-    border-radius: 50%;
-
-    background: white;
-
-    box-shadow:
-        0 0 9px white,
-        0 0 20px rgba(255,255,255,.65);
-}
-
-
-/* large ring */
-
-.orbit-a {
-    width: 455px;
-    height: 145px;
-
     border:
-        2px solid rgba(255,255,255,.42);
+        2px solid rgba(255,255,255,.45);
 
     box-shadow:
-        0 0 13px rgba(255,255,255,.10),
-        inset 0 0 15px rgba(255,255,255,.08);
+        0 0 12px rgba(255,255,255,.12),
+        0 0 25px rgba(255,255,255,.05);
+
+    z-index: 1;
+}
+
+.orbit-one {
+    width: 440px;
+    height: 145px;
 
     transform:
         translate(-50%,-50%)
-        rotateX(69deg);
+        rotateX(67deg)
+        rotateZ(0deg);
 
     animation:
-        orbitA
+        ringOne
+        5s
+        linear
+        infinite;
+}
+
+.orbit-two {
+    width: 400px;
+    height: 120px;
+
+    border-color:
+        rgba(255,255,255,.32);
+
+    transform:
+        translate(-50%,-50%)
+        rotateX(65deg)
+        rotateZ(60deg);
+
+    animation:
+        ringTwo
+        7s
+        linear
+        infinite;
+}
+
+.orbit-three {
+    width: 480px;
+    height: 170px;
+
+    border-color:
+        rgba(255,255,255,.22);
+
+    transform:
+        translate(-50%,-50%)
+        rotateX(69deg)
+        rotateZ(120deg);
+
+    animation:
+        ringThree
+        9s
+        linear
+        infinite;
+}
+
+.orbit-four {
+    width: 350px;
+    height: 100px;
+
+    border-color:
+        rgba(255,255,255,.18);
+
+    transform:
+        translate(-50%,-50%)
+        rotateX(63deg)
+        rotateZ(180deg);
+
+    animation:
+        ringFour
         6s
         linear
         infinite;
 }
 
-@keyframes orbitA {
+@keyframes ringOne {
+    from {
+        transform:
+            translate(-50%,-50%)
+            rotateX(67deg)
+            rotateZ(0deg);
+    }
 
+    to {
+        transform:
+            translate(-50%,-50%)
+            rotateX(67deg)
+            rotateZ(360deg);
+    }
+}
+
+@keyframes ringTwo {
+    from {
+        transform:
+            translate(-50%,-50%)
+            rotateX(65deg)
+            rotateZ(0deg);
+    }
+
+    to {
+        transform:
+            translate(-50%,-50%)
+            rotateX(65deg)
+            rotateZ(-360deg);
+    }
+}
+
+@keyframes ringThree {
     from {
         transform:
             translate(-50%,-50%)
@@ -1352,423 +894,83 @@ body.sidebar-collapsed .chat-section {
     }
 }
 
-
-/* second */
-
-.orbit-b {
-    width: 390px;
-    height: 118px;
-
-    border:
-        2px solid rgba(255,255,255,.30);
-
-    transform:
-        translate(-50%,-50%)
-        rotateX(66deg)
-        rotateZ(48deg);
-
-    animation:
-        orbitB
-        7.5s
-        linear
-        infinite
-        reverse;
-}
-
-@keyframes orbitB {
-
-    from {
-        transform:
-            translate(-50%,-50%)
-            rotateX(66deg)
-            rotateZ(48deg);
-    }
-
-    to {
-        transform:
-            translate(-50%,-50%)
-            rotateX(66deg)
-            rotateZ(-312deg);
-    }
-}
-
-
-/* third */
-
-.orbit-c {
-    width: 510px;
-    height: 165px;
-
-    border:
-        1.5px solid rgba(255,255,255,.19);
-
-    transform:
-        translate(-50%,-50%)
-        rotateX(72deg)
-        rotateZ(105deg);
-
-    animation:
-        orbitC
-        11s
-        linear
-        infinite;
-}
-
-@keyframes orbitC {
-
-    from {
-        transform:
-            translate(-50%,-50%)
-            rotateX(72deg)
-            rotateZ(105deg);
-    }
-
-    to {
-        transform:
-            translate(-50%,-50%)
-            rotateX(72deg)
-            rotateZ(465deg);
-    }
-}
-
-
-/* fourth */
-
-.orbit-d {
-    width: 345px;
-    height: 92px;
-
-    border:
-        2px solid rgba(255,255,255,.20);
-
-    transform:
-        translate(-50%,-50%)
-        rotateX(63deg)
-        rotateZ(155deg);
-
-    animation:
-        orbitD
-        5s
-        linear
-        infinite
-        reverse;
-}
-
-@keyframes orbitD {
-
+@keyframes ringFour {
     from {
         transform:
             translate(-50%,-50%)
             rotateX(63deg)
-            rotateZ(155deg);
+            rotateZ(0deg);
     }
 
     to {
         transform:
             translate(-50%,-50%)
             rotateX(63deg)
-            rotateZ(-205deg);
+            rotateZ(-360deg);
     }
 }
 
 
-/* fifth */
-
-.orbit-e {
-    width: 420px;
-    height: 128px;
-
-    border:
-        1px solid rgba(255,255,255,.12);
-
-    transform:
-        translate(-50%,-50%)
-        rotateX(74deg)
-        rotateZ(215deg);
-
-    animation:
-        orbitE
-        13s
-        linear
-        infinite;
-}
-
-@keyframes orbitE {
-
-    from {
-        transform:
-            translate(-50%,-50%)
-            rotateX(74deg)
-            rotateZ(215deg);
-    }
-
-    to {
-        transform:
-            translate(-50%,-50%)
-            rotateX(74deg)
-            rotateZ(575deg);
-    }
-}
-
-
-/* =========================================================
-   PARTICLES
-========================================================= */
-
-.orbit-particle {
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    width: 5px;
-    height: 5px;
-
-    border-radius: 50%;
-
-    background: white;
-
-    box-shadow:
-        0 0 7px white,
-        0 0 15px rgba(255,255,255,.6);
-
-    z-index: 6;
-}
-
-.particle-one {
-    animation:
-        particleOne
-        5s
-        linear
-        infinite;
-}
-
-.particle-two {
-    animation:
-        particleTwo
-        7s
-        linear
-        infinite;
-}
-
-.particle-three {
-    animation:
-        particleThree
-        9s
-        linear
-        infinite;
-}
-
-.particle-four {
-    animation:
-        particleFour
-        6s
-        linear
-        infinite;
-}
-
-.particle-five {
-    animation:
-        particleFive
-        11s
-        linear
-        infinite;
-}
-
-@keyframes particleOne {
-
-    from {
-        transform:
-            translate(-50%,-50%)
-            rotate(0deg)
-            translateX(225px)
-            rotate(0deg);
-    }
-
-    to {
-        transform:
-            translate(-50%,-50%)
-            rotate(360deg)
-            translateX(225px)
-            rotate(-360deg);
-    }
-}
-
-@keyframes particleTwo {
-
-    from {
-        transform:
-            translate(-50%,-50%)
-            rotate(120deg)
-            translateX(185px);
-    }
-
-    to {
-        transform:
-            translate(-50%,-50%)
-            rotate(480deg)
-            translateX(185px);
-    }
-}
-
-@keyframes particleThree {
-
-    from {
-        transform:
-            translate(-50%,-50%)
-            rotate(220deg)
-            translateX(255px);
-    }
-
-    to {
-        transform:
-            translate(-50%,-50%)
-            rotate(580deg)
-            translateX(255px);
-    }
-}
-
-@keyframes particleFour {
-
-    from {
-        transform:
-            translate(-50%,-50%)
-            rotate(70deg)
-            translateX(165px);
-    }
-
-    to {
-        transform:
-            translate(-50%,-50%)
-            rotate(-290deg)
-            translateX(165px);
-    }
-}
-
-@keyframes particleFive {
-
-    from {
-        transform:
-            translate(-50%,-50%)
-            rotate(300deg)
-            translateX(205px);
-    }
-
-    to {
-        transform:
-            translate(-50%,-50%)
-            rotate(660deg)
-            translateX(205px);
-    }
-}
-
-
-/* =========================================================
-   EVENT HORIZON
-========================================================= */
+/* CORE OUTLINE */
 
 .black-hole-outline {
     position: absolute;
 
-    left: 50%;
-    top: 50%;
-
-    width: 246px;
-    height: 246px;
-
-    transform:
-        translate(-50%,-50%);
-
-    border:
-        2.5px solid rgba(255,255,255,.95);
+    width: 235px;
+    height: 235px;
 
     border-radius: 50%;
 
-    z-index: 10;
+    border:
+        3px solid rgba(255,255,255,.92);
 
     box-shadow:
-        0 0 4px rgba(255,255,255,.9),
-        0 0 17px rgba(255,255,255,.30),
-        0 0 40px rgba(255,255,255,.10);
+        0 0 6px rgba(255,255,255,.8),
+        0 0 18px rgba(255,255,255,.3),
+        0 0 45px rgba(255,255,255,.1);
 
-    pointer-events: none;
+    z-index: 5;
 }
 
 
-/* =========================================================
-   BLACK CORE
-========================================================= */
+/* BLACK CENTER */
 
 .black-hole-core {
     position: absolute;
 
-    left: 50%;
-    top: 50%;
-
-    width: 230px;
-    height: 230px;
-
-    transform:
-        translate(-50%,-50%);
+    width: 218px;
+    height: 218px;
 
     border-radius: 50%;
 
     background:
         radial-gradient(
-            circle,
+            circle at 48% 45%,
             #000 0%,
-            #000 76%,
-            #010103 90%,
-            #050509 100%
+            #000 70%,
+            #020204 100%
         );
-
-    z-index: 8;
 
     box-shadow:
         0 0 0 5px #000,
         0 0 35px #000,
-        0 0 70px rgba(0,0,0,.95);
+        0 0 65px rgba(0,0,0,.9);
 
-    overflow: hidden;
-}
-
-.core-inner {
-    position: absolute;
-
-    inset: 7px;
-
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle at 42% 37%,
-            rgba(255,255,255,.015),
-            transparent 45%
-        ),
-        #000;
+    z-index: 6;
 }
 
 
-/* =========================================================
-   VOICE WAVE
-========================================================= */
+/* VOICE WAVE */
 
 .voice-wave {
     position: absolute;
 
-    left: 50%;
-    top: 50%;
+    z-index: 10;
 
-    width: 130px;
-    height: 70px;
-
-    transform:
-        translate(-50%,-50%);
-
-    z-index: 15;
+    width: 140px;
+    height: 60px;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
@@ -1776,10 +978,7 @@ body.sidebar-collapsed .chat-section {
 
     opacity: 0;
 
-    pointer-events: none;
-
-    transition:
-        opacity .2s ease;
+    transition: opacity .2s ease;
 }
 
 .conversation-mode.talking .voice-wave {
@@ -1788,15 +987,14 @@ body.sidebar-collapsed .chat-section {
 
 .voice-wave span {
     width: 3px;
-    height: 22px;
+    height: 28px;
 
-    border-radius: 5px;
+    border-radius: 10px;
 
     background: white;
 
     box-shadow:
-        0 0 6px white,
-        0 0 13px rgba(255,255,255,.55);
+        0 0 7px white;
 
     transform:
         scaleY(.12);
@@ -1808,9 +1006,9 @@ body.sidebar-collapsed .chat-section {
 }
 
 
-/* =========================================================
+/* =========================
    CONVERSATION TEXT
-========================================================= */
+========================= */
 
 .conversation-status {
     position: absolute;
@@ -1818,42 +1016,38 @@ body.sidebar-collapsed .chat-section {
     left: 0;
     right: 0;
 
-    top:
-        calc(40% + 195px);
+    top: calc(40% + 185px);
 
     text-align: center;
 
-    color: #b8b8c2;
+    color: #bdbdc7;
 
     font-size: 13px;
-
-    letter-spacing: .6px;
+    letter-spacing: .5px;
 }
 
 .conversation-mode.listening
 .conversation-status {
-    color: #fff;
+    color: white;
 }
 
 .conversation-mode.thinking
 .conversation-status {
-    color: #aaaab8;
+    color: #aaaaba;
 }
 
 .conversation-mode.talking
 .conversation-status {
-    color: #fff;
+    color: white;
 }
 
 .conversation-text {
     position: absolute;
 
     left: 50%;
-    top:
-        calc(40% + 226px);
+    top: calc(40% + 215px);
 
-    width:
-        min(760px,85vw);
+    width: min(760px,85vw);
 
     transform:
         translateX(-50%);
@@ -1863,7 +1057,6 @@ body.sidebar-collapsed .chat-section {
     color: #858591;
 
     font-size: 14px;
-
     line-height: 1.5;
 
     max-height: 65px;
@@ -1872,23 +1065,22 @@ body.sidebar-collapsed .chat-section {
 }
 
 
-/* =========================================================
+/* =========================
    ONE BUTTON
-========================================================= */
+========================= */
 
 .conversation-button-area {
     position: absolute;
 
     left: 50%;
 
-    top:
-        calc(40% + 292px);
+    top: calc(40% + 285px);
 
     transform:
         translateX(-50%);
 
-    width: 105px;
-    height: 105px;
+    width: 110px;
+    height: 110px;
 
     display: grid;
     place-items: center;
@@ -1906,21 +1098,23 @@ body.sidebar-collapsed .chat-section {
     border-radius: 50%;
 
     border:
-        1px solid rgba(255,255,255,.25);
+        1px solid rgba(255,255,255,.3);
 
     background:
         radial-gradient(
-            circle at 35% 28%,
-            #34343e,
-            #121218 60%,
-            #07070a 100%
+            circle at 35% 30%,
+            #383842,
+            #111117 65%,
+            #07070a
         );
+
+    color: white;
 
     cursor: pointer;
 
     box-shadow:
-        0 0 0 5px rgba(255,255,255,.035),
-        0 15px 45px rgba(0,0,0,.75);
+        0 0 0 6px rgba(255,255,255,.04),
+        0 12px 45px rgba(0,0,0,.8);
 
     transition:
         transform .18s ease,
@@ -1931,40 +1125,31 @@ body.sidebar-collapsed .chat-section {
     transform: scale(1.06);
 
     box-shadow:
-        0 0 0 7px rgba(255,255,255,.055),
-        0 0 35px rgba(255,255,255,.12);
+        0 0 0 8px rgba(255,255,255,.06),
+        0 0 35px rgba(255,255,255,.16);
 }
 
 .conversation-main-button:active {
-    transform: scale(.95);
+    transform: scale(.94);
 }
 
 .conversation-mode.listening
-.conversation-main-button {
-    box-shadow:
-        0 0 0 8px rgba(255,255,255,.08),
-        0 0 38px rgba(255,255,255,.24);
-}
-
+.conversation-main-button,
 .conversation-mode.talking
 .conversation-main-button {
     box-shadow:
-        0 0 0 8px rgba(255,255,255,.065),
-        0 0 38px rgba(255,255,255,.22);
+        0 0 0 9px rgba(255,255,255,.06),
+        0 0 40px rgba(255,255,255,.2);
 }
 
 
-/* =========================================================
-   MICROPHONE
-========================================================= */
+/* MIC */
 
-.button-mic {
+.mic-icon {
     position: relative;
 
-    width: 27px;
-    height: 39px;
-
-    display: block;
+    width: 28px;
+    height: 40px;
 }
 
 .mic-head {
@@ -1973,18 +1158,15 @@ body.sidebar-collapsed .chat-section {
     left: 50%;
     top: 0;
 
-    width: 13px;
+    width: 14px;
     height: 23px;
 
     transform:
         translateX(-50%);
 
-    border-radius: 8px;
+    border-radius: 10px;
 
     background: white;
-
-    box-shadow:
-        0 0 9px rgba(255,255,255,.35);
 }
 
 .mic-body {
@@ -1993,7 +1175,7 @@ body.sidebar-collapsed .chat-section {
     left: 50%;
     top: 17px;
 
-    width: 27px;
+    width: 28px;
     height: 20px;
 
     transform:
@@ -2005,7 +1187,7 @@ body.sidebar-collapsed .chat-section {
     border-top: 0;
 
     border-radius:
-        0 0 15px 15px;
+        0 0 16px 16px;
 }
 
 .mic-stand {
@@ -2015,13 +1197,16 @@ body.sidebar-collapsed .chat-section {
     bottom: 0;
 
     width: 2px;
-    height: 8px;
+    height: 7px;
 
     transform:
         translateX(-50%);
 
     background: white;
 }
+
+
+/* RIPPLES */
 
 .button-ripple {
     position: absolute;
@@ -2031,21 +1216,19 @@ body.sidebar-collapsed .chat-section {
     border-radius: 50%;
 
     border:
-        1px solid rgba(255,255,255,.13);
+        1px solid rgba(255,255,255,.16);
 
     opacity: 0;
 }
 
-.conversation-mode.listening
-.ripple-one {
+.conversation-mode.listening .ripple-one {
     animation:
         buttonRipple
         1.5s
         infinite;
 }
 
-.conversation-mode.listening
-.ripple-two {
+.conversation-mode.listening .ripple-two {
     animation:
         buttonRipple
         1.5s
@@ -2054,9 +1237,8 @@ body.sidebar-collapsed .chat-section {
 }
 
 @keyframes buttonRipple {
-
     from {
-        transform: scale(.78);
+        transform: scale(.8);
         opacity: .55;
     }
 
@@ -2074,7 +1256,7 @@ body.sidebar-collapsed .chat-section {
 
     bottom:
         calc(
-            17px +
+            18px +
             env(safe-area-inset-bottom)
         );
 
@@ -2082,22 +1264,21 @@ body.sidebar-collapsed .chat-section {
 
     text-align: center;
 
-    color: #52525e;
+    color: #50505c;
 
     font-size: 10px;
 }
 
 
-/* =========================================================
+/* =========================
    MODALS
-========================================================= */
+========================= */
 
 .modal {
     position: fixed;
-
     inset: 0;
 
-    z-index: 150;
+    z-index: 300;
 
     display: none;
 
@@ -2107,7 +1288,7 @@ body.sidebar-collapsed .chat-section {
     padding: 20px;
 
     background:
-        rgba(0,0,0,.72);
+        rgba(0,0,0,.75);
 
     backdrop-filter: blur(14px);
 }
@@ -2116,8 +1297,7 @@ body.sidebar-collapsed .chat-section {
     display: flex;
 }
 
-.settings-box,
-.account-box {
+.modal-box {
     width:
         min(450px,100%);
 
@@ -2126,7 +1306,7 @@ body.sidebar-collapsed .chat-section {
     background: #111116;
 
     border:
-        1px solid rgba(255,255,255,.10);
+        1px solid rgba(255,255,255,.1);
 
     border-radius: 20px;
 
@@ -2136,9 +1316,12 @@ body.sidebar-collapsed .chat-section {
 
 .modal-header {
     display: flex;
-
     align-items: center;
     justify-content: space-between;
+}
+
+.modal-header h2 {
+    margin: 0;
 }
 
 .modal-header button {
@@ -2146,11 +1329,9 @@ body.sidebar-collapsed .chat-section {
     height: 35px;
 
     border: 0;
-
     border-radius: 50%;
 
     color: white;
-
     background:
         rgba(255,255,255,.07);
 
@@ -2163,15 +1344,14 @@ body.sidebar-collapsed .chat-section {
     margin-top: 25px;
 }
 
-.setting-item p {
+.setting-item p,
+.account-box p {
     color: #858590;
-
     font-size: 13px;
 }
 
 .setting-buttons {
     display: flex;
-
     gap: 8px;
 }
 
@@ -2184,7 +1364,7 @@ body.sidebar-collapsed .chat-section {
     background: #202027;
 
     border:
-        1px solid rgba(255,255,255,.10);
+        1px solid rgba(255,255,255,.1);
 
     border-radius: 10px;
 
@@ -2193,14 +1373,17 @@ body.sidebar-collapsed .chat-section {
 
 .setting-buttons button.active {
     color: #050505;
-
     background: white;
 }
 
+.account-moon {
+    font-size: 45px;
+}
 
-/* =========================================================
+
+/* =========================
    TEXT SIZE
-========================================================= */
+========================= */
 
 body.text-small .message-bubble {
     font-size: 13px;
@@ -2215,9 +1398,9 @@ body.text-large .message-bubble {
 }
 
 
-/* =========================================================
-   TABLET / MOBILE
-========================================================= */
+/* =========================
+   MOBILE / TABLET
+========================= */
 
 @media (max-width: 900px) {
 
@@ -2225,22 +1408,20 @@ body.text-large .message-bubble {
         width: 72px;
     }
 
-    .sidebar .logo-word,
-    .sidebar .side-label {
-        opacity: 0;
-        width: 0;
-        overflow: hidden;
+    .sidebar .logo-name,
+    .sidebar .logo-ai,
+    .sidebar .label {
+        display: none;
     }
 
-    .sidebar .sidebar-logo {
+    .sidebar-logo {
         justify-content: center;
+        padding: 0;
     }
 
-    .sidebar .sidebar-button {
+    .sidebar-button {
         justify-content: center;
-
-        padding-left: 0;
-        padding-right: 0;
+        padding: 10px 0;
     }
 
     .chat-section {
@@ -2253,9 +1434,9 @@ body.text-large .message-bubble {
 }
 
 
-/* =========================================================
+/* =========================
    PHONE
-========================================================= */
+========================= */
 
 @media (max-width: 600px) {
 
@@ -2266,36 +1447,31 @@ body.text-large .message-bubble {
             translateX(-100%);
     }
 
-    .sidebar:not(.mobile-open) {
-        transform:
-            translateX(-100%);
-    }
-
-    .sidebar.mobile-open {
+    .sidebar.expanded {
         transform:
             translateX(0);
     }
 
     .sidebar.collapsed {
         width: 235px;
+        transform:
+            translateX(-100%);
     }
 
-    .sidebar.collapsed .logo-word,
-    .sidebar.collapsed .side-label {
-        opacity: 1;
-        width: auto;
-        overflow: visible;
+    .sidebar.collapsed .logo-name,
+    .sidebar.collapsed .logo-ai,
+    .sidebar.collapsed .label {
+        display: inline;
     }
 
     .sidebar.collapsed .sidebar-logo {
         justify-content: flex-start;
+        padding: 0 10px;
     }
 
     .sidebar.collapsed .sidebar-button {
         justify-content: flex-start;
-
-        padding-left: 12px;
-        padding-right: 12px;
+        padding: 10px 12px;
     }
 
     .chat-section,
@@ -2304,27 +1480,16 @@ body.text-large .message-bubble {
     }
 
     .chat-header {
-        height: 58px;
-        flex-basis: 58px;
-
-        padding: 0 15px;
+        padding: 0 16px;
     }
 
     .messages {
-        padding: 20px 13px;
+        padding: 20px 14px;
     }
 
     .chat-bottom-area {
         padding-left: 10px;
         padding-right: 10px;
-    }
-
-
-    /* conversation */
-
-    .conversation-top {
-        padding-left: 13px;
-        padding-right: 13px;
     }
 
     .black-hole-stage {
@@ -2335,104 +1500,40 @@ body.text-large .message-bubble {
     }
 
     .black-hole {
-        width: 400px;
-        height: 400px;
-
-        transform: scale(.76);
+        transform: scale(.78);
     }
 
     .conversation-status {
-        top:
-            calc(38% + 172px);
+        top: calc(38% + 165px);
     }
 
     .conversation-text {
-        top:
-            calc(38% + 203px);
+        top: calc(38% + 195px);
 
         width: 90vw;
     }
 
     .conversation-button-area {
-        top:
-            calc(38% + 270px);
+        top: calc(38% + 265px);
     }
 }
 
 
-/* =========================================================
+/* =========================
    SMALL PHONE
-========================================================= */
+========================= */
 
-@media (max-width: 390px) {
-
-    .black-hole-stage {
-        top: 37%;
-    }
+@media (max-width: 380px) {
 
     .black-hole {
-        transform: scale(.66);
+        transform: scale(.68);
     }
 
-    .conversation-status {
-        top:
-            calc(37% + 160px);
+    .conversation-button-area {
+        top: calc(38% + 245px);
     }
 
     .conversation-text {
-        top:
-            calc(37% + 191px);
-
         font-size: 13px;
-    }
-
-    .conversation-button-area {
-        top:
-            calc(37% + 255px);
-    }
-
-    .conversation-hint {
-        font-size: 9px;
-    }
-}
-
-
-/* =========================================================
-   LANDSCAPE PHONE
-========================================================= */
-
-@media
-    (max-height: 600px)
-    and (orientation: landscape) {
-
-    .conversation-top {
-        height: 55px;
-    }
-
-    .black-hole-stage {
-        top: 43%;
-    }
-
-    .black-hole {
-        transform: scale(.52);
-    }
-
-    .conversation-status {
-        top:
-            calc(43% + 120px);
-    }
-
-    .conversation-text {
-        top:
-            calc(43% + 145px);
-    }
-
-    .conversation-button-area {
-        top:
-            calc(43% + 190px);
-    }
-
-    .conversation-hint {
-        display: none;
     }
 }
