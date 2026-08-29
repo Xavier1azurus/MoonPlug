@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,11 +10,7 @@
         content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
 
-    <meta
-        name="theme-color"
-        content="#020205"
-    >
-
+    <meta name="theme-color" content="#020205">
     <meta
         name="description"
         content="MoonPlug AI"
@@ -23,34 +18,20 @@
 
     <title>MoonPlug AI</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
-
 <body>
 
-<!-- =========================================================
-     STAR FIELD
-========================================================= -->
-
-<div
-    id="starField"
-    class="star-field"
-></div>
+<div id="starField" class="star-field"></div>
 
 
 <!-- =========================================================
      SIDEBAR
 ========================================================= -->
 
-<aside
-    id="sidebar"
-    class="sidebar"
->
+<aside id="sidebar" class="sidebar">
 
     <button
         id="sidebarLogo"
@@ -75,11 +56,8 @@
             class="sidebar-button"
             type="button"
         >
-
-            <span>➕</span>
-
+            <span>＋</span>
             <b>New Chat</b>
-
         </button>
 
 
@@ -88,11 +66,8 @@
             class="sidebar-button conversation-button"
             type="button"
         >
-
             <span>◉</span>
-
             <b>Conversation</b>
-
         </button>
 
 
@@ -101,11 +76,8 @@
             class="sidebar-button"
             type="button"
         >
-
-            <span>📚</span>
-
+            <span>▣</span>
             <b>Study</b>
-
         </button>
 
 
@@ -114,11 +86,8 @@
             class="sidebar-button"
             type="button"
         >
-
-            <span>🍳</span>
-
+            <span>⌁</span>
             <b>Cook</b>
-
         </button>
 
 
@@ -127,11 +96,8 @@
             class="sidebar-button"
             type="button"
         >
-
-            <span>🖼️</span>
-
+            <span>▧</span>
             <b>Images</b>
-
         </button>
 
 
@@ -140,11 +106,8 @@
             class="sidebar-button"
             type="button"
         >
-
-            <span>💻</span>
-
+            <span>&lt;/&gt;</span>
             <b>Code</b>
-
         </button>
 
 
@@ -156,11 +119,8 @@
             class="sidebar-button"
             type="button"
         >
-
-            <span>💬</span>
-
+            <span>◌</span>
             <b>Chat History</b>
-
         </button>
 
     </div>
@@ -173,11 +133,8 @@
             class="sidebar-button"
             type="button"
         >
-
-            <span>⚙️</span>
-
+            <span>⚙</span>
             <b>Settings</b>
-
         </button>
 
 
@@ -186,11 +143,8 @@
             class="sidebar-button"
             type="button"
         >
-
-            <span>👤</span>
-
+            <span>○</span>
             <b>Account</b>
-
         </button>
 
     </div>
@@ -207,14 +161,9 @@
     <div class="chat-container">
 
 
-        <!-- HEADER -->
-
         <header class="chat-header">
 
-            <strong>
-                MoonPlug AI
-            </strong>
-
+            <strong>MoonPlug AI</strong>
 
             <span class="online">
 
@@ -226,8 +175,6 @@
 
         </header>
 
-
-        <!-- MESSAGES -->
 
         <div
             id="messages"
@@ -256,7 +203,10 @@
         </div>
 
 
-        <!-- THINKING -->
+        <!-- IMPORTANT:
+             Starts hidden.
+             JS only shows this after a real prompt.
+        -->
 
         <div
             id="typing"
@@ -265,9 +215,7 @@
         >
 
             <span class="typing-dot"></span>
-
             <span class="typing-dot"></span>
-
             <span class="typing-dot"></span>
 
             <span>
@@ -276,8 +224,6 @@
 
         </div>
 
-
-        <!-- INPUT -->
 
         <div class="chat-bottom-area">
 
@@ -303,10 +249,7 @@
 
 
             <p class="input-hint">
-
-                MoonPlug can make mistakes.
-                Check important information.
-
+                MoonPlug can make mistakes. Check important information.
             </p>
 
         </div>
@@ -327,8 +270,6 @@
 >
 
 
-    <!-- TOP BAR -->
-
     <div class="conversation-top">
 
 
@@ -336,11 +277,9 @@
             id="conversationClose"
             class="conversation-close"
             type="button"
-            aria-label="Close conversation mode"
+            aria-label="Close conversation"
         >
-
             ×
-
         </button>
 
 
@@ -367,7 +306,7 @@
 
 
     <!-- =====================================================
-         BLACK HOLE / VOICE ORB
+         BLACK HOLE / MOONPLUG ORB
     ====================================================== -->
 
     <div class="black-hole-stage">
@@ -375,40 +314,18 @@
         <div class="black-hole">
 
 
-            <!-- OUTER ORBITS -->
+            <div class="orbit orbit-one"></div>
 
-            <div
-                class="orbit orbit-one"
-            ></div>
+            <div class="orbit orbit-two"></div>
 
+            <div class="orbit orbit-three"></div>
 
-            <div
-                class="orbit orbit-two"
-            ></div>
+            <div class="orbit orbit-four"></div>
 
 
-            <div
-                class="orbit orbit-three"
-            ></div>
+            <div class="black-hole-outline"></div>
 
-
-            <div
-                class="orbit orbit-four"
-            ></div>
-
-
-            <!-- GLOW OUTLINE -->
-
-            <div
-                class="black-hole-outline"
-            ></div>
-
-
-            <!-- BLACK CORE -->
-
-            <div
-                class="black-hole-core"
-            ></div>
+            <div class="black-hole-core"></div>
 
 
             <!-- VOICE WAVE -->
@@ -435,12 +352,6 @@
                 <span></span>
                 <span></span>
                 <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
 
             </div>
 
@@ -449,7 +360,9 @@
     </div>
 
 
-    <!-- STATUS -->
+    <!-- =====================================================
+         STATUS
+    ====================================================== -->
 
     <div
         id="conversationStatus"
@@ -459,8 +372,6 @@
     </div>
 
 
-    <!-- USER / AI TEXT -->
-
     <div
         id="conversationText"
         class="conversation-text"
@@ -469,36 +380,48 @@
     </div>
 
 
-    <!-- MICROPHONE BUTTON -->
+    <!-- =====================================================
+         MICROPHONE
+    ====================================================== -->
 
     <div class="conversation-button-area">
-
 
         <button
             id="conversationMic"
             class="conversation-main-button"
             type="button"
-            aria-label="Start conversation"
+            aria-label="Start talking"
         >
 
 
-            <span class="button-mic">
+            <span class="mic-icon">
 
+                <svg
+                    viewBox="0 0 24 32"
+                    aria-hidden="true"
+                >
 
-                <span
-                    class="mic-head"
-                ></span>
+                    <rect
+                        x="7"
+                        y="1"
+                        width="10"
+                        height="19"
+                        rx="5"
+                    ></rect>
 
+                    <path
+                        d="M3.5 15.5v2.2a8.5 8.5 0 0 0 17 0v-2.2"
+                    ></path>
 
-                <span
-                    class="mic-body"
-                ></span>
+                    <path
+                        d="M12 26v5"
+                    ></path>
 
+                    <path
+                        d="M8 31h8"
+                    ></path>
 
-                <span
-                    class="mic-stand"
-                ></span>
-
+                </svg>
 
             </span>
 
@@ -507,24 +430,17 @@
                 class="button-ripple ripple-one"
             ></span>
 
-
             <span
                 class="button-ripple ripple-two"
             ></span>
-
 
         </button>
 
     </div>
 
 
-    <!-- HINT -->
-
     <p class="conversation-hint">
-
-        Tap once to talk.
-        MoonPlug will answer aloud.
-
+        Tap once to talk. MoonPlug will answer aloud.
     </p>
 
 </section>
@@ -546,10 +462,17 @@
 
         <div class="modal-header">
 
+            <div>
 
-            <h2>
-                Settings
-            </h2>
+                <h2>
+                    Settings
+                </h2>
+
+                <p class="settings-subtitle">
+                    Customize your MoonPlug experience.
+                </p>
+
+            </div>
 
 
             <button
@@ -557,15 +480,15 @@
                 type="button"
                 aria-label="Close settings"
             >
-
                 ×
-
             </button>
 
         </div>
 
 
-        <!-- TEXT SIZE -->
+        <!-- =================================================
+             TEXT SIZE
+        ================================================== -->
 
         <div class="setting-item">
 
@@ -573,14 +496,12 @@
                 Text Size
             </strong>
 
-
             <p>
                 Change the size of chat messages.
             </p>
 
 
             <div class="setting-buttons">
-
 
                 <button
                     class="size-button"
@@ -608,37 +529,66 @@
                     Large
                 </button>
 
-
             </div>
 
         </div>
 
 
-        <!-- VOICE -->
+        <!-- =================================================
+             VOICE
+        ================================================== -->
 
-        <div class="setting-item">
+        <div class="setting-item voice-setting">
 
-            <strong>
-                MoonPlug Voice
-            </strong>
+            <div class="setting-title-row">
+
+                <div>
+
+                    <strong>
+                        MoonPlug Voice
+                    </strong>
+
+                    <p>
+                        Choose the voice MoonPlug uses in Conversation Mode.
+                    </p>
+
+                </div>
+
+            </div>
 
 
-            <p>
-                Choose the voice MoonPlug uses
-                in Conversation Mode.
-            </p>
+            <div class="voice-selector-wrap">
+
+                <select
+                    id="voiceSelect"
+                    class="voice-select"
+                    aria-label="MoonPlug voice"
+                >
+
+                    <option value="">
+                        Loading voices...
+                    </option>
+
+                </select>
+
+            </div>
 
 
-            <select
-                id="voiceSelect"
-                aria-label="MoonPlug voice"
+            <button
+                id="testVoiceButton"
+                class="test-voice-button"
+                type="button"
             >
+                Test Voice
+            </button>
 
-                <option value="">
-                    Loading voices...
-                </option>
 
-            </select>
+            <p
+                id="voiceStatus"
+                class="voice-status"
+            >
+                Voices are provided by your device/browser.
+            </p>
 
         </div>
 
@@ -658,48 +608,33 @@
     aria-hidden="true"
 >
 
-
     <div class="account-box">
-
 
         <div class="account-logo">
             🌙
         </div>
 
-
         <h2>
             MoonPlug
         </h2>
 
-
         <p>
-            Account features can be connected
-            to your backend.
+            Account features can be connected to your backend.
         </p>
-
 
         <button
             id="closeAccount"
             type="button"
         >
-
             Continue as guest
-
         </button>
-
 
     </div>
 
 </section>
 
 
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
-
 <script src="script.js"></script>
 
 </body>
-
 </html>
-
