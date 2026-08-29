@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,12 +19,7 @@
 
 <body>
 
-<!-- =========================================================
-     STAR FIELD
-========================================================= -->
-
 <div id="starField" class="star-field" aria-hidden="true"></div>
-
 
 <!-- =========================================================
      SIDEBAR
@@ -45,7 +39,6 @@
         <span class="logo-ai">AI</span>
     </div>
 
-
     <div class="sidebar-buttons">
 
         <button id="newChatButton" class="sidebar-button" type="button">
@@ -53,50 +46,36 @@
             <span class="sidebar-label">New Chat</span>
         </button>
 
-
-        <!-- CONVERSATION MODE -->
-
         <button
             id="conversationButton"
             class="sidebar-button conversation-sidebar-button"
             type="button"
         >
-            <span class="sidebar-icon conversation-sidebar-icon">
-                ◉
-            </span>
-
-            <span class="sidebar-label">
-                Conversation
-            </span>
+            <span class="sidebar-icon conversation-sidebar-icon">◉</span>
+            <span class="sidebar-label">Conversation</span>
         </button>
-
 
         <button id="studyButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">📚</span>
             <span class="sidebar-label">Study</span>
         </button>
 
-
         <button id="cookButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">🍳</span>
             <span class="sidebar-label">Cook</span>
         </button>
-
 
         <button id="imagesButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">🖼️</span>
             <span class="sidebar-label">Images</span>
         </button>
 
-
         <button id="codeButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">💻</span>
             <span class="sidebar-label">Code</span>
         </button>
 
-
         <div class="sidebar-divider"></div>
-
 
         <button id="historyButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">💬</span>
@@ -105,14 +84,12 @@
 
     </div>
 
-
     <div class="sidebar-bottom">
 
         <button id="settingsButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">⚙️</span>
             <span class="sidebar-label">Settings</span>
         </button>
-
 
         <button id="ownerButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">👤</span>
@@ -145,41 +122,27 @@
 
         </header>
 
-
         <div id="messages" class="messages" aria-live="polite">
 
             <div id="emptyChat" class="empty-chat">
 
-                <div class="empty-moon">
-                    🌙
-                </div>
+                <div class="empty-moon">🌙</div>
 
-                <h1>
-                    What can I help with?
-                </h1>
+                <h1>What can I help with?</h1>
 
-                <p>
-                    Ask MoonPlug anything.
-                </p>
+                <p>Ask MoonPlug anything.</p>
 
             </div>
 
         </div>
 
-
-        <!-- OLD MOONPLUG THINKING ANIMATION -->
-
         <div id="typing" class="typing" aria-live="polite">
 
             <div class="moonplug-animation">
 
-                <div class="animation-moon">
-                    🌙
-                </div>
+                <div class="animation-moon">🌙</div>
 
-                <div class="animation-plug">
-                    🔌
-                </div>
+                <div class="animation-plug">🔌</div>
 
                 <div class="plug-glow"></div>
 
@@ -190,7 +153,6 @@
             </span>
 
         </div>
-
 
         <div class="chat-bottom-area">
 
@@ -266,18 +228,36 @@
         <div class="black-hole">
 
             <div class="black-hole-disk disk-back"></div>
-
             <div class="black-hole-disk disk-back-two"></div>
-
             <div class="black-hole-disk disk-middle"></div>
-
             <div class="black-hole-disk disk-front"></div>
-
             <div class="black-hole-disk disk-front-two"></div>
 
             <div class="black-hole-outline"></div>
 
-            <div class="black-hole-core"></div>
+            <div class="black-hole-core">
+
+                <!-- WHITE VOICE WAVE -->
+
+                <div
+                    id="voiceWave"
+                    class="voice-wave"
+                    aria-hidden="true"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+            </div>
 
         </div>
 
@@ -315,7 +295,6 @@
             </span>
         </button>
 
-
         <button
             id="conversationSpeaker"
             class="conversation-control speaker-control"
@@ -343,7 +322,7 @@
 
 
 <!-- =========================================================
-     CONVERSATION HISTORY CHOOSER
+     CONVERSATION HISTORY
 ========================================================= -->
 
 <div
@@ -356,9 +335,7 @@
 
         <div class="conversation-history-header">
 
-            <h2>
-                Conversation Mode
-            </h2>
+            <h2>Conversation Mode</h2>
 
             <button
                 id="conversationHistoryClose"
@@ -369,11 +346,9 @@
 
         </div>
 
-
         <p>
             Start a new conversation or continue your previous one.
         </p>
-
 
         <button
             id="newConversationButton"
@@ -384,7 +359,6 @@
             <span>Start fresh with MoonPlug.</span>
         </button>
 
-
         <button
             id="continueConversationButton"
             class="history-choice"
@@ -393,7 +367,6 @@
             <strong>Continue Conversation</strong>
             <span>Continue your saved conversation.</span>
         </button>
-
 
         <p
             id="conversationHistoryStatus"
@@ -431,14 +404,11 @@
 
         </div>
 
-
         <div class="setting-item">
 
             <strong>Appearance</strong>
 
-            <span>
-                Choose how MoonPlug looks.
-            </span>
+            <span>Choose how MoonPlug looks.</span>
 
             <div class="appearance-options">
 
@@ -453,14 +423,11 @@
 
         </div>
 
-
         <div class="setting-item">
 
             <strong>Text Size</strong>
 
-            <span>
-                Change the chat text size.
-            </span>
+            <span>Change the chat text size.</span>
 
             <div class="appearance-options">
 
@@ -509,18 +476,13 @@
 
     <div class="account-box">
 
-        <div class="account-logo">
-            🌙
-        </div>
+        <div class="account-logo">🌙</div>
 
-        <h1>
-            Welcome to MoonPlug
-        </h1>
+        <h1>Welcome to MoonPlug</h1>
 
         <p class="account-subtitle">
             Sign in or create your MoonPlug account.
         </p>
-
 
         <div class="account-tabs">
 
@@ -541,7 +503,6 @@
             </button>
 
         </div>
-
 
         <form id="loginForm" class="account-form">
 
@@ -575,7 +536,6 @@
             </button>
 
         </form>
-
 
         <form
             id="signupForm"
@@ -625,7 +585,6 @@
 
         </form>
 
-
         <button
             id="closeAccount"
             class="account-close"
@@ -633,7 +592,6 @@
         >
             Continue as guest
         </button>
-
 
         <p
             id="accountMessage"
@@ -657,17 +615,11 @@
 
     <div class="owner-box">
 
-        <div class="owner-logo">
-            🌙
-        </div>
+        <div class="owner-logo">🌙</div>
 
-        <h2>
-            Owner Access
-        </h2>
+        <h2>Owner Access</h2>
 
-        <p>
-            Enter the owner code.
-        </p>
+        <p>Enter the owner code.</p>
 
         <div class="password-wrapper">
 
@@ -727,9 +679,7 @@
 
         <div>
 
-            <h1>
-                Owner Panel
-            </h1>
+            <h1>Owner Panel</h1>
 
             <span>
                 MoonPlug AI Administration
@@ -745,7 +695,6 @@
         </button>
 
     </div>
-
 
     <div class="owner-content">
 
@@ -773,12 +722,9 @@
 
         </div>
 
-
         <div class="owner-section">
 
-            <h2>
-                App Controls
-            </h2>
+            <h2>App Controls</h2>
 
             <p class="owner-description">
                 Manage MoonPlug from the owner dashboard.
@@ -807,12 +753,9 @@
 
         </div>
 
-
         <div class="owner-section">
 
-            <h2>
-                AI Trainer
-            </h2>
+            <h2>AI Trainer</h2>
 
             <p class="owner-description">
                 Teach MoonPlug new knowledge and manage its learned training.
@@ -838,4 +781,3 @@
 
 </body>
 </html>
-
