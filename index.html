@@ -9,7 +9,7 @@
         content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
 
-    <meta name="theme-color" content="#020308">
+    <meta name="theme-color" content="#0f0f0f">
     <meta name="description" content="MoonPlug AI">
 
     <title>MoonPlug AI</title>
@@ -18,10 +18,6 @@
 </head>
 
 <body>
-
-<!-- =====================================================
-     STAR FIELD
-===================================================== -->
 
 <div id="starField" class="star-field" aria-hidden="true"></div>
 
@@ -44,21 +40,12 @@
         <span class="logo-ai">AI</span>
     </div>
 
+
     <div class="sidebar-buttons">
 
         <button id="newChatButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">➕</span>
             <span class="sidebar-label">New Chat</span>
-        </button>
-
-        <!-- CONVERSATION MODE -->
-        <button
-            id="conversationButton"
-            class="sidebar-button conversation-sidebar-button"
-            type="button"
-        >
-            <span class="sidebar-icon">🎙️</span>
-            <span class="sidebar-label">Conversation</span>
         </button>
 
         <button id="studyButton" class="sidebar-button" type="button">
@@ -89,6 +76,7 @@
         </button>
 
     </div>
+
 
     <div class="sidebar-bottom">
 
@@ -129,7 +117,11 @@
         </header>
 
 
-        <div id="messages" class="messages" aria-live="polite">
+        <div
+            id="messages"
+            class="messages"
+            aria-live="polite"
+        >
 
             <div id="emptyChat" class="empty-chat">
 
@@ -148,36 +140,46 @@
         </div>
 
 
-        <!-- THINKING -->
+        <!-- =================================================
+             THINKING
+        ================================================= -->
 
         <div id="typing" class="typing" aria-live="polite">
 
             <div class="moonplug-animation">
 
-                <div class="animation-moon">
-                    🌙
-                </div>
+                <div class="animation-moon">🌙</div>
 
-                <div class="animation-plug">
-                    🔌
-                </div>
+                <div class="animation-plug">🔌</div>
 
                 <div class="plug-glow"></div>
 
             </div>
 
             <span class="typing-text">
-                MoonPlug is thinking
+                MoonPlug is thinking...
             </span>
 
         </div>
 
 
-        <!-- INPUT -->
+        <!-- =================================================
+             INPUT
+        ================================================= -->
 
         <div class="chat-bottom-area">
 
             <div class="chat-input-area">
+
+                <button
+                    id="conversationButton"
+                    class="conversation-button"
+                    type="button"
+                    aria-label="Open Conversation Mode"
+                    title="Conversation Mode"
+                >
+                    🎙️
+                </button>
 
                 <textarea
                     id="messageInput"
@@ -223,7 +225,7 @@
         id="conversationClose"
         class="conversation-close"
         type="button"
-        aria-label="Close conversation mode"
+        aria-label="Close Conversation Mode"
     >
         ×
     </button>
@@ -237,8 +239,6 @@
     </div>
 
 
-    <!-- BIG MOONPLUG ORB -->
-
     <div
         id="moonOrb"
         class="moon-orb"
@@ -248,8 +248,6 @@
         <div class="orb-ring ring-2"></div>
         <div class="orb-ring ring-3"></div>
         <div class="orb-ring ring-4"></div>
-
-        <div class="orb-glow"></div>
 
         <div class="orb-core"></div>
 
@@ -268,7 +266,7 @@
         id="conversationMic"
         class="conversation-mic"
         type="button"
-        aria-label="Start listening"
+        aria-label="Start microphone"
     >
         🎙️
     </button>
@@ -380,13 +378,9 @@
 
     <div class="account-box">
 
-        <div class="account-logo">
-            🌙
-        </div>
+        <div class="account-logo">🌙</div>
 
-        <h1>
-            Welcome to MoonPlug
-        </h1>
+        <h1>Welcome to MoonPlug</h1>
 
         <p class="account-subtitle">
             Sign in or create your MoonPlug account.
@@ -505,9 +499,11 @@
             Continue as guest
         </button>
 
+
         <p
             id="accountMessage"
             class="account-message"
+            aria-live="polite"
         ></p>
 
     </div>
@@ -527,13 +523,9 @@
 
     <div class="owner-box">
 
-        <div class="owner-logo">
-            🌙
-        </div>
+        <div class="owner-logo">🌙</div>
 
-        <h2>
-            Owner Access
-        </h2>
+        <h2>Owner Access</h2>
 
         <p>
             Enter the owner code.
@@ -568,6 +560,7 @@
         <p
             id="ownerError"
             class="owner-error"
+            aria-live="polite"
         ></p>
 
         <button
@@ -597,9 +590,7 @@
 
         <div>
 
-            <h1>
-                Owner Panel
-            </h1>
+            <h1>Owner Panel</h1>
 
             <span>
                 MoonPlug AI Administration
@@ -622,51 +613,25 @@
         <div class="owner-grid">
 
             <div class="owner-card">
-
-                <strong>
-                    Users
-                </strong>
-
-                <span id="ownerUsers">
-                    0
-                </span>
-
+                <strong>Users</strong>
+                <span id="ownerUsers">0</span>
             </div>
 
             <div class="owner-card">
-
-                <strong>
-                    Chats
-                </strong>
-
-                <span id="ownerChats">
-                    0
-                </span>
-
+                <strong>Chats</strong>
+                <span id="ownerChats">0</span>
             </div>
 
             <div class="owner-card">
-
-                <strong>
-                    Status
-                </strong>
-
+                <strong>Status</strong>
                 <span class="owner-online">
                     Online
                 </span>
-
             </div>
 
             <div class="owner-card">
-
-                <strong>
-                    AI
-                </strong>
-
-                <span>
-                    MoonPlug
-                </span>
-
+                <strong>AI</strong>
+                <span>MoonPlug</span>
             </div>
 
         </div>
@@ -674,9 +639,7 @@
 
         <div class="owner-section">
 
-            <h2>
-                App Controls
-            </h2>
+            <h2>App Controls</h2>
 
             <p class="owner-description">
                 Manage MoonPlug from the owner dashboard.
@@ -708,12 +671,10 @@
 
         <div class="owner-section">
 
-            <h2>
-                AI Trainer
-            </h2>
+            <h2>AI Trainer</h2>
 
             <p class="owner-description">
-                Teach MoonPlug new knowledge and manage its learned training.
+                Teach MoonPlug new knowledge.
             </p>
 
             <button
