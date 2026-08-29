@@ -1,4 +1,3 @@
-
 /* =========================================================
    MOONPLUG AI
    COMPLETE STYLE
@@ -23,7 +22,7 @@ body {
 
 body {
     background: #050505;
-    color: #ffffff;
+    color: #fff;
     overflow: hidden;
 }
 
@@ -42,6 +41,7 @@ body {
 
 .random-star {
     position: absolute;
+
     left: var(--star-x);
     top: var(--star-y);
 
@@ -49,12 +49,13 @@ body {
     height: var(--star-size);
 
     border-radius: 50%;
-    background: #ffffff;
+
+    background: #fff;
 
     opacity: var(--star-opacity);
 
     box-shadow:
-        0 0 var(--star-glow) #ffffff;
+        0 0 var(--star-glow) #fff;
 
     animation:
         starFloat
@@ -65,18 +66,19 @@ body {
 }
 
 @keyframes starFloat {
-
     from {
-        transform: scale(var(--star-scale))
-                   translate(0, 0);
+        transform:
+            scale(var(--star-scale))
+            translate(0, 0);
     }
 
     to {
-        transform: scale(1)
-                   translate(
-                       var(--star-move-x),
-                       var(--star-move-y)
-                   );
+        transform:
+            scale(1)
+            translate(
+                var(--star-move-x),
+                var(--star-move-y)
+            );
     }
 }
 
@@ -95,11 +97,10 @@ body {
 
     padding: 18px 14px;
 
-    background:
-        rgba(8, 8, 8, 0.96);
+    background: rgba(8, 8, 8, .96);
 
     border-right:
-        1px solid rgba(255, 255, 255, 0.08);
+        1px solid rgba(255,255,255,.08);
 
     z-index: 100;
 
@@ -122,7 +123,6 @@ body {
     padding: 0 10px;
 
     cursor: pointer;
-
     user-select: none;
 }
 
@@ -135,15 +135,12 @@ body {
     font-size: 12px;
 }
 
-
 .sidebar-buttons {
     display: flex;
     flex-direction: column;
     gap: 6px;
-
     margin-top: 20px;
 }
-
 
 .sidebar-bottom {
     margin-top: auto;
@@ -154,17 +151,15 @@ body {
     gap: 6px;
 }
 
-
 .sidebar-button {
     width: 100%;
-
     min-height: 48px;
 
     border: 0;
     border-radius: 12px;
 
     background: transparent;
-    color: #eeeeee;
+    color: #eee;
 
     display: flex;
     align-items: center;
@@ -185,7 +180,7 @@ body {
 }
 
 .sidebar-button:hover {
-    background: rgba(255, 255, 255, .08);
+    background: rgba(255,255,255,.08);
 }
 
 .sidebar-button:active {
@@ -199,13 +194,13 @@ body {
     justify-content: center;
 
     font-size: 19px;
+
     flex-shrink: 0;
 }
 
 .sidebar-label {
     white-space: nowrap;
 }
-
 
 .conversation-sidebar-button {
     background:
@@ -215,20 +210,16 @@ body {
             rgba(255,255,255,.025)
         );
 
-    border: 1px solid rgba(255,255,255,.08);
-}
-
-.conversation-sidebar-button:hover {
-    background:
-        rgba(255,255,255,.13);
+    border:
+        1px solid rgba(255,255,255,.08);
 }
 
 .conversation-sidebar-icon {
-    color: white;
+    color: #fff;
+
     text-shadow:
         0 0 8px rgba(255,255,255,.7);
 }
-
 
 .sidebar-divider {
     height: 1px;
@@ -238,9 +229,6 @@ body {
 
     margin: 8px 4px;
 }
-
-
-/* COLLAPSED DESKTOP */
 
 .sidebar.collapsed {
     width: 74px;
@@ -272,6 +260,7 @@ body {
     margin-left: 250px;
 
     width: calc(100% - 250px);
+
     height: 100vh;
 
     z-index: 2;
@@ -290,7 +279,6 @@ body {
     display: flex;
     flex-direction: column;
 }
-
 
 .chat-header {
     height: 72px;
@@ -311,10 +299,12 @@ body {
 
 .online {
     color: #aaa;
+
     font-size: 13px;
 
     display: flex;
     align-items: center;
+
     gap: 7px;
 }
 
@@ -324,10 +314,10 @@ body {
 
     border-radius: 50%;
 
-    background: #ffffff;
+    background: #fff;
 
     box-shadow:
-        0 0 10px #ffffff;
+        0 0 10px #fff;
 }
 
 
@@ -348,7 +338,6 @@ body {
     scrollbar-width: thin;
 }
 
-
 .empty-chat {
     min-height: 100%;
 
@@ -363,28 +352,28 @@ body {
 
 .empty-moon {
     font-size: 55px;
-
     margin-bottom: 12px;
 }
 
 .empty-chat h1 {
     margin: 0;
-
     font-size: 32px;
 }
 
 .empty-chat p {
     margin-top: 10px;
-
     color: #888;
 }
 
-
 .message-bubble {
     width: fit-content;
-    max-width: min(78%, 700px);
 
-    padding: 13px 17px;
+    max-width:
+        min(78%, 700px);
+
+    padding:
+        13px
+        17px;
 
     border-radius: 18px;
 
@@ -395,13 +384,15 @@ body {
     white-space: pre-wrap;
 
     animation:
-        messageAppear .2s ease;
+        messageAppear
+        .2s
+        ease;
 }
 
 .message-bubble.user {
     margin-left: auto;
 
-    background: #ffffff;
+    background: #fff;
     color: #050505;
 
     border-bottom-right-radius: 5px;
@@ -420,7 +411,6 @@ body {
 }
 
 @keyframes messageAppear {
-
     from {
         opacity: 0;
         transform: translateY(6px);
@@ -508,29 +498,32 @@ body {
 }
 
 @keyframes oldMoonFloat {
-
     0%,100% {
-        transform: translateY(0) rotate(0);
+        transform:
+            translateY(0)
+            rotate(0);
     }
 
     50% {
-        transform: translateY(-4px) rotate(-8deg);
+        transform:
+            translateY(-4px)
+            rotate(-8deg);
     }
 }
 
 @keyframes oldPlugFloat {
-
     0%,100% {
-        transform: translateY(0);
+        transform:
+            translateY(0);
     }
 
     50% {
-        transform: translateY(3px);
+        transform:
+            translateY(3px);
     }
 }
 
 @keyframes oldGlow {
-
     from {
         opacity: .3;
         transform: scale(.8);
@@ -631,7 +624,6 @@ body {
 
 #sendButton:disabled {
     opacity: .45;
-    cursor: default;
 }
 
 .input-hint {
@@ -655,8 +647,7 @@ body {
 
     z-index: 500;
 
-    background:
-        #000000;
+    background: #000;
 
     display: none;
 
@@ -679,21 +670,18 @@ body {
 }
 
 @keyframes conversationIn {
-
     from {
         opacity: 0;
-        transform: scale(.97);
     }
 
     to {
         opacity: 1;
-        transform: scale(1);
     }
 }
 
 
 /* =========================================================
-   CONVERSATION TOP
+   TOP
 ========================================================= */
 
 .conversation-top {
@@ -708,6 +696,7 @@ body {
         18px;
 
     display: flex;
+
     align-items: center;
 
     justify-content: space-between;
@@ -717,10 +706,13 @@ body {
     width: 44px;
     height: 44px;
 
-    border: 1px solid rgba(255,255,255,.13);
+    border:
+        1px solid rgba(255,255,255,.13);
+
     border-radius: 50%;
 
-    background: rgba(255,255,255,.05);
+    background:
+        rgba(255,255,255,.05);
 
     color: white;
 
@@ -731,7 +723,6 @@ body {
 
 .conversation-title {
     font-weight: 600;
-
     letter-spacing: .5px;
 }
 
@@ -761,21 +752,25 @@ body {
 
 /* =========================================================
    BLACK HOLE
+   COMPLETELY STATIC
 ========================================================= */
 
 .black-hole-container {
     position: relative;
 
-    width: min(78vw, 430px);
-    height: min(78vw, 430px);
+    width:
+        min(78vw, 430px);
+
+    height:
+        min(78vw, 430px);
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
     margin-top: 5vh;
 }
-
 
 .black-hole {
     position: relative;
@@ -784,20 +779,19 @@ body {
     height: 76%;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    transform: rotate(-14deg);
+    transform: none;
 
-    animation:
-        blackHoleFloat
-        5s
-        ease-in-out
-        infinite;
+    animation: none;
 }
 
 
-/* Multiple disk bands */
+/* =========================================================
+   HOLE RINGS
+========================================================= */
 
 .black-hole-disk {
     position: absolute;
@@ -817,8 +811,7 @@ body {
     border:
         9px solid rgba(255,255,255,.55);
 
-    filter:
-        blur(1px);
+    filter: blur(1px);
 
     animation:
         diskRotate
@@ -826,7 +819,6 @@ body {
         linear
         infinite;
 }
-
 
 .disk-back {
     width: 135%;
@@ -884,7 +876,9 @@ body {
 }
 
 
-/* Event horizon outline */
+/* =========================================================
+   OUTLINE
+========================================================= */
 
 .black-hole-outline {
     position: absolute;
@@ -895,7 +889,7 @@ body {
     border-radius: 50%;
 
     border:
-        3px solid #ffffff;
+        3px solid white;
 
     box-shadow:
         0 0 12px rgba(255,255,255,.35),
@@ -903,15 +897,13 @@ body {
 
     z-index: 8;
 
-    animation:
-        outlinePulse
-        2.8s
-        ease-in-out
-        infinite;
+    animation: none;
 }
 
 
-/* Actual black center */
+/* =========================================================
+   CORE
+========================================================= */
 
 .black-hole-core {
     position: absolute;
@@ -921,29 +913,88 @@ body {
 
     border-radius: 50%;
 
-    background:
-        #000000;
+    background: #000;
 
     border:
-        2px solid #111111;
+        2px solid #111;
 
     z-index: 10;
 
     box-shadow:
         0 0 0 5px #050505,
         0 0 30px rgba(255,255,255,.08),
-        0 0 80px rgba(0,0,0,1);
+        0 0 80px #000;
 
-    animation:
-        corePulse
-        3s
-        ease-in-out
-        infinite;
+    transform: none;
+
+    animation: none;
+
+    overflow: hidden;
 }
 
 
-@keyframes diskRotate {
+/* =========================================================
+   WHITE VOICE WAVE
+========================================================= */
 
+.voice-wave {
+    position: absolute;
+
+    inset: 20% 12%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    opacity: 0;
+
+    transition:
+        opacity .2s ease;
+
+    pointer-events: none;
+}
+
+.voice-wave span {
+    width: 3px;
+
+    height: 45%;
+
+    min-height: 8px;
+
+    max-height: 75%;
+
+    border-radius: 999px;
+
+    background: white;
+
+    opacity: .9;
+
+    transform:
+        scaleY(.12);
+
+    box-shadow:
+        0 0 7px rgba(255,255,255,.6);
+
+    transition:
+        transform .08s linear;
+}
+
+
+/* WAVE ONLY WHILE SPEAKING */
+
+.conversation-mode.talking .voice-wave {
+    opacity: 1;
+}
+
+
+/* =========================================================
+   RING MOTION
+========================================================= */
+
+@keyframes diskRotate {
     from {
         transform:
             translate(-50%, -50%)
@@ -966,118 +1017,31 @@ body {
     }
 }
 
-@keyframes blackHoleFloat {
 
-    0%,100% {
-        transform:
-            rotate(-14deg)
-            translateY(0)
-            scale(1);
-    }
+/* =========================================================
+   CONVERSATION STATES
+   THE HOLE NEVER MOVES
+========================================================= */
 
-    50% {
-        transform:
-            rotate(-11deg)
-            translateY(-8px)
-            scale(1.035);
-    }
-}
-
-@keyframes outlinePulse {
-
-    0%,100% {
-        opacity: .75;
-        box-shadow:
-            0 0 12px rgba(255,255,255,.25),
-            0 0 35px rgba(255,255,255,.08);
-    }
-
-    50% {
-        opacity: 1;
-        box-shadow:
-            0 0 18px rgba(255,255,255,.5),
-            0 0 50px rgba(255,255,255,.15);
-    }
-}
-
-@keyframes corePulse {
-
-    0%,100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(.965);
-    }
-}
-
-
-/* LISTENING */
-
-.conversation-mode.listening .black-hole {
-    animation:
-        blackHoleFloat
-        2.5s
-        ease-in-out
-        infinite;
-}
-
-.conversation-mode.listening .black-hole-outline {
-    box-shadow:
-        0 0 20px rgba(255,255,255,.7),
-        0 0 70px rgba(255,255,255,.2);
-}
-
-
-/* THINKING */
-
-.conversation-mode.thinking .black-hole {
-    animation:
-        thinkingHole
-        1.4s
-        ease-in-out
-        infinite;
-}
-
-@keyframes thinkingHole {
-
-    0%,100% {
-        transform:
-            rotate(-14deg)
-            scale(1);
-    }
-
-    50% {
-        transform:
-            rotate(166deg)
-            scale(1.04);
-    }
-}
-
-
-/* TALKING */
-
+.conversation-mode.listening .black-hole,
+.conversation-mode.thinking .black-hole,
 .conversation-mode.talking .black-hole {
-    animation:
-        talkingHole
-        1s
-        ease-in-out
-        infinite;
+    transform: none;
+    animation: none;
 }
 
-@keyframes talkingHole {
+.conversation-mode.listening .black-hole-core,
+.conversation-mode.thinking .black-hole-core,
+.conversation-mode.talking .black-hole-core {
+    transform: none;
+    animation: none;
+}
 
-    0%,100% {
-        transform:
-            rotate(-14deg)
-            scale(1);
-    }
-
-    50% {
-        transform:
-            rotate(16deg)
-            scale(1.08);
-    }
+.conversation-mode.listening .black-hole-outline,
+.conversation-mode.thinking .black-hole-outline,
+.conversation-mode.talking .black-hole-outline {
+    transform: none;
+    animation: none;
 }
 
 
@@ -1106,7 +1070,8 @@ body {
 
     text-align: center;
 
-    font-size: clamp(18px, 4vw, 25px);
+    font-size:
+        clamp(18px, 4vw, 25px);
 
     line-height: 1.45;
 
@@ -1119,7 +1084,7 @@ body {
 
 
 /* =========================================================
-   CONVERSATION CONTROLS
+   CONTROLS
 ========================================================= */
 
 .conversation-controls {
@@ -1132,7 +1097,6 @@ body {
 
     margin-top: 22px;
 }
-
 
 .conversation-control {
     width: 64px;
@@ -1151,6 +1115,7 @@ body {
     cursor: pointer;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -1169,7 +1134,6 @@ body {
     transform: scale(.92);
 }
 
-
 .mic-control.active {
     background: white;
     color: black;
@@ -1179,7 +1143,9 @@ body {
 }
 
 
-/* CUSTOM MIC */
+/* =========================================================
+   MIC
+========================================================= */
 
 .mic-icon {
     position: relative;
@@ -1240,7 +1206,9 @@ body {
 }
 
 
-/* CUSTOM SPEAKER */
+/* =========================================================
+   SPEAKER
+========================================================= */
 
 .speaker-icon {
     position: relative;
@@ -1274,11 +1242,15 @@ body {
     width: 0;
     height: 0;
 
-    border-top: 12px solid transparent;
-    border-bottom: 12px solid transparent;
-    border-right: 16px solid currentColor;
-}
+    border-top:
+        12px solid transparent;
 
+    border-bottom:
+        12px solid transparent;
+
+    border-right:
+        16px solid currentColor;
+}
 
 .speaker-wave {
     position: absolute;
@@ -1310,7 +1282,6 @@ body {
     height: 24px;
 }
 
-
 .conversation-hint {
     margin-top: 15px;
 
@@ -1323,11 +1294,12 @@ body {
 
 
 /* =========================================================
-   CONVERSATION HISTORY
+   HISTORY
 ========================================================= */
 
 .conversation-history {
     position: fixed;
+
     inset: 0;
 
     z-index: 600;
@@ -1351,7 +1323,8 @@ body {
 }
 
 .conversation-history-box {
-    width: min(100%, 430px);
+    width:
+        min(100%, 430px);
 
     padding: 24px;
 
@@ -1360,8 +1333,7 @@ body {
 
     border-radius: 22px;
 
-    background:
-        #0b0b0b;
+    background: #0b0b0b;
 
     box-shadow:
         0 20px 80px rgba(0,0,0,.7);
@@ -1369,7 +1341,9 @@ body {
 
 .conversation-history-header {
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 }
 
@@ -1391,7 +1365,6 @@ body {
 
 .conversation-history-box > p {
     color: #888;
-
     line-height: 1.5;
 }
 
@@ -1417,6 +1390,7 @@ body {
     cursor: pointer;
 
     display: flex;
+
     flex-direction: column;
 
     gap: 5px;
@@ -1429,7 +1403,6 @@ body {
 
 .history-choice span {
     color: #888;
-
     font-size: 12px;
 }
 
@@ -1447,6 +1420,7 @@ body {
 .owner-overlay,
 .owner-panel {
     position: fixed;
+
     inset: 0;
 
     z-index: 300;
@@ -1468,7 +1442,8 @@ body {
 .settings-box,
 .account-box,
 .owner-box {
-    width: min(100%, 480px);
+    width:
+        min(100%, 480px);
 
     background: #0c0c0c;
 
@@ -1485,7 +1460,9 @@ body {
 
 .settings-header {
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
 }
 
@@ -1495,9 +1472,13 @@ body {
 
 .close-settings {
     border: 0;
+
     background: transparent;
+
     color: white;
+
     font-size: 20px;
+
     cursor: pointer;
 }
 
@@ -1505,6 +1486,7 @@ body {
     margin-top: 25px;
 
     display: flex;
+
     flex-direction: column;
 
     gap: 7px;
@@ -1524,11 +1506,13 @@ body {
 .appearance-options button {
     padding: 9px 13px;
 
-    border: 1px solid rgba(255,255,255,.1);
+    border:
+        1px solid rgba(255,255,255,.1);
 
     border-radius: 10px;
 
-    background: rgba(255,255,255,.06);
+    background:
+        rgba(255,255,255,.06);
 
     color: white;
 
@@ -1541,7 +1525,9 @@ body {
 }
 
 
-/* ACCOUNT */
+/* =========================================================
+   ACCOUNT
+========================================================= */
 
 .account-logo,
 .owner-logo {
@@ -1577,7 +1563,8 @@ body {
 
     cursor: pointer;
 
-    border-bottom: 1px solid #222;
+    border-bottom:
+        1px solid #222;
 }
 
 .account-tab.active {
@@ -1587,6 +1574,7 @@ body {
 
 .account-form {
     display: flex;
+
     flex-direction: column;
 
     gap: 8px;
@@ -1600,7 +1588,8 @@ body {
 
     border-radius: 10px;
 
-    border: 1px solid #252525;
+    border:
+        1px solid #252525;
 
     background: #080808;
 
@@ -1649,7 +1638,9 @@ body {
 }
 
 
-/* OWNER */
+/* =========================================================
+   OWNER
+========================================================= */
 
 .owner-panel {
     z-index: 700;
@@ -1668,10 +1659,13 @@ body {
     padding: 25px;
 
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
 
-    border-bottom: 1px solid #181818;
+    border-bottom:
+        1px solid #181818;
 }
 
 .owner-header h1 {
@@ -1687,7 +1681,8 @@ body {
 .owner-section > button {
     padding: 11px 15px;
 
-    border: 1px solid #222;
+    border:
+        1px solid #222;
 
     border-radius: 10px;
 
@@ -1699,7 +1694,8 @@ body {
 }
 
 .owner-content {
-    width: min(1100px, 100%);
+    width:
+        min(1100px, 100%);
 
     margin: auto;
 
@@ -1718,13 +1714,15 @@ body {
 .owner-card {
     padding: 20px;
 
-    border: 1px solid #191919;
+    border:
+        1px solid #191919;
 
     border-radius: 15px;
 
     background: #0b0b0b;
 
     display: flex;
+
     flex-direction: column;
 
     gap: 8px;
@@ -1743,7 +1741,8 @@ body {
 
     padding: 22px;
 
-    border: 1px solid #191919;
+    border:
+        1px solid #191919;
 
     border-radius: 18px;
 
@@ -1756,13 +1755,15 @@ body {
 
 .owner-actions {
     display: flex;
+
     gap: 10px;
+
     flex-wrap: wrap;
 }
 
 
 /* =========================================================
-   TEXT SIZES
+   TEXT SIZE
 ========================================================= */
 
 .text-small .message-bubble {
@@ -1779,57 +1780,7 @@ body {
 
 
 /* =========================================================
-   LIGHT THEME
-========================================================= */
-
-body.light-theme {
-    background: #f5f5f5;
-    color: #111;
-}
-
-body.light-theme .sidebar {
-    background: #ffffff;
-    border-right-color: #ddd;
-}
-
-body.light-theme .sidebar-button {
-    color: #111;
-}
-
-body.light-theme .sidebar-button:hover {
-    background: #eee;
-}
-
-body.light-theme .chat-bottom-area {
-    background:
-        linear-gradient(
-            transparent,
-            #f5f5f5 25%
-        );
-}
-
-body.light-theme #messageInput {
-    color: #111;
-}
-
-body.light-theme .chat-input-area {
-    background: white;
-    border-color: #ddd;
-}
-
-body.light-theme .message-bubble.ai {
-    background: #e9e9e9;
-    border-color: #ddd;
-}
-
-body.light-theme .message-bubble.user {
-    background: #111;
-    color: white;
-}
-
-
-/* =========================================================
-   MOBILE + IPAD
+   MOBILE / IPAD / IPHONE
 ========================================================= */
 
 @media (max-width: 1200px) {
@@ -1859,8 +1810,6 @@ body.light-theme .message-bubble.user {
     }
 }
 
-
-/* iPad and iPhone */
 
 @media (max-width: 700px) {
 
@@ -1926,8 +1875,11 @@ body.light-theme .message-bubble.user {
     }
 
     .black-hole-container {
-        width: min(82vw, 380px);
-        height: min(82vw, 380px);
+        width:
+            min(82vw, 380px);
+
+        height:
+            min(82vw, 380px);
 
         margin-top: 3vh;
     }
@@ -1994,4 +1946,3 @@ body.light-theme .message-bubble.user {
         padding: 15px;
     }
 }
-
