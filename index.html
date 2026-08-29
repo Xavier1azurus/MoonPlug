@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -18,7 +19,12 @@
 
 <body>
 
+<!-- =====================================================
+     STAR FIELD
+===================================================== -->
+
 <div id="starField" class="star-field" aria-hidden="true"></div>
+
 
 <!-- =====================================================
      SIDEBAR
@@ -43,6 +49,16 @@
         <button id="newChatButton" class="sidebar-button" type="button">
             <span class="sidebar-icon">➕</span>
             <span class="sidebar-label">New Chat</span>
+        </button>
+
+        <!-- CONVERSATION MODE -->
+        <button
+            id="conversationButton"
+            class="sidebar-button conversation-sidebar-button"
+            type="button"
+        >
+            <span class="sidebar-icon">🎙️</span>
+            <span class="sidebar-label">Conversation</span>
         </button>
 
         <button id="studyButton" class="sidebar-button" type="button">
@@ -119,17 +135,45 @@
 
                 <div class="empty-moon">🌙</div>
 
-                <h1>What can I help with?</h1>
+                <h1>
+                    What can I help with?
+                </h1>
 
-                <p>Ask MoonPlug anything.</p>
+                <p>
+                    Ask MoonPlug anything.
+                </p>
 
             </div>
 
         </div>
 
 
-        <div id="typing" class="typing" aria-live="polite"></div>
+        <!-- THINKING -->
 
+        <div id="typing" class="typing" aria-live="polite">
+
+            <div class="moonplug-animation">
+
+                <div class="animation-moon">
+                    🌙
+                </div>
+
+                <div class="animation-plug">
+                    🔌
+                </div>
+
+                <div class="plug-glow"></div>
+
+            </div>
+
+            <span class="typing-text">
+                MoonPlug is thinking
+            </span>
+
+        </div>
+
+
+        <!-- INPUT -->
 
         <div class="chat-bottom-area">
 
@@ -166,10 +210,81 @@
 
 
 <!-- =====================================================
+     CONVERSATION MODE
+===================================================== -->
+
+<div
+    id="conversationMode"
+    class="conversation-mode"
+    aria-hidden="true"
+>
+
+    <button
+        id="conversationClose"
+        class="conversation-close"
+        type="button"
+        aria-label="Close conversation mode"
+    >
+        ×
+    </button>
+
+
+    <div
+        id="conversationStatus"
+        class="conversation-status"
+    >
+        Ready
+    </div>
+
+
+    <!-- BIG MOONPLUG ORB -->
+
+    <div
+        id="moonOrb"
+        class="moon-orb"
+    >
+
+        <div class="orb-ring ring-1"></div>
+        <div class="orb-ring ring-2"></div>
+        <div class="orb-ring ring-3"></div>
+        <div class="orb-ring ring-4"></div>
+
+        <div class="orb-glow"></div>
+
+        <div class="orb-core"></div>
+
+    </div>
+
+
+    <div
+        id="conversationText"
+        class="conversation-text"
+    >
+        Tap the microphone to talk
+    </div>
+
+
+    <button
+        id="conversationMic"
+        class="conversation-mic"
+        type="button"
+        aria-label="Start listening"
+    >
+        🎙️
+    </button>
+
+</div>
+
+
+<!-- =====================================================
      SETTINGS
 ===================================================== -->
 
-<div id="settingsPanel" class="settings-panel" aria-hidden="true">
+<div
+    id="settingsPanel"
+    class="settings-panel"
+    aria-hidden="true"
+>
 
     <div class="settings-box">
 
@@ -187,15 +302,21 @@
 
         </div>
 
+
         <div class="setting-item">
 
             <strong>Appearance</strong>
 
-            <span>Choose how MoonPlug looks.</span>
+            <span>
+                Choose how MoonPlug looks.
+            </span>
 
             <div class="appearance-options">
 
-                <button id="themeButton" type="button">
+                <button
+                    id="themeButton"
+                    type="button"
+                >
                     Dark
                 </button>
 
@@ -203,23 +324,38 @@
 
         </div>
 
+
         <div class="setting-item">
 
             <strong>Text Size</strong>
 
-            <span>Change the chat text size.</span>
+            <span>
+                Change the chat text size.
+            </span>
 
             <div class="appearance-options">
 
-                <button class="size-button" data-size="small" type="button">
+                <button
+                    class="size-button"
+                    data-size="small"
+                    type="button"
+                >
                     Small
                 </button>
 
-                <button class="size-button active" data-size="medium" type="button">
+                <button
+                    class="size-button active"
+                    data-size="medium"
+                    type="button"
+                >
                     Medium
                 </button>
 
-                <button class="size-button" data-size="large" type="button">
+                <button
+                    class="size-button"
+                    data-size="large"
+                    type="button"
+                >
                     Large
                 </button>
 
@@ -236,33 +372,53 @@
      ACCOUNT
 ===================================================== -->
 
-<div id="accountScreen" class="account-screen" aria-hidden="true">
+<div
+    id="accountScreen"
+    class="account-screen"
+    aria-hidden="true"
+>
 
     <div class="account-box">
 
-        <div class="account-logo">🌙</div>
+        <div class="account-logo">
+            🌙
+        </div>
 
-        <h1>Welcome to MoonPlug</h1>
+        <h1>
+            Welcome to MoonPlug
+        </h1>
 
         <p class="account-subtitle">
             Sign in or create your MoonPlug account.
         </p>
 
+
         <div class="account-tabs">
 
-            <button id="loginTab" class="account-tab active" type="button">
+            <button
+                id="loginTab"
+                class="account-tab active"
+                type="button"
+            >
                 Log In
             </button>
 
-            <button id="signupTab" class="account-tab" type="button">
+            <button
+                id="signupTab"
+                class="account-tab"
+                type="button"
+            >
                 Sign Up
             </button>
 
         </div>
 
+
         <form id="loginForm" class="account-form">
 
-            <label for="loginEmail">Email address</label>
+            <label for="loginEmail">
+                Email address
+            </label>
 
             <input
                 id="loginEmail"
@@ -271,7 +427,9 @@
                 autocomplete="email"
             >
 
-            <label for="loginPassword">Password</label>
+            <label for="loginPassword">
+                Password
+            </label>
 
             <input
                 id="loginPassword"
@@ -280,15 +438,25 @@
                 autocomplete="current-password"
             >
 
-            <button type="submit" class="account-submit">
+            <button
+                type="submit"
+                class="account-submit"
+            >
                 Log In
             </button>
 
         </form>
 
-        <form id="signupForm" class="account-form" hidden>
 
-            <label for="signupEmail">Email address</label>
+        <form
+            id="signupForm"
+            class="account-form"
+            hidden
+        >
+
+            <label for="signupEmail">
+                Email address
+            </label>
 
             <input
                 id="signupEmail"
@@ -297,7 +465,9 @@
                 autocomplete="email"
             >
 
-            <label for="signupPassword">Password</label>
+            <label for="signupPassword">
+                Password
+            </label>
 
             <input
                 id="signupPassword"
@@ -306,7 +476,9 @@
                 autocomplete="new-password"
             >
 
-            <label for="signupConfirm">Confirm password</label>
+            <label for="signupConfirm">
+                Confirm password
+            </label>
 
             <input
                 id="signupConfirm"
@@ -315,17 +487,28 @@
                 autocomplete="new-password"
             >
 
-            <button type="submit" class="account-submit">
+            <button
+                type="submit"
+                class="account-submit"
+            >
                 Create Account
             </button>
 
         </form>
 
-        <button id="closeAccount" class="account-close" type="button">
+
+        <button
+            id="closeAccount"
+            class="account-close"
+            type="button"
+        >
             Continue as guest
         </button>
 
-        <p id="accountMessage" class="account-message"></p>
+        <p
+            id="accountMessage"
+            class="account-message"
+        ></p>
 
     </div>
 
@@ -336,15 +519,25 @@
      HIDDEN OWNER LOGIN
 ===================================================== -->
 
-<div id="ownerLogin" class="owner-overlay" aria-hidden="true">
+<div
+    id="ownerLogin"
+    class="owner-overlay"
+    aria-hidden="true"
+>
 
     <div class="owner-box">
 
-        <div class="owner-logo">🌙</div>
+        <div class="owner-logo">
+            🌙
+        </div>
 
-        <h2>Owner Access</h2>
+        <h2>
+            Owner Access
+        </h2>
 
-        <p>Enter the owner code.</p>
+        <p>
+            Enter the owner code.
+        </p>
 
         <div class="password-wrapper">
 
@@ -365,13 +558,23 @@
 
         </div>
 
-        <button id="ownerLoginButton" type="button">
+        <button
+            id="ownerLoginButton"
+            type="button"
+        >
             Enter
         </button>
 
-        <p id="ownerError" class="owner-error"></p>
+        <p
+            id="ownerError"
+            class="owner-error"
+        ></p>
 
-        <button id="ownerCancel" class="owner-cancel" type="button">
+        <button
+            id="ownerCancel"
+            class="owner-cancel"
+            type="button"
+        >
             Cancel
         </button>
 
@@ -384,50 +587,96 @@
      OWNER PANEL
 ===================================================== -->
 
-<div id="ownerPanel" class="owner-panel" aria-hidden="true">
+<div
+    id="ownerPanel"
+    class="owner-panel"
+    aria-hidden="true"
+>
 
     <div class="owner-header">
 
         <div>
-            <h1>Owner Panel</h1>
-            <span>MoonPlug AI Administration</span>
+
+            <h1>
+                Owner Panel
+            </h1>
+
+            <span>
+                MoonPlug AI Administration
+            </span>
+
         </div>
 
-        <button id="ownerLogout" type="button">
+        <button
+            id="ownerLogout"
+            type="button"
+        >
             Logout
         </button>
 
     </div>
+
 
     <div class="owner-content">
 
         <div class="owner-grid">
 
             <div class="owner-card">
-                <strong>Users</strong>
-                <span id="ownerUsers">0</span>
+
+                <strong>
+                    Users
+                </strong>
+
+                <span id="ownerUsers">
+                    0
+                </span>
+
             </div>
 
             <div class="owner-card">
-                <strong>Chats</strong>
-                <span id="ownerChats">0</span>
+
+                <strong>
+                    Chats
+                </strong>
+
+                <span id="ownerChats">
+                    0
+                </span>
+
             </div>
 
             <div class="owner-card">
-                <strong>Status</strong>
-                <span class="owner-online">Online</span>
+
+                <strong>
+                    Status
+                </strong>
+
+                <span class="owner-online">
+                    Online
+                </span>
+
             </div>
 
             <div class="owner-card">
-                <strong>AI</strong>
-                <span>MoonPlug</span>
+
+                <strong>
+                    AI
+                </strong>
+
+                <span>
+                    MoonPlug
+                </span>
+
             </div>
 
         </div>
 
+
         <div class="owner-section">
 
-            <h2>App Controls</h2>
+            <h2>
+                App Controls
+            </h2>
 
             <p class="owner-description">
                 Manage MoonPlug from the owner dashboard.
@@ -449,19 +698,28 @@
 
             </div>
 
-            <p id="ownerActionMessage" class="owner-action-message"></p>
+            <p
+                id="ownerActionMessage"
+                class="owner-action-message"
+            ></p>
 
         </div>
 
+
         <div class="owner-section">
 
-            <h2>AI Trainer</h2>
+            <h2>
+                AI Trainer
+            </h2>
 
             <p class="owner-description">
                 Teach MoonPlug new knowledge and manage its learned training.
             </p>
 
-            <button id="trainerButton" type="button">
+            <button
+                id="trainerButton"
+                type="button"
+            >
                 Open Trainer
             </button>
 
@@ -470,65 +728,6 @@
         </div>
 
     </div>
-
-</div>
-
-
-<!-- =====================================================
-     MOBILE CONVERSATION MODE
-===================================================== -->
-
-<div
-    id="conversationMode"
-    class="conversation-mode"
-    aria-hidden="true"
->
-
-    <button
-        id="conversationClose"
-        class="conversation-close"
-        type="button"
-        aria-label="Close conversation mode"
-    >
-        ×
-    </button>
-
-    <div
-        id="conversationStatus"
-        class="conversation-status"
-    >
-        Listening...
-    </div>
-
-
-    <div id="moonOrb" class="moon-orb">
-
-        <div class="orb-ring ring-1"></div>
-        <div class="orb-ring ring-2"></div>
-        <div class="orb-ring ring-3"></div>
-        <div class="orb-ring ring-4"></div>
-
-        <div class="orb-core"></div>
-
-    </div>
-
-
-    <div
-        id="conversationText"
-        class="conversation-text"
-    >
-        Talk to MoonPlug
-    </div>
-
-
-    <button
-        id="conversationMic"
-        class="conversation-mic"
-        type="button"
-        aria-label="Toggle conversation listening"
-    >
-        🎙
-    </button>
 
 </div>
 
