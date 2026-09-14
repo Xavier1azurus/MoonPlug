@@ -1,56 +1,134 @@
-"use strict";
-
 /* =========================================================
    MOONPLUG AI
-   COMPLETE FRONTEND JS
+   FINAL FRONTEND
 ========================================================= */
 
-const API_BASE = "https://moonplug.onrender.com";
+"use strict";
 
-let recognition = null;
-let recognitionSupported = false;
 
-let listening = false;
-let speaking = false;
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const API_BASE =
+    "https://moonplug.onrender.com";
+
+
+const STORAGE_KEYS = {
+
+    theme: "moonplugTheme",
+
+    textSize: "moonplugTextSize",
+
+    history: "moonplugChatHistory",
+
+    voice: "moonplugVoice"
+
+};
+
+
+/* =========================================================
+   DOM HELPER
+========================================================= */
+
+const $ = id =>
+    document.getElementById(id);
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentChat = [];
+
+let isSending = false;
+
+let animationRunning = false;
+
 let thinking = false;
 
-let speechAnimationFrame = null;
+let listening = false;
+
+let speaking = false;
+
+let speechRecognition = null;
+
 let speechVoices = [];
 
-let selectedVoiceName =
-    localStorage.getItem("moonplugVoice") || "";
+let selectedVoiceName = "";
+
+let voiceReady = false;
 
 let conversationRequestId = 0;
 
-const $ = id => document.getElementById(id);
+let conversationPermissionBlocked = false;
 
 
 /* =========================================================
    STARTUP
 ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    listening = false;
-    speaking = false;
-    thinking = false;
+        createStars();
 
-    hideTyping();
+        setupSidebar();
 
-    createStars();
-    setupSidebar();
-    setupChat();
-    setupConversation();
-    setupSettings();
-    setupAccount();
-    setupSpeechRecognition();
-    setupVoiceLoading();
+        setupChat();
 
-    loadTextSize();
-    loadSpeechVoices();
+        setupConversation();
 
-    checkBackendHealth();
-});
+        setupSettings();
+
+        setupAccount();
+
+        setupSpeechRecognition();
+
+        setupVoiceLoading();
+
+        setupTestVoice();
+
+        loadTextSize();
+
+        loadSpeechVoices();
+
+        checkBackendHealth();
+
+        const messageInput =
+            $("messageInput");
+
+        if (messageInput) {
+
+            messageInput.addEventListener(
+                "input",
+                autoResizeMessageInput
+            );
+
+            messageInput.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key === "Enter" &&
+                        !event.shiftKey &&
+                        !event.isComposing
+                    ) {
+
+                        event.preventDefault();
+
+                        $("sendButton")?.click();
+                    }
+
+                }
+            );
+
+            autoResizeMessageInput();
+        }
+
+    }
+);
 
 
 /* =========================================================
@@ -59,21 +137,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function createStars() {
 
-    const field = $("starField");
+    const field =
+        $("starField");
 
     if (!field) return;
 
     field.innerHTML = "";
 
-    const amount =
-        window.innerWidth <= 600 ? 55 : 95;
+    const width =
+        window.innerWidth;
 
-    for (let i = 0; i < amount; i++) {
+    let count = 320;
+
+    if (width <= 600) {
+
+        count = 170;
+
+    } else if (width <= 1200) {
+
+        count = 240;
+
+    }
+
+    for (
+        let i = 0;
+        i < count;
+        i++
+    ) {
 
         const star =
-            document.createElement("div");
+            document.createElement("span");
 
-        star.className = "random-star";
+        star.className =
+            "random-star";
 
         star.style.setProperty(
             "--star-x",
@@ -85,48 +181,52 @@ function createStars() {
             `${Math.random() * 100}%`
         );
 
+        const size =
+            Math.random() * 1.7 + .5;
+
         star.style.setProperty(
             "--star-size",
-            `${Math.random() * 2 + .5}px`
+            `${size}px`
         );
 
         star.style.setProperty(
             "--star-opacity",
-            `${Math.random() * .6 + .2}`
+            `${Math.random() * .65 + .2}`
         );
 
         star.style.setProperty(
             "--star-glow",
-            `${Math.random() * 5 + 2}px`
+            `${Math.random() * 5 + 1}px`
         );
 
         star.style.setProperty(
             "--star-duration",
-            `${Math.random() * 5 + 3}s`
+            `${Math.random() * 4 + 3}s`
         );
 
         star.style.setProperty(
             "--star-delay",
-            `${Math.random() * -8}s`
+            `${Math.random() * 4}s`
         );
 
         star.style.setProperty(
             "--star-scale",
-            `${Math.random() * .6 + .5}`
+            `${Math.random() * .5 + .7}`
         );
 
         star.style.setProperty(
             "--star-move-x",
-            `${Math.random() * 10 - 5}px`
+            `${Math.random() * 8 - 4}px`
         );
 
         star.style.setProperty(
             "--star-move-y",
-            `${Math.random() * 10 - 5}px`
+            `${Math.random() * 8 - 4}px`
         );
 
         field.appendChild(star);
     }
+
 }
 
 
@@ -136,192 +236,167 @@ function createStars() {
 
 function setupSidebar() {
 
-    const sidebar = $("sidebar");
-    const logo = $("sidebarLogo");
+    const sidebar =
+        $("sidebar");
 
-    if (logo && sidebar) {
+    const logo =
+        $("sidebarLogo");
 
-        logo.addEventListener("click", () => {
+    if (!sidebar || !logo) return;
 
-            if (window.innerWidth <= 900) {
 
-                sidebar.classList.toggle("expanded");
+    logo.addEventListener(
+        "click",
+        () => {
+
+            if (
+                window.innerWidth <= 900
+            ) {
+
+                sidebar.classList.toggle(
+                    "expanded"
+                );
 
             } else {
 
-                sidebar.classList.toggle("collapsed");
+                sidebar.classList.toggle(
+                    "collapsed"
+                );
+
             }
 
-        });
-    }
+        }
+    );
 
 
-    const conversation =
-        $("conversationButton");
-
-    if (conversation) {
-
-        conversation.addEventListener(
-            "click",
-            openConversation
+    const buttons =
+        document.querySelectorAll(
+            ".sidebar-button"
         );
-    }
+
+    buttons.forEach(button => {
+
+        button.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    window.innerWidth <= 900 &&
+                    !sidebar.classList.contains(
+                        "expanded"
+                    )
+                ) {
+
+                    sidebar.classList.add(
+                        "expanded"
+                    );
+
+                    event.stopPropagation();
+
+                }
+
+            },
+            true
+        );
+
+    });
 
 
-    const newChat =
-        $("newChatButton");
-
-    if (newChat) {
-
-        newChat.addEventListener(
+    $("newChatButton")
+        ?.addEventListener(
             "click",
             startNewChat
         );
-    }
 
+    $("conversationButton")
+        ?.addEventListener(
+            "click",
+            openConversation
+        );
 
-    const settings =
-        $("settingsButton");
-
-    if (settings) {
-
-        settings.addEventListener(
+    $("settingsButton")
+        ?.addEventListener(
             "click",
             openSettings
         );
-    }
 
-
-    const account =
-        $("accountButton");
-
-    if (account) {
-
-        account.addEventListener(
+    $("accountButton")
+        ?.addEventListener(
             "click",
             openAccount
         );
-    }
 
-
-    const history =
-        $("historyButton");
-
-    if (history) {
-
-        history.addEventListener(
-            "click",
-            () => {
-
-                addMessage(
-                    "Chat history is coming soon.",
-                    "ai"
-                );
-            }
-        );
-    }
 }
 
 
 /* =========================================================
-   NORMAL CHAT
+   CHAT INPUT
 ========================================================= */
 
 function setupChat() {
 
-    const input = $("messageInput");
-    const button = $("sendButton");
+    $("sendButton")
+        ?.addEventListener(
+            "click",
+            sendMessage
+        );
 
-    if (!input || !button) return;
+}
 
-    button.addEventListener(
-        "click",
-        sendMessage
-    );
 
-    input.addEventListener(
-        "keydown",
-        event => {
+function autoResizeMessageInput() {
 
-            if (
-                event.key === "Enter" &&
-                !event.shiftKey
-            ) {
+    const input =
+        $("messageInput");
 
-                event.preventDefault();
-                sendMessage();
-            }
-        }
-    );
+    if (!input) return;
 
-    input.addEventListener(
-        "input",
-        () => {
+    input.style.height =
+        "auto";
 
-            input.style.height = "auto";
+    const maxHeight = 180;
 
-            input.style.height =
-                Math.min(
-                    input.scrollHeight,
-                    180
-                ) + "px";
-        }
-    );
+    input.style.height =
+        `${Math.min(
+            input.scrollHeight,
+            maxHeight
+        )}px`;
 }
 
 
 /* =========================================================
-   SEND NORMAL CHAT
+   SEND MESSAGE
 ========================================================= */
 
 async function sendMessage() {
 
-    const input = $("messageInput");
-    const button = $("sendButton");
+    if (isSending) return;
 
-    if (!input || !button) return;
+    const input =
+        $("messageInput");
 
-    const message =
+    if (!input) return;
+
+    const text =
         input.value.trim();
 
-    if (!message) {
-
-        thinking = false;
-        hideTyping();
-
-        return;
-    }
+    if (!text) return;
 
 
-    /*
-     * Built-in answers work even if the
-     * backend doesn't know the answer.
-     */
-
-    const localAnswer =
-        getMoonPlugIdentityAnswer(message);
-
-    addMessage(message, "user");
+    addMessage(
+        text,
+        "user"
+    );
 
     input.value = "";
-    input.style.height = "auto";
 
-    if (localAnswer) {
+    autoResizeMessageInput();
 
-        addMessage(
-            localAnswer,
-            "ai"
-        );
+    showTyping(true);
 
-        return;
-    }
+    isSending = true;
 
-
-    thinking = true;
-
-    button.disabled = true;
-
-    showTyping();
+    $("sendButton").disabled = true;
 
 
     try {
@@ -338,190 +413,224 @@ async function sendMessage() {
                     },
 
                     body: JSON.stringify({
-                        message
+                        message: text
                     })
                 }
             );
 
 
-        const data =
-            await response
-                .json()
-                .catch(() => ({}));
+        let data;
+
+        try {
+
+            data =
+                await response.json();
+
+        } catch {
+
+            data = {
+                success: false,
+                error:
+                    "Server returned an invalid response."
+            };
+
+        }
 
 
         if (!response.ok) {
 
             throw new Error(
                 data.error ||
-                "Chat request failed."
+                data.message ||
+                `Server error ${response.status}`
             );
+
         }
 
 
-        const reply =
+        const answer =
             data.response ||
             data.message ||
-            data.answer ||
-            "I received your message.";
+            data.answer;
+
+
+        if (!answer) {
+
+            throw new Error(
+                "MoonPlug returned an empty response."
+            );
+
+        }
 
 
         addMessage(
-            String(reply),
+            answer,
             "ai"
         );
 
+
+        saveCurrentChat();
 
     } catch (error) {
 
         console.error(
-            "MoonPlug chat:",
+            "MoonPlug chat error:",
             error
         );
 
+
         addMessage(
-            "I couldn't connect to MoonPlug right now.",
+            `Sorry, I couldn't connect to MoonPlug right now.\n\n${error.message}`,
             "ai"
         );
 
-
     } finally {
 
-        thinking = false;
+        showTyping(false);
 
-        hideTyping();
+        isSending = false;
 
-        button.disabled = false;
+        $("sendButton").disabled = false;
 
         input.focus();
+
     }
+
 }
 
 
 /* =========================================================
-   MOONPLUG IDENTITY ANSWERS
+   IDENTITY ANSWERS
 ========================================================= */
 
-function getMoonPlugIdentityAnswer(message) {
+function getIdentityAnswer(text) {
 
-    const text =
-        message
+    const value =
+        String(text || "")
             .toLowerCase()
-            .replace(/[?!.,]/g, "")
             .trim();
 
 
-    const whoMadePatterns = [
-        "who made you",
-        "who created you",
-        "who built you",
-        "who developed you",
-        "who is your creator",
-        "who created moonplug",
-        "who made moonplug"
-    ];
-
-
-    const madeWhenPatterns = [
-        "when were you made",
-        "when was moonplug made",
-        "when were you created",
-        "when was moonplug created",
-        "when were you built",
-        "when was moonplug built"
-    ];
-
-
     if (
-        whoMadePatterns.some(
-            pattern =>
-                text.includes(pattern)
-        )
+        value.includes("who made you") ||
+        value.includes("who created you") ||
+        value.includes("who built you")
     ) {
 
         return (
             "I was made by Xavier as part " +
             "of the MoonPlug AI project."
         );
+
     }
 
 
     if (
-        madeWhenPatterns.some(
-            pattern =>
-                text.includes(pattern)
-        )
+        value.includes("when were you made") ||
+        value.includes("when were you created") ||
+        value.includes("when was moonplug made")
     ) {
 
         return (
             "MoonPlug was created in 2026 " +
             "as an AI project."
         );
+
     }
 
 
     return null;
+
 }
 
 
 /* =========================================================
-   MESSAGES
+   ADD MESSAGE
 ========================================================= */
 
-function addMessage(text, sender) {
+function addMessage(
+    text,
+    type
+) {
 
-    const messages = $("messages");
-    const empty = $("emptyChat");
+    const messages =
+        $("messages");
 
     if (!messages) return;
 
+
+    const empty =
+        $("emptyChat");
+
     if (empty) {
+
         empty.remove();
+
     }
 
-    const bubble =
+
+    const row =
         document.createElement("div");
 
-    bubble.className =
-        `message-bubble ${sender}`;
-
-    bubble.textContent =
-        String(text);
+    row.className =
+        `message-row ${type}`;
 
 
-    messages.appendChild(
-        bubble
-    );
+    const message =
+        document.createElement("div");
+
+    message.className =
+        `message ${type}`;
+
+
+    message.textContent =
+        String(text || "");
+
+
+    row.appendChild(message);
+
+    messages.appendChild(row);
 
 
     messages.scrollTop =
         messages.scrollHeight;
+
+
+    currentChat.push({
+
+        role:
+            type === "user"
+                ? "user"
+                : "assistant",
+
+        content:
+            String(text || ""),
+
+        timestamp:
+            Date.now()
+
+    });
+
+
+    return message;
+
 }
 
 
 /* =========================================================
-   THINKING
+   TYPING
 ========================================================= */
 
-function showTyping() {
+function showTyping(show) {
 
-    const typing = $("typing");
-
-    if (!typing) return;
-
-    typing.hidden = false;
-    typing.style.display = "flex";
-}
-
-
-function hideTyping() {
-
-    const typing = $("typing");
+    const typing =
+        $("typing");
 
     if (!typing) return;
 
-    typing.hidden = true;
-    typing.style.display = "none";
+    typing.hidden =
+        !show;
+
 }
 
 
@@ -531,64 +640,99 @@ function hideTyping() {
 
 function startNewChat() {
 
-    stopListening();
-    stopSpeaking();
+    currentChat = [];
 
-    thinking = false;
-
-    hideTyping();
-
-    const messages = $("messages");
+    const messages =
+        $("messages");
 
     if (!messages) return;
 
-    messages.innerHTML = `
-        <div id="emptyChat" class="empty-chat">
 
-            <div class="home-orb">
+    messages.innerHTML = `
+
+        <div id="emptyChat"
+             class="empty-chat">
+
+            <div
+                class="home-orb"
+                aria-hidden="true"
+            >
                 <span></span>
             </div>
 
-            <h1>What can I help with?</h1>
+            <h1>
+                What can I help with?
+            </h1>
 
-            <p>Ask MoonPlug anything.</p>
+            <p>
+                Ask MoonPlug anything.
+            </p>
 
         </div>
+
     `;
+
+
+    const input =
+        $("messageInput");
+
+    input?.focus();
+
+    saveCurrentChat();
+
 }
 
 
 /* =========================================================
-   CONVERSATION
+   SAVE CHAT
+========================================================= */
+
+function saveCurrentChat() {
+
+    try {
+
+        localStorage.setItem(
+            STORAGE_KEYS.history,
+            JSON.stringify(currentChat)
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Could not save chat:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CONVERSATION SETUP
 ========================================================= */
 
 function setupConversation() {
 
-    const close =
-        $("conversationClose");
-
-    const mic =
-        $("conversationMic");
-
-
-    if (close) {
-
-        close.addEventListener(
+    $("conversationClose")
+        ?.addEventListener(
             "click",
             closeConversation
         );
-    }
 
 
-    if (mic) {
-
-        mic.addEventListener(
+    $("conversationMic")
+        ?.addEventListener(
             "click",
-            handleConversationButton
+            toggleConversationListening
         );
-    }
+
 }
 
+
+/* =========================================================
+   OPEN CONVERSATION
+========================================================= */
 
 function openConversation() {
 
@@ -597,44 +741,98 @@ function openConversation() {
 
     if (!mode) return;
 
+
     stopListening();
+
     stopSpeaking();
+
 
     thinking = false;
 
-    mode.classList.add("active");
+    conversationPermissionBlocked =
+        false;
+
+
+    mode.classList.add(
+        "active"
+    );
 
     mode.setAttribute(
         "aria-hidden",
         "false"
     );
 
-    setConversationState("idle");
+
+    initializeConversationVoice();
+
+
+    setConversationState(
+        "listening"
+    );
 
     setConversationText(
-        "Tap the microphone to talk"
+        "Listening..."
     );
+
+
+    setTimeout(
+        () => {
+
+            if (
+                mode.classList.contains(
+                    "active"
+                ) &&
+                !speaking &&
+                !thinking &&
+                !listening
+            ) {
+
+                startListening();
+
+            }
+
+        },
+        150
+    );
+
 }
 
 
+/* =========================================================
+   CLOSE CONVERSATION
+========================================================= */
+
 function closeConversation() {
 
-    stopListening();
-    stopSpeaking();
+    conversationRequestId++;
 
     thinking = false;
 
-    conversationRequestId++;
+    conversationPermissionBlocked =
+        false;
+
+    stopListening();
+
+    stopSpeaking();
+
+    stopVoiceWave();
+
 
     const mode =
         $("conversationMode");
 
     if (!mode) return;
 
+
     mode.classList.remove(
-        "active",
-        "listening",
-        "thinking",
+        "active"
+    );
+
+    mode.classList.remove(
+        "listening"
+    );
+
+    mode.classList.remove(
         "talking"
     );
 
@@ -642,26 +840,82 @@ function closeConversation() {
         "aria-hidden",
         "true"
     );
+
+
+    setConversationState(
+        "idle"
+    );
+
+    setConversationText(
+        "Tap Conversation to start again."
+    );
+
 }
 
 
 /* =========================================================
-   CONVERSATION BUTTON
+   TOGGLE LISTENING
 ========================================================= */
 
-function handleConversationButton() {
+function toggleConversationListening() {
+
+    const mode =
+        $("conversationMode");
+
+    if (
+        !mode ||
+        !mode.classList.contains(
+            "active"
+        )
+    ) {
+
+        return;
+
+    }
+
 
     if (speaking) {
 
         stopSpeaking();
 
-        setConversationState("idle");
+        if (
+            mode.classList.contains(
+                "active"
+            )
+        ) {
 
-        setConversationText(
-            "Tap the microphone to talk"
-        );
+            setConversationState(
+                "listening"
+            );
+
+            setConversationText(
+                "Listening..."
+            );
+
+            setTimeout(
+                () => {
+
+                    if (
+                        mode.classList.contains(
+                            "active"
+                        ) &&
+                        !speaking &&
+                        !thinking &&
+                        !listening
+                    ) {
+
+                        startListening();
+
+                    }
+
+                },
+                150
+            );
+
+        }
 
         return;
+
     }
 
 
@@ -669,11 +923,32 @@ function handleConversationButton() {
 
         stopListening();
 
+        setConversationState(
+            "idle"
+        );
+
+        setConversationText(
+            "Conversation paused."
+        );
+
         return;
+
     }
 
 
+    conversationPermissionBlocked =
+        false;
+
+    setConversationState(
+        "listening"
+    );
+
+    setConversationText(
+        "Listening..."
+    );
+
     startListening();
+
 }
 
 
@@ -681,7 +956,9 @@ function handleConversationButton() {
    CONVERSATION STATE
 ========================================================= */
 
-function setConversationState(state) {
+function setConversationState(
+    state
+) {
 
     const mode =
         $("conversationMode");
@@ -689,7 +966,8 @@ function setConversationState(state) {
     const status =
         $("conversationStatus");
 
-    if (!mode) return;
+    if (!mode || !status) return;
+
 
     mode.classList.remove(
         "listening",
@@ -697,33 +975,62 @@ function setConversationState(state) {
         "talking"
     );
 
-    if (state !== "idle") {
-        mode.classList.add(state);
-    }
 
+    if (state === "listening") {
 
-    const labels = {
-
-        idle: "Ready",
-
-        listening: "Listening",
-
-        thinking: "Thinking",
-
-        talking: "Speaking"
-    };
-
-
-    if (status) {
+        mode.classList.add(
+            "listening"
+        );
 
         status.textContent =
-            labels[state] ||
-            "Ready";
+            "Listening";
+
+        return;
+
     }
+
+
+    if (state === "thinking") {
+
+        mode.classList.add(
+            "thinking"
+        );
+
+        status.textContent =
+            "Thinking";
+
+        return;
+
+    }
+
+
+    if (state === "talking") {
+
+        mode.classList.add(
+            "talking"
+        );
+
+        status.textContent =
+            "Speaking";
+
+        return;
+
+    }
+
+
+    status.textContent =
+        "Ready";
+
 }
 
 
-function setConversationText(text) {
+/* =========================================================
+   CONVERSATION TEXT
+========================================================= */
+
+function setConversationText(
+    text
+) {
 
     const element =
         $("conversationText");
@@ -731,7 +1038,8 @@ function setConversationText(text) {
     if (!element) return;
 
     element.textContent =
-        String(text);
+        String(text || "");
+
 }
 
 
@@ -748,142 +1056,260 @@ function setupSpeechRecognition() {
 
     if (!Recognition) {
 
-        recognitionSupported = false;
-
-        return;
-    }
-
-
-    recognitionSupported = true;
-
-    recognition =
-        new Recognition();
-
-
-    recognition.continuous = false;
-
-    recognition.interimResults = true;
-
-    recognition.lang = "en-US";
-
-
-    recognition.onstart = () => {
-
-        listening = true;
-        thinking = false;
-
         setConversationState(
-            "listening"
+            "idle"
         );
 
         setConversationText(
-            "Listening..."
-        );
-    };
-
-
-    recognition.onresult = event => {
-
-        let transcript = "";
-
-        for (
-            let i = event.resultIndex;
-            i < event.results.length;
-            i++
-        ) {
-
-            transcript +=
-                event.results[i][0]
-                    .transcript;
-        }
-
-
-        transcript =
-            transcript.trim();
-
-
-        if (transcript) {
-
-            setConversationText(
-                transcript
-            );
-        }
-
-
-        const last =
-            event.results[
-                event.results.length - 1
-            ];
-
-
-        if (
-            last &&
-            last.isFinal &&
-            transcript
-        ) {
-
-            processConversation(
-                transcript
-            );
-        }
-    };
-
-
-    recognition.onerror = event => {
-
-        console.warn(
-            "Speech recognition:",
-            event.error
+            "Voice input is not supported in this browser."
         );
 
+        return;
 
-        listening = false;
-
-
-        if (
-            event.error ===
-            "not-allowed"
-        ) {
-
-            setConversationText(
-                "Microphone permission was denied."
-            );
-
-        } else if (
-            event.error ===
-            "no-speech"
-        ) {
-
-            setConversationText(
-                "I didn't hear anything. Tap to try again."
-            );
-
-        } else {
-
-            setConversationText(
-                "Microphone error. Try again."
-            );
-        }
+    }
 
 
-        setConversationState("idle");
-    };
+    speechRecognition =
+        new Recognition();
 
 
-    recognition.onend = () => {
+    speechRecognition.continuous =
+        false;
 
-        listening = false;
+    speechRecognition.interimResults =
+        true;
 
-        if (
-            !thinking &&
-            !speaking
-        ) {
+    speechRecognition.lang =
+        "en-US";
+
+
+    speechRecognition.onstart =
+        () => {
+
+            listening = true;
 
             setConversationState(
-                "idle"
+                "listening"
             );
-        }
-    };
+
+            setConversationText(
+                "Listening..."
+            );
+
+        };
+
+
+    speechRecognition.onresult =
+        event => {
+
+            let interim = "";
+
+            let finalText = "";
+
+
+            for (
+                let i =
+                    event.resultIndex;
+
+                i <
+                    event.results.length;
+
+                i++
+            ) {
+
+                const result =
+                    event.results[i];
+
+                const transcript =
+                    result[0].transcript;
+
+
+                if (result.isFinal) {
+
+                    finalText +=
+                        transcript;
+
+                } else {
+
+                    interim +=
+                        transcript;
+
+                }
+
+            }
+
+
+            if (interim) {
+
+                setConversationText(
+                    interim
+                );
+
+            }
+
+
+            if (finalText.trim()) {
+
+                const transcript =
+                    finalText.trim();
+
+
+                setConversationText(
+                    transcript
+                );
+
+
+                stopListening();
+
+
+                processConversation(
+                    transcript
+                );
+
+            }
+
+        };
+
+
+    speechRecognition.onerror =
+        event => {
+
+            listening = false;
+
+
+            if (
+                event.error ===
+                "not-allowed"
+            ) {
+
+                conversationPermissionBlocked =
+                    true;
+
+                setConversationState(
+                    "idle"
+                );
+
+                setConversationText(
+                    "Microphone permission was denied."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                event.error ===
+                "service-not-allowed"
+            ) {
+
+                conversationPermissionBlocked =
+                    true;
+
+                setConversationState(
+                    "idle"
+                );
+
+                setConversationText(
+                    "Voice input is unavailable."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                event.error ===
+                "no-speech"
+            ) {
+
+                return;
+
+            }
+
+
+            console.warn(
+                "Speech recognition:",
+                event.error
+            );
+
+        };
+
+
+    speechRecognition.onend =
+        () => {
+
+            listening = false;
+
+
+            const mode =
+                $("conversationMode");
+
+
+            const active =
+                mode &&
+                mode.classList.contains(
+                    "active"
+                );
+
+
+            if (
+                active &&
+                !conversationPermissionBlocked &&
+                !thinking &&
+                !speaking
+            ) {
+
+                setConversationState(
+                    "listening"
+                );
+
+                setConversationText(
+                    "Listening..."
+                );
+
+
+                setTimeout(
+                    () => {
+
+                        if (
+                            mode.classList.contains(
+                                "active"
+                            ) &&
+                            !conversationPermissionBlocked &&
+                            !thinking &&
+                            !speaking &&
+                            !listening
+                        ) {
+
+                            startListening();
+
+                        }
+
+                    },
+                    250
+                );
+
+
+                return;
+
+            }
+
+
+            if (
+                !thinking &&
+                !speaking
+            ) {
+
+                setConversationState(
+                    "idle"
+                );
+
+            }
+
+        };
+
 }
 
 
@@ -893,39 +1319,57 @@ function setupSpeechRecognition() {
 
 function startListening() {
 
-    if (!recognitionSupported) {
-
-        setConversationState("idle");
-
-        setConversationText(
-            "Speech recognition isn't supported in this browser."
-        );
+    if (
+        !speechRecognition ||
+        listening ||
+        thinking ||
+        speaking
+    ) {
 
         return;
+
     }
 
 
-    stopSpeaking();
+    const mode =
+        $("conversationMode");
+
+
+    if (
+        !mode ||
+        !mode.classList.contains(
+            "active"
+        )
+    ) {
+
+        return;
+
+    }
 
 
     try {
 
-        recognition.start();
+        speechRecognition.start();
 
-    } catch {
+    } catch (error) {
 
-        try {
-            recognition.stop();
-        } catch {}
+        if (
+            !String(error.message)
+                .toLowerCase()
+                .includes(
+                    "already started"
+                )
+        ) {
 
-        setTimeout(() => {
+            console.warn(
+                "Could not start microphone:",
+                error
+            );
 
-            try {
-                recognition.start();
-            } catch {}
+        }
 
-        }, 250);
     }
+
 }
 
 
@@ -935,68 +1379,33 @@ function startListening() {
 
 function stopListening() {
 
-    if (recognition) {
+    if (!speechRecognition) return;
 
-        try {
-            recognition.stop();
-        } catch {}
-    }
+
+    try {
+
+        speechRecognition.stop();
+
+    } catch {}
 
     listening = false;
 
-    if (!thinking && !speaking) {
-        setConversationState("idle");
-    }
 }
 
 
 /* =========================================================
-   CONVERSATION BACKEND
+   PROCESS CONVERSATION
 ========================================================= */
 
 async function processConversation(
     transcript
 ) {
 
-    stopListening();
+    const text =
+        String(transcript || "")
+            .trim();
 
-    const message =
-        String(
-            transcript || ""
-        ).trim();
-
-
-    if (!message) return;
-
-
-    const localAnswer =
-        getMoonPlugIdentityAnswer(
-            message
-        );
-
-
-    if (localAnswer) {
-
-        addMessage(
-            message,
-            "user"
-        );
-
-        addMessage(
-            localAnswer,
-            "ai"
-        );
-
-        setConversationText(
-            localAnswer
-        );
-
-        speakConversation(
-            localAnswer
-        );
-
-        return;
-    }
+    if (!text) return;
 
 
     const requestId =
@@ -1010,8 +1419,55 @@ async function processConversation(
     );
 
     setConversationText(
-        message
+        text
     );
+
+
+    addMessage(
+        text,
+        "user"
+    );
+
+
+    saveCurrentChat();
+
+
+    const identityAnswer =
+        getIdentityAnswer(text);
+
+
+    if (identityAnswer) {
+
+        if (
+            requestId !==
+            conversationRequestId
+        ) {
+
+            return;
+
+        }
+
+
+        thinking = false;
+
+
+        addMessage(
+            identityAnswer,
+            "ai"
+        );
+
+
+        saveCurrentChat();
+
+
+        await speakConversation(
+            identityAnswer
+        );
+
+
+        return;
+
+    }
 
 
     try {
@@ -1028,24 +1484,34 @@ async function processConversation(
                     },
 
                     body: JSON.stringify({
-                        message
+                        message: text
                     })
                 }
             );
 
 
-        const data =
-            await response
-                .json()
-                .catch(() => ({}));
+        let data;
+
+        try {
+
+            data =
+                await response.json();
+
+        } catch {
+
+            data = null;
+
+        }
 
 
         if (!response.ok) {
 
             throw new Error(
-                data.error ||
-                "Chat request failed."
+                data?.error ||
+                data?.message ||
+                `Server error ${response.status}`
             );
+
         }
 
 
@@ -1053,42 +1519,41 @@ async function processConversation(
             requestId !==
             conversationRequestId
         ) {
+
             return;
+
         }
 
 
-        const reply =
-            data.response ||
-            data.message ||
-            data.answer ||
-            "I received your message.";
+        const answer =
+            data?.response ||
+            data?.message ||
+            data?.answer;
 
 
-        const cleanReply =
-            String(reply).trim();
+        if (!answer) {
+
+            throw new Error(
+                "MoonPlug returned an empty response."
+            );
+
+        }
 
 
         thinking = false;
 
 
         addMessage(
-            message,
-            "user"
-        );
-
-        addMessage(
-            cleanReply,
+            answer,
             "ai"
         );
 
 
-        setConversationText(
-            cleanReply
-        );
+        saveCurrentChat();
 
 
-        speakConversation(
-            cleanReply
+        await speakConversation(
+            answer
         );
 
 
@@ -1100,21 +1565,47 @@ async function processConversation(
         );
 
 
+        if (
+            requestId !==
+            conversationRequestId
+        ) {
+
+            return;
+
+        }
+
+
         thinking = false;
 
-        setConversationState(
-            "idle"
+
+        const message =
+            "Sorry, I couldn't connect " +
+            "to MoonPlug right now.";
+
+
+        addMessage(
+            message,
+            "ai"
         );
 
+
         setConversationText(
-            "I couldn't connect to MoonPlug right now."
+            error.message ||
+            message
         );
+
+
+        await speakConversation(
+            message
+        );
+
     }
+
 }
 
 
 /* =========================================================
-   VOICE SYSTEM
+   VOICE LOADING
 ========================================================= */
 
 function setupVoiceLoading() {
@@ -1128,13 +1619,9 @@ function setupVoiceLoading() {
         );
 
         return;
+
     }
 
-
-    /*
-     * Voices can load asynchronously.
-     * This is especially important on Safari.
-     */
 
     window.speechSynthesis.onvoiceschanged =
         loadSpeechVoices;
@@ -1154,87 +1641,233 @@ function setupVoiceLoading() {
         1000
     );
 
-
-    setTimeout(
-        loadSpeechVoices,
-        2000
-    );
 }
 
+
+/* =========================================================
+   LOAD VOICES
+========================================================= */
 
 function loadSpeechVoices() {
 
     if (
         !("speechSynthesis" in window)
     ) {
+
         return;
+
     }
 
 
-    speechVoices =
-        window.speechSynthesis
-            .getVoices() || [];
-
-
-    populateVoiceSelector();
-}
-
-
-function populateVoiceSelector() {
-
-    const selector =
-        $("voiceSelect");
-
-    if (!selector) return;
-
-
     const voices =
-        speechVoices;
-
-
-    selector.innerHTML = "";
+        window.speechSynthesis
+            .getVoices();
 
 
     if (!voices.length) {
 
-        const option =
-            document.createElement(
-                "option"
-            );
-
-        option.value = "";
-
-        option.textContent =
-            "Loading voices...";
-
-        selector.appendChild(
-            option
-        );
-
-        setVoiceStatus(
-            "Waiting for available voices..."
-        );
-
         return;
+
     }
 
 
-    const english =
-        voices.filter(
-            voice =>
-                /^en[-_]/i.test(
-                    voice.lang
-                )
+    speechVoices =
+        voices;
+
+
+    const stored =
+        localStorage.getItem(
+            STORAGE_KEYS.voice
         );
 
 
-    const available =
-        english.length
-            ? english
-            : voices;
+    if (
+        stored &&
+        voices.some(
+            voice =>
+                voice.name === stored
+        )
+    ) {
+
+        selectedVoiceName =
+            stored;
+
+    } else {
+
+        const preferred =
+            voices.find(
+                voice =>
+                    voice.lang
+                        ?.toLowerCase()
+                        .startsWith(
+                            "en-us"
+                        )
+            ) ||
+
+            voices.find(
+                voice =>
+                    voice.lang
+                        ?.toLowerCase()
+                        .startsWith("en")
+            ) ||
+
+            voices[0];
 
 
-    available.forEach(
+        selectedVoiceName =
+            preferred?.name || "";
+
+    }
+
+
+    populateVoiceSelector();
+
+    voiceReady =
+        Boolean(
+            getSelectedVoice()
+        );
+
+}
+
+
+/* =========================================================
+   INITIALIZE DEFAULT VOICE
+========================================================= */
+
+function initializeConversationVoice() {
+
+    if (
+        !("speechSynthesis" in window)
+    ) {
+
+        voiceReady = false;
+
+        setVoiceStatus(
+            "Voice playback is unavailable."
+        );
+
+        return false;
+
+    }
+
+
+    try {
+
+        window.speechSynthesis.cancel();
+
+        window.speechSynthesis.resume();
+
+    } catch {}
+
+
+    loadSpeechVoices();
+
+
+    const voices =
+        window.speechSynthesis
+            .getVoices() || [];
+
+
+    if (voices.length) {
+
+        const voice =
+            getSelectedVoice();
+
+
+        if (voice) {
+
+            selectedVoiceName =
+                voice.name;
+
+            voiceReady = true;
+
+
+            localStorage.setItem(
+                STORAGE_KEYS.voice,
+                selectedVoiceName
+            );
+
+
+            setVoiceStatus(
+                "Voice ready."
+            );
+
+
+            return true;
+
+        }
+
+    }
+
+
+    voiceReady = false;
+
+
+    setTimeout(
+        () => {
+
+            loadSpeechVoices();
+
+
+            const laterVoices =
+                window.speechSynthesis
+                    .getVoices() || [];
+
+
+            if (laterVoices.length) {
+
+                const voice =
+                    getSelectedVoice();
+
+
+                if (voice) {
+
+                    selectedVoiceName =
+                        voice.name;
+
+                    voiceReady = true;
+
+
+                    localStorage.setItem(
+                        STORAGE_KEYS.voice,
+                        selectedVoiceName
+                    );
+
+
+                    setVoiceStatus(
+                        "Voice ready."
+                    );
+
+                }
+
+            }
+
+        },
+        100
+    );
+
+
+    return false;
+
+}
+
+
+/* =========================================================
+   VOICE SELECTOR
+========================================================= */
+
+function populateVoiceSelector() {
+
+    const select =
+        $("voiceSelect");
+
+    if (!select) return;
+
+
+    select.innerHTML = "";
+
+
+    speechVoices.forEach(
         voice => {
 
             const option =
@@ -1258,78 +1891,36 @@ function populateVoiceSelector() {
 
                 option.selected =
                     true;
+
             }
 
 
-            selector.appendChild(
+            select.appendChild(
                 option
             );
+
         }
     );
 
 
-    const exists =
-        available.some(
-            voice =>
-                voice.name ===
-                selectedVoiceName
-        );
+    if (!speechVoices.length) {
 
-
-    if (
-        !exists
-    ) {
-
-        selectedVoiceName =
-            available[0]?.name || "";
-
-        if (selectedVoiceName) {
-
-            localStorage.setItem(
-                "moonplugVoice",
-                selectedVoiceName
+        const option =
+            document.createElement(
+                "option"
             );
-        }
-    }
 
+        option.value = "";
 
-    selector.value =
-        selectedVoiceName;
+        option.textContent =
+            "No voices available";
 
-
-    selector.onchange = () => {
-
-        selectedVoiceName =
-            selector.value;
-
-
-        localStorage.setItem(
-            "moonplugVoice",
-            selectedVoiceName
+        select.appendChild(
+            option
         );
 
-
-        setVoiceStatus(
-            `Voice selected: ${selectedVoiceName}`
-        );
-    };
-
-
-    setVoiceStatus(
-        `${available.length} voice${available.length === 1 ? "" : "s"} available`
-    );
-}
-
-
-function setVoiceStatus(text) {
-
-    const status =
-        $("voiceStatus");
-
-    if (status) {
-        status.textContent =
-            String(text);
     }
+
 }
 
 
@@ -1342,17 +1933,21 @@ function getSelectedVoice() {
     if (
         !("speechSynthesis" in window)
     ) {
+
         return null;
+
     }
 
 
     const voices =
         window.speechSynthesis
-            .getVoices() || [];
+            .getVoices();
 
 
     if (!voices.length) {
+
         return null;
+
     }
 
 
@@ -1367,195 +1962,379 @@ function getSelectedVoice() {
 
 
         if (selected) {
+
             return selected;
+
         }
+
+    }
+
+
+    const stored =
+        localStorage.getItem(
+            STORAGE_KEYS.voice
+        );
+
+
+    if (stored) {
+
+        const storedVoice =
+            voices.find(
+                voice =>
+                    voice.name === stored
+            );
+
+
+        if (storedVoice) {
+
+            selectedVoiceName =
+                storedVoice.name;
+
+            return storedVoice;
+
+        }
+
+    }
+
+
+    const englishUS =
+        voices.find(
+            voice =>
+                voice.lang
+                    ?.toLowerCase()
+                    .startsWith(
+                        "en-us"
+                    )
+        );
+
+
+    if (englishUS) {
+
+        selectedVoiceName =
+            englishUS.name;
+
+        return englishUS;
+
     }
 
 
     const english =
-        voices.filter(
+        voices.find(
             voice =>
-                /^en[-_]/i.test(
-                    voice.lang
-                )
+                voice.lang
+                    ?.toLowerCase()
+                    .startsWith(
+                        "en"
+                    )
         );
 
 
-    return (
-        english.find(
-            voice =>
-                /^en-US/i.test(
-                    voice.lang
-                )
-        ) ||
-        english[0] ||
-        voices[0]
-    );
+    if (english) {
+
+        selectedVoiceName =
+            english.name;
+
+        return english;
+
+    }
+
+
+    selectedVoiceName =
+        voices[0].name;
+
+
+    return voices[0];
+
 }
 
 
 /* =========================================================
-   SPEAK
+   SPEAK CONVERSATION
 ========================================================= */
 
-function speakConversation(text) {
+function speakConversation(
+    text
+) {
 
-    if (
-        !("speechSynthesis" in window)
-    ) {
+    return new Promise(
+        resolve => {
 
-        setConversationText(
-            "Voice playback isn't supported in this browser."
-        );
-
-        return;
-    }
+            const message =
+                String(text || "")
+                    .trim();
 
 
-    const message =
-        String(text || "").trim();
+            if (!message) {
+
+                resolve();
+
+                return;
+
+            }
 
 
-    if (!message) return;
+            if (!voiceReady) {
+
+                initializeConversationVoice();
+
+            }
 
 
-    /*
-     * IMPORTANT:
-     * Some browsers will silently fail if an
-     * old utterance is still queued.
-     */
+            if (
+                !("speechSynthesis" in window)
+            ) {
 
-    try {
+                setConversationState(
+                    "idle"
+                );
 
-        window.speechSynthesis.cancel();
+                resolve();
 
-        window.speechSynthesis.resume();
+                return;
 
-    } catch {}
-
-
-    const utterance =
-        new SpeechSynthesisUtterance(
-            message
-        );
+            }
 
 
-    const voice =
-        getSelectedVoice();
+            const voice =
+                getSelectedVoice();
 
 
-    if (voice) {
+            if (!voice) {
 
-        utterance.voice =
-            voice;
+                setConversationState(
+                    "idle"
+                );
 
-        utterance.lang =
-            voice.lang;
+                setConversationText(
+                    "Voice playback is unavailable."
+                );
 
-    } else {
+                resolve();
 
-        utterance.lang =
-            "en-US";
-    }
+                return;
 
-
-    utterance.rate =
-        0.95;
-
-    utterance.pitch =
-        1;
-
-    utterance.volume =
-        1;
+            }
 
 
-    utterance.onstart = () => {
-
-        speaking = true;
-        thinking = false;
-
-        setConversationState(
-            "talking"
-        );
-
-        startVoiceWave();
-    };
+            stopListening();
 
 
-    utterance.onend = () => {
+            speaking = true;
 
-        speaking = false;
-        thinking = false;
-
-        stopSpeechAnimation();
-
-        setConversationState(
-            "idle"
-        );
-
-        setConversationText(
-            "Tap the microphone to talk"
-        );
-    };
+            thinking = false;
 
 
-    utterance.onerror = event => {
-
-        console.error(
-            "MoonPlug voice error:",
-            event.error
-        );
+            setConversationState(
+                "talking"
+            );
 
 
-        speaking = false;
-        thinking = false;
-
-        stopSpeechAnimation();
-
-        setConversationState(
-            "idle"
-        );
-
-        setConversationText(
-            "Tap the microphone to talk"
-        );
-    };
+            setConversationText(
+                message
+            );
 
 
-    /*
-     * Give Safari a moment to resume its
-     * speech engine before speaking.
-     */
+            startVoiceWave();
 
-    try {
-
-        window.speechSynthesis.resume();
-
-        setTimeout(() => {
 
             try {
 
-                window.speechSynthesis.speak(
-                    utterance
+                window.speechSynthesis.cancel();
+
+                window.speechSynthesis.resume();
+
+            } catch {}
+
+
+            const utterance =
+                new SpeechSynthesisUtterance(
+                    message
                 );
 
+
+            utterance.voice =
+                voice;
+
+
+            utterance.rate =
+                0.95;
+
+            utterance.pitch =
+                1;
+
+            utterance.volume =
+                1;
+
+
+            utterance.onstart =
+                () => {
+
+                    speaking = true;
+
+                    setConversationState(
+                        "talking"
+                    );
+
+                    startVoiceWave();
+
+                };
+
+
+            utterance.onend =
+                () => {
+
+                    speaking = false;
+
+                    thinking = false;
+
+                    stopVoiceWave();
+
+
+                    const mode =
+                        $("conversationMode");
+
+
+                    if (
+                        mode &&
+                        mode.classList.contains(
+                            "active"
+                        )
+                    ) {
+
+                        setConversationState(
+                            "listening"
+                        );
+
+                        setConversationText(
+                            "Listening..."
+                        );
+
+
+                        setTimeout(
+                            () => {
+
+                                if (
+                                    mode.classList.contains(
+                                        "active"
+                                    ) &&
+                                    !speaking &&
+                                    !thinking &&
+                                    !listening &&
+                                    !conversationPermissionBlocked
+                                ) {
+
+                                    startListening();
+
+                                }
+
+                            },
+                            200
+                        );
+
+                    } else {
+
+                        setConversationState(
+                            "idle"
+                        );
+
+                    }
+
+
+                    resolve();
+
+                };
+
+
+            utterance.onerror =
+                event => {
+
+                    speaking = false;
+
+                    thinking = false;
+
+                    stopVoiceWave();
+
+
+                    console.warn(
+                        "Speech synthesis:",
+                        event.error
+                    );
+
+
+                    const mode =
+                        $("conversationMode");
+
+
+                    if (
+                        mode &&
+                        mode.classList.contains(
+                            "active"
+                        )
+                    ) {
+
+                        setConversationState(
+                            "listening"
+                        );
+
+                        setConversationText(
+                            "Listening..."
+                        );
+
+
+                        setTimeout(
+                            () => {
+
+                                if (
+                                    mode.classList.contains(
+                                        "active"
+                                    ) &&
+                                    !speaking &&
+                                    !thinking &&
+                                    !listening &&
+                                    !conversationPermissionBlocked
+                                ) {
+
+                                    startListening();
+
+                                }
+
+                            },
+                            250
+                        );
+
+                    }
+
+
+                    resolve();
+
+                };
+
+
+            try {
+
+                window.speechSynthesis
+                    .speak(utterance);
+
             } catch (error) {
+
+                speaking = false;
+
+                thinking = false;
+
+                stopVoiceWave();
 
                 console.error(
                     "Speech failed:",
                     error
                 );
+
+                resolve();
+
             }
 
-        }, 50);
+        }
+    );
 
-    } catch (error) {
-
-        console.error(
-            "Speech engine error:",
-            error
-        );
-    }
 }
 
 
@@ -1565,105 +2344,74 @@ function speakConversation(text) {
 
 function setupTestVoice() {
 
-    const button =
-        $("testVoiceButton");
+    $("testVoiceButton")
+        ?.addEventListener(
+            "click",
+            () => {
 
-    if (!button) return;
-
-
-    button.addEventListener(
-        "click",
-        () => {
-
-            const voice =
-                getSelectedVoice();
+                initializeConversationVoice();
 
 
-            if (!voice) {
-
-                setVoiceStatus(
-                    "No voice is available yet."
-                );
-
-                return;
-            }
+                const voice =
+                    getSelectedVoice();
 
 
-            stopSpeaking();
+                if (!voice) {
+
+                    setVoiceStatus(
+                        "No voice is available."
+                    );
+
+                    return;
+
+                }
 
 
-            const utterance =
-                new SpeechSynthesisUtterance(
-                    "Hi. I'm MoonPlug."
-                );
+                if (
+                    !("speechSynthesis" in window)
+                ) {
+
+                    return;
+
+                }
 
 
-            utterance.voice =
-                voice;
+                try {
 
-            utterance.lang =
-                voice.lang;
+                    window.speechSynthesis.cancel();
 
-            utterance.rate =
-                .95;
+                    window.speechSynthesis.resume();
 
-            utterance.pitch =
-                1;
-
-            utterance.volume =
-                1;
+                } catch {}
 
 
-            utterance.onstart = () => {
-
-                setVoiceStatus(
-                    `Speaking with ${voice.name}`
-                );
-            };
+                const utterance =
+                    new SpeechSynthesisUtterance(
+                        "Hi. I'm MoonPlug."
+                    );
 
 
-            utterance.onend = () => {
+                utterance.voice =
+                    voice;
 
-                setVoiceStatus(
-                    `Voice selected: ${voice.name}`
-                );
-            };
+                utterance.rate =
+                    .95;
 
+                utterance.pitch =
+                    1;
 
-            utterance.onerror = error => {
-
-                console.error(
-                    "Test voice:",
-                    error
-                );
-
-                setVoiceStatus(
-                    "The voice could not be played."
-                );
-            };
+                utterance.volume =
+                    1;
 
 
-            try {
-
-                window.speechSynthesis.cancel();
-                window.speechSynthesis.resume();
-
-                setTimeout(() => {
-
-                    window.speechSynthesis.speak(
+                window.speechSynthesis
+                    .speak(
                         utterance
                     );
 
-                }, 50);
-
-            } catch (error) {
-
-                console.error(
-                    error
-                );
             }
-        }
-    );
+        );
+
 }
 
 
@@ -1673,6 +2421,13 @@ function setupTestVoice() {
 
 function stopSpeaking() {
 
+    speaking = false;
+
+    thinking = false;
+
+    stopVoiceWave();
+
+
     if (
         "speechSynthesis" in window
     ) {
@@ -1681,15 +2436,10 @@ function stopSpeaking() {
 
             window.speechSynthesis.cancel();
 
-            window.speechSynthesis.resume();
-
         } catch {}
+
     }
 
-
-    speaking = false;
-
-    stopSpeechAnimation();
 }
 
 
@@ -1699,81 +2449,25 @@ function stopSpeaking() {
 
 function startVoiceWave() {
 
+    animationRunning =
+        true;
+
+
     const wave =
         $("voiceWave");
 
     if (!wave) return;
 
+    wave.style.opacity =
+        "1";
 
-    stopSpeechAnimation();
-
-
-    const bars =
-        Array.from(
-            wave.querySelectorAll("span")
-        );
-
-
-    function animate() {
-
-        if (!speaking) {
-
-            stopSpeechAnimation();
-
-            return;
-        }
-
-
-        bars.forEach(
-            (bar, index) => {
-
-                const pulse =
-                    Math.sin(
-                        Date.now() / 90 +
-                        index * .75
-                    );
-
-
-                const random =
-                    Math.random();
-
-
-                const height =
-                    .25 +
-                    random * .55 +
-                    (pulse + 1) * .2;
-
-
-                bar.style.transform =
-                    `scaleY(${Math.min(
-                        1.8,
-                        height
-                    )})`;
-            }
-        );
-
-
-        speechAnimationFrame =
-            requestAnimationFrame(
-                animate
-            );
-    }
-
-
-    animate();
 }
 
 
-function stopSpeechAnimation() {
+function stopVoiceWave() {
 
-    if (speechAnimationFrame) {
-
-        cancelAnimationFrame(
-            speechAnimationFrame
-        );
-
-        speechAnimationFrame = null;
-    }
+    animationRunning =
+        false;
 
 
     const wave =
@@ -1781,15 +2475,9 @@ function stopSpeechAnimation() {
 
     if (!wave) return;
 
+    wave.style.opacity =
+        "";
 
-    wave.querySelectorAll("span")
-        .forEach(
-            bar => {
-
-                bar.style.transform =
-                    "scaleY(.12)";
-            }
-        );
 }
 
 
@@ -1799,20 +2487,46 @@ function stopSpeechAnimation() {
 
 function setupSettings() {
 
-    const close =
-        $("closeSettings");
-
-    if (close) {
-
-        close.addEventListener(
+    $("closeSettings")
+        ?.addEventListener(
             "click",
             closeSettings
         );
-    }
+
+
+    $("voiceSelect")
+        ?.addEventListener(
+            "change",
+            event => {
+
+                selectedVoiceName =
+                    event.target.value;
+
+
+                localStorage.setItem(
+                    STORAGE_KEYS.voice,
+                    selectedVoiceName
+                );
+
+
+                voiceReady =
+                    Boolean(
+                        getSelectedVoice()
+                    );
+
+
+                setVoiceStatus(
+                    "Voice ready."
+                );
+
+            }
+        );
 
 
     document
-        .querySelectorAll(".size-button")
+        .querySelectorAll(
+            ".size-button"
+        )
         .forEach(
             button => {
 
@@ -1820,16 +2534,16 @@ function setupSettings() {
                     "click",
                     () => {
 
-                        updateTextSize(
+                        setTextSize(
                             button.dataset.size
                         );
+
                     }
                 );
+
             }
         );
 
-
-    setupTestVoice();
 }
 
 
@@ -1840,12 +2554,15 @@ function openSettings() {
 
     if (!panel) return;
 
+
     panel.setAttribute(
         "aria-hidden",
         "false"
     );
 
+
     loadSpeechVoices();
+
 }
 
 
@@ -1856,65 +2573,112 @@ function closeSettings() {
 
     if (!panel) return;
 
+
     panel.setAttribute(
         "aria-hidden",
         "true"
     );
+
 }
 
 
-function updateTextSize(size) {
+/* =========================================================
+   TEXT SIZE
+========================================================= */
 
-    const valid =
-        ["small", "medium", "large"];
+function setTextSize(
+    size
+) {
+
+    const body =
+        document.body;
 
 
-    if (!valid.includes(size)) {
-        size = "medium";
-    }
-
-
-    document.body.classList.remove(
+    body.classList.remove(
         "text-small",
         "text-medium",
         "text-large"
     );
 
 
-    document.body.classList.add(
+    const validSizes = [
+        "small",
+        "medium",
+        "large"
+    ];
+
+
+    if (
+        !validSizes.includes(size)
+    ) {
+
+        size = "medium";
+
+    }
+
+
+    body.classList.add(
         `text-${size}`
     );
 
 
     localStorage.setItem(
-        "moonplugTextSize",
+        STORAGE_KEYS.textSize,
         size
     );
 
 
     document
-        .querySelectorAll(".size-button")
+        .querySelectorAll(
+            ".size-button"
+        )
         .forEach(
             button => {
 
                 button.classList.toggle(
                     "active",
-                    button.dataset.size === size
+                    button.dataset.size ===
+                        size
                 );
+
             }
         );
+
 }
 
 
 function loadTextSize() {
 
-    const saved =
+    const size =
         localStorage.getItem(
-            "moonplugTextSize"
-        ) || "medium";
+            STORAGE_KEYS.textSize
+        ) ||
+        "medium";
 
 
-    updateTextSize(saved);
+    setTextSize(
+        size
+    );
+
+}
+
+
+/* =========================================================
+   VOICE STATUS
+========================================================= */
+
+function setVoiceStatus(
+    text
+) {
+
+    const status =
+        $("voiceStatus");
+
+    if (!status) return;
+
+    status.textContent =
+        String(text || "");
+
 }
 
 
@@ -1924,16 +2688,12 @@ function loadTextSize() {
 
 function setupAccount() {
 
-    const close =
-        $("closeAccount");
-
-    if (close) {
-
-        close.addEventListener(
+    $("closeAccount")
+        ?.addEventListener(
             "click",
             closeAccount
         );
-    }
+
 }
 
 
@@ -1944,10 +2704,12 @@ function openAccount() {
 
     if (!screen) return;
 
+
     screen.setAttribute(
         "aria-hidden",
         "false"
     );
+
 }
 
 
@@ -1958,11 +2720,55 @@ function closeAccount() {
 
     if (!screen) return;
 
+
     screen.setAttribute(
         "aria-hidden",
         "true"
     );
+
 }
+
+
+/* =========================================================
+   MODAL ESCAPE
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key !== "Escape"
+        ) {
+
+            return;
+
+        }
+
+
+        const conversation =
+            $("conversationMode");
+
+
+        if (
+            conversation?.classList.contains(
+                "active"
+            )
+        ) {
+
+            closeConversation();
+
+            return;
+
+        }
+
+
+        closeSettings();
+
+        closeAccount();
+
+    }
+);
 
 
 /* =========================================================
@@ -1975,14 +2781,21 @@ async function checkBackendHealth() {
 
         const response =
             await fetch(
-                `${API_BASE}/api/health`
+                `${API_BASE}/health`,
+                {
+                    method: "GET"
+                }
             );
 
 
         if (!response.ok) {
-            throw new Error(
-                "Backend unavailable"
+
+            console.warn(
+                "MoonPlug backend health check failed."
             );
+
+            return;
+
         }
 
 
@@ -1990,13 +2803,39 @@ async function checkBackendHealth() {
             "MoonPlug backend online."
         );
 
-
     } catch (error) {
 
         console.warn(
-            "MoonPlug backend:",
+            "MoonPlug backend is unreachable:",
             error
         );
+
     }
+
 }
 
+
+/* =========================================================
+   WINDOW RESIZE
+========================================================= */
+
+let starResizeTimer = null;
+
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        clearTimeout(
+            starResizeTimer
+        );
+
+
+        starResizeTimer =
+            setTimeout(
+                createStars,
+                250
+            );
+
+    }
+);
