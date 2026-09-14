@@ -17,56 +17,53 @@
 
 <aside id="sidebar" class="sidebar">
 
-    <button
-        id="sidebarLogo"
-        class="sidebar-logo"
-        type="button"
-        aria-label="Toggle sidebar"
-    >
+    <button id="sidebarLogo" class="sidebar-logo" type="button" aria-label="Toggle sidebar">
+
         <span class="logo-mark" aria-hidden="true">
             <span class="logo-crescent"></span>
         </span>
 
         <span class="logo-name">MOONPLUG</span>
         <span class="logo-ai">AI</span>
+
     </button>
 
     <nav class="sidebar-buttons" aria-label="MoonPlug navigation">
 
         <button id="newChatButton" class="sidebar-button" type="button">
-            <span class="nav-icon">+</span>
+            <span class="nav-icon" aria-hidden="true">✚</span>
             <b>New Chat</b>
         </button>
 
         <button id="conversationButton" class="sidebar-button" type="button">
-            <span class="nav-icon conversation-icon"></span>
+            <span class="nav-icon conversation-icon" aria-hidden="true"></span>
             <b>Conversation</b>
         </button>
 
         <button id="studyButton" class="sidebar-button" type="button">
-            <span class="nav-icon">S</span>
+            <span class="nav-icon" aria-hidden="true">📖</span>
             <b>Study</b>
         </button>
 
         <button id="cookButton" class="sidebar-button" type="button">
-            <span class="nav-icon">C</span>
+            <span class="nav-icon" aria-hidden="true">🍳</span>
             <b>Cook</b>
         </button>
 
         <button id="imagesButton" class="sidebar-button" type="button">
-            <span class="nav-icon">I</span>
+            <span class="nav-icon" aria-hidden="true">🖼</span>
             <b>Images</b>
         </button>
 
         <button id="codeButton" class="sidebar-button" type="button">
-            <span class="nav-icon">&lt;/&gt;</span>
+            <span class="nav-icon" aria-hidden="true">💻</span>
             <b>Code</b>
         </button>
 
         <div class="sidebar-divider"></div>
 
         <button id="historyButton" class="sidebar-button" type="button">
-            <span class="nav-icon history-icon"></span>
+            <span class="nav-icon history-icon" aria-hidden="true"></span>
             <b>Chat History</b>
         </button>
 
@@ -75,12 +72,12 @@
     <div class="sidebar-bottom">
 
         <button id="settingsButton" class="sidebar-button" type="button">
-            <span class="nav-icon settings-icon"></span>
+            <span class="nav-icon settings-icon" aria-hidden="true"></span>
             <b>Settings</b>
         </button>
 
         <button id="accountButton" class="sidebar-button" type="button">
-            <span class="nav-icon account-icon"></span>
+            <span class="nav-icon account-icon" aria-hidden="true"></span>
             <b>Account</b>
         </button>
 
@@ -106,13 +103,10 @@
 
         </header>
 
+
         <div id="messages" class="messages">
 
             <div id="emptyChat" class="empty-chat">
-
-                <div class="home-orb" aria-hidden="true">
-                    <span></span>
-                </div>
 
                 <h1>What can I help with?</h1>
 
@@ -121,6 +115,7 @@
             </div>
 
         </div>
+
 
         <div id="typing" class="typing" hidden>
 
@@ -131,6 +126,7 @@
             <span>MoonPlug is thinking...</span>
 
         </div>
+
 
         <div class="chat-bottom-area">
 
@@ -156,8 +152,7 @@
             </div>
 
             <p class="input-hint">
-                MoonPlug can make mistakes.
-                Check important information.
+                MoonPlug can make mistakes. Check important information.
             </p>
 
         </div>
@@ -188,10 +183,7 @@
 
         <div class="conversation-brand">
 
-            <span
-                class="brand-dot"
-                aria-hidden="true"
-            ></span>
+            <span class="brand-dot" aria-hidden="true"></span>
 
             <strong>MoonPlug</strong>
 
@@ -207,12 +199,9 @@
     </div>
 
 
-    <!-- ================= BLACK HOLE ================= -->
+    <!-- BIG BLACK-HOLE ORB ONLY EXISTS HERE -->
 
-    <div
-        class="black-hole-stage"
-        aria-hidden="true"
-    >
+    <div class="black-hole-stage" aria-hidden="true">
 
         <div class="black-hole">
 
@@ -225,10 +214,7 @@
 
             <div class="black-hole-core"></div>
 
-            <div
-                id="voiceWave"
-                class="voice-wave"
-            >
+            <div id="voiceWave" class="voice-wave">
 
                 <span></span>
                 <span></span>
@@ -240,6 +226,7 @@
                 <span></span>
                 <span></span>
                 <span></span>
+
                 <span></span>
                 <span></span>
                 <span></span>
@@ -258,18 +245,12 @@
     </div>
 
 
-    <div
-        id="conversationStatus"
-        class="conversation-status"
-    >
+    <div id="conversationStatus" class="conversation-status">
         Ready
     </div>
 
 
-    <div
-        id="conversationText"
-        class="conversation-text"
-    >
+    <div id="conversationText" class="conversation-text">
         Starting conversation...
     </div>
 
@@ -283,10 +264,7 @@
             aria-label="Pause conversation"
         >
 
-            <span
-                class="button-mic"
-                aria-hidden="true"
-            >
+            <span class="button-mic" aria-hidden="true">
 
                 <span class="mic-head"></span>
                 <span class="mic-body"></span>
@@ -303,8 +281,7 @@
 
 
     <p class="conversation-hint">
-        Speak naturally.
-        MoonPlug listens again after every answer.
+        Speak naturally. MoonPlug listens again after every answer.
     </p>
 
 </section>
@@ -343,6 +320,7 @@
                 Change the size of chat messages.
             </p>
 
+
             <div class="setting-buttons">
 
                 <button
@@ -379,9 +357,9 @@
             <strong>MoonPlug Voice</strong>
 
             <p>
-                Choose the voice MoonPlug uses
-                in Conversation Mode.
+                Choose the voice MoonPlug uses in Conversation Mode.
             </p>
+
 
             <label
                 for="voiceSelect"
@@ -390,14 +368,18 @@
                 Voice
             </label>
 
+
             <select
                 id="voiceSelect"
                 class="voice-select"
             >
+
                 <option value="">
                     Loading voices...
                 </option>
+
             </select>
+
 
             <div
                 id="voiceStatus"
@@ -405,6 +387,7 @@
             >
                 Loading voice options...
             </div>
+
 
             <button
                 id="testVoiceButton"
@@ -438,12 +421,14 @@
             <span class="logo-crescent"></span>
         </div>
 
+
         <h2>MoonPlug</h2>
 
+
         <p>
-            Account features can be connected
-            to your backend.
+            Account features can be connected to your backend.
         </p>
+
 
         <button
             id="closeAccount"
