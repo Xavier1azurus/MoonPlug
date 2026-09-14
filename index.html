@@ -1,448 +1,748 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#020205">
-    <meta name="description" content="MoonPlug AI">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#020205"
+    >
+
+    <meta
+        name="description"
+        content="MoonPlug AI"
+    >
+
     <title>MoonPlug AI</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 <body>
 
-<div id="starField" class="star-field" aria-hidden="true"></div>
+    <!-- =====================================================
+         STAR FIELD
+    ====================================================== -->
 
-<!-- ================= SIDEBAR ================= -->
-
-<aside id="sidebar" class="sidebar">
-
-    <button id="sidebarLogo" class="sidebar-logo" type="button" aria-label="Toggle sidebar">
-
-        <span class="logo-mark" aria-hidden="true">
-            <span class="logo-crescent"></span>
-        </span>
-
-        <span class="logo-name">MOONPLUG</span>
-        <span class="logo-ai">AI</span>
-
-    </button>
-
-    <nav class="sidebar-buttons" aria-label="MoonPlug navigation">
-
-        <button id="newChatButton" class="sidebar-button" type="button">
-            <span class="nav-icon" aria-hidden="true">✚</span>
-            <b>New Chat</b>
-        </button>
-
-        <button id="conversationButton" class="sidebar-button" type="button">
-            <span class="nav-icon conversation-icon" aria-hidden="true"></span>
-            <b>Conversation</b>
-        </button>
-
-        <button id="studyButton" class="sidebar-button" type="button">
-            <span class="nav-icon" aria-hidden="true">📖</span>
-            <b>Study</b>
-        </button>
-
-        <button id="cookButton" class="sidebar-button" type="button">
-            <span class="nav-icon" aria-hidden="true">🍳</span>
-            <b>Cook</b>
-        </button>
-
-        <button id="imagesButton" class="sidebar-button" type="button">
-            <span class="nav-icon" aria-hidden="true">🖼</span>
-            <b>Images</b>
-        </button>
-
-        <button id="codeButton" class="sidebar-button" type="button">
-            <span class="nav-icon" aria-hidden="true">💻</span>
-            <b>Code</b>
-        </button>
-
-        <div class="sidebar-divider"></div>
-
-        <button id="historyButton" class="sidebar-button" type="button">
-            <span class="nav-icon history-icon" aria-hidden="true"></span>
-            <b>Chat History</b>
-        </button>
-
-    </nav>
-
-    <div class="sidebar-bottom">
-
-        <button id="settingsButton" class="sidebar-button" type="button">
-            <span class="nav-icon settings-icon" aria-hidden="true"></span>
-            <b>Settings</b>
-        </button>
-
-        <button id="accountButton" class="sidebar-button" type="button">
-            <span class="nav-icon account-icon" aria-hidden="true"></span>
-            <b>Account</b>
-        </button>
-
-    </div>
-
-</aside>
+    <div
+        id="starField"
+        class="star-field"
+        aria-hidden="true"
+    ></div>
 
 
-<!-- ================= MAIN CHAT ================= -->
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
 
-<main class="chat-section">
-
-    <div class="chat-container">
-
-        <header class="chat-header">
-
-            <strong>MoonPlug AI</strong>
-
-            <span class="online">
-                <i></i>
-                Online
-            </span>
-
-        </header>
-
-
-        <div id="messages" class="messages">
-
-            <div id="emptyChat" class="empty-chat">
-
-                <h1>What can I help with?</h1>
-
-                <p>Ask MoonPlug anything.</p>
-
-            </div>
-
-        </div>
-
-
-        <div id="typing" class="typing" hidden>
-
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
-
-            <span>MoonPlug is thinking...</span>
-
-        </div>
-
-
-        <div class="chat-bottom-area">
-
-            <div class="chat-input-area">
-
-                <textarea
-                    id="messageInput"
-                    rows="1"
-                    maxlength="12000"
-                    placeholder="Ask MoonPlug anything..."
-                    autocomplete="off"
-                    aria-label="Message MoonPlug"
-                ></textarea>
-
-                <button
-                    id="sendButton"
-                    type="button"
-                    aria-label="Send message"
-                >
-                    <span aria-hidden="true">↑</span>
-                </button>
-
-            </div>
-
-            <p class="input-hint">
-                MoonPlug can make mistakes. Check important information.
-            </p>
-
-        </div>
-
-    </div>
-
-</main>
-
-
-<!-- ================= CONVERSATION MODE ================= -->
-
-<section
-    id="conversationMode"
-    class="conversation-mode"
-    aria-hidden="true"
->
-
-    <div class="conversation-top">
+    <aside
+        id="sidebar"
+        class="sidebar"
+    >
 
         <button
-            id="conversationClose"
-            class="conversation-close"
+            id="sidebarLogo"
+            class="sidebar-logo"
             type="button"
-            aria-label="Close conversation"
-        >
-            ×
-        </button>
-
-        <div class="conversation-brand">
-
-            <span class="brand-dot" aria-hidden="true"></span>
-
-            <strong>MoonPlug</strong>
-
-        </div>
-
-        <div class="conversation-live">
-
-            <i></i>
-            LIVE
-
-        </div>
-
-    </div>
-
-
-    <!-- BIG BLACK-HOLE ORB ONLY EXISTS HERE -->
-
-    <div class="black-hole-stage" aria-hidden="true">
-
-        <div class="black-hole">
-
-            <div class="orbit orbit-one"></div>
-            <div class="orbit orbit-two"></div>
-            <div class="orbit orbit-three"></div>
-            <div class="orbit orbit-four"></div>
-
-            <div class="black-hole-outline"></div>
-
-            <div class="black-hole-core"></div>
-
-            <div id="voiceWave" class="voice-wave">
-
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div id="conversationStatus" class="conversation-status">
-        Ready
-    </div>
-
-
-    <div id="conversationText" class="conversation-text">
-        Starting conversation...
-    </div>
-
-
-    <div class="conversation-button-area">
-
-        <button
-            id="conversationMic"
-            class="conversation-main-button"
-            type="button"
-            aria-label="Pause conversation"
+            aria-label="Toggle sidebar"
         >
 
-            <span class="button-mic" aria-hidden="true">
-
-                <span class="mic-head"></span>
-                <span class="mic-body"></span>
-                <span class="mic-stand"></span>
-
+            <span
+                class="logo-mark"
+                aria-hidden="true"
+            >
+                <span class="logo-crescent"></span>
             </span>
 
-            <span class="button-ripple ripple-one"></span>
-            <span class="button-ripple ripple-two"></span>
+            <span class="logo-name">
+                MOONPLUG
+            </span>
+
+            <span class="logo-ai">
+                AI
+            </span>
 
         </button>
 
-    </div>
 
-
-    <p class="conversation-hint">
-        Speak naturally. MoonPlug listens again after every answer.
-    </p>
-
-</section>
-
-
-<!-- ================= SETTINGS ================= -->
-
-<section
-    id="settingsPanel"
-    class="modal"
-    aria-hidden="true"
->
-
-    <div class="settings-box">
-
-        <div class="modal-header">
-
-            <h2>Settings</h2>
+        <nav
+            class="sidebar-buttons"
+            aria-label="MoonPlug navigation"
+        >
 
             <button
-                id="closeSettings"
+                id="newChatButton"
+                class="sidebar-button"
                 type="button"
-                aria-label="Close settings"
+            >
+                <span
+                    class="nav-icon"
+                    aria-hidden="true"
+                >✚</span>
+
+                <b>New Chat</b>
+            </button>
+
+
+            <button
+                id="conversationButton"
+                class="sidebar-button"
+                type="button"
+            >
+                <span
+                    class="nav-icon conversation-icon"
+                    aria-hidden="true"
+                ></span>
+
+                <b>Conversation</b>
+            </button>
+
+
+            <button
+                id="studyButton"
+                class="sidebar-button"
+                type="button"
+            >
+                <span
+                    class="nav-icon"
+                    aria-hidden="true"
+                >📖</span>
+
+                <b>Study</b>
+            </button>
+
+
+            <button
+                id="cookButton"
+                class="sidebar-button"
+                type="button"
+            >
+                <span
+                    class="nav-icon"
+                    aria-hidden="true"
+                >🍳</span>
+
+                <b>Cook</b>
+            </button>
+
+
+            <button
+                id="imagesButton"
+                class="sidebar-button"
+                type="button"
+            >
+                <span
+                    class="nav-icon"
+                    aria-hidden="true"
+                >🖼</span>
+
+                <b>Images</b>
+            </button>
+
+
+            <button
+                id="codeButton"
+                class="sidebar-button"
+                type="button"
+            >
+                <span
+                    class="nav-icon"
+                    aria-hidden="true"
+                >💻</span>
+
+                <b>Code</b>
+            </button>
+
+
+            <div class="sidebar-divider"></div>
+
+
+            <button
+                id="historyButton"
+                class="sidebar-button"
+                type="button"
+            >
+                <span
+                    class="nav-icon history-icon"
+                    aria-hidden="true"
+                ></span>
+
+                <b>Chat History</b>
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                id="settingsButton"
+                class="sidebar-button"
+                type="button"
+            >
+                <span
+                    class="nav-icon settings-icon"
+                    aria-hidden="true"
+                ></span>
+
+                <b>Settings</b>
+            </button>
+
+
+            <button
+                id="accountButton"
+                class="sidebar-button"
+                type="button"
+            >
+                <span
+                    class="nav-icon account-icon"
+                    aria-hidden="true"
+                ></span>
+
+                <b>Account</b>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         NORMAL CHAT
+    ====================================================== -->
+
+    <main class="chat-section">
+
+        <div class="chat-container">
+
+
+            <!-- HEADER -->
+
+            <header class="chat-header">
+
+                <strong>
+                    MoonPlug AI
+                </strong>
+
+                <span class="online">
+                    <i></i>
+                    Online
+                </span>
+
+            </header>
+
+
+            <!-- =================================================
+                 MESSAGES
+            ================================================== -->
+
+            <div
+                id="messages"
+                class="messages"
+            >
+
+                <div
+                    id="emptyChat"
+                    class="empty-chat"
+                >
+
+                    <h1>
+                        What can I help with?
+                    </h1>
+
+                    <p>
+                        Ask MoonPlug anything.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 RESPONSE ANIMATION
+
+                 Moon
+                    ↓
+                 Plug rises
+                    ↓
+                 Response streams
+                    ↓
+                 Plug connects
+                    ↓
+                 Sparks
+            ================================================== -->
+
+            <div
+                id="responseAnimation"
+                class="response-animation"
+                aria-hidden="true"
+            >
+
+                <div class="response-moon">
+                    ☾
+                </div>
+
+
+                <div class="response-cable"></div>
+
+
+                <div class="response-plug">
+
+                    <span
+                        class="plug-pin plug-pin-one"
+                    ></span>
+
+                    <span
+                        class="plug-pin plug-pin-two"
+                    ></span>
+
+                    <span class="plug-body"></span>
+
+                    <span class="plug-cable"></span>
+
+                </div>
+
+
+                <span
+                    class="response-spark spark-one"
+                >
+                    ✦
+                </span>
+
+                <span
+                    class="response-spark spark-two"
+                >
+                    ✦
+                </span>
+
+                <span
+                    class="response-spark spark-three"
+                >
+                    ✧
+                </span>
+
+                <span
+                    class="response-spark spark-four"
+                >
+                    ✧
+                </span>
+
+            </div>
+
+
+            <!-- =================================================
+                 CHAT INPUT
+            ================================================== -->
+
+            <div class="chat-bottom-area">
+
+                <div class="chat-input-area">
+
+                    <textarea
+                        id="messageInput"
+                        rows="1"
+                        maxlength="12000"
+                        placeholder="Ask MoonPlug anything..."
+                        autocomplete="off"
+                        aria-label="Message MoonPlug"
+                    ></textarea>
+
+
+                    <button
+                        id="sendButton"
+                        type="button"
+                        aria-label="Send message"
+                    >
+
+                        <span aria-hidden="true">
+                            ↑
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <p class="input-hint">
+                    MoonPlug can make mistakes. Check important information.
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         CONVERSATION MODE
+    ====================================================== -->
+
+    <section
+        id="conversationMode"
+        class="conversation-mode"
+        aria-hidden="true"
+    >
+
+
+        <!-- TOP BAR -->
+
+        <div class="conversation-top">
+
+            <button
+                id="conversationClose"
+                class="conversation-close"
+                type="button"
+                aria-label="Close conversation"
             >
                 ×
             </button>
 
-        </div>
+
+            <div class="conversation-brand">
+
+                <span
+                    class="brand-dot"
+                    aria-hidden="true"
+                ></span>
+
+                <strong>
+                    MoonPlug
+                </strong>
+
+            </div>
 
 
-        <div class="setting-item">
+            <div class="conversation-live">
 
-            <strong>Text Size</strong>
+                <i></i>
 
-            <p>
-                Change the size of chat messages.
-            </p>
-
-
-            <div class="setting-buttons">
-
-                <button
-                    class="size-button"
-                    data-size="small"
-                    type="button"
-                >
-                    Small
-                </button>
-
-                <button
-                    class="size-button active"
-                    data-size="medium"
-                    type="button"
-                >
-                    Medium
-                </button>
-
-                <button
-                    class="size-button"
-                    data-size="large"
-                    type="button"
-                >
-                    Large
-                </button>
+                LIVE
 
             </div>
 
         </div>
 
 
-        <div class="setting-item voice-setting">
+        <!-- =================================================
+             BLACK HOLE / VOICE ORB
+        ================================================== -->
 
-            <strong>MoonPlug Voice</strong>
+        <div
+            class="black-hole-stage"
+            aria-hidden="true"
+        >
 
-            <p>
-                Choose the voice MoonPlug uses in Conversation Mode.
-            </p>
+            <div class="black-hole">
 
+                <div class="orbit orbit-one"></div>
 
-            <label
-                for="voiceSelect"
-                class="setting-label"
-            >
-                Voice
-            </label>
+                <div class="orbit orbit-two"></div>
 
+                <div class="orbit orbit-three"></div>
 
-            <select
-                id="voiceSelect"
-                class="voice-select"
-            >
-
-                <option value="">
-                    Loading voices...
-                </option>
-
-            </select>
+                <div class="orbit orbit-four"></div>
 
 
-            <div
-                id="voiceStatus"
-                class="voice-status"
-            >
-                Loading voice options...
+                <div class="black-hole-outline"></div>
+
+
+                <div class="black-hole-core"></div>
+
+
+                <div
+                    id="voiceWave"
+                    class="voice-wave"
+                >
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
             </div>
 
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div
+            id="conversationStatus"
+            class="conversation-status"
+        >
+            Ready
+        </div>
+
+
+        <!-- CURRENT SPEECH / RESPONSE -->
+
+        <div
+            id="conversationText"
+            class="conversation-text"
+        >
+            Starting conversation...
+        </div>
+
+
+        <!-- MIC -->
+
+        <div class="conversation-button-area">
 
             <button
-                id="testVoiceButton"
-                class="voice-test-button"
+                id="conversationMic"
+                class="conversation-main-button"
                 type="button"
+                aria-label="Pause conversation"
             >
-                Test Voice
+
+                <span
+                    class="button-mic"
+                    aria-hidden="true"
+                >
+
+                    <span class="mic-head"></span>
+
+                    <span class="mic-body"></span>
+
+                    <span class="mic-stand"></span>
+
+                </span>
+
+
+                <span
+                    class="button-ripple ripple-one"
+                ></span>
+
+                <span
+                    class="button-ripple ripple-two"
+                ></span>
+
             </button>
 
         </div>
 
-    </div>
 
-</section>
-
-
-<!-- ================= ACCOUNT ================= -->
-
-<section
-    id="accountScreen"
-    class="modal"
-    aria-hidden="true"
->
-
-    <div class="account-box">
-
-        <div
-            class="account-logo"
-            aria-hidden="true"
-        >
-            <span class="logo-crescent"></span>
-        </div>
-
-
-        <h2>MoonPlug</h2>
-
-
-        <p>
-            Account features can be connected to your backend.
+        <p class="conversation-hint">
+            Speak naturally. MoonPlug listens again after every answer.
         </p>
 
-
-        <button
-            id="closeAccount"
-            type="button"
-        >
-            Continue as guest
-        </button>
-
-    </div>
-
-</section>
+    </section>
 
 
-<script src="script.js"></script>
+    <!-- =====================================================
+         SETTINGS
+    ====================================================== -->
+
+    <section
+        id="settingsPanel"
+        class="modal"
+        aria-hidden="true"
+    >
+
+        <div class="settings-box">
+
+
+            <div class="modal-header">
+
+                <h2>
+                    Settings
+                </h2>
+
+
+                <button
+                    id="closeSettings"
+                    type="button"
+                    aria-label="Close settings"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- TEXT SIZE -->
+
+            <div class="setting-item">
+
+                <strong>
+                    Text Size
+                </strong>
+
+
+                <p>
+                    Change the size of chat messages.
+                </p>
+
+
+                <div class="setting-buttons">
+
+                    <button
+                        class="size-button"
+                        data-size="small"
+                        type="button"
+                    >
+                        Small
+                    </button>
+
+
+                    <button
+                        class="size-button active"
+                        data-size="medium"
+                        type="button"
+                    >
+                        Medium
+                    </button>
+
+
+                    <button
+                        class="size-button"
+                        data-size="large"
+                        type="button"
+                    >
+                        Large
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- VOICE -->
+
+            <div class="setting-item voice-setting">
+
+                <strong>
+                    MoonPlug Voice
+                </strong>
+
+
+                <p>
+                    Choose the voice MoonPlug uses in Conversation Mode.
+                </p>
+
+
+                <label
+                    for="voiceSelect"
+                    class="setting-label"
+                >
+                    Voice
+                </label>
+
+
+                <select
+                    id="voiceSelect"
+                    class="voice-select"
+                >
+
+                    <option value="">
+                        Loading voices...
+                    </option>
+
+                </select>
+
+
+                <div
+                    id="voiceStatus"
+                    class="voice-status"
+                >
+                    Loading voice options...
+                </div>
+
+
+                <button
+                    id="testVoiceButton"
+                    class="voice-test-button"
+                    type="button"
+                >
+                    Test Voice
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ACCOUNT
+    ====================================================== -->
+
+    <section
+        id="accountScreen"
+        class="modal"
+        aria-hidden="true"
+    >
+
+        <div class="account-box">
+
+
+            <div
+                class="account-logo"
+                aria-hidden="true"
+            >
+                <span class="logo-crescent"></span>
+            </div>
+
+
+            <h2>
+                MoonPlug
+            </h2>
+
+
+            <p>
+                Account features can be connected to your backend.
+            </p>
+
+
+            <button
+                id="closeAccount"
+                type="button"
+            >
+                Continue as guest
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="script.js"></script>
 
 </body>
+
 </html>
