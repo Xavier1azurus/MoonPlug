@@ -889,3 +889,444 @@ body {
 
     text-align: center;
 }
+/* =========================================================
+   MOONPLUG RESPONSE ANIMATION
+   Plug rises to the moon → connects → sparks
+========================================================= */
+
+.response-animation {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 190px;
+    height: 230px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 20;
+
+    opacity: 0;
+    visibility: hidden;
+}
+
+.response-animation.response-active,
+.response-animation.plug-complete,
+.response-animation.plug-sparks {
+    visibility: visible;
+}
+
+.response-animation.response-active {
+    opacity: 1;
+}
+
+
+/* =========================================================
+   MOON
+========================================================= */
+
+.response-moon {
+    position: absolute;
+
+    left: 50%;
+    top: 12px;
+
+    width: 64px;
+    height: 64px;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: #050509;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 42px;
+    line-height: 1;
+
+    box-shadow:
+        0 0 12px rgba(255,255,255,.8),
+        0 0 35px rgba(255,255,255,.35),
+        0 0 70px rgba(255,255,255,.15);
+}
+
+
+/* =========================================================
+   CABLE
+========================================================= */
+
+.response-cable {
+    position: absolute;
+
+    left: 50%;
+    top: 75px;
+
+    width: 4px;
+    height: 105px;
+
+    transform:
+        translateX(-50%)
+        scaleY(0);
+
+    transform-origin: top center;
+
+    background: linear-gradient(
+        to bottom,
+        #ffffff,
+        #a9a9b5,
+        #ffffff
+    );
+
+    border-radius: 999px;
+
+    opacity: .9;
+}
+
+
+/* =========================================================
+   PLUG
+========================================================= */
+
+.response-plug {
+    position: absolute;
+
+    left: 50%;
+    bottom: 4px;
+
+    width: 58px;
+    height: 58px;
+
+    transform:
+        translate(-50%, 0);
+
+    opacity: 1;
+}
+
+
+/* Plug body */
+
+.plug-body {
+    position: absolute;
+
+    left: 50%;
+    bottom: 0;
+
+    width: 50px;
+    height: 34px;
+
+    transform: translateX(-50%);
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 12px rgba(255,255,255,.8),
+        0 0 25px rgba(255,255,255,.3);
+}
+
+
+/* Plug pins */
+
+.plug-pin {
+    position: absolute;
+
+    bottom: 29px;
+
+    width: 9px;
+    height: 23px;
+
+    background: #ffffff;
+
+    border-radius: 5px 5px 2px 2px;
+
+    box-shadow:
+        0 0 10px rgba(255,255,255,.7);
+}
+
+.plug-pin-one {
+    left: 14px;
+}
+
+.plug-pin-two {
+    right: 14px;
+}
+
+
+/* Cable coming from plug */
+
+.plug-cable {
+    position: absolute;
+
+    left: 50%;
+    bottom: -42px;
+
+    width: 5px;
+    height: 45px;
+
+    transform: translateX(-50%);
+
+    background: #ffffff;
+
+    border-radius: 999px;
+
+    box-shadow:
+        0 0 8px rgba(255,255,255,.5);
+}
+
+
+/* =========================================================
+   PLUG RISE
+========================================================= */
+
+.response-active .response-plug {
+    animation:
+        plugRise
+        1.25s
+        cubic-bezier(.2,.8,.2,1)
+        forwards;
+}
+
+.response-active .response-cable {
+    animation:
+        cableRise
+        1.25s
+        cubic-bezier(.2,.8,.2,1)
+        forwards;
+}
+
+
+@keyframes plugRise {
+
+    0% {
+        transform:
+            translate(-50%, 0);
+    }
+
+    100% {
+        transform:
+            translate(-50%, -106px);
+    }
+}
+
+
+@keyframes cableRise {
+
+    0% {
+        transform:
+            translateX(-50%)
+            scaleY(0);
+    }
+
+    100% {
+        transform:
+            translateX(-50%)
+            scaleY(1);
+    }
+}
+
+
+/* =========================================================
+   PLUG CONNECTS TO MOON
+========================================================= */
+
+.plug-complete .response-plug {
+
+    transform:
+        translate(-50%, -106px);
+
+    animation:
+        plugConnect
+        .25s
+        ease-out
+        forwards;
+}
+
+
+@keyframes plugConnect {
+
+    0% {
+        transform:
+            translate(-50%, -106px)
+            scale(1);
+    }
+
+    55% {
+        transform:
+            translate(-50%, -110px)
+            scale(1.08);
+    }
+
+    100% {
+        transform:
+            translate(-50%, -106px)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   MOON FLASH
+========================================================= */
+
+.plug-sparks .response-moon {
+
+    animation:
+        moonFlash
+        .55s
+        ease-out;
+}
+
+
+@keyframes moonFlash {
+
+    0% {
+        transform: translateX(-50%) scale(1);
+    }
+
+    40% {
+        transform: translateX(-50%) scale(1.15);
+        box-shadow:
+            0 0 25px rgba(255,255,255,.95),
+            0 0 65px rgba(255,255,255,.7),
+            0 0 110px rgba(255,255,255,.35);
+    }
+
+    100% {
+        transform: translateX(-50%) scale(1);
+    }
+}
+
+
+/* =========================================================
+   SPARKS
+========================================================= */
+
+.response-spark {
+
+    position: absolute;
+
+    left: 50%;
+    top: 43px;
+
+    font-size: 20px;
+
+    color: #ffffff;
+
+    opacity: 0;
+
+    text-shadow:
+        0 0 8px rgba(255,255,255,.9),
+        0 0 20px rgba(255,255,255,.5);
+}
+
+
+.plug-sparks .response-spark {
+
+    opacity: 1;
+
+    animation:
+        sparkBurst
+        .65s
+        ease-out
+        forwards;
+}
+
+
+.spark-one {
+    --sx: -58px;
+    --sy: -30px;
+}
+
+.spark-two {
+    --sx: 58px;
+    --sy: -24px;
+}
+
+.spark-three {
+    --sx: -45px;
+    --sy: 28px;
+}
+
+.spark-four {
+    --sx: 45px;
+    --sy: 32px;
+}
+
+
+@keyframes sparkBurst {
+
+    0% {
+        transform:
+            translate(-50%, 0)
+            scale(.4);
+
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            translate(
+                calc(-50% + var(--sx)),
+                var(--sy)
+            )
+            scale(1);
+
+        opacity: 0;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .response-animation {
+        width: 160px;
+        height: 210px;
+    }
+
+    .response-moon {
+        width: 58px;
+        height: 58px;
+        font-size: 38px;
+    }
+
+    .response-cable {
+        top: 70px;
+        height: 95px;
+    }
+
+    .response-plug {
+        width: 52px;
+        height: 52px;
+    }
+
+    .plug-body {
+        width: 46px;
+        height: 31px;
+    }
+
+    .plug-pin {
+        bottom: 27px;
+        height: 21px;
+        width: 8px;
+    }
+
+    .plug-pin-one {
+        left: 13px;
+    }
+
+    .plug-pin-two {
+        right: 13px;
+    }
+}
