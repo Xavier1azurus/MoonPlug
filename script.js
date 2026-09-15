@@ -1,4 +1,4 @@
-```javascript
+
 "use strict";
 
 /* =========================================================
@@ -3110,7 +3110,78 @@ function stopSpeechAnimation() {
             }
         );
 }
+/* =========================================================
+   RESPONSE ANIMATION
+========================================================= */
 
+function startResponseAnimation() {
+
+    const animation =
+        $("responseAnimation");
+
+    if (!animation) {
+        return;
+    }
+
+    animation.classList.remove(
+        "plug-complete",
+        "plug-sparks"
+    );
+
+    animation.classList.add(
+        "response-active"
+    );
+}
+
+
+function finishResponseAnimation() {
+
+    const animation =
+        $("responseAnimation");
+
+    if (!animation) {
+        return;
+    }
+
+    animation.classList.remove(
+        "response-active"
+    );
+
+    animation.classList.add(
+        "plug-complete",
+        "plug-sparks"
+    );
+
+
+    setTimeout(
+        () => {
+
+            animation.classList.remove(
+                "plug-complete",
+                "plug-sparks"
+            );
+
+        },
+        1250
+    );
+}
+
+
+function cancelResponseAnimation() {
+
+    const animation =
+        $("responseAnimation");
+
+    if (!animation) {
+        return;
+    }
+
+    animation.classList.remove(
+        "response-active",
+        "plug-complete",
+        "plug-sparks"
+    );
+}
 
 /* =========================================================
    SETTINGS
