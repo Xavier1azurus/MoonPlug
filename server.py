@@ -2477,9 +2477,18 @@ def chat():
                         message
 
                 })
-            return ollama_chat_stream(
-    messages
-)
+                        response = ollama_chat(messages)
+
+            save_conversation(
+                message,
+                response
+            )
+
+            return jsonify({
+                "success": True,
+                "response": response,
+                "source": "ollama"
+            })
         except Exception as error:
 
             print()
