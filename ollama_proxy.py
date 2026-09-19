@@ -167,10 +167,10 @@ def chat():
 
             try:
 
-                for line in upstream.iter_lines(
-                    decode_unicode=True
-                ):
-
+               for line in upstream.iter_lines(
+    chunk_size=1,
+    decode_unicode=True
+):
                     if not line:
                         continue
 
