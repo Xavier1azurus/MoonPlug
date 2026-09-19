@@ -7,7 +7,7 @@
    STREAMING + VOICE + CONVERSATION MODE
 ========================================================= */
 
-const API_BASE = "https://moonplug.onrender.com";
+const API_BASE = "https://innovation-latinas-separately-accounting.trycloudflare.com";
 
 let recognition = null;
 let recognitionSupported = false;
