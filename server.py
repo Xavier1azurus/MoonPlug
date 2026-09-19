@@ -543,64 +543,206 @@ def ollama_available():
 # OLLAMA CHAT
 # ============================================================
 
+# ============================================================
+# OLLAMA CHAT — NORMAL
+# ============================================================
+
 def ollama_chat(messages):
+
     if not OLLAMA_HOST:
+
         raise RuntimeError(
             "OLLAMA_HOST is not configured."
         )
 
     payload = {
-        "model": OLLAMA_MODEL,
-        "messages": messages,
-        "stream": True
+
+        "model":
+            OLLAMA_MODEL,
+
+        "messages":
+            messages,
+
+        "stream":
+            False
+
     }
 
     response = requests.post(
+
         f"{OLLAMA_HOST}/api/chat",
+
         headers=proxy_headers(),
+
         json=payload,
-        timeout=300,
-        stream=True
+
+        timeout=300
+
     )
 
     if response.status_code == 401:
-        response.close()
+
         raise RuntimeError(
             "Ollama returned Unauthorized. "
             "Check MOONPLUG_PROXY_KEY."
         )
 
     if not response.ok:
-        error_text = response.text[:1000]
+
+        raise RuntimeError(
+
+            f"Ollama returned HTTP "
+            f"{response.status_code}: "
+            f"{response.text[:1000]}"
+
+        )
+
+    try:
+
+        data = response.json()
+
+    except ValueError as error:
+
+        raise RuntimeError(
+            "Ollama returned invalid JSON."
+        ) from error
+
+    if not isinstance(
+        data,
+        dict
+    ):
+
+        raise RuntimeError(
+            "Ollama returned an invalid response."
+        )
+
+    message = data.get(
+        "message",
+        {}
+    )
+
+    if not isinstance(
+        message,
+        dict
+    ):
+
+        return ""
+
+    content = message.get(
+        "content",
+        ""
+    )
+
+    if content is None:
+
+        return ""
+
+    return str(
+        content
+    ).strip()
+
+
+# ============================================================
+# OLLAMA CHAT — STREAMING
+# ============================================================
+
+def ollama_chat_stream(messages):
+
+    if not OLLAMA_HOST:
+
+        raise RuntimeError(
+            "OLLAMA_HOST is not configured."
+        )
+
+    payload = {
+
+        "model":
+            OLLAMA_MODEL,
+
+        "messages":
+            messages,
+
+        "stream":
+            True
+
+    }
+
+    response = requests.post(
+
+        f"{OLLAMA_HOST}/api/chat",
+
+        headers=proxy_headers(),
+
+        json=payload,
+
+        timeout=300,
+
+        stream=True
+
+    )
+
+    if response.status_code == 401:
+
         response.close()
 
         raise RuntimeError(
+            "Ollama returned Unauthorized. "
+            "Check MOONPLUG_PROXY_KEY."
+        )
+
+    if not response.ok:
+
+        error_text = response.text[:1000]
+
+        response.close()
+
+        raise RuntimeError(
+
             f"Ollama returned HTTP "
             f"{response.status_code}: "
             f"{error_text}"
+
         )
 
     def generate():
+
         try:
+
             for line in response.iter_lines(
                 decode_unicode=True
             ):
+
                 if not line:
+
                     continue
 
                 yield line + "\n"
 
         finally:
+
             response.close()
 
     return Response(
-        stream_with_context(generate()),
+
+        stream_with_context(
+            generate()
+        ),
+
         status=200,
-        content_type="application/x-ndjson; charset=utf-8",
+
+        content_type=
+            "application/x-ndjson; charset=utf-8",
+
         headers={
-            "Cache-Control": "no-cache",
-            "X-Accel-Buffering": "no"
+
+            "Cache-Control":
+                "no-cache",
+
+            "X-Accel-Buffering":
+                "no"
+
         }
+
     )
 # ============================================================
 # OWNER AUTHENTICATION
