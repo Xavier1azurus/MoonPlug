@@ -2334,8 +2334,7 @@ def chat():
                         message
 
                 })
-
-                      response = ollama_chat(
+            response = ollama_chat(
                 messages
             )
 
@@ -2366,32 +2365,6 @@ def chat():
                     str(error)
 
             }), 503
-        except Exception as error:
-
-            print()
-            print(
-                "OLLAMA CHAT ERROR:"
-            )
-            print(
-                repr(error)
-            )
-            traceback.print_exc()
-            print()
-
-            return jsonify({
-
-                "success":
-                    False,
-
-                "error":
-                    "Could not connect to the "
-                    "Ollama server.",
-
-                "details":
-                    str(error)
-
-            }), 503
-
     # --------------------------------------------------------
     # FALLBACK
     # --------------------------------------------------------
