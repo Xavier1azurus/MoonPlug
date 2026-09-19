@@ -2335,40 +2335,37 @@ def chat():
 
                 })
 
-            response = ollama_chat(
+                      response = ollama_chat(
                 messages
             )
 
-            if response:
+            return response
 
-                save_conversation(
-                    message,
-                    response
-                )
+        except Exception as error:
 
-                return jsonify({
-
-                    "success":
-                        True,
-
-                    "response":
-                        response,
-
-                    "source":
-                        "ollama",
-
-                    "trainingId":
-                        None,
-
-                    "matchScore":
-                        0
-
-                })
-
-            raise RuntimeError(
-                "Ollama returned an empty response."
+            print()
+            print(
+                "OLLAMA CHAT ERROR:"
             )
+            print(
+                repr(error)
+            )
+            traceback.print_exc()
+            print()
 
+            return jsonify({
+
+                "success":
+                    False,
+
+                "error":
+                    "Could not connect to the "
+                    "Ollama server.",
+
+                "details":
+                    str(error)
+
+            }), 503
         except Exception as error:
 
             print()
