@@ -1,10 +1,9 @@
 # MoonPlug Ollama Proxy
 
 import os
-
 import requests
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response, stream_with_context
 
 
 app = Flask(__name__)
@@ -36,6 +35,7 @@ def authorized():
         bool(PROXY_KEY)
         and supplied_key == PROXY_KEY
     )
+
 
 @app.route("/health", methods=["GET"])
 def health():
@@ -111,6 +111,10 @@ def tags():
         }), 503
 
 
+# ============================================================
+# STREAMING CHAT
+# ============================================================
+
 @app.route("/api/chat", methods=["POST"])
 def chat():
 
@@ -121,34 +125,69 @@ def chat():
             "error": "Forbidden"
         }), 403
 
+    data = request.get_json(
+        silent=True
+    )
+
+    if not isinstance(data, dict):
+
+        return jsonify({
+            "success": False,
+            "error": "Invalid JSON request."
+        }), 400
+
+    # Make absolutely sure Ollama streams
+    data["stream"] = True
+
     try:
 
-        data = request.get_json(
-            silent=True
+        upstream = requests.post(
+            f"{OLLAMA_URL}/api/chat",
+            json=data,
+            headers={
+                "Accept": "application/x-ndjson"
+            },
+            timeout=300,
+            stream=True
         )
 
-        if not isinstance(data, dict):
+        if not upstream.ok:
+
+            error_text = upstream.text[:1000]
+
+            upstream.close()
 
             return jsonify({
                 "success": False,
-                "error": "Invalid JSON request."
-            }), 400
+                "error": error_text
+            }), upstream.status_code
 
-        response = requests.post(
-            f"{OLLAMA_URL}/api/chat",
-            json=data,
-            timeout=300
-        )
+        @stream_with_context
+        def generate():
 
-        return (
-            response.content,
-            response.status_code,
-            {
-                "Content-Type":
-                    response.headers.get(
-                        "Content-Type",
-                        "application/json"
-                    )
+            try:
+
+                for line in upstream.iter_lines(
+                    decode_unicode=True
+                ):
+
+                    if not line:
+                        continue
+
+                    # Send each Ollama JSON chunk immediately
+                    yield line + "\n"
+
+            finally:
+
+                upstream.close()
+
+        return Response(
+            generate(),
+            status=upstream.status_code,
+            content_type="application/x-ndjson; charset=utf-8",
+            headers={
+                "Cache-Control": "no-cache",
+                "X-Accel-Buffering": "no"
             }
         )
 
@@ -164,7 +203,10 @@ if __name__ == "__main__":
 
     if not PROXY_KEY:
 
-        print("ERROR: PROXY_KEY is not configured.")
+        print(
+            "ERROR: PROXY_KEY is not configured."
+        )
+
         raise SystemExit(1)
 
     print()
@@ -182,6 +224,6 @@ if __name__ == "__main__":
     app.run(
         host="127.0.0.1",
         port=5001,
-        debug=False
+        debug=False,
+        threaded=True
     )
-
