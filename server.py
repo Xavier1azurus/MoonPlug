@@ -708,9 +708,10 @@ def ollama_chat_stream(messages):
 
         try:
 
-            for line in response.iter_lines(
-                decode_unicode=True
-            ):
+           for line in response.iter_lines(
+    chunk_size=1,
+    decode_unicode=True
+):
 
                 if not line:
 
