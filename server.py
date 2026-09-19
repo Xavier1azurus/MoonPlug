@@ -64,9 +64,8 @@ FRONTEND_ORIGIN = os.environ.get(
 
 OLLAMA_HOST = os.environ.get(
     "OLLAMA_HOST",
-    ""
+    "http://127.0.0.1:11434"
 ).strip().rstrip("/")
-
 OLLAMA_MODEL = os.environ.get(
     "OLLAMA_MODEL",
     "llama3.2:latest"
