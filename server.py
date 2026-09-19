@@ -13,8 +13,7 @@ from functools import wraps
 
 import requests
 import psycopg
-
-from flask import Flask, jsonify, request, session
+from flask import Flask, Response, jsonify, request, session, stream_with_context
 from flask_cors import CORS
 from psycopg.rows import dict_row
 from werkzeug.security import check_password_hash
@@ -545,91 +544,64 @@ def ollama_available():
 # ============================================================
 
 def ollama_chat(messages):
-
     if not OLLAMA_HOST:
-
         raise RuntimeError(
             "OLLAMA_HOST is not configured."
         )
 
     payload = {
-        "model":
-            OLLAMA_MODEL,
-
-        "messages":
-            messages,
-
-        "stream":
-            False
+        "model": OLLAMA_MODEL,
+        "messages": messages,
+        "stream": True
     }
 
     response = requests.post(
         f"{OLLAMA_HOST}/api/chat",
         headers=proxy_headers(),
         json=payload,
-        timeout=300
+        timeout=300,
+        stream=True
     )
 
     if response.status_code == 401:
-
+        response.close()
         raise RuntimeError(
             "Ollama returned Unauthorized. "
             "Check MOONPLUG_PROXY_KEY."
         )
 
     if not response.ok:
+        error_text = response.text[:1000]
+        response.close()
 
         raise RuntimeError(
             f"Ollama returned HTTP "
             f"{response.status_code}: "
-            f"{response.text[:1000]}"
+            f"{error_text}"
         )
 
-    try:
+    def generate():
+        try:
+            for line in response.iter_lines(
+                decode_unicode=True
+            ):
+                if not line:
+                    continue
 
-        data = response.json()
+                yield line + "\n"
 
-    except ValueError as error:
+        finally:
+            response.close()
 
-        raise RuntimeError(
-            "Ollama returned invalid JSON."
-        ) from error
-
-    if not isinstance(
-        data,
-        dict
-    ):
-
-        raise RuntimeError(
-            "Ollama returned an invalid response."
-        )
-
-    message = data.get(
-        "message",
-        {}
+    return Response(
+        stream_with_context(generate()),
+        status=200,
+        content_type="application/x-ndjson; charset=utf-8",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no"
+        }
     )
-
-    if not isinstance(
-        message,
-        dict
-    ):
-
-        return ""
-
-    content = message.get(
-        "content",
-        ""
-    )
-
-    if content is None:
-
-        return ""
-
-    return str(
-        content
-    ).strip()
-
-
 # ============================================================
 # OWNER AUTHENTICATION
 # ============================================================
