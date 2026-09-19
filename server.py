@@ -2476,12 +2476,9 @@ def chat():
                         message
 
                 })
-            response = ollama_chat(
-                messages
-            )
-
-            return response
-
+            return ollama_chat_stream(
+    messages
+)
         except Exception as error:
 
             print()
